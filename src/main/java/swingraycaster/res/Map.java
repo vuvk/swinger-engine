@@ -39,6 +39,8 @@ import swingraycaster.objects.creatures.enemy.Enemy;
 import swingraycaster.objects.creatures.Player;
 import swingraycaster.objects.creatures.enemy.Guard;
 import swingraycaster.objects.creatures.enemy.GuardRocketeer;
+import swingraycaster.objects.weapon.Pistol;
+import swingraycaster.objects.weapon.Shotgun;
 import swingraycaster.util.ImmutablePair;
 import swingraycaster.util.Pair;
 import swingraycaster.util.Utils;
@@ -431,6 +433,40 @@ public final class Map {
             double y = i % WIDTH  + 0.5;
                  
             new Key(keysMat[keyNum], new Vector3(x, y), keyNum);
+        }        
+        
+        /* грузим оружие */
+        System.out.println("\tWeapons...");
+        jsonArray = jsonlevel.get("weapons").getAsJsonArray();
+        Material[] weaponsMat = new Material[jsonArray.size()];
+        for (int i = 0; i < jsonArray.size(); ++i) {
+            JsonObject jsonWeapon = jsonArray.get(i).getAsJsonObject();            
+            int matNum = jsonWeapon.get("material").getAsInt();
+            if (matNum >= 0) {
+                weaponsMat[i] = MaterialBank.BANK[matNum];
+            }
+        }
+        
+        /* расставляем оружие */
+        System.out.println("\t\tWeapons placing...");
+        jsonArray = jsonlevel.get("weapons_map").getAsJsonArray();
+        for (int i = 0; i < jsonArray.size(); ++i) {
+            int weaponNum = jsonArray.get(i).getAsInt();
+            if (weaponNum < 1) {
+                continue;
+            }
+            
+            double x = i / HEIGHT + 0.5;
+            double y = i % WIDTH  + 0.5;
+            
+            switch (weaponNum) {
+                case 1 :
+                    new Pistol(weaponsMat[1], new Vector3(x, y));
+                    break;
+                case 2 :
+                    new Shotgun(weaponsMat[2], new Vector3(x, y));
+                    break;
+            }
         }
         
         /* грузим двери */

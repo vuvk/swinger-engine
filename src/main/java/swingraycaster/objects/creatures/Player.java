@@ -24,6 +24,7 @@ import swingraycaster.audio.Sound;
 import swingraycaster.audio.SoundBank;
 import swingraycaster.objects.Door;
 import swingraycaster.objects.Key;
+import swingraycaster.objects.weapon.Weapon;
 
 /**
  *
@@ -45,7 +46,7 @@ public final class Player extends Creature {
                     moveF = false,
                     moveB = false;
     private boolean rotL = false,
-                    rotR = false;    
+                    rotR = false;
     
     private final static double HEALTH = 100.0;
     private final static double RADIUS = 0.25;
@@ -249,10 +250,19 @@ public final class Player extends Creature {
     
     public void createWeaponsInHand() {        
         weaponsInHand[0] = KnifeInHand.getInstance();
-        weaponsInHand[1] = PistolInHand.getInstance();
+        /*weaponsInHand[1] = PistolInHand.getInstance();
         weaponsInHand[2] = ShotgunInHand.getInstance();
         weaponsInHand[3] = RifleInHand.getInstance();
-        weaponsInHand[4] = RocketLauncherInHand.getInstance();
+        weaponsInHand[4] = RocketLauncherInHand.getInstance();*/
+    }
+    
+    public void addWeaponInHand(Weapon weapon) {
+        int weaponNum = weapon.getWeaponNum();
+        boolean firstGrab = (weaponsInHand[weaponNum] == null);
+        if (firstGrab) {
+            weaponsInHand[weaponNum] = weapon.getInstance();
+            setWeaponInHand(weaponNum);
+        }
     }
     
     public void update() {          

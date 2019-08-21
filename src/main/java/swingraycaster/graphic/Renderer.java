@@ -194,6 +194,8 @@ public final class Renderer extends JPanel {
             playerHpText.setMessage(String.format(Locale.ENGLISH, "HP %.0f", PLAYER.getHealth()));
         }
         
+        Text.drawAll(g);
+        
         // рисуем консоль
         if (Config.console) {
             int y = Window.HEIGHT - 50;
@@ -203,8 +205,6 @@ public final class Renderer extends JPanel {
             g.setColor(Color.WHITE);
             g.drawString("Enter command: " + Config.consoleCommand, 10, y + 15); //FPS counter            
         }
-        
-        Text.drawAll(g);
     } 
     
     /*

@@ -38,6 +38,7 @@ public final class SoundBank {
     private final static String SOUND_FILE_DOOR_CLOSE = "resources/snd/door_stop.wav";
     
     /* items */
+    private final static String SOUND_FILE_GET_WEAPON = "resources/snd/pkup.wav";
     private final static String SOUND_FILE_GET_KEY = "resources/snd/r_item2.wav";
     
     /* phrases */
@@ -75,6 +76,7 @@ public final class SoundBank {
     public final static SoundBuffer SOUND_BUFFER_DOOR_CLOSE = new SoundBuffer(new File(SOUND_FILE_DOOR_CLOSE));
     
     /* items */
+    public final static SoundBuffer SOUND_BUFFER_GET_WEAPON = new SoundBuffer(new File(SOUND_FILE_GET_WEAPON));
     public final static SoundBuffer SOUND_BUFFER_GET_KEY = new SoundBuffer(new File(SOUND_FILE_GET_KEY));
     
     /* phrases */
