@@ -140,8 +140,8 @@
 /*108 */	"resources/pics/keys/gold_key.png",
 
 /* weapons */
-/*109 */	"resources/pics/weapons/item/Пистолетик валяется.png",
-/*110 */	"resources/pics/weapons/item/Обрез валяется.png"
+/*109 */	"resources/pics/weapons/item/pistol.png",
+/*110 */	"resources/pics/weapons/item/shotgun.png"
 
 	],
 	

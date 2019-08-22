@@ -42,8 +42,8 @@ public final class SoundBank {
     private final static String SOUND_FILE_GET_KEY = "resources/snd/r_item2.wav";
     
     /* phrases */
-    private final static String SOUND_FILE_NEAD_KEY1 = "resources/snd/need_key1.ogg";
-    private final static String SOUND_FILE_NEAD_KEY2 = "resources/snd/need_key2.ogg";
+    private final static String SOUND_FILE_NEAD_KEY1 = "resources/snd/need_key1.wav";
+    private final static String SOUND_FILE_NEAD_KEY2 = "resources/snd/need_key2.wav";
     
     /* music */
     public final static String SOUND_FILE_MUSIC1 = "resources/snd/music.mp3";

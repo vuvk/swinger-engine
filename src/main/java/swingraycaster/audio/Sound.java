@@ -15,8 +15,6 @@ package swingraycaster.audio;
 import java.io.File;
 import java.io.IOException;
 import java.util.Random;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.sound.sampled.AudioFormat;
 
 import javax.sound.sampled.AudioInputStream;
@@ -279,6 +277,7 @@ public class Sound implements AutoCloseable {
             // получаем несжатый формат
             AudioFormat format = new AudioFormat(AudioFormat.Encoding.PCM_SIGNED,
                                  baseFormat.getSampleRate(),
+                                 //22050,
                                  16,
                                  baseFormat.getChannels(),
                                  baseFormat.getChannels() * 2,
