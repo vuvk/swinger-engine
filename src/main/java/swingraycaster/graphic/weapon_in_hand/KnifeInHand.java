@@ -18,10 +18,10 @@ public class KnifeInHand extends RayWeaponInHand {
     private final static int FRAMES_COUNT = 7;
     private final static Image[] FRAMES = new Image[FRAMES_COUNT];
     private final static String[] FILES = { 
+        "resources/pics/weapons/knife0.png", 
         "resources/pics/weapons/knife1.png", 
         "resources/pics/weapons/knife2.png",
-        "resources/pics/weapons/knife3.png",
-        "resources/pics/weapons/knife4.png" 
+        "resources/pics/weapons/knife3.png"
     };    
     private static KnifeInHand instance = null;
     private final static double ACCURACY = 0.0;

@@ -14,22 +14,13 @@ import swingraycaster.res.Image;
  * @author tai-prg3
  */
 public class PistolInHand extends RayWeaponInHand {
-    private final static int FRAMES_COUNT = 6;
+    private final static int FRAMES_COUNT = 4;
     private final static Image[] FRAMES = new Image[FRAMES_COUNT];
-    /*private final static String[] FILES = { 
-        "resources/pics/weapons/pistol1.png", 
-        "resources/pics/weapons/pistol2.png",
-        "resources/pics/weapons/pistol3.png",
-        "resources/pics/weapons/pistol4.png"
-    };*/ 
     private final static String[] FILES = { 
-        "resources/pics/weapons/Пистолетик 1.png", 
-        "resources/pics/weapons/Пистолетик 2.png",
-        "resources/pics/weapons/Пистолетик 3.png",
-        "resources/pics/weapons/Пистолетик 4.png",
-        "resources/pics/weapons/Пистолетик 5.png",
-        "resources/pics/weapons/Пистолетик 6.png"
-    };   
+        "resources/pics/weapons/pistol0.png", 
+        "resources/pics/weapons/pistol1.png",
+        "resources/pics/weapons/pistol2.png"
+    };
     private static PistolInHand instance = null;
     private final static double ACCURACY = 5.0;
     private final static int BULLETS_PER_SHOOT = 1;
@@ -63,7 +54,7 @@ public class PistolInHand extends RayWeaponInHand {
             for (int i = 0; i < FILES.length; ++i) {
                 FRAMES[i] = new Image(FILES[i], size, size);
             }
-            //FRAMES[4] = FRAMES[1];
+            FRAMES[3] = FRAMES[2];
         }
     }
     

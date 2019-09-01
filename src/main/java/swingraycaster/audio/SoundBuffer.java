@@ -27,6 +27,7 @@ public class SoundBuffer {
         if (stream != null) {
             try {
                 format = stream.getFormat();
+                System.out.println(format.toString());
                 //System.out.println("start read = " + file.getName() + " | size = " + file.length() + " | available = " + stream.available());
                 
                 //buffer = stream.readAllBytes();
@@ -46,6 +47,7 @@ public class SoundBuffer {
                 for (n = 0; n < bufferSize; ++n) {
                     buffer[n] = buf.get(n);
                 }
+                buf.clear();
                 
                 /*
                 int pos = 0;
@@ -69,7 +71,7 @@ public class SoundBuffer {
     }
     
     public AudioInputStream getAudioInputStream() {
-        if (buffer == null || buffer.length == 0 || format == null) {
+        if (buffer == null || buffer.length <= 0 || format == null) {
             return null;
         }
         

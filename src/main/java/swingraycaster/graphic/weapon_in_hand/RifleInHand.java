@@ -7,6 +7,7 @@ package swingraycaster.graphic.weapon_in_hand;
 
 import swingraycaster.audio.SoundBank;
 import swingraycaster.graphic.Renderer;
+import swingraycaster.math.Vector2;
 import swingraycaster.res.Image;
 
 /**
@@ -14,25 +15,16 @@ import swingraycaster.res.Image;
  * @author tai-prg3
  */
 public class RifleInHand  extends RayWeaponInHand {
-    private final static int FRAMES_COUNT = 6;
+    private final static int FRAMES_COUNT = 3;
     private final static Image[] FRAMES = new Image[FRAMES_COUNT];
-    /*private final static String[] FILES = { 
-        "resources/pics/weapons/pistol1.png", 
-        "resources/pics/weapons/pistol2.png",
-        "resources/pics/weapons/pistol3.png",
-        "resources/pics/weapons/pistol4.png"
-    };*/ 
     private final static String[] FILES = { 
-        "resources/pics/weapons/ППШ 1.png", 
-        "resources/pics/weapons/ППШ 2.png",
-        "resources/pics/weapons/ППШ 3.png",
-        "resources/pics/weapons/ППШ 4.png",
-        "resources/pics/weapons/ППШ 5.png",
-        "resources/pics/weapons/ППШ 6.png"
-    };   
+        "resources/pics/weapons/mp40_0.png", 
+        "resources/pics/weapons/mp40_1.png",
+        "resources/pics/weapons/mp40_2.png"
+    };
     private static RifleInHand instance = null;
     private final static double ACCURACY = 5.0;
-    private final static int BULLETS_PER_SHOOT = 3;
+    private final static int BULLETS_PER_SHOOT = 1;
     private final static double DISTANCE = 100;
     private final static double ANIM_SPEED = 15.0;
     private final static double SHOOT_DELAY = 0.05;
@@ -62,6 +54,7 @@ public class RifleInHand  extends RayWeaponInHand {
 
             for (int i = 0; i < FILES.length; ++i) {
                 FRAMES[i] = new Image(FILES[i], size, size);
+                FRAMES[i].setCenter(new Vector2(0.6, 0.5));
             }
             //FRAMES[4] = FRAMES[1];
         }

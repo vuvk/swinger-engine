@@ -45,7 +45,7 @@ public class ShotgunInHand extends RayWeaponInHand {
         setShootDelay(SHOOT_DELAY);
         setAccuracy(ACCURACY);
         setBulletPerShoot(BULLETS_PER_SHOOT);
-        setSoundShoot(SoundBank.SOUND_BUFFER_SHOTGUN);
+//      setSoundShoot(SoundBank.SOUND_BUFFER_SHOTGUN);
     }
     
     public static void loadFrames() {

@@ -40,6 +40,7 @@ import swingraycaster.objects.creatures.Player;
 import swingraycaster.objects.creatures.enemy.Guard;
 import swingraycaster.objects.creatures.enemy.GuardRocketeer;
 import swingraycaster.objects.weapon.Pistol;
+import swingraycaster.objects.weapon.Rifle;
 import swingraycaster.objects.weapon.Shotgun;
 import swingraycaster.util.ImmutablePair;
 import swingraycaster.util.Pair;
@@ -464,7 +465,7 @@ public final class Map {
                     new Pistol(weaponsMat[1], new Vector3(x, y));
                     break;
                 case 2 :
-                    new Shotgun(weaponsMat[2], new Vector3(x, y));
+                    new Rifle(weaponsMat[2], new Vector3(x, y));
                     break;
             }
         }

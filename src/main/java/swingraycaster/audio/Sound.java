@@ -13,9 +13,13 @@ package swingraycaster.audio;
  * @author tai-prg3
  */
 import java.io.File;
-import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Random;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.sound.sampled.AudioFormat;
+import javax.sound.sampled.AudioFormat.Encoding;
 
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
@@ -23,10 +27,11 @@ import javax.sound.sampled.Clip;
 import javax.sound.sampled.FloatControl;
 import javax.sound.sampled.LineEvent;
 import javax.sound.sampled.LineListener;
-import javax.sound.sampled.LineUnavailableException;
-import javax.sound.sampled.UnsupportedAudioFileException;
+import javax.sound.sampled.Port;
 
-public class Sound implements AutoCloseable {    
+public class Sound implements AutoCloseable {  
+
+    private static final Logger LOG = Logger.getLogger(Sound.class.getName());
     
     private boolean released = false;
     private AudioInputStream stream = null;
@@ -71,8 +76,8 @@ public class Sound implements AutoCloseable {
         try {
             clip = AudioSystem.getClip();
             clip.open(stream);
-        } catch (LineUnavailableException | IOException exc) {
-            exc.printStackTrace();
+        } catch (Exception ex) {
+            LOG.log(Level.SEVERE, null, ex);
             close();
             
             return false;
@@ -175,8 +180,8 @@ public class Sound implements AutoCloseable {
         if (stream != null) {
             try {
                 stream.close();
-            } catch (IOException exc) {
-                exc.printStackTrace();
+            } catch (Exception ex) {
+                LOG.log(Level.SEVERE, null, ex);
             }
         }
     }
@@ -262,29 +267,51 @@ public class Sound implements AutoCloseable {
         sounds[variant].play();
     }
     
-    public static AudioInputStream getEncodedAudioInputStream(File file) {  
+    public static AudioInputStream getEncodedAudioInputStream(File file) { 
+        if (AudioSystem.isLineSupported(Port.Info.SPEAKER)) {
+            System.out.println("Speaker not found.");
+            return null;
+        }
+        
         AudioInputStream in = null;
         try {
             in = AudioSystem.getAudioInputStream(file);
-        } catch (UnsupportedAudioFileException | IOException ex) {
-            ex.printStackTrace();
+        } catch (Exception ex) {
+            LOG.log(Level.SEVERE, null, ex);
+            return null;
         }
         
         if (in != null) {
-            // получаем формат аудио
-            AudioFormat baseFormat = in.getFormat();
+            try {
+                // получаем формат аудио
+                AudioFormat inFormat = in.getFormat();
+                Encoding[] enc = AudioSystem.getTargetEncodings(inFormat);
+                if (enc.length == 0) {
+                    System.out.println("Not specified encoders for '" + file.getName() + "'...");
+                    return null;
+                }
 
-            // получаем несжатый формат
-            AudioFormat format = new AudioFormat(AudioFormat.Encoding.PCM_SIGNED,
-                                 baseFormat.getSampleRate(),
-                                 //22050,
-                                 16,
-                                 baseFormat.getChannels(),
-                                 baseFormat.getChannels() * 2,
-                                 baseFormat.getSampleRate(),
-                                 true);
-
-            return AudioSystem.getAudioInputStream(format, in);
+                // получаем несжатый формат
+                AudioFormat outFormat = new AudioFormat(AudioFormat.Encoding.PCM_SIGNED,
+                                                        //inFormat.getSampleRate(),
+                                                        //inFormat.getChannels(),
+                                                        //inFormat.getChannels() * 2,
+                                                        //inFormat.getSampleRate(),
+                        
+                                                        44100,
+                                                        16,
+                                                        inFormat.getChannels(),
+                                                        inFormat.getChannels() * 2,
+                                                        44100,
+                        
+                                                        false);
+                return AudioSystem.getAudioInputStream(outFormat, in);
+                //return AudioSystem.getAudioInputStream(Encoding.PCM_SIGNED, in);
+                //return in;
+            } catch (Exception ex) {
+                LOG.log(Level.SEVERE, null, ex);
+                return in;
+            }
         }
         
         return null;

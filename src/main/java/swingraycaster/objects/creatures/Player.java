@@ -161,6 +161,23 @@ public final class Player extends Creature {
         return plane;
     }
     
+    public void createWeaponsInHand() {        
+        weaponsInHand[0] = KnifeInHand.getInstance();
+        /*weaponsInHand[1] = PistolInHand.getInstance();
+        weaponsInHand[2] = ShotgunInHand.getInstance();
+        weaponsInHand[3] = RifleInHand.getInstance();
+        weaponsInHand[4] = RocketLauncherInHand.getInstance();*/
+    }
+    
+    public void addWeaponInHand(Weapon weapon) {
+        int weaponNum = weapon.getWeaponNum();
+        boolean firstGrab = (weaponsInHand[weaponNum] == null);
+        if (firstGrab) {
+            weaponsInHand[weaponNum] = weapon.getInstance();
+            setWeaponInHand(weaponNum);
+        }
+    }
+    
     public WeaponInHand getWeaponInHand() {
         return weaponsInHand[curWeaponInHandNum];
     }
@@ -247,23 +264,6 @@ public final class Player extends Creature {
             }
         }
     }    
-    
-    public void createWeaponsInHand() {        
-        weaponsInHand[0] = KnifeInHand.getInstance();
-        /*weaponsInHand[1] = PistolInHand.getInstance();
-        weaponsInHand[2] = ShotgunInHand.getInstance();
-        weaponsInHand[3] = RifleInHand.getInstance();
-        weaponsInHand[4] = RocketLauncherInHand.getInstance();*/
-    }
-    
-    public void addWeaponInHand(Weapon weapon) {
-        int weaponNum = weapon.getWeaponNum();
-        boolean firstGrab = (weaponsInHand[weaponNum] == null);
-        if (firstGrab) {
-            weaponsInHand[weaponNum] = weapon.getInstance();
-            setWeaponInHand(weaponNum);
-        }
-    }
     
     public void update() {          
         // обновляем оружие в руках

@@ -13,6 +13,7 @@ import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 import swingraycaster.graphic.Sky;
 import swingraycaster.math.BoundingBox;
+import swingraycaster.math.Vector2;
 import swingraycaster.util.ImageUtils;
 
 /**
@@ -25,6 +26,7 @@ public/* abstract*/ class Image {
     protected int[][] pixels;
     protected int width;
     protected int height;
+    protected Vector2 center = new Vector2(0.5, 0.5);
     private boolean alphaChannel;
     protected BoundingBox volume = new BoundingBox(0, 1, 0, 1);
     
@@ -141,6 +143,10 @@ public/* abstract*/ class Image {
             volume.setBottom((double)bottom / (height - 1));
         }
     }
+
+    public void setCenter(Vector2 center) {
+        this.center = center;
+    }       
     
     private void load(final File file, int newWidth, int newHeight) {
         try {
@@ -188,6 +194,10 @@ public/* abstract*/ class Image {
     
     public BoundingBox getVolume() {
         return volume;
+    }    
+
+    public Vector2 getCenter() {
+        return center;
     }
     
     public boolean hasAlphaChannel() {

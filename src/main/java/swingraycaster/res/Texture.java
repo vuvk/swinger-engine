@@ -13,10 +13,10 @@ import java.io.File;
  * @author tai-prg3
  */
 public final class Texture extends Image {
-    public final static int WIDTH  = 64;
-    public final static int HEIGHT = 64;
-    public final static int WIDTH_POT  = 6;
-    public final static int HEIGHT_POT = 6;
+    public final static int WIDTH  = 128;
+    public final static int HEIGHT = 128;
+    public final static int WIDTH_POT  = 7;
+    public final static int HEIGHT_POT = 7;
         
     public Texture(final BufferedImage image) {
         super(image, WIDTH, HEIGHT);

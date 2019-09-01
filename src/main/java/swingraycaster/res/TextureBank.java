@@ -81,64 +81,113 @@ public final class TextureBank {
         */
         //guard
         //attack
-        GUARD_ATK[0][0] = new Texture(PICS_FOLDER + "guard/SPR_GRD_SHOOT1.png"); 
+        /*GUARD_ATK[0][0] = new Texture(PICS_FOLDER + "guard/SPR_GRD_SHOOT1.png"); 
         GUARD_ATK[1][0] = new Texture(PICS_FOLDER + "guard/SPR_GRD_SHOOT2.png"); 
-        GUARD_ATK[2][0] = new Texture(PICS_FOLDER + "guard/SPR_GRD_SHOOT3.png"); 
+        GUARD_ATK[2][0] = new Texture(PICS_FOLDER + "guard/SPR_GRD_SHOOT3.png"); */
+        GUARD_ATK[0][0] = new Texture(PICS_FOLDER + "enemies/guard/gard_shoot1.png"); 
+        GUARD_ATK[1][0] = new Texture(PICS_FOLDER + "enemies/guard/gard_shoot2.png"); 
+        GUARD_ATK[2][0] = new Texture(PICS_FOLDER + "enemies/guard/gard_shoot3.png");
         
         //idle
-        GUARD_STAND[0][0] = new Texture(PICS_FOLDER + "guard/SPR_GRD_S_1.png");
+        /*GUARD_STAND[0][0] = new Texture(PICS_FOLDER + "guard/SPR_GRD_S_1.png");
         GUARD_STAND[0][1] = new Texture(PICS_FOLDER + "guard/SPR_GRD_S_2.png");
         GUARD_STAND[0][2] = new Texture(PICS_FOLDER + "guard/SPR_GRD_S_3.png");
         GUARD_STAND[0][3] = new Texture(PICS_FOLDER + "guard/SPR_GRD_S_4.png");
         GUARD_STAND[0][4] = new Texture(PICS_FOLDER + "guard/SPR_GRD_S_5.png");
         GUARD_STAND[0][5] = new Texture(PICS_FOLDER + "guard/SPR_GRD_S_6.png");
         GUARD_STAND[0][6] = new Texture(PICS_FOLDER + "guard/SPR_GRD_S_7.png");
-        GUARD_STAND[0][7] = new Texture(PICS_FOLDER + "guard/SPR_GRD_S_8.png");
+        GUARD_STAND[0][7] = new Texture(PICS_FOLDER + "guard/SPR_GRD_S_8.png");*/
+        GUARD_STAND[0][0] = new Texture(PICS_FOLDER + "enemies/guard/garda1.png");
+        GUARD_STAND[0][1] = new Texture(PICS_FOLDER + "enemies/guard/garda2.png");
+        GUARD_STAND[0][2] = new Texture(PICS_FOLDER + "enemies/guard/garda3.png");
+        GUARD_STAND[0][3] = new Texture(PICS_FOLDER + "enemies/guard/garda4.png");
+        GUARD_STAND[0][4] = new Texture(PICS_FOLDER + "enemies/guard/garda5.png");
+        GUARD_STAND[0][5] = new Texture(PICS_FOLDER + "enemies/guard/garda6.png");
+        GUARD_STAND[0][6] = new Texture(PICS_FOLDER + "enemies/guard/garda7.png");
+        GUARD_STAND[0][7] = new Texture(PICS_FOLDER + "enemies/guard/garda8.png");
         //walk0
-        GUARD_WALK[0][0] = new Texture(PICS_FOLDER + "guard/SPR_GRD_W1_1.png");
+        /*GUARD_WALK[0][0] = new Texture(PICS_FOLDER + "guard/SPR_GRD_W1_1.png");
         GUARD_WALK[0][1] = new Texture(PICS_FOLDER + "guard/SPR_GRD_W1_2.png");
         GUARD_WALK[0][2] = new Texture(PICS_FOLDER + "guard/SPR_GRD_W1_3.png");
         GUARD_WALK[0][3] = new Texture(PICS_FOLDER + "guard/SPR_GRD_W1_4.png");
         GUARD_WALK[0][4] = new Texture(PICS_FOLDER + "guard/SPR_GRD_W1_5.png");
         GUARD_WALK[0][5] = new Texture(PICS_FOLDER + "guard/SPR_GRD_W1_6.png");
         GUARD_WALK[0][6] = new Texture(PICS_FOLDER + "guard/SPR_GRD_W1_7.png");
-        GUARD_WALK[0][7] = new Texture(PICS_FOLDER + "guard/SPR_GRD_W1_8.png");
+        GUARD_WALK[0][7] = new Texture(PICS_FOLDER + "guard/SPR_GRD_W1_8.png");*/
+        GUARD_WALK[0][0] = new Texture(PICS_FOLDER + "enemies/guard/gardb1.png");
+        GUARD_WALK[0][1] = new Texture(PICS_FOLDER + "enemies/guard/gardb2.png");
+        GUARD_WALK[0][2] = new Texture(PICS_FOLDER + "enemies/guard/gardb3.png");
+        GUARD_WALK[0][3] = new Texture(PICS_FOLDER + "enemies/guard/gardb4.png");
+        GUARD_WALK[0][4] = new Texture(PICS_FOLDER + "enemies/guard/gardb5.png");
+        GUARD_WALK[0][5] = new Texture(PICS_FOLDER + "enemies/guard/gardb6.png");
+        GUARD_WALK[0][6] = new Texture(PICS_FOLDER + "enemies/guard/gardb7.png");
+        GUARD_WALK[0][7] = new Texture(PICS_FOLDER + "enemies/guard/gardb8.png");
         //walk1
-        GUARD_WALK[1][0] = new Texture(PICS_FOLDER + "guard/SPR_GRD_W2_1.png");
+        /*GUARD_WALK[1][0] = new Texture(PICS_FOLDER + "guard/SPR_GRD_W2_1.png");
         GUARD_WALK[1][1] = new Texture(PICS_FOLDER + "guard/SPR_GRD_W2_2.png");
         GUARD_WALK[1][2] = new Texture(PICS_FOLDER + "guard/SPR_GRD_W2_3.png");
         GUARD_WALK[1][3] = new Texture(PICS_FOLDER + "guard/SPR_GRD_W2_4.png");
         GUARD_WALK[1][4] = new Texture(PICS_FOLDER + "guard/SPR_GRD_W2_5.png");
         GUARD_WALK[1][5] = new Texture(PICS_FOLDER + "guard/SPR_GRD_W2_6.png");
         GUARD_WALK[1][6] = new Texture(PICS_FOLDER + "guard/SPR_GRD_W2_7.png");
-        GUARD_WALK[1][7] = new Texture(PICS_FOLDER + "guard/SPR_GRD_W2_8.png");
+        GUARD_WALK[1][7] = new Texture(PICS_FOLDER + "guard/SPR_GRD_W2_8.png");*/
+        GUARD_WALK[1][0] = new Texture(PICS_FOLDER + "enemies/guard/gardc1.png");
+        GUARD_WALK[1][1] = new Texture(PICS_FOLDER + "enemies/guard/gardc2.png");
+        GUARD_WALK[1][2] = new Texture(PICS_FOLDER + "enemies/guard/gardc3.png");
+        GUARD_WALK[1][3] = new Texture(PICS_FOLDER + "enemies/guard/gardc4.png");
+        GUARD_WALK[1][4] = new Texture(PICS_FOLDER + "enemies/guard/gardc5.png");
+        GUARD_WALK[1][5] = new Texture(PICS_FOLDER + "enemies/guard/gardc6.png");
+        GUARD_WALK[1][6] = new Texture(PICS_FOLDER + "enemies/guard/gardc7.png");
+        GUARD_WALK[1][7] = new Texture(PICS_FOLDER + "enemies/guard/gardc8.png");
         //walk2
-        GUARD_WALK[2][0] = new Texture(PICS_FOLDER + "guard/SPR_GRD_W3_1.png");
+        /*GUARD_WALK[2][0] = new Texture(PICS_FOLDER + "guard/SPR_GRD_W3_1.png");
         GUARD_WALK[2][1] = new Texture(PICS_FOLDER + "guard/SPR_GRD_W3_2.png");
         GUARD_WALK[2][2] = new Texture(PICS_FOLDER + "guard/SPR_GRD_W3_3.png");
         GUARD_WALK[2][3] = new Texture(PICS_FOLDER + "guard/SPR_GRD_W3_4.png");
         GUARD_WALK[2][4] = new Texture(PICS_FOLDER + "guard/SPR_GRD_W3_5.png");
         GUARD_WALK[2][5] = new Texture(PICS_FOLDER + "guard/SPR_GRD_W3_6.png");
         GUARD_WALK[2][6] = new Texture(PICS_FOLDER + "guard/SPR_GRD_W3_7.png");
-        GUARD_WALK[2][7] = new Texture(PICS_FOLDER + "guard/SPR_GRD_W3_8.png");
+        GUARD_WALK[2][7] = new Texture(PICS_FOLDER + "guard/SPR_GRD_W3_8.png");*/
+        GUARD_WALK[2][0] = new Texture(PICS_FOLDER + "enemies/guard/gardd1.png");
+        GUARD_WALK[2][1] = new Texture(PICS_FOLDER + "enemies/guard/gardd2.png");
+        GUARD_WALK[2][2] = new Texture(PICS_FOLDER + "enemies/guard/gardd3.png");
+        GUARD_WALK[2][3] = new Texture(PICS_FOLDER + "enemies/guard/gardd4.png");
+        GUARD_WALK[2][4] = new Texture(PICS_FOLDER + "enemies/guard/gardd5.png");
+        GUARD_WALK[2][5] = new Texture(PICS_FOLDER + "enemies/guard/gardd6.png");
+        GUARD_WALK[2][6] = new Texture(PICS_FOLDER + "enemies/guard/gardd7.png");
+        GUARD_WALK[2][7] = new Texture(PICS_FOLDER + "enemies/guard/gardd8.png");
         //walk3
-        GUARD_WALK[3][0] = new Texture(PICS_FOLDER + "guard/SPR_GRD_W4_1.png");
+        /*GUARD_WALK[3][0] = new Texture(PICS_FOLDER + "guard/SPR_GRD_W4_1.png");
         GUARD_WALK[3][1] = new Texture(PICS_FOLDER + "guard/SPR_GRD_W4_2.png");
         GUARD_WALK[3][2] = new Texture(PICS_FOLDER + "guard/SPR_GRD_W4_3.png");
         GUARD_WALK[3][3] = new Texture(PICS_FOLDER + "guard/SPR_GRD_W4_4.png");
         GUARD_WALK[3][4] = new Texture(PICS_FOLDER + "guard/SPR_GRD_W4_5.png");
         GUARD_WALK[3][5] = new Texture(PICS_FOLDER + "guard/SPR_GRD_W4_6.png");
         GUARD_WALK[3][6] = new Texture(PICS_FOLDER + "guard/SPR_GRD_W4_7.png");
-        GUARD_WALK[3][7] = new Texture(PICS_FOLDER + "guard/SPR_GRD_W4_8.png");        
+        GUARD_WALK[3][7] = new Texture(PICS_FOLDER + "guard/SPR_GRD_W4_8.png"); */  
+        GUARD_WALK[3][0] = new Texture(PICS_FOLDER + "enemies/guard/garde1.png");
+        GUARD_WALK[3][1] = new Texture(PICS_FOLDER + "enemies/guard/garde2.png");
+        GUARD_WALK[3][2] = new Texture(PICS_FOLDER + "enemies/guard/garde3.png");
+        GUARD_WALK[3][3] = new Texture(PICS_FOLDER + "enemies/guard/garde4.png");
+        GUARD_WALK[3][4] = new Texture(PICS_FOLDER + "enemies/guard/garde5.png");
+        GUARD_WALK[3][5] = new Texture(PICS_FOLDER + "enemies/guard/garde6.png");
+        GUARD_WALK[3][6] = new Texture(PICS_FOLDER + "enemies/guard/garde7.png");
+        GUARD_WALK[3][7] = new Texture(PICS_FOLDER + "enemies/guard/garde8.png");        
         //pain
-        GUARD_PAIN[0][0] = new Texture(PICS_FOLDER + "guard/SPR_GRD_PAIN_1.png");   
-        GUARD_PAIN[1][0] = new Texture(PICS_FOLDER + "guard/SPR_GRD_PAIN_2.png"); 
+        /*GUARD_PAIN[0][0] = new Texture(PICS_FOLDER + "guard/SPR_GRD_PAIN_1.png");   
+        GUARD_PAIN[1][0] = new Texture(PICS_FOLDER + "guard/SPR_GRD_PAIN_2.png"); */
+        GUARD_PAIN[0][0] = new Texture(PICS_FOLDER + "enemies/guard/gard_pain1.png");   
+        GUARD_PAIN[1][0] = new Texture(PICS_FOLDER + "enemies/guard/gard_pain2.png"); 
         //die
-        GUARD_DIE[0][0] = new Texture(PICS_FOLDER + "guard/SPR_GRD_DIE_1.png"); 
+        /*GUARD_DIE[0][0] = new Texture(PICS_FOLDER + "guard/SPR_GRD_DIE_1.png"); 
         GUARD_DIE[1][0] = new Texture(PICS_FOLDER + "guard/SPR_GRD_DIE_2.png"); 
-        GUARD_DIE[2][0] = new Texture(PICS_FOLDER + "guard/SPR_GRD_DIE_3.png"); 
+        GUARD_DIE[2][0] = new Texture(PICS_FOLDER + "guard/SPR_GRD_DIE_3.png"); */
+        GUARD_DIE[0][0] = new Texture(PICS_FOLDER + "enemies/guard/gard_die1.png"); 
+        GUARD_DIE[1][0] = new Texture(PICS_FOLDER + "enemies/guard/gard_die2.png"); 
+        GUARD_DIE[2][0] = new Texture(PICS_FOLDER + "enemies/guard/gard_die3.png"); 
         //dead
-        GUARD_DEAD = new Texture(PICS_FOLDER + "guard/SPR_GRD_DEAD.png"); 
+        //GUARD_DEAD = new Texture(PICS_FOLDER + "guard/SPR_GRD_DEAD.png"); 
+        GUARD_DEAD = new Texture(PICS_FOLDER + "enemies/guard/gard_dead.png"); 
         
         // projectiles
         // rocket

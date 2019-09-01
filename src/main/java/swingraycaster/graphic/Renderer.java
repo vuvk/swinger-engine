@@ -1357,7 +1357,7 @@ public final class Renderer extends JPanel {
                 int volumeTop    = (int)(image.getVolume().getTop()    * image.getHeight());
                 int volumeBottom = (int)(image.getVolume().getBottom() * image.getHeight());
                 
-                int startX = (int)weapon.getPos().x - (image.getWidth() >> 1);
+                int startX = (int)weapon.getPos().x - (int)(image.getWidth() * image.getCenter().x);
                 int startY = (int)weapon.getPos().y - image.getHeight();
                 
                 for (int y = volumeTop; y < volumeBottom; ++y) {  
