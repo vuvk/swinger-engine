@@ -36,14 +36,12 @@
             <version>1.0.3.3</version>
         </dependency>
         
-        <!-- https://mvnrepository.com/artifact/com.googlecode.soundlibs/mp3spi -->
-        <!--
+        <!-- https://mvnrepository.com/artifact/com.googlecode.soundlibs/mp3spi -->        
         <dependency>
             <groupId>com.googlecode.soundlibs</groupId>
             <artifactId>mp3spi</artifactId>
             <version>1.9.5.4</version>
         </dependency>
-        -->
         
         <!-- https://mvnrepository.com/artifact/org.jogamp.joal/joal -->
         <!--
@@ -71,20 +69,7 @@
     </dependencies>
     
     
-    <build>
-        <!--
-        <resources>
-            <resource>
-                <directory>src/main/java</directory>
-                <includes>
-                    <include>com/vuvk/n3d/ico/*.png</include>
-                    <include>com/vuvk/n3d/ico/small/*.png</include>
-                    <include>com/vuvk/n3d/ico/jframes/*.png</include>
-                </includes>
-            </resource>
-        </resources>
-        -->
-    
+    <build>    
         <plugins>                        
             <!-- BUILD jar with dependencies -->
             <plugin>
@@ -101,7 +86,7 @@
                     <archive>
                         <manifest>
                             <addClasspath>true</addClasspath>
-                            <mainClass>swingraycaster.Main</mainClass>
+                            <mainClass>com.vuvk.swinger.Main</mainClass>
                             <classpathPrefix>lib/</classpathPrefix>
                         </manifest>
                     </archive>
@@ -198,10 +183,11 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <mainClass>swingraycaster.Main</mainClass>
+                    <mainClass>com.vuvk.swinger.Main</mainClass>
                 </configuration>
             </plugin>
             
         </plugins>
     </build>
+    <name>swinger</name>
 </project>
