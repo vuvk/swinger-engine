@@ -46,7 +46,7 @@ public abstract class WeaponInHand {
     private double shootDelay = 0;
     private double _shootDelay = 0;
     
-    private Sound soundShoot;
+    private SoundBuffer soundShootBuffer;
     
     protected WeaponInHand() {                
         int rW = Renderer.WIDTH;
@@ -125,12 +125,12 @@ public abstract class WeaponInHand {
     }
     
     protected void setSoundShoot(SoundBuffer audioBuffer) {
-        soundShoot = new Sound(audioBuffer);
+        soundShootBuffer = audioBuffer;
     }
     
     protected void playSoundShoot() {
-        if (soundShoot != null) {
-            soundShoot.play();
+        if (soundShootBuffer != null) {
+            new Sound(soundShootBuffer).play();
         }
     }
     
@@ -212,7 +212,7 @@ public abstract class WeaponInHand {
                     curFrameNum = 0;
                     animDelay = 0.0;
                     animate = false;
-                } else {                    
+                } else {
                     animDelay -= 1.0;
                 }
                 

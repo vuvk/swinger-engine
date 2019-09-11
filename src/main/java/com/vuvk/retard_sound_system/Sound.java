@@ -63,8 +63,7 @@ public final class Sound extends SoundBasis {
     }
     
     private void prepareStream(SoundBuffer buffer) {
-        inputAudioStream = buffer.getAudioInputStream();
-        markStream();
+        super.prepareStream(buffer.getAudioInputStream());
     }    
 
     @Override

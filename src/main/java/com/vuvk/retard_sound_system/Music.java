@@ -22,6 +22,7 @@ import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.sound.sampled.AudioFormat;
+import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.DataLine;
 import javax.sound.sampled.LineUnavailableException;
@@ -122,15 +123,7 @@ public final class Music extends SoundBasis {
             }
         }
     }
-     
-    /*
-    @Override
-    protected void prepareStream() {
-        super.prepareStream();
-        prepareLine();
-    }
-    */
-    
+         
     @Override
     protected void prepareStream(File file) {
         super.prepareStream(file);
@@ -145,6 +138,12 @@ public final class Music extends SoundBasis {
     
     @Override 
     protected void prepareStream(InputStream in) {
+        super.prepareStream(in);
+        prepareLine();
+    }
+    
+    @Override 
+    protected void prepareStream(AudioInputStream in) {
         super.prepareStream(in);
         prepareLine();
     }

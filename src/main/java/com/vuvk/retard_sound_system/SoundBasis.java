@@ -34,14 +34,16 @@ import javax.sound.sampled.AudioInputStream;
 public abstract class SoundBasis implements AutoCloseable {
     private static final Logger LOG = Logger.getLogger(SoundBasis.class.getName());   
     
-    protected URL inputURL = null;
+    protected URL  inputURL = null;
     protected File inputFile = null;
-    protected InputStream inputStream;
     protected AudioInputStream inputAudioStream;
+    private int inputAudioStreamPosition = 0;
+    private AudioFormat audioFormat;
+    private int channels = 0;
     private boolean playing = false;
     private boolean looping = false;
     private double volume = 1.0;
-    
+        
     public double getVolume() {
         return volume;
     }
@@ -55,11 +57,12 @@ public abstract class SoundBasis implements AutoCloseable {
     }   
     
     public AudioFormat getFormat() {
-        if (inputAudioStream != null) {
-            return inputAudioStream.getFormat();
-        }
-        return null;
+        return audioFormat;
     } 
+    
+    public int getChannels() {
+        return channels;
+    }
     
     public SoundBasis setVolume(double value) {
         if (value < 0.0) {
@@ -85,7 +88,11 @@ public abstract class SoundBasis implements AutoCloseable {
     int read(byte[] buffer) {
         if (inputAudioStream != null) {
             try {
-                return inputAudioStream.read(buffer);            
+                int readed = inputAudioStream.read(buffer);
+                if (readed > 0) {
+                    inputAudioStreamPosition += readed;
+                }
+                return readed;            
             } catch (IOException ex) {
                 LOG.log(Level.SEVERE, null, ex);
             }
@@ -99,8 +106,9 @@ public abstract class SoundBasis implements AutoCloseable {
     }
     
     public SoundBasis play(final boolean looping) {
-        rewind();
-        
+        if (inputAudioStreamPosition > 0) {
+            rewind();
+        }
         setLooping(looping);
         setPlaying(true);
         
@@ -109,18 +117,16 @@ public abstract class SoundBasis implements AutoCloseable {
     
     public SoundBasis loop() {
         return play(true);
-    }
+    }    
     
-    
-    public SoundBasis rewind() {    
-        //setPlaying(false);
-        
+    public SoundBasis rewind() {           
         if (inputFile != null) {
             prepareStream(inputFile);
         } else if (inputURL != null) {
             prepareStream(inputURL);
         } else if (inputAudioStream != null && inputAudioStream.markSupported()) {
             try {
+                inputAudioStreamPosition = 0;
                 inputAudioStream.reset();
             } catch (IOException ex) {
                 LOG.log(Level.SEVERE, null, ex);
@@ -142,15 +148,16 @@ public abstract class SoundBasis implements AutoCloseable {
         }
     }
     
-    /*
-    protected void prepareStream() {
-        rewind();
-    }*/
+    protected void prepareStream(AudioInputStream stream) {
+        inputAudioStream = stream;
+        markStream();
+        audioFormat = inputAudioStream.getFormat();
+        channels = audioFormat.getChannels();
+        inputAudioStreamPosition = 0;
+    }
     
     protected void prepareStream(InputStream stream) {
-        inputStream = stream;
-        inputAudioStream = SoundSystem.getEncodedAudioInputStream(stream);
-        markStream();   
+        prepareStream(SoundSystem.getEncodedAudioInputStream(stream));
     }
     
     protected void prepareStream(File file) {
@@ -179,20 +186,14 @@ public abstract class SoundBasis implements AutoCloseable {
         
         inputFile = null;
         inputURL  = null;
+        inputAudioStreamPosition = 0;
+        channels = 0;
+        audioFormat = null;
         
         if (inputAudioStream != null) {
             try {
                 inputAudioStream.close();
                 inputAudioStream = null;
-            } catch (IOException ex) {
-                LOG.log(Level.SEVERE, null, ex);
-            }
-        }         
-        
-        if (inputStream != null) {
-            try {
-                inputStream.close();
-                inputStream = null;
             } catch (IOException ex) {
                 LOG.log(Level.SEVERE, null, ex);
             }
