@@ -31,9 +31,9 @@ public final class TextureBank {
     
     public final static Texture[][] ROCKET = new Texture[1][8];
     
-    public final static Texture[] EXPLODE = new Texture[16];
+    public final static Texture[] EXPLODE = new Texture[3];
     public final static Texture[] BLOOD = new Texture[3];
-    public final static Texture[] PUFF = new Texture[3];
+    public final static Texture[] PUFF = new Texture[4];
     public final static Texture[] SMOKE = new Texture[16];
     
     static {
@@ -198,15 +198,15 @@ public final class TextureBank {
         // effects
         // explode
         for (int i = 0; i < EXPLODE.length; ++i) {
-            EXPLODE[i] = new Texture(PICS_FOLDER + "effects/explode/explode_" + i + ".png"); 
+            EXPLODE[i] = new Texture(PICS_FOLDER + "effects/explode" + i + ".png"); 
         }
         // blood
         for (int i = 0; i < BLOOD.length; ++i) {
-            BLOOD[i] = new Texture(PICS_FOLDER + "effects/blood" + (i + 1) + ".png"); 
+            BLOOD[i] = new Texture(PICS_FOLDER + "effects/blood" + i + ".png"); 
         }
         // puff
         for (int i = 0; i < PUFF.length; ++i) {
-            PUFF[i] = new Texture(PICS_FOLDER + "effects/Пулька попала в стенку анимация кадр " + (i + 1) + ".png"); 
+            PUFF[i] = new Texture(PICS_FOLDER + "effects/puff" + i + ".png"); 
         }        
         // smoke
         for (int i = 0; i < SMOKE.length; ++i) {

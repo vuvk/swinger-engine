@@ -5,7 +5,6 @@
  */
 package com.vuvk.swinger.graphic.weapon_in_hand;
 
-import com.vuvk.swinger.audio.SoundBank;
 import com.vuvk.swinger.graphic.Renderer;
 import com.vuvk.swinger.res.Image;
 
@@ -14,9 +13,9 @@ import com.vuvk.swinger.res.Image;
  * @author tai-prg3
  */
 public class ShotgunInHand extends RayWeaponInHand {
-    private final static int FRAMES_COUNT = 8;
+    private final static int FRAMES_COUNT = 0;
     private final static Image[] FRAMES = new Image[FRAMES_COUNT];
-    private final static String[] FILES = { 
+    private final static String[] FILES = {/* 
         "resources/pics/weapons/Обрез кадр 1.png",
         "resources/pics/weapons/Обрез кадр 2.png",
         "resources/pics/weapons/Обрез кадр 3.png",
@@ -24,7 +23,7 @@ public class ShotgunInHand extends RayWeaponInHand {
         "resources/pics/weapons/Обрез кадр 5.png",
         "resources/pics/weapons/Обрез кадр 6.png",
         "resources/pics/weapons/Обрез кадр 7.png",
-        "resources/pics/weapons/Обрез кадр 8.png",
+        "resources/pics/weapons/Обрез кадр 8.png",*/
     };   
     private static ShotgunInHand instance = null;
     private final static double ACCURACY = 15.0;

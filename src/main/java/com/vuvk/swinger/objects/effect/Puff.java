@@ -6,7 +6,6 @@
 package com.vuvk.swinger.objects.effect;
 
 import com.vuvk.swinger.math.Vector3;
-import com.vuvk.swinger.res.Texture;
 import com.vuvk.swinger.res.TextureBank;
 
 /**

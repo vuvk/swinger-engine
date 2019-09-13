@@ -26,6 +26,9 @@ import java.util.logging.Logger;
 public final class Sound extends SoundBasis {  
     private static final Logger LOG = Logger.getLogger(Sound.class.getName());
     
+    public boolean started = false;
+    public long startedTime;
+    
     public Sound(SoundBuffer buffer) {
         prepareStream(buffer);
     }
@@ -68,6 +71,8 @@ public final class Sound extends SoundBasis {
 
     @Override
     public Sound play(boolean looping) {
+        started = true;
+        startedTime = System.currentTimeMillis();
         super.play(looping);            
         SoundSystem.playSound(this);           
         return this;
@@ -75,6 +80,7 @@ public final class Sound extends SoundBasis {
 	
     @Override
     public Sound stop() {
+        started = false;
         super.stop();
         SoundSystem.stopSound(this);
         return this;
