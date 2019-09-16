@@ -15,8 +15,8 @@
 */
 package com.vuvk.retard_sound_system;
 
+import com.vuvk.utils.FastByteArrayInputStream;
 import java.io.BufferedInputStream;
-import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -101,6 +101,6 @@ public final class SoundBuffer {
             return null;
         }
         
-        return new AudioInputStream(new ByteArrayInputStream(buffer), format, buffer.length);
+        return new AudioInputStream(new FastByteArrayInputStream(buffer), format, buffer.length);
     }
 }

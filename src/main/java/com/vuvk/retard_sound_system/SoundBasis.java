@@ -125,8 +125,8 @@ public abstract class SoundBasis implements AutoCloseable {
         } else if (inputURL != null) {
             prepareStream(inputURL);
         } else if (inputAudioStream != null && inputAudioStream.markSupported()) {
+            inputAudioStreamPosition = 0;
             try {
-                inputAudioStreamPosition = 0;
                 inputAudioStream.reset();
             } catch (IOException ex) {
                 LOG.log(Level.SEVERE, null, ex);
