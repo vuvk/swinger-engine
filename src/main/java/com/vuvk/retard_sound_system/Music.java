@@ -23,7 +23,6 @@ import java.util.logging.Logger;
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
-import javax.sound.sampled.DataLine;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.SourceDataLine;
 
@@ -104,10 +103,8 @@ public final class Music extends SoundBasis {
     private void prepareLine() { 
         if (inputAudioStream != null) {
             AudioFormat format = inputAudioStream.getFormat();
-            //final DataLine.Info info = new DataLine.Info(SourceDataLine.class, format);
 
             try {
-                //line = (SourceDataLine) AudioSystem.getLine(info);
                 line = AudioSystem.getSourceDataLine(format);
                 line.open(format);
                 line.start();

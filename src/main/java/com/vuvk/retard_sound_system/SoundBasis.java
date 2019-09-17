@@ -86,8 +86,8 @@ public abstract class SoundBasis implements AutoCloseable {
     }
     
     int read(byte[] buffer) {
-        if (inputAudioStream != null) {
-            try {
+        if (inputAudioStream != null) {            
+            try {                
                 int readed = inputAudioStream.read(buffer);
                 if (readed > 0) {
                     inputAudioStreamPosition += readed;
@@ -99,6 +99,22 @@ public abstract class SoundBasis implements AutoCloseable {
         }
         
         return -1;
+    }
+    
+    long skip(long bytes) {
+        if (inputAudioStream != null) {
+            try {
+                long skipped = inputAudioStream.skip(bytes);
+                if (skipped > 0) {
+                    inputAudioStreamPosition += skipped;
+                }
+                return skipped;
+            } catch (IOException ex) {
+                LOG.log(Level.SEVERE, null, ex);
+            }
+        }
+        
+        return 0;        
     }
     
     public SoundBasis play() {

@@ -19,8 +19,7 @@ import com.vuvk.swinger.res.Image;
  */
 public abstract class WeaponInHand {    
     private static final Logger LOG = Logger.getLogger(WeaponInHand.class.getName());
-    
-    
+        
     private Vector2 startPos;
     private Vector2 pos;
     private double angle = 0;
@@ -213,7 +212,7 @@ public abstract class WeaponInHand {
                     animDelay = 0.0;
                     animate = false;
                 } else {
-                    animDelay -= 1.0;
+                    animDelay = 0.0;
                 }
                 
                 if (curFrameNum == frameForShoot) {

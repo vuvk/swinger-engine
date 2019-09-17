@@ -31,7 +31,6 @@ import java.util.logging.Logger;
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
-import javax.sound.sampled.DataLine;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.SourceDataLine;
 import javax.sound.sampled.UnsupportedAudioFileException;
@@ -49,14 +48,19 @@ public final class SoundSystem {
     private final static int STEREO_CHANNELS = 2;
     private final static boolean SIGNED = true;
     private final static boolean BIG_ENDIAN = false;
+    private final static int MAX_WRITE_LINE_TRIES = 100;
+    private final static boolean CACHED = false;
     
     private static boolean started = false;
     
     private static SourceDataLine MONO_LINE   = null;
     private static SourceDataLine STEREO_LINE = null;
     
+    /**
+     * class for queue of sounds
+     */
     private static class SoundList {
-        final static int MAX_SOUNDS = 8;        
+        final static int MAX_SOUNDS = 16;        
         final Sound[] sounds = new Sound[MAX_SOUNDS];
         int size = 0;
               
@@ -169,23 +173,24 @@ public final class SoundSystem {
         }
         
         final Sound[] getSounds() {
+            Sound[] sounds = new Sound[this.sounds.length];
+            System.arraycopy(this.sounds, 0, sounds, 0, sounds.length);
             return sounds;
         }
     }
     
-    //private static final List<Sound> MONO_SOUNDS = new ArrayList<>();
-    //private static final List<Sound> STEREO_SOUNDS = new ArrayList<>();
     private static final SoundList MONO_SOUNDS = new SoundList();
     private static final SoundList STEREO_SOUNDS = new SoundList();
     final static List<Music> MUSICS = new ArrayList<>();
     
     private final static List<Sound> MONO_SOUNDS_FOR_ADD   = new ArrayList<>();
     private final static List<Sound> MONO_SOUNDS_FOR_DEL   = new ArrayList<>();
-    //private final static SoundList MONO_SOUNDS_FOR_ADD   = new SoundList();
-    //private final static SoundList MONO_SOUNDS_FOR_DEL   = new SoundList();
     private final static List<Sound> STEREO_SOUNDS_FOR_ADD = new ArrayList<>();
     private final static List<Sound> STEREO_SOUNDS_FOR_DEL = new ArrayList<>();  
     
+    /**
+     * class for caching sound data
+     */
     private static class SoundCache {
         private SourceDataLine line;
         private final byte[] buffer;
@@ -199,15 +204,20 @@ public final class SoundSystem {
         void writeToLine() {
             int offset = 0;
             int cnt;
-            bufferSize = (bufferSize % 2 == 0) ? bufferSize : bufferSize + 1;
-            while (offset < bufferSize) {
+            bufferSize = (bufferSize % 2 == 0) ? bufferSize : bufferSize + 1;            
+            
+            // пытаемся записать
+            int maxSizeForWrite = line.getFormat().getChannels() * (SAMPLE_SIZE_IN_BITS >> 3);
+            int skips = 0;
+            while (offset < bufferSize && skips < MAX_WRITE_LINE_TRIES) {
                 cnt = line.available();
                 if (cnt > 0) {
-                    if (offset + cnt >= buffer.length) {
-                        cnt = buffer.length - offset;
-                    }
-                    line.write(buffer, offset, cnt);
-                    offset += cnt;
+                    int sizeForWrite = Math.min(cnt, maxSizeForWrite);
+                    line.write(buffer, offset, sizeForWrite);
+                    //offset += sizeForWrite;
+                    offset += maxSizeForWrite;
+                } else {
+                    ++skips;
                 }
             }
         }
@@ -247,11 +257,7 @@ public final class SoundSystem {
     
     private static void init() {
         try {
-            /*while (MONO_LINE == null)*/ {
-                //DataLine.Info lineInfo = new DataLine.Info(SourceDataLine.class, getAudioMonoFormat());
-                //MONO_LINE = (SourceDataLine) AudioSystem.getLine(lineInfo);    
-                MONO_LINE = AudioSystem.getSourceDataLine(getAudioMonoFormat());
-            }
+            MONO_LINE = AudioSystem.getSourceDataLine(getAudioMonoFormat());
             MONO_LINE.open(getAudioMonoFormat());
             MONO_LINE.start();
                         
@@ -265,11 +271,7 @@ public final class SoundSystem {
         }
         
         try {
-            /*while (STEREO_LINE == null)*/ {
-                //DataLine.Info lineInfo = new DataLine.Info(SourceDataLine.class, getAudioStereoFormat());
-                //STEREO_LINE = (SourceDataLine) AudioSystem.getLine(lineInfo);
-                STEREO_LINE = AudioSystem.getSourceDataLine(getAudioStereoFormat());
-            }
+            STEREO_LINE = AudioSystem.getSourceDataLine(getAudioStereoFormat());
             STEREO_LINE.open(getAudioStereoFormat());
             STEREO_LINE.start();
             
@@ -382,7 +384,7 @@ public final class SoundSystem {
     }
     
     static void stopSound(Sound sound) {
-        if (sound != null && isPlaying(sound)) {            
+        if (sound != null/* && isPlaying(sound)*/) {            
             switch (sound.getChannels()) {
                 case 1 : 
                     synchronized (MONO_SOUNDS_FOR_DEL) {
@@ -471,50 +473,78 @@ public final class SoundSystem {
      * @param sounds list of sounds in system (mono or stereo)
      * @param line line for write (mono or stereo)
      */
-    private static void updateLine(final List<Sound> sounds, final SourceDataLine line) {            
+    private static void updateLine(final SoundList sounds, final SourceDataLine line) {            
         final int channels = line.getFormat().getChannels();
-        final int bufferSize = channels << 1;
+        final int bufferSize = channels * (SAMPLE_SIZE_IN_BITS >> 3);
 
         final double[] mixer   = new double[bufferSize >> 1];
         final int[]    counter = new int   [bufferSize];
         final byte[]   result  = new byte  [bufferSize];
+        final byte[]   buffer  = new byte  [bufferSize];
+        double volume;
         int cntReaded = 0;
         int soundsCount = 0;
 
-        for (final Sound sound : sounds) {    
-            final double volume = sound.getVolume();
-            final byte[] buffer = new byte[bufferSize];
-            cntReaded = sound.read(buffer);                                
-
-            if (cntReaded > 0) {
-                for (int i = 0, n = 0; i < cntReaded; i += 2, ++n) {
-                    byte low  = buffer[i];
-                    byte high = buffer[i + 1];
-
-                    int value = (short)(((high & 0xFF) << 8) | (low & 0xFF));
-
-                    mixer[n] += value * volume;                        
-                    counter[n]++;
+        if (!sounds.isEmpty()) {
+            Sound[] data = sounds.getSounds();
+            for (final Sound sound : data) {
+                if (sound == null) {
+                    continue;
                 }
-                ++soundsCount;
-            } else if (cntReaded == -1) {
-                if (sound.isLooping()) {
-                    sound.rewind();
-                } else {
-                    sound.stop();
+                
+                volume = sound.getVolume();
+                cntReaded = sound.read(buffer);
+
+                if (cntReaded > 0) {
+                    if (volume > 0.0) {
+                        for (int i = 0, n = 0; i < cntReaded; i += 2, ++n) {
+                            int low  = buffer[i    ];
+                            int high = buffer[i + 1];
+
+                            int value = (short)(((high & 0xFF) << 8) | (low & 0xFF));
+
+                            if (volume < 1.0) {
+                                value *= volume;
+                            } 
+                            mixer[n] += value;      
+                            counter[n]++;
+                        }
+                        ++soundsCount;
+                    }
+                } else if (cntReaded == -1) {
+                    if (sound.isLooping()) {
+                        sound.rewind();
+                    } else {
+                        sound.stop();
+                    }
                 }
             }
-        }
 
-        if (soundsCount > 0) {
-            // собираем средний звук
-            for (int i = 0, n = 0; i < mixer.length; n += 2, ++i) {
-                int value = (int) (mixer[i] / counter[i]);
-                result[n]     = (byte) value;
-                result[n + 1] = (byte) (value >> 8);
+            if (soundsCount > 0) {
+                // собираем средний звук
+                for (int i = 0, n = 0; i < mixer.length; n += 2, ++i) {
+                    int value = (int) (mixer[i] / counter[i]);
+                    result[n    ] = (byte) value;
+                    result[n + 1] = (byte) (value >> 8);
+                }
+                
+                // пытаемся записать
+                int offset = 0;
+                int cnt;
+                int maxSizeForWrite = channels * (SAMPLE_SIZE_IN_BITS >> 3);
+                int skips = 0;
+                while (offset < result.length && skips < MAX_WRITE_LINE_TRIES) {
+                    cnt = line.available();
+                    if (cnt > 0) {
+                        int sizeForWrite = Math.min(cnt, maxSizeForWrite);
+                        line.write(result, offset, sizeForWrite);
+                        //offset += sizeForWrite;
+                        offset += maxSizeForWrite;
+                    } else {
+                        ++skips;
+                    }
+                }
             }
-            
-            line.write(result, 0, result.length);
         }
     }
     
@@ -523,81 +553,65 @@ public final class SoundSystem {
      * @param sounds list of sounds in system (mono or stereo)
      * @param line line for write (mono or stereo)
      */
-    private static void updateLine(final /*List<Sound>*/SoundList sounds, final SourceDataLine line, final SoundCache cache) {          
+    private static void updateLine(final SoundList sounds, final SourceDataLine line, final SoundCache cache) {   
         final int channels = line.getFormat().getChannels();
-        final int bufferSize = 512/*channels << 1*/;
+        final int bufferSize = channels * (SAMPLE_SIZE_IN_BITS >> 3);
 
         final double[] mixer   = new double[bufferSize >> 1];
         final int[]    counter = new int   [bufferSize];
-        //final byte[]   result  = new byte  [bufferSize];
-        final byte[] buffer = new byte[bufferSize];
+        final byte[]   buffer  = new byte  [bufferSize];
         double volume;
         int cntReaded = 0;
         int soundsCount = 0;
 
-        if (!sounds.isEmpty())
-        for (final Sound sound : sounds.getSounds()) {
-            if (sound == null) {
-                continue;
-            }
-            
-            if (sound.started) {
-                sound.started = false;
-                System.out.println("Прошло времени = " + (System.currentTimeMillis() - sound.startedTime));
-            }
+        if (!sounds.isEmpty()) {
+            Sound[] data = sounds.getSounds();
+            for (final Sound sound : data) {
+                if (sound == null) {
+                    continue;
+                }
+                
+                volume = sound.getVolume();
+                cntReaded = sound.read(buffer);
 
-            volume = sound.getVolume();
-            cntReaded = sound.read(buffer);
+                if (cntReaded > 0) {
+                    if (volume > 0.0) {
+                        for (int i = 0, n = 0; i < cntReaded; i += 2, ++n) {
+                            int low  = buffer[i    ];
+                            int high = buffer[i + 1];
 
-            if (cntReaded > 0) {
-                if (volume > 0) {
-                    for (int i = 0, n = 0; i < cntReaded; i += 2, ++n) {
-                        int low  = buffer[i];
-                        int high = buffer[i + 1];
+                            int value = (short)(((high & 0xFF) << 8) | (low & 0xFF));
 
-                        int value = (short)(((high & 0xFF) << 8) | (low & 0xFF));
-
-                        if (volume < 1.0) {
-                            value *= volume;
-                        } 
-                        mixer[n] += value;      
-                        counter[n]++;
+                            if (volume < 1.0) {
+                                value *= volume;
+                            } 
+                            mixer[n] += value;      
+                            counter[n]++;
+                        }
+                        ++soundsCount;
+                    }
+                } else if (cntReaded == -1) {
+                    if (sound.isLooping()) {
+                        sound.rewind();
+                    } else {
+                        sound.stop();
                     }
                 }
-                ++soundsCount;
-            } else if (cntReaded == -1) {
-                if (sound.isLooping()) {
-                    sound.rewind();
-                } else {
-                    sound.stop();
-                }
             }
-        }
 
-        if (soundsCount > 0) {
-            // собираем средний звук
-            for (int i = 0/*, n = 0*/; i < mixer.length; /*n += 2, */++i) {
-                int value = (int) (mixer[i] / counter[i]);
-                //result[n]     = (byte) value;
-                //result[n + 1] = (byte) (value >> 8);
-                cache.write((byte) value);
-                cache.write((byte) (value >> 8));
-            }
-            // наполняем кэш
-            /*for (int i = 0; i < result.length; i++) {
-                if (!cache.isFull()) {
-                    cache.add(result[i]);
-                } else {
-                    line.write(cache.getBuffer(), 0, cache.getBufferSize());
-                    cache.reset();
-                    cache.add(result[i]);
+            if (soundsCount > 0) {
+                // собираем средний звук
+                for (int i = 0; i < mixer.length; ++i) {
+                    int value = (int) (mixer[i] / counter[i]);
+                    
+                    // и сразу в кэш
+                    cache.write((byte) value);
+                    cache.write((byte) (value >> 8));
+                }                
+            } else {
+                if (!cache.isEmpty()) {
+                    cache.drain();
                 }
-            }*/
-        } else {
-            if (!cache.isEmpty()) {
-                //line.write(cache.getBuffer(), 0, cache.getBufferSize());
-                //cache.reset();
-                cache.drain();
             }
         }
     }
@@ -619,7 +633,11 @@ public final class SoundSystem {
             }
             
             if (!MONO_SOUNDS.isEmpty() || !MONO_CACHE.isEmpty()) {
-                updateLine(MONO_SOUNDS, MONO_LINE, MONO_CACHE);
+                if (CACHED) {
+                    updateLine(MONO_SOUNDS, MONO_LINE, MONO_CACHE);                    
+                } else {
+                    updateLine(MONO_SOUNDS, MONO_LINE);
+                }
             }
         }
     }
@@ -640,9 +658,13 @@ public final class SoundSystem {
                 }
             }
             
-            /*if (!STEREO_SOUNDS.isEmpty() || !STEREO_CACHE.isEmpty()) {
-                updateLine(STEREO_SOUNDS, STEREO_LINE, STEREO_CACHE);
-            }*/
+            if (!STEREO_SOUNDS.isEmpty() || !STEREO_CACHE.isEmpty()) {
+                if (CACHED) {
+                    updateLine(STEREO_SOUNDS, STEREO_LINE, STEREO_CACHE);
+                } else {
+                    updateLine(STEREO_SOUNDS, STEREO_LINE);
+                }
+            }
         }
     }
         

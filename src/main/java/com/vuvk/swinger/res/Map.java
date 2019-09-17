@@ -11,6 +11,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.vuvk.retard_sound_system.Music;
 import java.awt.Point;
 import java.io.FileReader;
 import java.io.Reader;
@@ -32,16 +33,12 @@ import com.vuvk.swinger.math.Vector2;
 import com.vuvk.swinger.math.Vector3;
 import com.vuvk.swinger.objects.Door;
 import com.vuvk.swinger.objects.Key;
-import com.vuvk.swinger.objects.creatures.enemy.Enemy;
 import com.vuvk.swinger.objects.creatures.Player;
 import com.vuvk.swinger.objects.creatures.enemy.Guard;
 import com.vuvk.swinger.objects.creatures.enemy.GuardRocketeer;
 import com.vuvk.swinger.objects.weapon.Pistol;
 import com.vuvk.swinger.objects.weapon.Rifle;
-import com.vuvk.swinger.objects.weapon.Shotgun;
 import com.vuvk.swinger.util.ImmutablePair;
-import com.vuvk.swinger.util.Pair;
-import com.vuvk.swinger.util.Utils;
 
 /**
  *
@@ -599,12 +596,14 @@ public final class Map {
         new GuardRocketeer(new Vector3(12.5, 18.5, 0.0), 
                             0);
         
-        new Text(FontBank.FONT_OUTLINE, "Let's GO, my friends!", new Point(70, 150));
+        new Text(FontBank.FONT_OUTLINE, "demo", new Point(250, 150));
         
         /*
         new Sound(SoundBank.SOUND_FILE_MUSIC1)
             .setVolume(0.6f)
             .loop();
         */
+        
+        //new Music("resources/snd/music/music.mp3").play(true);
     }
 }

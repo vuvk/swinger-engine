@@ -17,11 +17,10 @@ import com.vuvk.swinger.res.TextureBank;
  */
 public class Explode extends Effect {
     private final static double ANIM_SPEED = 10.0;
-    private final static Sound SOUND_EXPLODE = new Sound(SoundBank.SOUND_BUFFER_EXPLODE);
     
     public Explode(Vector3 pos) {
         super(TextureBank.EXPLODE, ANIM_SPEED, true, pos);
         setBrightness(Fog.END);
-        SOUND_EXPLODE.play();
+        new Sound(SoundBank.SOUND_BUFFER_EXPLODE).play();
     }
 }
