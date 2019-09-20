@@ -5,7 +5,6 @@
  */
 package com.vuvk.swinger.res;
 
-import com.vuvk.swinger.res.Texture;
 import com.vuvk.swinger.res.TextureBank;
 
 /**

@@ -11,12 +11,12 @@ import com.vuvk.swinger.graphic.Fog;
  *
  * @author tai-prg3
  */
-public final class Config {        
-    public static boolean interlacing = false;
+public final class Config {
+    public static boolean interlacing = true;
     public static boolean antialiasing = false;
     public static int quality = 0;  // чем больше, тем хуже качество
-    public static boolean multithreading = false;
-    public static boolean mouseLook = false;
+    public static boolean multithreading = true;
+    public static boolean mouseLook = true;
     public static boolean console = false;
     public static String consoleCommand;
     public static boolean drawSky = true;    

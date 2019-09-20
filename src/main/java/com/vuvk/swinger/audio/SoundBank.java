@@ -22,6 +22,7 @@ public final class SoundBank {
     private final static String SOUND_FILE_PISTOL  = "resources/snd/weapons/Pistol.wav";
 //  private final static String SOUND_FILE_SHOTGUN = "resources/snd/weapons/shotgun.wav";
     private final static String SOUND_FILE_RIFLE   = "resources/snd/weapons/Machine Gun.wav";
+    private final static String SOUND_FILE_MINIGUN = "resources/snd/weapons/gatling.wav";
     private final static String SOUND_FILE_BAZOOKA = "resources/snd/weapons/Rocket Launcher.wav";
     
     /* enemies */
@@ -60,6 +61,7 @@ public final class SoundBank {
     public final static SoundBuffer SOUND_BUFFER_PISTOL  = new SoundBuffer(new File(SOUND_FILE_PISTOL ));
 //  public final static SoundBuffer SOUND_BUFFER_SHOTGUN = new SoundBuffer(new File(SOUND_FILE_SHOTGUN));
     public final static SoundBuffer SOUND_BUFFER_RIFLE   = new SoundBuffer(new File(SOUND_FILE_RIFLE  ));
+    public final static SoundBuffer SOUND_BUFFER_MINIGUN = new SoundBuffer(new File(SOUND_FILE_MINIGUN));    
     public final static SoundBuffer SOUND_BUFFER_BAZOOKA = new SoundBuffer(new File(SOUND_FILE_BAZOOKA));
     
     /* enemies */

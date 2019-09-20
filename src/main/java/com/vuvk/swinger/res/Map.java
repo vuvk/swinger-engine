@@ -26,6 +26,7 @@ import com.vuvk.swinger.graphic.WallMaterialBank;
 import com.vuvk.swinger.graphic.gui.text.FontBank;
 import com.vuvk.swinger.graphic.gui.text.Text;
 import com.vuvk.swinger.graphic.weapon_in_hand.KnifeInHand;
+import com.vuvk.swinger.graphic.weapon_in_hand.MinigunInHand;
 import com.vuvk.swinger.graphic.weapon_in_hand.PistolInHand;
 import com.vuvk.swinger.graphic.weapon_in_hand.RifleInHand;
 import com.vuvk.swinger.graphic.weapon_in_hand.RocketLauncherInHand;
@@ -39,6 +40,7 @@ import com.vuvk.swinger.objects.creatures.Creature;
 import com.vuvk.swinger.objects.creatures.Player;
 import com.vuvk.swinger.objects.creatures.enemy.Guard;
 import com.vuvk.swinger.objects.creatures.enemy.GuardRocketeer;
+import com.vuvk.swinger.objects.weapon.Minigun;
 import com.vuvk.swinger.objects.weapon.Pistol;
 import com.vuvk.swinger.objects.weapon.Rifle;
 import com.vuvk.swinger.util.ImmutablePair;
@@ -478,6 +480,9 @@ public final class Map {
                 case 2 :
                     new Rifle(weaponsMat[2], new Vector3(x, y));
                     break;
+                case 3 :
+                    new Minigun(weaponsMat[3], new Vector3(x, y));
+                    break;
             }
         }
         
@@ -594,6 +599,7 @@ public final class Map {
         PistolInHand.loadFrames();
         ShotgunInHand.loadFrames();
         RifleInHand.loadFrames();
+        MinigunInHand.loadFrames();
         RocketLauncherInHand.loadFrames();
         //Player.getInstance().createWeaponsInHand();
         
@@ -620,6 +626,8 @@ public final class Map {
             .setVolume(0.6f)
             .loop();
         */
+        
+        new Sprite(TextureBank.GUARD_STAND, 0, new Vector3(17.1, 14.3, 1.0)).rotate(180);
         
         //new Music("resources/snd/music/music.mp3").play(true);
     }

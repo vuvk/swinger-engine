@@ -47,7 +47,7 @@ public abstract class WeaponInHand {
     
     private SoundBuffer soundShootBuffer;
     
-    protected WeaponInHand() {                
+    protected WeaponInHand() {
         int rW = Renderer.WIDTH;
         int rH = Renderer.HEIGHT;
         int min = Math.min(rW, rH) >> 1;   

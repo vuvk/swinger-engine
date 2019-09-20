@@ -14,7 +14,7 @@ import com.vuvk.swinger.res.Image;
  *
  * @author tai-prg3
  */
-public class RifleInHand  extends RayWeaponInHand {
+public class RifleInHand extends RayWeaponInHand {
     private final static int FRAMES_COUNT = 3;
     private final static Image[] FRAMES = new Image[FRAMES_COUNT];
     private final static String[] FILES = { 
@@ -26,8 +26,8 @@ public class RifleInHand  extends RayWeaponInHand {
     private final static double ACCURACY = 5.0;
     private final static int BULLETS_PER_SHOOT = 1;
     private final static double DISTANCE = 100;
-    private final static double ANIM_SPEED = 25.0;
-    private final static double SHOOT_DELAY = 0.005;
+    private final static double ANIM_SPEED = 15.0;
+    private final static double SHOOT_DELAY = 0.015;
     private final static double DAMAGE = 15.0;
     private final static int FRAME_FOR_SHOOT = 1;
     
