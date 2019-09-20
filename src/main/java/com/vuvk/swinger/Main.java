@@ -94,6 +94,7 @@ public class Main {
                     @Override
                     public void run() {
                         Map.load();  
+                        Config.draw = true;
                         
                         while (!Window.QUIT) {
                             mainWindow.update();

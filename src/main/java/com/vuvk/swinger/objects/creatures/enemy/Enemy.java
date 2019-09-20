@@ -27,9 +27,9 @@ import com.vuvk.swinger.res.Map;
  */
 public abstract class Enemy extends Creature {   
     /** список всех вражин */
-    public final static List<Enemy> LIB = new ArrayList<>();
+    //public final static List<Enemy> LIB = new ArrayList<>();
     /** список вражин на удаление */
-    private final static List<Enemy> FOR_DELETE_FROM_LIB = new ArrayList<>();
+    //private final static List<Enemy> FOR_DELETE_FROM_LIB = new ArrayList<>();
         
     //private Texture[][] curAnim;
     /*private Texture[][] idle;
@@ -94,15 +94,21 @@ public abstract class Enemy extends Creature {
         setDeadAnimation(dead);
         setState(EnemyState.IDLE);
         
-        LIB.add(this);
+        //LIB.add(this);
     }
     
     @Override
     public void finalize() {
         super.finalize();
         sprite.markForDelete();
-        LIB.remove(this);
+        //LIB.remove(this);
     }
+    
+    /*
+    public static void deleteAll() {
+        LIB.clear();
+    }
+    */
         
     @Override
     public void setPos(final Vector3 pos) {
@@ -322,6 +328,7 @@ public abstract class Enemy extends Creature {
         setDirection(angleToPlayer);
     }
     
+    @Override
     public void update() {
         // умирать?
         if (health <= 0.0 && state != EnemyState.DIE) {
@@ -355,7 +362,10 @@ public abstract class Enemy extends Creature {
         if (state == EnemyState.DIE) {
             if (!sprite.isAnimate()) {
                 new Sprite(dead, pos)/*.markForAdd()*/;
-                FOR_DELETE_FROM_LIB.add(this);                
+                //FOR_DELETE_FROM_LIB.add(this);       
+                //finalize();
+                markForDelete();
+                return;
             }
             return;
         }
@@ -490,16 +500,17 @@ public abstract class Enemy extends Creature {
         }
     }
     
-    public static void updateAll() {
-        for (Enemy enemy : LIB) {
-            enemy.update();
-        }
-        
+    /*
+    public static void updateAll() {        
         if (FOR_DELETE_FROM_LIB.size() > 0) {
             for (Iterator<Enemy> it = FOR_DELETE_FROM_LIB.iterator(); it.hasNext(); ) {
                 it.next().finalize();
             }
             FOR_DELETE_FROM_LIB.clear();
         }
-    }
+        
+        for (Enemy enemy : LIB) {
+            enemy.update();
+        }
+    }*/
 }

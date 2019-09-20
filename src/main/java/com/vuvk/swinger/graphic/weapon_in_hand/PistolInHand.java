@@ -43,19 +43,17 @@ public class PistolInHand extends RayWeaponInHand {
         setSoundShoot(SoundBank.SOUND_BUFFER_PISTOL);
     }
     
-    public static void loadFrames() {
-        if (instance == null) {
-            int rW = Renderer.WIDTH;
-            int rH = Renderer.HEIGHT;
+    public static void loadFrames() {        
+        int rW = Renderer.WIDTH;
+        int rH = Renderer.HEIGHT;
 
-            int min = Math.min(rW, rH);        
-            int size = min >> 1;
+        int min = Math.min(rW, rH);        
+        int size = min >> 1;
 
-            for (int i = 0; i < FILES.length; ++i) {
-                FRAMES[i] = new Image(FILES[i], size, size);
-            }
-            FRAMES[3] = FRAMES[2];
+        for (int i = 0; i < FILES.length; ++i) {
+            FRAMES[i] = new Image(FILES[i], size, size);
         }
+        FRAMES[3] = FRAMES[2];
     }
     
     public static PistolInHand getInstance() {

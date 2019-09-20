@@ -11,6 +11,9 @@ import com.vuvk.swinger.math.BoundingBox;
 import com.vuvk.swinger.math.Segment;
 import com.vuvk.swinger.math.Vector2;
 import com.vuvk.swinger.math.Vector3;
+import com.vuvk.swinger.objects.Sprite;
+import java.util.Iterator;
+import java.util.Vector;
 
 /**
  *
@@ -18,6 +21,7 @@ import com.vuvk.swinger.math.Vector3;
  */
 public abstract class Creature {
     public final static List<Creature> LIB = new ArrayList<>();
+    private final static List<Creature> FOR_DELETE_FROM_LIB = new ArrayList<>();
     
     protected double health;
     protected Vector3 pos;
@@ -35,6 +39,32 @@ public abstract class Creature {
     @Override
     public void finalize() {
         LIB.remove(this);
+    }
+    
+    abstract public void update();
+    
+    /**
+     * Пометить объект на удаление
+     */
+    public void markForDelete() {
+        FOR_DELETE_FROM_LIB.add(this);
+    }
+    
+    public static void updateAll() {
+        if (!FOR_DELETE_FROM_LIB.isEmpty()) {
+            for (Creature creature : FOR_DELETE_FROM_LIB) {
+                creature.finalize();
+            }
+            FOR_DELETE_FROM_LIB.clear();
+        }
+        
+        for (Creature creature : LIB) {
+            creature.update();
+        }
+    }
+    
+    public static void deleteAll() {
+        LIB.clear();
     }
 
     public double getHealth() {

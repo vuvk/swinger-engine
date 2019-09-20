@@ -12,6 +12,8 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.vuvk.retard_sound_system.Music;
+import com.vuvk.retard_sound_system.SoundSystem;
+import com.vuvk.swinger.Config;
 import java.awt.Point;
 import java.io.FileReader;
 import java.io.Reader;
@@ -33,6 +35,7 @@ import com.vuvk.swinger.math.Vector2;
 import com.vuvk.swinger.math.Vector3;
 import com.vuvk.swinger.objects.Door;
 import com.vuvk.swinger.objects.Key;
+import com.vuvk.swinger.objects.creatures.Creature;
 import com.vuvk.swinger.objects.creatures.Player;
 import com.vuvk.swinger.objects.creatures.enemy.Guard;
 import com.vuvk.swinger.objects.creatures.enemy.GuardRocketeer;
@@ -301,7 +304,21 @@ public final class Map {
         {22.5, 21.5, 0.0,  9},*/
     };
     
+    public static void reset() {
+        Config.draw = false;
+        
+        SoundSystem.stopAll();
+        Door.deleteAll();
+        Creature.deleteAll();
+        Sprite.deleteAll();
+        Material.deleteAll();
+        Player.deleteInstance();
+    }
+    
     public static void load() {
+        reset();
+        //Config.draw = false;
+                        
         System.out.println("Loading map...");
         
         JsonObject jsonlevel = new JsonObject();        
@@ -578,7 +595,7 @@ public final class Map {
         ShotgunInHand.loadFrames();
         RifleInHand.loadFrames();
         RocketLauncherInHand.loadFrames();
-        Player.getInstance().createWeaponsInHand();
+        //Player.getInstance().createWeaponsInHand();
         
         System.out.println("\tEnemies...");
         new Guard(new Vector3(15.5, 21.5, 0.0), 

@@ -48,18 +48,16 @@ public class ShotgunInHand extends RayWeaponInHand {
     }
     
     public static void loadFrames() {
-        if (instance == null) {
-            int rW = Renderer.WIDTH;
-            int rH = Renderer.HEIGHT;
+        int rW = Renderer.WIDTH;
+        int rH = Renderer.HEIGHT;
 
-            int min = Math.min(rW, rH);        
-            int size = min >> 1;
+        int min = Math.min(rW, rH);        
+        int size = min >> 1;
 
-            for (int i = 0; i < FILES.length; ++i) {
-                FRAMES[i] = new Image(FILES[i], size, size);
-            }
-            //FRAMES[4] = FRAMES[1];
+        for (int i = 0; i < FILES.length; ++i) {
+            FRAMES[i] = new Image(FILES[i], size, size);
         }
+        //FRAMES[4] = FRAMES[1];
     }
     
     public static ShotgunInHand getInstance() {

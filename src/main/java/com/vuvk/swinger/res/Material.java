@@ -59,11 +59,7 @@ public class Material {
     }
     
     public Material(Image frame, double animSpeed, boolean playOnce) {
-        setFrames(frame);
-        setAnimSpeed(animSpeed);
-        this.playOnce = playOnce;
-        //LIB.add(this);
-        markForAdd();
+        this(new Image[]{frame}, animSpeed, playOnce);
     }
     
     public Material(Image[] frames, double animSpeed, boolean playOnce) {
@@ -85,6 +81,12 @@ public class Material {
     @Override
     public void finalize() {
         LIB.remove(this);
+    }
+    
+    public static void deleteAll() {
+        LIB.clear();
+        FOR_ADD_TO_LIB.clear();
+        FOR_DELETE_FROM_LIB.clear();
     }
     
     /**

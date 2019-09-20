@@ -12,6 +12,7 @@ import com.vuvk.swinger.objects.creatures.Player;
 import com.vuvk.swinger.graphic.Fog;
 import com.vuvk.swinger.graphic.Renderer;
 import com.vuvk.swinger.Window;
+import com.vuvk.swinger.res.Map;
 
 /**
  *
@@ -19,10 +20,10 @@ import com.vuvk.swinger.Window;
  */
 public final class KeyboardManager extends KeyAdapter {
     private static KeyboardManager instance = null;       
-    private static Player player;
+    //private static Player player;
     
     private KeyboardManager () {
-        player = Player.getInstance();
+    //    player = Player.getInstance();
     }    
 
     public static KeyboardManager getInstance() {
@@ -34,6 +35,8 @@ public final class KeyboardManager extends KeyAdapter {
     
     @Override
     public void keyReleased(final KeyEvent e) {
+        Player player = Player.getInstance();
+        
         if (!Config.console) {
             switch (e.getKeyCode()) {
                 case KeyEvent.VK_UP:
@@ -55,6 +58,11 @@ public final class KeyboardManager extends KeyAdapter {
                 case KeyEvent.VK_5 : player.setWeaponInHand(4); break;
                 
                 case KeyEvent.VK_SPACE : player.openDoor(); break;
+                
+                case KeyEvent.VK_R : 
+                    Map.load(); 
+                    Config.draw = true; 
+                    break;
                 
                 case KeyEvent.VK_M : Config.mouseLook = !Config.mouseLook; break;
             }
@@ -98,6 +106,8 @@ public final class KeyboardManager extends KeyAdapter {
 
     @Override
     public void keyPressed(final KeyEvent e) {
+        Player player = Player.getInstance();
+        
         if (!Config.console) {
             switch (e.getKeyCode()) {
                 case KeyEvent.VK_UP:

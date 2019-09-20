@@ -21,9 +21,9 @@ import com.vuvk.swinger.input.MouseManager;
 import com.vuvk.swinger.objects.creatures.Player;
 import com.vuvk.swinger.objects.Door;
 import com.vuvk.swinger.objects.Sprite;
-import com.vuvk.swinger.objects.creatures.enemy.Enemy;
+import com.vuvk.swinger.objects.creatures.Creature;
 import com.vuvk.swinger.res.Map;
-import com.vuvk.swinger.util.Utils;
+import com.vuvk.utils.Utils;
 
 /**
  *
@@ -39,7 +39,7 @@ public class Window extends JFrame {
     public static boolean QUIT = false;
     
     private final Renderer RENDERER;
-    private final Player PLAYER;
+    //private final Player PLAYER;
     private Point windowPos;
     private Point windowCenter;
     
@@ -56,7 +56,7 @@ public class Window extends JFrame {
         RENDERER = Renderer.getInstance();
         add(RENDERER);
         pack();
-        PLAYER = Player.getInstance();
+        //PLAYER = Player.getInstance();
         
         init();
     }
@@ -108,41 +108,45 @@ public class Window extends JFrame {
         //repaint();
     }
     
-    public void update() {                
-        // затираем видимость блоков
-        //Utils.arrayFastFill(Map.VISIBLE_CELLS, false);
-        for (boolean[] array : Map.VISIBLE_CELLS) {
-            Utils.arrayFastFill(array, false);
-        }
-        /*
-        for (int i = 0; i < Map.VISIBLE_CELLS.length; ++i) {
-            Map.VISIBLE_CELLS[i] = false;      
-        } */
-        
-        Material.updateAll();
-        Sprite.updateAll();
-        Door.updateAll();/*
-        Projectile.updateAll();
-        Effect.updateAll();*/
-        Enemy.updateAll();
-        PLAYER.update();
-        
-        // вращение мышкой и фиксация курсора в центре окна
-        if (Config.mouseLook) {
-            Point mousePos = MouseManager.getLocation();
-            if (mousePos != null && mousePos.x != windowCenter.x) {
-                int offsetX = windowCenter.x - mousePos.x;
-                if (offsetX != 0) {
-                    double mouseSpeed = (double)offsetX / WIDTH;
-                    PLAYER.rotate(Math.toRadians(mouseSpeed * Player.MOUSE_ROT_SPEED));         
-                }
-                MouseManager.setLocation(windowCenter);
-            } else if (mousePos == null) {
-                MouseManager.setLocation(windowCenter);                
+    public void update() {     
+        if (Config.draw) {
+            // затираем видимость блоков
+            //Utils.arrayFastFill(Map.VISIBLE_CELLS, false);
+            for (boolean[] array : Map.VISIBLE_CELLS) {
+                Utils.arrayFastFill(array, false);
             }
+            /*
+            for (int i = 0; i < Map.VISIBLE_CELLS.length; ++i) {
+                Map.VISIBLE_CELLS[i] = false;      
+            } */
+
+            Material.updateAll();
+            Sprite.updateAll();
+            Door.updateAll();
+            Creature.updateAll();
+            /*
+            Projectile.updateAll();
+            Effect.updateAll();*/
+            //Enemy.updateAll();
+            //Player.getInstance().update();
+
+            // вращение мышкой и фиксация курсора в центре окна
+            if (Config.mouseLook) {
+                Point mousePos = MouseManager.getLocation();
+                if (mousePos != null && mousePos.x != windowCenter.x) {
+                    int offsetX = windowCenter.x - mousePos.x;
+                    if (offsetX != 0) {
+                        double mouseSpeed = (double)offsetX / WIDTH;
+                        Player.getInstance().rotate(Math.toRadians(mouseSpeed * Player.MOUSE_ROT_SPEED));         
+                    }
+                    MouseManager.setLocation(windowCenter);
+                } else if (mousePos == null) {
+                    MouseManager.setLocation(windowCenter);                
+                }
+            }
+
+            Sky.getInstance().update();
+            RENDERER.draw();
         }
-        
-        Sky.getInstance().update();
-        RENDERER.draw();
     }
 }

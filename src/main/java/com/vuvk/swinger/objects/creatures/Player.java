@@ -114,14 +114,6 @@ public final class Player extends Creature {
         this.moveB = moveB;
     }
     
-    public static Player getInstance() {
-        if (instance == null) {
-            instance = new Player();
-        }
-        return instance;
-    }
-
-    
     public void addKey(Key key) {
         keys.add(key.getKeyNum());
     }
@@ -261,6 +253,7 @@ public final class Player extends Creature {
         }
     }    
     
+    @Override
     public void update() {          
         // обновляем оружие в руках
         if (getWeaponInHand() != null) {
@@ -392,11 +385,31 @@ public final class Player extends Creature {
         }
     }
     
-    private Player() {
-        super(new Vector3(20.5, 4.75, 0.0), HEALTH, RADIUS);
-        //super(new Vector3(19.76, 20.55, 0.0), HEALTH, RADIUS);
-        //super(new Vector3(20.5, 8.79, 0.0), HEALTH, RADIUS);
-        //super(new Vector3(15.46, 5.3, 0.0), HEALTH, RADIUS);
-        rotate(Math.toRadians(-90));        
+    public static Player getInstance() {
+        if (instance == null) {
+            createInstance(new Vector3(20.5, 4.75, 0.0));
+        }
+        return instance;
+    }
+    
+    public static void createInstance(Vector3 pos) {
+        if (instance != null) {
+            deleteInstance();
+        } else {
+            instance = new Player(pos);
+        }
+    }
+    
+    public static void deleteInstance() {
+        if (instance != null) {
+            instance.markForDelete();
+            instance = null;
+        }
+    }
+    
+    private Player(Vector3 pos) {
+        super(pos, HEALTH, RADIUS);
+        createWeaponsInHand();
+        rotate(Math.toRadians(-90));
     }
 }

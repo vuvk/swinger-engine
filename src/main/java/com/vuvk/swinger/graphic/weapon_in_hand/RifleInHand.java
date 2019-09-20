@@ -45,19 +45,17 @@ public class RifleInHand  extends RayWeaponInHand {
     }
     
     public static void loadFrames() {
-        if (instance == null) {
-            int rW = Renderer.WIDTH;
-            int rH = Renderer.HEIGHT;
+        int rW = Renderer.WIDTH;
+        int rH = Renderer.HEIGHT;
 
-            int min = Math.min(rW, rH);        
-            int size = min >> 1;
+        int min = Math.min(rW, rH);        
+        int size = min >> 1;
 
-            for (int i = 0; i < FILES.length; ++i) {
-                FRAMES[i] = new Image(FILES[i], size, size);
-                FRAMES[i].setCenter(new Vector2(0.6, 0.5));
-            }
-            //FRAMES[4] = FRAMES[1];
+        for (int i = 0; i < FILES.length; ++i) {
+            FRAMES[i] = new Image(FILES[i], size, size);
+            FRAMES[i].setCenter(new Vector2(0.6, 0.5));
         }
+        //FRAMES[4] = FRAMES[1];
     }
     
     public static RifleInHand getInstance() {

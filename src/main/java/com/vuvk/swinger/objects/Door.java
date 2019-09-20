@@ -48,7 +48,7 @@ public class Door extends TexturedSegment {
     private boolean neadKey;
     private int keyForOpen;
     
-    private Player PLAYER = Player.getInstance();    
+    //private Player PLAYER = Player.getInstance();    
     private final static List<Door> LIB = new ArrayList<>();
     
     public Door(final Vector2 a, final Vector2 b, final Material material) {
@@ -101,6 +101,10 @@ public class Door extends TexturedSegment {
     @Override
     public void finalize() {
         LIB.remove(this);
+    }
+    
+    public static void deleteAll() {
+        LIB.clear();
     }
     
     public void update() {        

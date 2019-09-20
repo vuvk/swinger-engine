@@ -25,5 +25,7 @@ public final class Config {
     public final static boolean STEP_BY_STEP_RENDERING = false;
     public final static int STEP_BY_STEP_DELAY = 10; 
     
+    public static boolean draw = false;
+    
     private Config() {}
 }

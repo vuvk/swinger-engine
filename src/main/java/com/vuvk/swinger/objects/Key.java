@@ -17,7 +17,7 @@ import com.vuvk.swinger.res.Material;
  */
 public class Key extends Sprite {
         
-    private Player PLAYER = Player.getInstance();
+    //private Player PLAYER = Player.getInstance();
     //private final static List<Key> LIB = new ArrayList<>();
     
     private int keyNum;
@@ -35,9 +35,11 @@ public class Key extends Sprite {
     public void update() {     
         super.update();
         
-        if (PLAYER.getPos().distance(getPos()) < 0.5) {
+        Player player = Player.getInstance();
+        
+        if (player.getPos().distance(getPos()) < 0.5) {
             new Sound(SoundBank.SOUND_BUFFER_GET_KEY).play();
-            PLAYER.addKey(this);
+            player.addKey(this);
             
             markForDelete();
         }

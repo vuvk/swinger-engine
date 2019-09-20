@@ -19,7 +19,7 @@ import com.vuvk.swinger.res.Material;
  * @author vuvk
  */
 public abstract class Weapon extends Sprite {
-    private Player PLAYER = Player.getInstance();
+    //private Player PLAYER = Player.getInstance();
     //private final static List<Key> LIB = new ArrayList<>();
     
     private int weaponNum;
@@ -44,9 +44,11 @@ public abstract class Weapon extends Sprite {
     public void update() {     
         super.update();
         
-        if (PLAYER.getPos().distance(getPos()) < 0.5) {
+        Player player = Player.getInstance();
+        
+        if (player.getPos().distance(getPos()) < 0.5) {
             new Sound(SoundBank.SOUND_BUFFER_GET_WEAPON).play();
-            PLAYER.addWeaponInHand(this);
+            player.addWeaponInHand(this);
             
             markForDelete();
         }

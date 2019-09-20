@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import com.vuvk.swinger.math.Vector2;
+import com.vuvk.swinger.objects.creatures.Creature;
 import com.vuvk.swinger.res.Image;
 import com.vuvk.swinger.res.Texture;
 
@@ -20,7 +21,7 @@ import com.vuvk.swinger.res.Texture;
  * @author tai-prg3
  */
 public class Sprite extends Material implements Comparable<Sprite> {
-    private final static Player PLAYER = Player.getInstance();
+    //private final static Player PLAYER = Player.getInstance();
     public final static List<Sprite> LIB = new ArrayList<>();
     //private final static List<Sprite> FOR_ADD_TO_LIB = new ArrayList<>();
     private final static List<Sprite> FOR_DELETE_FROM_LIB = new ArrayList<>();
@@ -183,7 +184,7 @@ public class Sprite extends Material implements Comparable<Sprite> {
     /**
      * Пометить объект на удаление
      */
-    @Override
+    //@Override
     public void markForDelete() {
         FOR_DELETE_FROM_LIB.add(this);
     }
@@ -192,7 +193,9 @@ public class Sprite extends Material implements Comparable<Sprite> {
     public void update() {        
         super.update();
         
-        final Vector2 plPos = PLAYER.getPos();
+        Player player = Player.getInstance();
+        
+        final Vector2 plPos = player.getPos();
         final double x1 = pos.x,
                      y1 = pos.y,
                      x2 = plPos.x,
@@ -275,12 +278,17 @@ public class Sprite extends Material implements Comparable<Sprite> {
             FOR_ADD_TO_LIB.clear();
         }
         */
-        if (FOR_DELETE_FROM_LIB.size() > 0) {
-            for (Iterator<Sprite> it = FOR_DELETE_FROM_LIB.iterator(); it.hasNext(); ) {
-                it.next().finalize();
+        if (!FOR_DELETE_FROM_LIB.isEmpty()) {
+            for (Sprite sprite : FOR_DELETE_FROM_LIB) {
+                sprite.finalize();
             }
             FOR_DELETE_FROM_LIB.clear();
         }
+    }
+        
+    public static void deleteAll() {
+        LIB.clear();
+        FOR_DELETE_FROM_LIB.clear();
     }
 
     @Override

@@ -34,7 +34,7 @@ import com.vuvk.swinger.graphic.weapon_in_hand.WeaponInHand;
 import com.vuvk.swinger.objects.creatures.Player;
 import com.vuvk.swinger.res.Image;
 import com.vuvk.swinger.res.MaterialBank;
-import com.vuvk.swinger.util.Utils;
+import com.vuvk.utils.Utils;
 
 /**
  *
@@ -43,7 +43,7 @@ import com.vuvk.swinger.util.Utils;
 public final class Renderer extends JPanel {
     private final static Logger LOG = Logger.getLogger(Renderer.class.getName());
     private static Renderer instance = null;
-    private final static Player PLAYER = Player.getInstance();
+    //private final static Player PLAYER = Player.getInstance();
     /*private final static RepaintManager REPAINT_MANAGER;
     static {        
         REPAINT_MANAGER = RepaintManager.currentManager(INSTANCE);
@@ -99,6 +99,20 @@ public final class Renderer extends JPanel {
         double wallDist;
     }
 */
+    private class RenderTarget {
+        int x, y;
+        //double wallX;
+        int texX = 0;
+        //int side;
+        //double wallDist;
+        // draw wall or segment?
+        //boolean drawSegment = false;
+        // is door side wall ?
+        //boolean doorWall = false;
+        Texture texture;
+        double wallDist;
+        Vector2 collisionPoint = new Vector2();
+    }
     
     private class RenderTask implements Runnable {
         CountDownLatch latch;
@@ -180,12 +194,13 @@ public final class Renderer extends JPanel {
             //g.drawString("FPS: " + fps, 10, 15); //FPS counter
             fpsText.setMessage("FPS: " + fps);
                     
-            Vector2 pos = PLAYER.getPos();
+            Player player = Player.getInstance();
+            Vector2 pos = player.getPos();
             //g.drawString(String.format(Locale.ENGLISH, "Player pos: %.2f %.2f", pos.x, pos.y), 10, 30);
             playerPosText.setMessage(String.format(Locale.ENGLISH, "PLAYER POS: %.2f %.2f", pos.x, pos.y));
             //g.drawString(String.format(Locale.ENGLISH, "PLAYER HEALTH: %.2f", PLAYER.getHealth()), 10, 90);
             playerHpText.setLocation(new Point(16, Window.HEIGHT - 48));
-            playerHpText.setMessage(String.format(Locale.ENGLISH, "HP %.0f", PLAYER.getHealth()));
+            playerHpText.setMessage(String.format(Locale.ENGLISH, "HP %.0f", player.getHealth()));
         }
         
         Text.drawAll(g);
@@ -354,10 +369,12 @@ public final class Renderer extends JPanel {
      * @param fromX Позиция X с которой начинать
      * @param toX Позиция X до которой рендерить
      */
-    private void renderWorld(int fromX, int toX) {      
-        final Vector3 pos    = PLAYER.getPos();
-        final Vector2 dir    = PLAYER.getView();
-        final Vector2 plane  = PLAYER.getPlane();
+    private void renderWorld(int fromX, int toX) {   
+        Player player = Player.getInstance();
+        
+        final Vector3 pos    = player.getPos();
+        final Vector2 dir    = player.getView();
+        final Vector2 plane  = player.getPlane();
         final Vector2 ray    = new Vector2(); 
         final Vector2 invRay = new Vector2();
             
@@ -1003,7 +1020,7 @@ public final class Renderer extends JPanel {
                         //int arrayPos = (y - 1) * WIDTH + x;
                         //int pixelPos = (floorTexY << Texture.WIDTH_POT) + floorTexX;
                         //if (ZBUFFER[arrayPos] > currentDist) {
-                        if (floorCell >= 0) {
+                        if (floorCell >= 0) {                            
                             if (ZBUFFER[x][y - 1] > currentDist) {
                                 //SCREEN_BUFFER.setRGB(x, y, Texture.WALLS[3].getPixel(floorTexX, floorTexY));
                                 //buffer[(y - 1) * WIDTH + x] = Texture.WALLS[3].getPixel(floorTexX, floorTexY);
@@ -1108,7 +1125,7 @@ public final class Renderer extends JPanel {
                 if (Config.STEP_BY_STEP_RENDERING) {
                     try { 
                         Thread.sleep(Config.STEP_BY_STEP_DELAY); 
-                    } catch (InterruptedException ex) {}
+                    } catch (InterruptedException ignored) {}
                     SCREEN_RASTER.setDataElements(0, 0, WIDTH, HEIGHT, SCREEN_BUFFER);
                     repaint();
                 }
@@ -1117,14 +1134,15 @@ public final class Renderer extends JPanel {
     }
     
     public void draw() {
+        Player player = Player.getInstance();
         //Graphics g = SCREEN.getGraphics();
         //final WritableRaster raster = SCREEN.getRaster();
         //DataBuffer buf = raster.getDataBuffer();
         //WritableRaster rasterSmall = SCREEN_SMALL.getRaster();
         
-        final Vector3 pos = PLAYER.getPos();
-        final Vector2 dir = PLAYER.getView();
-        final Vector2 plane = PLAYER.getPlane();
+        final Vector3 pos = player.getPos();
+        final Vector2 dir = player.getView();
+        final Vector2 plane = player.getPlane();
         //Vector2 ray = new Vector2();  
         
         // calc distance to player
@@ -1342,7 +1360,7 @@ public final class Renderer extends JPanel {
             }
         }
         
-        WeaponInHand weapon = PLAYER.getWeaponInHand();
+        WeaponInHand weapon = player.getWeaponInHand();
         if (weapon != null) {
             Image image = weapon.getFrame();
             if (image != null) {

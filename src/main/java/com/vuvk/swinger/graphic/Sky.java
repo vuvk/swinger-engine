@@ -15,7 +15,7 @@ import com.vuvk.swinger.res.TextureBank;
  */
 public final class Sky extends Image {    
     private static Sky instance = new Sky(TextureBank.PICS_FOLDER + "sky.png");
-    private final static Player PLAYER = Player.getInstance();
+    //private final static Player PLAYER = Player.getInstance();
     
     private double xStep;    
     private int xStart;
@@ -34,7 +34,7 @@ public final class Sky extends Image {
     }
     
     public void update() {
-        xStart = (int)(PLAYER.getDirection() * xStep);
+        xStart = (int)(Player.getInstance().getDirection() * xStep);
         if (xStart >= width) {
             xStart = 0;
         }
