@@ -1,0 +1,39 @@
+{
+    "textures": [
+        /* doors */
+        /* 0 */    "resources/pics/doors/door_1.png",
+        /* 1 */    "resources/pics/doors/door_2.png",
+
+        /* keys */
+        /* 2 */    "resources/pics/items/keys/gold_key.png"
+    ],
+
+    "materials": [  
+        /* doors */
+        /* 0 */    {"textures": [0], "animation_speed": 0, "play_once": true},
+        /* 1 */    {"textures": [1], "animation_speed": 0, "play_once": true},
+
+        /* keys */
+        /* 2 */    {"textures": [2], "animation_speed": 0, "play_once": true}
+    ],    
+
+    
+    "keys_config": [
+        /* 0 */    {"material": 2}   /* золотой ключ */
+    ],    
+    
+    "keys_map": [
+        {"key": 0, "position": [22.5, 1.5, 0.0]}
+    ],
+    
+    
+    "doors_config": [
+        /* 0 */    {"material": 0},
+        /* 1 */    {"material": 1, "key": 0}
+    ],    
+
+    "doors_map": [
+        {"door": 0, "position": [20, 1]},
+        {"door": 1, "position": [21, 2]},
+    ]
+}

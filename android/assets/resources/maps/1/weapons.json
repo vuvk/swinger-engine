@@ -1,0 +1,26 @@
+{
+    "textures" : [
+        /* 0 */ "resources/pics/items/weapons/pistol.png",
+        /* 1 */ "resources/pics/items/weapons/mp40.png",
+        /* 2 */ "resources/pics/items/weapons/minigun.png"
+    ],
+    
+    "materials" : [
+        /* 0 */ {"textures": [0], "animation_speed": 0, "play_once": true},
+        /* 1 */ {"textures": [1], "animation_speed": 0, "play_once": true},
+        /* 2 */ {"textures": [2], "animation_speed": 0, "play_once": true}
+    ],
+    
+    "config" : [
+        /* 0 */ {"material": -1, "ammo_in_clip": 0  },   /* нож. Всегда в руках */
+        /* 1 */ {"material":  0, "ammo_in_clip": 12 },   /* пистолет */
+        /* 2 */ {"material":  1, "ammo_in_clip": 25 },   /* mp-40 */
+        /* 3 */ {"material":  2, "ammo_in_clip": 100}    /* minigun */
+    ],
+
+    "map": [
+        {"weapon": 1, "position": [15.5, 1.5, 0.0]},
+        {"weapon": 2, "position": [14.5, 1.5, 0.0]},
+        {"weapon": 3, "position": [13.5, 1.5, 0.0]}
+    ]
+}

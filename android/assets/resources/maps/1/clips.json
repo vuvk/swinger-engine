@@ -1,0 +1,29 @@
+{
+    "textures": [
+        /* 0 */	"resources/pics/items/clips/small_clip.png",
+        /* 1 */	"resources/pics/items/clips/big_clip.png"        
+    ],
+
+    "materials": [
+        /* 0 */	{"textures": [0], "animation_speed": 0, "play_once": true},
+        /* 1 */	{"textures": [1], "animation_speed": 0, "play_once": true}
+    ],
+
+    "config": [
+        /*
+            type (see AmmoType):
+                0 - nothing
+                1 - pistol
+                2 - shotgun
+                3 - rocket
+        */
+        /* 0 */ {"material": 0, "type": 1, "volume": 25 },
+        /* 1 */ {"material": 1, "type": 1, "volume": 100}
+    ],
+
+    "map": [
+        {"clip": 0, "position": [11.5, 3.5, 0.0]},
+        {"clip": 1, "position": [12.5, 4.5, 0.0]},
+        {"clip": 0, "position": [11.5, 5.5, 0.0]}        
+    ]
+}
