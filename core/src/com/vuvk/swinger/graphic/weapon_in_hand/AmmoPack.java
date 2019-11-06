@@ -15,6 +15,7 @@
  */
 package com.vuvk.swinger.graphic.weapon_in_hand;
 
+import com.vuvk.swinger.objects.weapon.AmmoType;
 import java.util.Map;
 import java.util.HashMap;
 

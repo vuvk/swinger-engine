@@ -100,7 +100,7 @@
                  "play_once": false,
                  "brightness": 15.0},
         /* waiter */
-        /* 4 */	{"textures": [68, 69, 70], "animation_speed": 10, "play_once": false},
+        /* 4 */	{"textures": [68, 69, 70], "animation_speed": 10, "play_once": false}
     ],
 
     "map": [

@@ -76,7 +76,13 @@ public class Material {
     
     @Override
     public void finalize() {
-        LIB.remove(this);
+        destroy();
+    }
+    
+    public void destroy() {        
+        //synchronized(LIB) {
+            LIB.remove(this);
+        //}
     }
     
     public static void deleteAll() {
@@ -211,7 +217,8 @@ public class Material {
         
         if (FOR_DELETE_FROM_LIB.size() > 0) {
             for (Iterator<Material> it = FOR_DELETE_FROM_LIB.iterator(); it.hasNext(); ) {
-                it.next().finalize();
+                /*it.next().finalize();*/
+                it.next().destroy();
             }
             FOR_DELETE_FROM_LIB.clear();
         }

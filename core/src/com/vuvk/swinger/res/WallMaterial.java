@@ -3,8 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.vuvk.swinger.graphic;
+package com.vuvk.swinger.res;
 
+import com.vuvk.swinger.graphic.Side;
 import com.vuvk.swinger.res.Material;
 import com.vuvk.swinger.res.Image;
 import com.vuvk.swinger.utils.ArrayUtils;

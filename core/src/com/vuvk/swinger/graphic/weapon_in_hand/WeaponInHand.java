@@ -7,6 +7,7 @@ package com.vuvk.swinger.graphic.weapon_in_hand;
 
 //import com.vuvk.retard_sound_system.Sound;
 //import com.vuvk.retard_sound_system.SoundBuffer;
+import com.vuvk.swinger.objects.weapon.AmmoType;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.files.FileHandle;

@@ -99,25 +99,39 @@ public class Sprite extends Material implements Comparable<Sprite> {
     public Sprite(final Image frame, double animSpeed, boolean playOnce, final Vector3 pos) {
         super(frame, animSpeed, playOnce);
         setPos(pos);
-        LIB.add(this);
+        //synchronized(LIB) {
+            LIB.add(this);
+        //}
     }   
     
     public Sprite(final Image[] frames, double animSpeed, boolean playOnce, final Vector3 pos) {
         super(frames, animSpeed, playOnce);
         setPos(pos);
-        LIB.add(this);
+        //synchronized(LIB) {
+            LIB.add(this);
+        //}
     }   
     
     public Sprite(final Image[][] frames, double animSpeed, boolean playOnce, final Vector3 pos) {
         super(frames, animSpeed, playOnce);
         setPos(pos);
-        LIB.add(this);
+        //synchronized(LIB) {
+            LIB.add(this);
+        //}
     }    
     
     @Override
     public void finalize() {
         super.finalize();
-        LIB.removeValue(this, false);
+        destroy();
+    }
+    
+    @Override
+    public void destroy() {
+        super.destroy();
+        //synchronized(LIB) {
+            LIB.removeValue(this, true);
+        //}
     }
 
     public Vector3 getPos() {
@@ -171,7 +185,7 @@ public class Sprite extends Material implements Comparable<Sprite> {
         }
     }
     
-    public void rotate(final double degree) {         
+    public void rotate(final double degree) {
         setDirection(direction + degree);
     }
     
@@ -185,9 +199,11 @@ public class Sprite extends Material implements Comparable<Sprite> {
     /**
      * Пометить объект на удаление
      */
-    //@Override
+    @Override
     public void markForDelete() {
-        FOR_DELETE_FROM_LIB.add(this);
+        //synchronized(FOR_DELETE_FROM_LIB) {
+            FOR_DELETE_FROM_LIB.add(this);
+        //}
     }
     
     @Override
@@ -280,10 +296,13 @@ public class Sprite extends Material implements Comparable<Sprite> {
         }
         */
         if (!FOR_DELETE_FROM_LIB.isEmpty()) {
-            for (Sprite sprite : FOR_DELETE_FROM_LIB) {
-                sprite.finalize();
+            synchronized(FOR_DELETE_FROM_LIB) {                
+                for (Iterator<Sprite> it = FOR_DELETE_FROM_LIB.iterator(); it.hasNext(); ) {
+                    /*it.next().finalize();*/
+                    it.next().destroy();
+                }
+                FOR_DELETE_FROM_LIB.clear();
             }
-            FOR_DELETE_FROM_LIB.clear();
         }
     }
         

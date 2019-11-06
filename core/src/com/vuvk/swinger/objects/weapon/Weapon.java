@@ -11,7 +11,6 @@ import com.vuvk.swinger.audio.SoundSystem;
 import com.vuvk.swinger.graphic.weapon_in_hand.AmmoPack;
 import com.vuvk.swinger.graphic.weapon_in_hand.WeaponInHand;
 import com.vuvk.swinger.math.Vector3;
-import com.vuvk.swinger.graphic.weapon_in_hand.AmmoType;
 import com.vuvk.swinger.objects.Sprite;
 import com.vuvk.swinger.objects.creatures.Player;
 import com.vuvk.swinger.res.Material;
@@ -34,6 +33,14 @@ public abstract class Weapon extends Sprite {
         this.ammoType = ammoType;
     }
 
+    public void setWeaponNum(int weaponNum) {
+        this.weaponNum = weaponNum;
+    }
+
+    public void setAmmoType(AmmoType ammoType) {
+        this.ammoType = ammoType;
+    }
+    
     public int getWeaponNum() {
         return weaponNum;
     }
@@ -73,9 +80,10 @@ public abstract class Weapon extends Sprite {
             if (curAmmo > maxAmmo) {
                 curAmmo = maxAmmo;
             }
-            AmmoPack.PACK.put(ammoType, curAmmo);
+            AmmoPack.PACK.put(ammoType, curAmmo);            
             
             markForDelete();
+            //destroy();
         }
     }
 }

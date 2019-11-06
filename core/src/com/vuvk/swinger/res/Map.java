@@ -27,34 +27,35 @@ import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import com.vuvk.swinger.graphic.TexturedSegment;
-import com.vuvk.swinger.graphic.WallMaterial;
-import com.vuvk.swinger.graphic.WallMaterialBank;
 import com.vuvk.swinger.graphic.gui.text.FontBank;
 import com.vuvk.swinger.graphic.gui.text.Text;
 import com.vuvk.swinger.graphic.weapon_in_hand.AmmoPack;
-import com.vuvk.swinger.graphic.weapon_in_hand.AmmoType;
+import com.vuvk.swinger.objects.weapon.AmmoType;
 import com.vuvk.swinger.graphic.weapon_in_hand.KnifeInHand;
 import com.vuvk.swinger.graphic.weapon_in_hand.MinigunInHand;
 import com.vuvk.swinger.graphic.weapon_in_hand.PistolInHand;
 import com.vuvk.swinger.graphic.weapon_in_hand.RifleInHand;
 import com.vuvk.swinger.graphic.weapon_in_hand.RocketLauncherInHand;
 import com.vuvk.swinger.graphic.weapon_in_hand.ShotgunInHand;
+import com.vuvk.swinger.js.Interpreter;
 import com.vuvk.swinger.math.Segment;
 import com.vuvk.swinger.math.Vector2;
 import com.vuvk.swinger.math.Vector3;
-import com.vuvk.swinger.objects.Clip;
 import com.vuvk.swinger.objects.Door;
 import com.vuvk.swinger.objects.Key;
 import com.vuvk.swinger.objects.creatures.Creature;
 import com.vuvk.swinger.objects.creatures.Player;
 import com.vuvk.swinger.objects.creatures.enemy.Guard;
 import com.vuvk.swinger.objects.creatures.enemy.GuardRocketeer;
-import com.vuvk.swinger.objects.weapon.Minigun;
-import com.vuvk.swinger.objects.weapon.Pistol;
-import com.vuvk.swinger.objects.weapon.Rifle;
 import com.vuvk.swinger.utils.ArrayUtils;
 import com.vuvk.swinger.utils.ImmutablePair;
+import java.io.File;
+import java.io.IOException;
+import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -349,7 +350,7 @@ public final class Map {
         }    
     }
     
-    private static void loadSprites(int levelNum) {            
+    /*private static void loadSprites(int levelNum) {            
         System.out.println("\tSprites...");
         
         int materialsCount = MaterialBank.BANK.size;    
@@ -375,9 +376,9 @@ public final class Map {
             
             new Sprite(mat, pos);          
         }
-    }
+    }*/
     
-    private static void loadWeapons(int levelNum) {             
+    /*private static void loadWeapons(int levelNum) {             
         System.out.println("\tWeapons...");
         
         int materialsCount = MaterialBank.BANK.size;
@@ -385,7 +386,6 @@ public final class Map {
         Json json = new Json();
         JsonValue jsonLevel = new JsonReader().parse(Gdx.files.internal("resources/maps/" + levelNum + "/weapons.json"));
         
-        /* грузим текстуры */     
         System.out.println("\t\tTextures and materials...");
         loadTexturesAndMaterials(jsonLevel);
         
@@ -401,7 +401,6 @@ public final class Map {
             weaponsClip[i] = jsonWeapon.getInt("ammo_in_clip");
         }
         
-        /* расставляем оружие */
         System.out.println("\t\tWeapons placing...");
         ArrayList<JsonValue> weapMap = json.readValue(ArrayList.class, jsonLevel.get("map"));   
         for (JsonValue jsonWeapon : weapMap) {     
@@ -425,9 +424,9 @@ public final class Map {
                     break;
             }
         }
-    }    
+    }    */
     
-    private static void loadClips(int levelNum) {
+    /*private static void loadClips(int levelNum) {
         System.out.println("\tClips...");
         
         int materialsCount = MaterialBank.BANK.size;    
@@ -476,7 +475,7 @@ public final class Map {
             
             new Clip(clipsMat[clipNum], pos, clipsType[clipNum], clipsVol[clipNum]);
         }
-    }
+    }*/
     
     private static void loadKeysDoors(int levelNum) {
         System.out.println("\tKeys and Doors...");
@@ -595,6 +594,11 @@ public final class Map {
         //Config.draw = false;
                                 
         System.out.println("Loading map...");
+        
+        Interpreter.clearListing();
+        Interpreter.addListing(new File("resources/maps/loader.js"));
+        
+        //Interpreter.evalScript(new File("resources/maps/loader.js"));
                 
         Json json = new Json();
         JsonValue jsonlevel = new JsonReader().parse(Gdx.files.internal("resources/maps/" + levelNum + "/map.json"));
@@ -603,7 +607,7 @@ public final class Map {
         for (int x = 0; x < WIDTH; ++x) {
             for (int y = 0; y < HEIGHT; ++y) {
                 SOLIDS[x][y] = false;
-            }        
+            }
         }
         /* грузим текстуры */     
         System.out.println("\tTextures and materials...");
@@ -686,16 +690,23 @@ public final class Map {
         }
                         
         /* грузим спрайты */  
-        loadSprites(levelNum);
+        //loadSprites(levelNum);
+        Interpreter.addListing(new File("resources/maps/" + levelNum + "/sprites.js"));
         
         /* грузим оружие */
-        loadWeapons(levelNum);  
+        //loadWeapons(levelNum);  
+        Interpreter.addListing(new File("resources/maps/" + levelNum + "/weapons.js"));
         
         /* грузим патроны */
-        loadClips(levelNum);
+        //loadClips(levelNum);
+        Interpreter.addListing(new File("resources/maps/" + levelNum + "/clips.js"));
         
         /* грузим ключи и двери */
-        loadKeysDoors(levelNum);
+        //loadKeysDoors(levelNum);
+        Interpreter.addListing(new File("resources/maps/" + levelNum + "/keys_doors.js"));
+               
+        
+        Interpreter.runListing();
         
         System.out.println("\tWeapons in player's hand...");
         //Sprite.loadAll();

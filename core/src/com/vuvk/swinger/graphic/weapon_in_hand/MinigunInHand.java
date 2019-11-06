@@ -5,6 +5,7 @@
  */
 package com.vuvk.swinger.graphic.weapon_in_hand;
 
+import com.vuvk.swinger.objects.weapon.AmmoType;
 import com.badlogic.gdx.Gdx;
 import com.vuvk.swinger.audio.SoundBank;
 import com.vuvk.swinger.graphic.Renderer;

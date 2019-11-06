@@ -54,7 +54,7 @@ import com.vuvk.swinger.res.Map;
 import com.vuvk.swinger.res.Material;
 import com.vuvk.swinger.res.TextureBank;
 import com.vuvk.swinger.utils.ArrayUtils;
-import com.vuvk.swinger.graphic.weapon_in_hand.AmmoType;
+import com.vuvk.swinger.objects.weapon.AmmoType;
 import java.util.Locale;
 
 public class Game extends ApplicationAdapter {    
