@@ -172,7 +172,7 @@ public final class Map {
     }*/;
     public final static WallMaterial[][][] WALLS_MATERIALS_MAP = new WallMaterial[LEVELS_COUNT][WIDTH][HEIGHT];
     
-    public final static int[][] DOORS_MAP = new int [WIDTH][HEIGHT];/* = {
+    public final static int[][] DOORS = new int [WIDTH][HEIGHT];/* = {
         {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
         {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
         {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
@@ -477,7 +477,7 @@ public final class Map {
         }
     }*/
     
-    private static void loadKeysDoors(int levelNum) {
+    /*private static void loadKeysDoors(int levelNum) {
         System.out.println("\tKeys and Doors...");
         
         int materialsCount = MaterialBank.BANK.size;
@@ -485,7 +485,7 @@ public final class Map {
         Json json = new Json();
         JsonValue jsonLevel = new JsonReader().parse(Gdx.files.internal("resources/maps/" + levelNum + "/keys_doors.json"));
         
-        /* грузим текстуры */     
+        // грузим текстуры      
         System.out.println("\t\tTextures and materials...");
         loadTexturesAndMaterials(jsonLevel);
         
@@ -530,7 +530,7 @@ public final class Map {
         System.out.println("\t\tDoors placing...");             
         for (int x = 0; x < WIDTH; ++x) {
             for (int y = 0; y < HEIGHT; ++y) {
-                DOORS_MAP[x][y] = -1;
+                DOORS[x][y] = -1;
             }
         }
         ArrayList<JsonValue> doorsMap = json.readValue(ArrayList.class, jsonLevel.get("doors_map"));   
@@ -540,7 +540,7 @@ public final class Map {
             int x = doorPos[0],
                 y = doorPos[1];
             
-            DOORS_MAP[x][y] = doorNum;
+            DOORS[x][y] = doorNum;
             
             // расставляем твердые объекты там, где двери
             if (doorNum >= 0) {
@@ -572,11 +572,11 @@ public final class Map {
                     SOLIDS[x][y] = true;
                 // дверь не была размещена
                 } else {
-                    DOORS_MAP[x][y] = -1;
+                    DOORS[x][y] = -1;
                 }                  
             } 
         }
-    }
+    }*/
     
     public static void reset() {
         Config.draw = false;

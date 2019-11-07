@@ -268,7 +268,7 @@ public final class Player extends Creature {
         Vector2 checkPos = pos.add(view);
         int x = (int)checkPos.x,
             y = (int)checkPos.y;
-        if (Map.DOORS_MAP[x][y] >= 0) {
+        if (Map.DOORS[x][y] >= 0) {
             // чекаем пересечение взгляда с дверью
             Door door = (Door)Map.SEGMENTS[x][y];
             if (door != null && !door.isOpen()) {

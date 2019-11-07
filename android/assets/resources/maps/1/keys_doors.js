@@ -47,7 +47,7 @@ for (var i = 0; i < keysDoorsParams.doors_config.length; ++i) {
 print("\t\tDoors placing...");             
 for (var x = 0; x < Map.WIDTH; ++x) {
 	for (var y = 0; y < Map.HEIGHT; ++y) {
-		Map.DOORS_MAP[x][y] = -1;
+		Map.DOORS[x][y] = -1;
 	}
 }
 
@@ -86,11 +86,11 @@ for (var i = 0; i < keysDoorsParams.doors_map.length; ++i) {
 			var door = new Door(a, b, doors_presets[doorNum].material, doors_presets[doorNum].keyNum);
 			Map.SEGMENTS[x][y] = door;
 			Map.SOLIDS[x][y] = true;            
-			Map.DOORS_MAP[x][y] = doorNum;
+			Map.DOORS[x][y] = doorNum;
 			
 		// дверь не была размещена
 		} else {
-			Map.DOORS_MAP[x][y] = -1;
+			Map.DOORS[x][y] = -1;
 		}                  
 	} 
 }

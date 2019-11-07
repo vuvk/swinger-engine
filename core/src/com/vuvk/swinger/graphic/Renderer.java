@@ -823,7 +823,7 @@ public final class Renderer/* extends JPanel*/ {
                     //    }
                     //// дверь
                     //} else {
-                    //    txr = Texture.DOORS[Map.DOORS_MAP[mapY * Map.WIDTH + mapX] - 1];
+                    //    txr = Texture.DOORS[Map.DOORS[mapY * Map.WIDTH + mapX] - 1];
                     //}
                     Texture txr = target.texture;
                     int[] pixelsColumn = txr.getColumn(texX);
