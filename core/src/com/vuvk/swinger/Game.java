@@ -15,6 +15,7 @@ import com.badlogic.gdx.Graphics;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.InputProcessor;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -41,6 +42,7 @@ import com.vuvk.swinger.graphic.Fog;
 import com.vuvk.swinger.graphic.Renderer;
 import com.vuvk.swinger.graphic.Sky;
 import com.vuvk.swinger.graphic.gui.GuiBank;
+import com.vuvk.swinger.graphic.gui.ScreenBlood;
 import com.vuvk.swinger.graphic.gui.text.FontBank;
 import com.vuvk.swinger.graphic.gui.text.Text;
 import com.vuvk.swinger.graphic.weapon_in_hand.AmmoPack;
@@ -53,7 +55,6 @@ import com.vuvk.swinger.objects.creatures.Player;
 import com.vuvk.swinger.res.Map;
 import com.vuvk.swinger.res.Material;
 import com.vuvk.swinger.res.TextureBank;
-import com.vuvk.swinger.utils.ArrayUtils;
 import com.vuvk.swinger.objects.weapon.AmmoType;
 import java.util.Locale;
 
@@ -75,6 +76,9 @@ public class Game extends ApplicationAdapter {
     private Text playerPosText;
     private Text playerHpText;
     private Text playerAmmoText;
+    
+    private Texture deathScreen;
+    private ScreenBlood[] screenBloods = new ScreenBlood[Config.WIDTH];
     
     int renderX,
         renderY,
@@ -156,94 +160,119 @@ public class Game extends ApplicationAdapter {
             fpsText.setMessage("FPS: " + Gdx.graphics.getFramesPerSecond());
         }
 
-        if (Config.draw) {
-            Material.updateAll();
-            Sprite.updateAll();
-            Door.updateAll();
-            Creature.updateAll();
-
-            Sky.getInstance().update();
-            
+        if (Config.draw) {            
             Renderer renderer = Renderer.getInstance();
             Player player = Player.getInstance();
             Camera playerCamera = player.getCamera();
             
-            renderer.setActiveCamera(playerCamera);
-
-            // set viewport
-            //Gdx.gl.glViewport((int) viewport.x,     (int) viewport.y,
-            //                  (int) viewport.width, (int) viewport.height);
             camViewport.apply();
             batch.setProjectionMatrix(cam.combined);
-            batch.begin();
             
-            //Renderer.canRender = false;
-            //Renderer.SCREEN.draw(Renderer.getInstance().SCREEN_RASTER, 0, 0);
-            
-            batch.draw(renderer.getFrame(), 0, 0, Config.WIDTH + 1, Config.HEIGHT + 1);
-            //Renderer.canRender = true;
-            
-            /*
-            font.draw(batch, processors, 10, 450);  
-            font.draw(batch, fpsString,  10, 470);  
-            */
-            
-            // GUI            
-            if (!Config.STEP_BY_STEP_RENDERING) {                
-                Vector2 pos = player.getPos();
-                playerPosText.setMessage(String.format(Locale.ENGLISH, "PLAYER POS: %.2f %.2f", pos.x, pos.y));
+            if (player.getHealth() > 0.0) {
+                Material.updateAll();
+                Sprite.updateAll();
+                Door.updateAll();
+                Creature.updateAll();
+
+                Sky.getInstance().update();
+
+                renderer.setActiveCamera(playerCamera);
+
+                // set viewport
+                //Gdx.gl.glViewport((int) viewport.x,     (int) viewport.y,
+                //                  (int) viewport.width, (int) viewport.height);
+
+                //Renderer.canRender = false;
+                //Renderer.SCREEN.draw(Renderer.getInstance().SCREEN_RASTER, 0, 0);
                 
-                playerHpText.setLocation(new Vector2(16, Config.HEIGHT - 16));
-                playerHpText.setMessage(String.format(Locale.ENGLISH, "HP %.0f", player.getHealth()));
-                                
-                String ammoText = "";
-                AmmoType ammoType = player.getWeaponInHand().getAmmoType();
-                switch (ammoType) {
-                    case PISTOL:
-                    case SHOTGUN:
-                    case ROCKET:
-                        ammoText = "AMMO " + AmmoPack.PACK.get(ammoType);
-                        break;
-                }
-                playerAmmoText.setLocation(new Vector2(16, Config.HEIGHT - 40));
-                playerAmmoText.setMessage(ammoText);
-                
-                Text.drawAll(batch);
-            }
-            
-            if (Config.console) {
-                batch.draw(consoleBackground, 0, 0);
-                font.draw(batch, Config.consoleCommand, 10, 25);                      
-            }
-            
-            batch.end();
-            
-            //Gdx.gl.glViewport(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-            stage.getViewport().apply();
-            stage.draw();
-            stage.act();
-            
-            // вращение мышкой и фиксация курсора в центре окна
-            if (Config.mouseLook) {
-                double deltaX = InputManager.getDeltaX();
-                if (deltaX != 0.0) {
-                    double mouseSpeed = deltaX / Config.WIDTH;
-                    playerCamera.rotate(Math.toRadians(mouseSpeed * Player.MOUSE_ROT_SPEED ));                      
-                }  
+                batch.begin();
+                batch.draw(renderer.getFrame(), 0, 0, Config.WIDTH + 1, Config.HEIGHT + 1);
+                //Renderer.canRender = true;
+
                 /*
-                if (deltaX < 0.0) {
-                    player.setRotL(false);
-                    player.setRotR(true);
-                } else if (deltaX > 0.0) {
-                    player.setRotL(true);
-                    player.setRotR(false);
-                } else {                    
-                    player.setRotL(false);
-                    player.setRotR(false);
-                }*/
+                font.draw(batch, processors, 10, 450);  
+                font.draw(batch, fpsString,  10, 470);  
+                */
+
+                // GUI            
+                if (!Config.STEP_BY_STEP_RENDERING) {                
+                    Vector2 pos = player.getPos();
+                    playerPosText.setMessage(String.format(Locale.ENGLISH, "PLAYER POS: %.2f %.2f", pos.x, pos.y));
+
+                    playerHpText.setLocation(new Vector2(16, Config.HEIGHT - 16));
+                    playerHpText.setMessage(String.format(Locale.ENGLISH, "HP %.0f", player.getHealth()));
+
+                    String ammoText = "";
+                    AmmoType ammoType = player.getWeaponInHand().getAmmoType();
+                    switch (ammoType) {
+                        case PISTOL:
+                        case SHOTGUN:
+                        case ROCKET:
+                            ammoText = "AMMO " + AmmoPack.PACK.get(ammoType);
+                            break;
+                    }
+                    playerAmmoText.setLocation(new Vector2(16, Config.HEIGHT - 40));
+                    playerAmmoText.setMessage(ammoText);
+
+                    Text.drawAll(batch);
+                }
+
+                if (Config.console) {
+                    batch.draw(consoleBackground, 0, 0);
+                    font.draw(batch, Config.consoleCommand, 10, 25);                      
+                }
+
+                batch.end();
+
+                //Gdx.gl.glViewport(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+                stage.getViewport().apply();
+                stage.draw();
+                stage.act();
+
+                // вращение мышкой и фиксация курсора в центре окна
+                if (Config.mouseLook) {
+                    double deltaX = InputManager.getDeltaX();
+                    if (deltaX != 0.0) {
+                        double mouseSpeed = deltaX / Config.WIDTH;
+                        playerCamera.rotate(Math.toRadians(mouseSpeed * Player.MOUSE_ROT_SPEED ));                      
+                    }  
+                    /*
+                    if (deltaX < 0.0) {
+                        player.setRotL(false);
+                        player.setRotR(true);
+                    } else if (deltaX > 0.0) {
+                        player.setRotL(true);
+                        player.setRotR(false);
+                    } else {                    
+                        player.setRotL(false);
+                        player.setRotR(false);
+                    }*/
+
+                    InputManager.setLocation(windowCenter);
+                }    
+            }
+            // игрок умер
+            else {
+                if (deathScreen == null) {
+                    deathScreen = renderer.getFrame();
+                    SoundSystem.playOnceRandom(new FileHandle[]{SoundBank.FILE_DIE1, SoundBank.FILE_DIE2});
+                    
+                    for (int i = 0; i < screenBloods.length; ++i) {
+                        screenBloods[i] = new ScreenBlood(new Vector2(i, 0));
+                    }
+                }
                 
-                InputManager.setLocation(windowCenter);
-            }    
+                for (int i = 0; i < screenBloods.length; ++i) {
+                    screenBloods[i].update();
+                    Vector2 pos = screenBloods[i].getPos();
+                    if (pos.y < Renderer.HEIGHT) {
+                        deathScreen.draw(ScreenBlood.DROP, (int)pos.x, (int)pos.y);
+                    }
+                }
+                batch.begin();
+                batch.draw(deathScreen, 0, 0, Config.WIDTH + 1, Config.HEIGHT + 1);
+                batch.end();                
+            }
         }
         InputManager.reset();
         

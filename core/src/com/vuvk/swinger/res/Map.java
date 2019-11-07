@@ -41,12 +41,16 @@ import com.vuvk.swinger.js.Interpreter;
 import com.vuvk.swinger.math.Segment;
 import com.vuvk.swinger.math.Vector2;
 import com.vuvk.swinger.math.Vector3;
+import com.vuvk.swinger.objects.Clip;
 import com.vuvk.swinger.objects.Door;
 import com.vuvk.swinger.objects.Key;
 import com.vuvk.swinger.objects.creatures.Creature;
 import com.vuvk.swinger.objects.creatures.Player;
 import com.vuvk.swinger.objects.creatures.enemy.Guard;
 import com.vuvk.swinger.objects.creatures.enemy.GuardRocketeer;
+import com.vuvk.swinger.objects.weapon.Minigun;
+import com.vuvk.swinger.objects.weapon.Pistol;
+import com.vuvk.swinger.objects.weapon.Rifle;
 import com.vuvk.swinger.utils.ArrayUtils;
 import com.vuvk.swinger.utils.ImmutablePair;
 import java.io.File;
@@ -350,7 +354,7 @@ public final class Map {
         }    
     }
     
-    /*private static void loadSprites(int levelNum) {            
+    private static void loadSprites(int levelNum) {            
         System.out.println("\tSprites...");
         
         int materialsCount = MaterialBank.BANK.size;    
@@ -376,9 +380,9 @@ public final class Map {
             
             new Sprite(mat, pos);          
         }
-    }*/
+    }
     
-    /*private static void loadWeapons(int levelNum) {             
+    private static void loadWeapons(int levelNum) {             
         System.out.println("\tWeapons...");
         
         int materialsCount = MaterialBank.BANK.size;
@@ -424,9 +428,9 @@ public final class Map {
                     break;
             }
         }
-    }    */
+    }    
     
-    /*private static void loadClips(int levelNum) {
+    private static void loadClips(int levelNum) {
         System.out.println("\tClips...");
         
         int materialsCount = MaterialBank.BANK.size;    
@@ -475,9 +479,9 @@ public final class Map {
             
             new Clip(clipsMat[clipNum], pos, clipsType[clipNum], clipsVol[clipNum]);
         }
-    }*/
+    }
     
-    /*private static void loadKeysDoors(int levelNum) {
+    private static void loadKeysDoors(int levelNum) {
         System.out.println("\tKeys and Doors...");
         
         int materialsCount = MaterialBank.BANK.size;
@@ -576,7 +580,7 @@ public final class Map {
                 }                  
             } 
         }
-    }*/
+    }
     
     public static void reset() {
         Config.draw = false;
@@ -595,11 +599,9 @@ public final class Map {
                                 
         System.out.println("Loading map...");
         
-        Interpreter.clearListing();
-        Interpreter.addListing(new File("resources/maps/loader.js"));
-        
-        //Interpreter.evalScript(new File("resources/maps/loader.js"));
-                
+        //Interpreter.clearListing();
+        //Interpreter.addListing(new File("resources/maps/loader.js"));
+              
         Json json = new Json();
         JsonValue jsonlevel = new JsonReader().parse(Gdx.files.internal("resources/maps/" + levelNum + "/map.json"));
                 
@@ -690,23 +692,23 @@ public final class Map {
         }
                         
         /* грузим спрайты */  
-        //loadSprites(levelNum);
-        Interpreter.addListing(new File("resources/maps/" + levelNum + "/sprites.js"));
+        loadSprites(levelNum);
+        //Interpreter.addListing(new File("resources/maps/" + levelNum + "/sprites.js"));
         
         /* грузим оружие */
-        //loadWeapons(levelNum);  
-        Interpreter.addListing(new File("resources/maps/" + levelNum + "/weapons.js"));
+        loadWeapons(levelNum);  
+        //Interpreter.addListing(new File("resources/maps/" + levelNum + "/weapons.js"));
         
         /* грузим патроны */
-        //loadClips(levelNum);
-        Interpreter.addListing(new File("resources/maps/" + levelNum + "/clips.js"));
+        loadClips(levelNum);
+        //Interpreter.addListing(new File("resources/maps/" + levelNum + "/clips.js"));
         
         /* грузим ключи и двери */
-        //loadKeysDoors(levelNum);
-        Interpreter.addListing(new File("resources/maps/" + levelNum + "/keys_doors.js"));
+        loadKeysDoors(levelNum);
+        //Interpreter.addListing(new File("resources/maps/" + levelNum + "/keys_doors.js"));
                
         
-        Interpreter.runListing();
+        //Interpreter.runListing();
         
         System.out.println("\tWeapons in player's hand...");
         //Sprite.loadAll();
