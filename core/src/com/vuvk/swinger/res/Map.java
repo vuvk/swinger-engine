@@ -6,6 +6,7 @@
 package com.vuvk.swinger.res;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.JsonReader;
@@ -21,6 +22,8 @@ import com.vuvk.retard_sound_system.Music;
 import com.vuvk.retard_sound_system.SoundSystem;
 */
 import com.vuvk.swinger.Config;
+import com.vuvk.swinger.audio.SoundBank;
+import com.vuvk.swinger.audio.SoundSystem;
 import java.io.FileReader;
 import java.io.Reader;
 import java.util.Arrays;
@@ -44,6 +47,7 @@ import com.vuvk.swinger.math.Vector3;
 import com.vuvk.swinger.objects.Clip;
 import com.vuvk.swinger.objects.Door;
 import com.vuvk.swinger.objects.Key;
+import com.vuvk.swinger.objects.MedKit;
 import com.vuvk.swinger.objects.creatures.Creature;
 import com.vuvk.swinger.objects.creatures.Player;
 import com.vuvk.swinger.objects.creatures.enemy.Guard;
@@ -53,6 +57,7 @@ import com.vuvk.swinger.objects.weapon.Pistol;
 import com.vuvk.swinger.objects.weapon.Rifle;
 import com.vuvk.swinger.utils.ArrayUtils;
 import com.vuvk.swinger.utils.ImmutablePair;
+import com.vuvk.swinger.utils.Pair;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
@@ -74,6 +79,11 @@ public final class Map {
     
     public final static boolean[][] SOLIDS = new boolean[WIDTH][HEIGHT];
     public final static boolean[][] VISIBLE_CELLS = new boolean[WIDTH][HEIGHT];
+    
+    // уровень активен?
+    public static boolean active = false;
+    
+    private static Music MUSIC = null;
     
     
     private Map() {}    
@@ -481,6 +491,41 @@ public final class Map {
         }
     }
     
+    private static void loadMedkits(int levelNum) {
+        System.out.println("\nMedkits...");
+        
+        int materialsCount = MaterialBank.BANK.size;    
+        
+        Json json = new Json();
+        JsonValue jsonLevel = new JsonReader().parse(Gdx.files.internal("resources/maps/" + levelNum + "/medkits.json"));        
+         
+        System.out.println("\t\tTextures and materials...");
+        loadTexturesAndMaterials(jsonLevel);
+        
+        ArrayList<JsonValue> medkitsArray = json.readValue(ArrayList.class, jsonLevel.get("config"));   
+        Pair<Material, Double>[] presets = new Pair[medkitsArray.size()];
+        for (int i = 0; i < medkitsArray.size(); ++i) {
+            JsonValue jsonClip = medkitsArray.get(i);
+            presets[i] = new Pair<>();
+                    
+            int matNum = jsonClip.getInt("material");
+            if (matNum >= 0) {
+                presets[i].setLeft(MaterialBank.BANK.get(materialsCount + matNum));
+            }
+            presets[i].setRight(jsonClip.getDouble("volume"));
+        }        
+        
+        ArrayList<JsonValue> clipsMap = json.readValue(ArrayList.class, jsonLevel.get("map"));  
+        for (JsonValue jsonClip : clipsMap) {
+            int num = jsonClip.getInt("medkit");
+            
+            float[] jsonPos = jsonClip.get("position").asFloatArray();
+            Vector3 pos = new Vector3(jsonPos[0], jsonPos[1], jsonPos[2]);
+            
+            new MedKit(presets[num].getLeft(), pos, presets[num].getRight());
+        }
+    }
+    
     private static void loadKeysDoors(int levelNum) {
         System.out.println("\tKeys and Doors...");
         
@@ -591,6 +636,14 @@ public final class Map {
         Sprite.deleteAll();
         Material.deleteAll();
         Player.deleteInstance();
+        
+        if (MUSIC != null) {
+            MUSIC.stop();
+            MUSIC.dispose();
+            MUSIC = null;
+        }        
+        
+        active = false;
     }
     
     public static void load(int levelNum) {
@@ -703,6 +756,9 @@ public final class Map {
         loadClips(levelNum);
         //Interpreter.addListing(new File("resources/maps/" + levelNum + "/clips.js"));
         
+        /* грузим аптечки */
+        loadMedkits(levelNum);
+        
         /* грузим ключи и двери */
         loadKeysDoors(levelNum);
         //Interpreter.addListing(new File("resources/maps/" + levelNum + "/keys_doors.js"));
@@ -739,14 +795,17 @@ public final class Map {
         
         new Text(FontBank.FONT_OUTLINE, "demo", new Vector2(250, 150));
         
-        /*
-        new Sound(SoundBank.SOUND_FILE_MUSIC1)
-            .setVolume(0.6f)
-            .loop();
-        */
+        
+        MUSIC = SoundSystem.loadSound(SoundBank.FILE_MUSIC1);
+        MUSIC.setVolume(0.6f);
+        MUSIC.setLooping(true);
+        MUSIC.play();
         
         new Sprite(TextureBank.GUARD_STAND, 0, new Vector3(17.1, 14.3, 1.0)).rotate(180);
         
         //new Music("resources/snd/music/music.mp3").play(true);
+        
+        
+        active = true;
     }
 }

@@ -9,7 +9,7 @@ public class DesktopLauncher {
     public static void main (String[] arg) {
         LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
 
-        config.allowSoftwareMode = false;
+        config.allowSoftwareMode = true;
         config.useHDPI = false;
         config.useGL30 = false;
         config.foregroundFPS = config.backgroundFPS = 120;

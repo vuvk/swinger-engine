@@ -253,21 +253,21 @@ public class Game extends ApplicationAdapter {
             }
             // игрок умер
             else {
-                if (deathScreen == null) {
+                if (Map.active) {
                     deathScreen = renderer.getFrame();
-                    SoundSystem.playOnceRandom(new FileHandle[]{SoundBank.FILE_DIE1, SoundBank.FILE_DIE2});
+                    SoundSystem.playOnce(SoundBank.FILE_PLAYER_DIE);
                     
                     for (int i = 0; i < screenBloods.length; ++i) {
                         screenBloods[i] = new ScreenBlood(new Vector2(i, 0));
                     }
+                    
+                    Map.active = false;
                 }
                 
                 for (int i = 0; i < screenBloods.length; ++i) {
                     screenBloods[i].update();
                     Vector2 pos = screenBloods[i].getPos();
-                    if (pos.y < Renderer.HEIGHT) {
-                        deathScreen.draw(ScreenBlood.DROP, (int)pos.x, (int)pos.y);
-                    }
+                    deathScreen.draw(ScreenBlood.DROP, (int)pos.x, (int)pos.y);
                 }
                 batch.begin();
                 batch.draw(deathScreen, 0, 0, Config.WIDTH + 1, Config.HEIGHT + 1);

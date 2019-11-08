@@ -23,6 +23,7 @@ public abstract class Creature extends Object3D {
     private final static List<Creature> FOR_DELETE_FROM_LIB = new ArrayList<>();
     
     protected double health;
+    protected final double maxHealth;
     protected double radius;
     protected final BoundingBox bb = new BoundingBox();
     
@@ -30,6 +31,7 @@ public abstract class Creature extends Object3D {
         setHealth(health);
         setRadius(radius);
         setPos(pos);
+        maxHealth = health;
     //  update();
         LIB.add(this);
     }
@@ -67,6 +69,10 @@ public abstract class Creature extends Object3D {
 
     public double getHealth() {
         return health;
+    }
+    
+    public double getMaxHealth() {
+        return maxHealth;
     }
 
     public BoundingBox getBB() {

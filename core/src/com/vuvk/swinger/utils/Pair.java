@@ -12,6 +12,9 @@ package com.vuvk.swinger.utils;
 public class Pair<T,V> {
     private T left;
     private V right; 
+    
+    public Pair() {
+    }
 
     public Pair(T left, V right) {
         this.left = left;

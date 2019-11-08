@@ -1,0 +1,26 @@
+{
+    "textures": [
+        /* 0 */	"resources/pics/items/medic/chicken.png",
+        /* 1 */	"resources/pics/items/medic/dog_food.png",
+        /* 2 */	"resources/pics/items/medic/medkit.png"
+    ],
+
+    "materials": [
+        /* 0 */	{"textures": [0], "animation_speed": 0, "play_once": true},
+        /* 1 */	{"textures": [1], "animation_speed": 0, "play_once": true},
+        /* 2 */	{"textures": [2], "animation_speed": 0, "play_once": true}
+    ],
+
+    "config": [
+        /* 0 */ {"material": 0, "volume": 25},
+        /* 1 */ {"material": 1, "volume": 15},
+        /* 1 */ {"material": 2, "volume": 25}
+    ],
+
+    "map": [
+        {"medkit": 0, "position": [ 8.5,  9.5, 0.0]},
+        {"medkit": 0, "position": [ 9.5,  9.5, 0.0]},
+        {"medkit": 1, "position": [ 9.7, 18.7, 0.0]},
+        {"medkit": 2, "position": [17.5, 13.5, 0.0]}        
+    ]
+}

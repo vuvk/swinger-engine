@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.g3d.particles.influencers.ParticleControllerInfluencer;
+import com.vuvk.swinger.graphic.Renderer;
 import com.vuvk.swinger.math.Vector2;
 import java.util.Random;
 
@@ -42,6 +43,8 @@ public class ScreenBlood {
     }
     
     public void update() {
-        pos.y += speed * Gdx.graphics.getDeltaTime();
+        if (pos.y < Renderer.HEIGHT) {
+            pos.y += speed * Gdx.graphics.getDeltaTime();
+        }
     }
 }

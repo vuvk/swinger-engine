@@ -45,16 +45,22 @@ public final class SoundBank {
     private final static String PATH_DOOR_CLOSE = "resources/snd/world/door_stop.wav";
     
     /* items */
-    private final static String PATH_GET_WEAPON = "resources/snd/items/pkup.wav";
+    private final static String PATH_GET_WEAPON = "resources/snd/items/Weapon.wav";
     private final static String PATH_GET_KEY    = "resources/snd/items/Key.wav";
     private final static String PATH_GET_AMMO   = "resources/snd/items/Ammo.wav";
+    private final static String PATH_GET_MEDKIT1 = "resources/snd/items/Health.wav";
+    private final static String PATH_GET_MEDKIT2 = "resources/snd/items/Medkit.wav";
+    
     
     /* phrases */
     private final static String PATH_NEED_KEY1 = "resources/snd/player/need_key1.wav";
     private final static String PATH_NEED_KEY2 = "resources/snd/player/need_key2.wav";
     
+    /* dies */    
+    private final static String PATH_PLAYER_DIE = "resources/snd/player/Player Dies.wav";
+    
     /* music */
-    private final static String PATH_MUSIC1 = "resources/snd/music.mp3";
+    private final static String PATH_MUSIC1 = "resources/snd/music/music.ogg";
     
     
     /* handles */
@@ -86,10 +92,18 @@ public final class SoundBank {
     public final static FileHandle FILE_GET_WEAPON = Gdx.files.internal(PATH_GET_WEAPON);
     public final static FileHandle FILE_GET_KEY    = Gdx.files.internal(PATH_GET_KEY);
     public final static FileHandle FILE_GET_AMMO   = Gdx.files.internal(PATH_GET_AMMO);
+    public final static FileHandle FILE_GET_MEDKIT1 = Gdx.files.internal(PATH_GET_MEDKIT1);
+    public final static FileHandle FILE_GET_MEDKIT2 = Gdx.files.internal(PATH_GET_MEDKIT2);
     
     /* phrases */
     public final static FileHandle FILE_NEED_KEY1 = Gdx.files.internal(PATH_NEED_KEY1);
     public final static FileHandle FILE_NEED_KEY2 = Gdx.files.internal(PATH_NEED_KEY2);
+    
+    /* dies */
+    public final static FileHandle FILE_PLAYER_DIE = Gdx.files.internal(PATH_PLAYER_DIE);
+    
+    /* music */
+    public static final FileHandle FILE_MUSIC1 = Gdx.files.internal(PATH_MUSIC1);
     
     /* все звуки здесь? */
     public final static Array<FileHandle> HANDLES = new Array<>(false, 10);

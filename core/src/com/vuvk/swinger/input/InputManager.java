@@ -143,7 +143,7 @@ public final class InputManager extends InputAdapter {
                         }
                         Config.consoleCommand = sb.toString();
                         //Config.consoleCommand = Config.consoleCommand.substring(0, Config.consoleCommand.length() - 1);
-                        System.out.println("backspace");
+                        //System.out.println("backspace");
                     } else {
                         Config.consoleCommand = "";
                     }

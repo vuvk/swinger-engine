@@ -58,6 +58,7 @@ public final class SoundSystem {
                 }
                 
                 for (Music sound : LIB) {
+                    sound.stop();
                     sound.dispose();
                 }
                 LIB.clear();
@@ -74,6 +75,13 @@ public final class SoundSystem {
         
     public static Music loadSound(FileHandle file) {
         return Gdx.audio.newMusic(file);
+    }
+    
+    public static void play(Music sound, boolean looping) {
+        sound.stop();        
+        sound.setLooping(looping);
+        sound.play();
+        LIB.add(sound);
     }
     
     /**
