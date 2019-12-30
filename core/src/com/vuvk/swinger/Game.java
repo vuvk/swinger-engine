@@ -47,7 +47,9 @@ import com.vuvk.swinger.graphic.gui.text.FontBank;
 import com.vuvk.swinger.graphic.gui.text.Text;
 import com.vuvk.swinger.graphic.weapon_in_hand.AmmoPack;
 import com.vuvk.swinger.input.InputManager;
+import com.vuvk.swinger.math.Segment;
 import com.vuvk.swinger.math.Vector2;
+import com.vuvk.swinger.math.Vector3;
 import com.vuvk.swinger.objects.Door;
 import com.vuvk.swinger.objects.Sprite;
 import com.vuvk.swinger.objects.creatures.Creature;
@@ -84,6 +86,33 @@ public class Game extends ApplicationAdapter {
         renderY,
         renderWidth, 
         renderHeight;
+    
+    class KishPoint {
+        Vector2 a;
+        boolean onDown = false;
+        
+        KishPoint(Vector2 v) {
+            a = v;
+        }
+        
+        void update() {
+            double speed = 0.5 * Gdx.graphics.getDeltaTime();
+            Vector2 move = new Vector2(speed, 0);
+            
+            if (onDown) {
+                a = a.sub(move);
+                if (a.x <= 1.25) {
+                    onDown = false;
+                }
+            } else {
+                a = a.add(move);
+                if (a.x >= 1.75) {
+                    onDown = true;
+                }                
+            }
+        }
+    }
+    KishPoint[] kishPoints = new KishPoint[10];
 
     @Override
     public void create () {                 
@@ -144,6 +173,22 @@ public class Game extends ApplicationAdapter {
          
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Renderer.getInstance().start();
+        
+        /*for (int i = 1; i < 6; ++i) {
+            kishPoints[i - 1] = new KishPoint(Map.SEGMENTS[1][i].getA());
+            kishPoints[(i - 1) * 2 + 1] = new KishPoint(Map.SEGMENTS[1][i].getB());
+        }*/
+        
+        kishPoints[0] = new KishPoint(Map.SEGMENTS[1][1].getA());
+        kishPoints[1] = new KishPoint(Map.SEGMENTS[1][1].getB());
+        kishPoints[2] = new KishPoint(Map.SEGMENTS[1][2].getA());
+        kishPoints[3] = new KishPoint(Map.SEGMENTS[1][2].getB());
+        kishPoints[4] = new KishPoint(Map.SEGMENTS[1][3].getA());
+        kishPoints[5] = new KishPoint(Map.SEGMENTS[1][3].getB());
+        kishPoints[6] = new KishPoint(Map.SEGMENTS[1][4].getA());
+        kishPoints[7] = new KishPoint(Map.SEGMENTS[1][4].getB());
+        kishPoints[8] = new KishPoint(Map.SEGMENTS[1][5].getA());
+        kishPoints[9] = new KishPoint(Map.SEGMENTS[1][5].getB());
     }
 
     @Override
@@ -153,6 +198,77 @@ public class Game extends ApplicationAdapter {
         //Graphics graphics = Gdx.graphics;
         
         cam.update();
+        
+        /*for (int i = 1; i < 6; ++i) {
+            kishPoints[i - 1].update();
+            kishPoints[(i - 1) * 2 + 1].update();
+            
+            Map.SEGMENTS[1][i].setA(kishPoints[i - 1].a);
+            //Map.SEGMENTS[1][i].setB(kishPoints[(i - 1) * 2 + 1].a);
+        }*/
+        for (int i = 0; i < 10; ++i) {
+            kishPoints[i].update();
+        }
+        
+        Map.SEGMENTS[1][1].setA(kishPoints[0].a);
+        Map.SEGMENTS[1][1].setB(kishPoints[1].a);
+        Map.SEGMENTS[1][2].setA(kishPoints[2].a);
+        Map.SEGMENTS[1][2].setB(kishPoints[3].a);
+        Map.SEGMENTS[1][3].setA(kishPoints[4].a);
+        Map.SEGMENTS[1][3].setB(kishPoints[5].a);
+        Map.SEGMENTS[1][4].setA(kishPoints[6].a);
+        Map.SEGMENTS[1][4].setB(kishPoints[7].a);
+        Map.SEGMENTS[1][5].setA(kishPoints[8].a);
+        Map.SEGMENTS[1][5].setB(kishPoints[9].a);
+        
+        Segment tree = Map.SEGMENTS[7][ 3];
+        Vector2 a = tree.getA();
+        Vector2 b = tree.getB();
+        double angle = Math.toRadians(45 * Gdx.graphics.getDeltaTime());
+        
+        a.x -= 7.5;
+        b.x -= 7.5;
+        a.y -= 3.5;
+        b.y -= 3.5;
+        
+        double cos = Math.cos(angle);
+        double sin = Math.sin(angle);
+        
+        double x = a.x;
+        a.x = a.x * cos - a.y * sin;
+        a.y =   x * sin + a.y * cos;
+        
+        x = b.x;
+        b.x = b.x * cos - b.y * sin;
+        b.y =   x * sin + b.y * cos;
+        
+        a.x += 7.5;
+        b.x += 7.5;
+        a.y += 3.5;
+        b.y += 3.5;        
+        
+        
+        tree = Map.SEGMENTS[7][ 5];
+        a = tree.getA();
+        b = tree.getB();
+        
+        a.x -= 7.5;
+        b.x -= 7.5;
+        a.y -= 5.5;
+        b.y -= 5.5;
+        
+        x = a.x;
+        a.x = a.x * cos - a.y * sin;
+        a.y =   x * sin + a.y * cos;
+        
+        x = b.x;
+        b.x = b.x * cos - b.y * sin;
+        b.y =   x * sin + b.y * cos;
+        
+        a.x += 7.5;
+        b.x += 7.5;
+        a.y += 5.5;
+        b.y += 5.5;      
                 
         timeForFPS += Gdx.graphics.getDeltaTime();
         if (timeForFPS > 0.5) {

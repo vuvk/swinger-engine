@@ -7,10 +7,13 @@ package com.vuvk.swinger.res;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.JsonReader;
 import com.badlogic.gdx.utils.JsonValue;
+import com.badlogic.gdx.utils.JsonWriter;
+import com.badlogic.gdx.utils.StreamUtils;
 import com.vuvk.swinger.objects.Sprite;
 /*
 import com.google.gson.Gson;
@@ -59,7 +62,12 @@ import com.vuvk.swinger.utils.ArrayUtils;
 import com.vuvk.swinger.utils.ImmutablePair;
 import com.vuvk.swinger.utils.Pair;
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.ObjectOutputStream;
+import java.io.StringWriter;
+import java.io.Writer;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -335,7 +343,7 @@ public final class Map {
     private static void loadTexturesAndMaterials(JsonValue jsonLevel) {
         Json json = new Json();
         
-        int texturesCount  = TextureBank.WALLS.size;        
+        int texturesCount  = TextureBank.WALLS.size();        
         
         /* грузим текстуры */    
         ArrayList<String> txrArray = json.readValue(ArrayList.class, jsonLevel.get("textures"));        
@@ -367,7 +375,7 @@ public final class Map {
     private static void loadSprites(int levelNum) {            
         System.out.println("\tSprites...");
         
-        int materialsCount = MaterialBank.BANK.size;    
+        int materialsCount = MaterialBank.BANK.size();    
         
         Json json = new Json();
         JsonValue jsonLevel = new JsonReader().parse(Gdx.files.internal("resources/maps/" + levelNum + "/sprites.json"));        
@@ -395,7 +403,7 @@ public final class Map {
     private static void loadWeapons(int levelNum) {             
         System.out.println("\tWeapons...");
         
-        int materialsCount = MaterialBank.BANK.size;
+        int materialsCount = MaterialBank.BANK.size();
         
         Json json = new Json();
         JsonValue jsonLevel = new JsonReader().parse(Gdx.files.internal("resources/maps/" + levelNum + "/weapons.json"));
@@ -443,7 +451,7 @@ public final class Map {
     private static void loadClips(int levelNum) {
         System.out.println("\tClips...");
         
-        int materialsCount = MaterialBank.BANK.size;    
+        int materialsCount = MaterialBank.BANK.size();    
         
         Json json = new Json();
         JsonValue jsonLevel = new JsonReader().parse(Gdx.files.internal("resources/maps/" + levelNum + "/clips.json"));        
@@ -494,7 +502,7 @@ public final class Map {
     private static void loadMedkits(int levelNum) {
         System.out.println("\nMedkits...");
         
-        int materialsCount = MaterialBank.BANK.size;    
+        int materialsCount = MaterialBank.BANK.size();    
         
         Json json = new Json();
         JsonValue jsonLevel = new JsonReader().parse(Gdx.files.internal("resources/maps/" + levelNum + "/medkits.json"));        
@@ -529,7 +537,7 @@ public final class Map {
     private static void loadKeysDoors(int levelNum) {
         System.out.println("\tKeys and Doors...");
         
-        int materialsCount = MaterialBank.BANK.size;
+        int materialsCount = MaterialBank.BANK.size();
         
         Json json = new Json();
         JsonValue jsonLevel = new JsonReader().parse(Gdx.files.internal("resources/maps/" + levelNum + "/keys_doors.json"));
@@ -666,8 +674,8 @@ public final class Map {
         }
         /* грузим текстуры */     
         System.out.println("\tTextures and materials...");
-        TextureBank.WALLS = new Array<>();
-        MaterialBank.BANK = new Array<>();
+        TextureBank.WALLS.clear();
+        MaterialBank.BANK.clear();
         loadTexturesAndMaterials(jsonlevel);
         
         /* формируем материалы стен */
@@ -721,19 +729,11 @@ public final class Map {
             int x = i / HEIGHT;
             int y = i % WIDTH;
             CEIL[x][y] = ceil[i];
-        }      
+        }
         
         for (Segment[] array : SEGMENTS) {
             Arrays.fill(array, null);
         }
-                
-        // кастомные сегменты
-        /*  
-        SEGMENTS[21][ 9] = new TexturedSegment(21,    9, 22, 9.5, TextureBank.WALLS[1]);
-        SEGMENTS[22][10] = new TexturedSegment(22.5, 10, 23, 11 , TextureBank.WALLS[1]);        
-        SEGMENTS[22][12] = new TexturedSegment(22,   13, 23, 12 , TextureBank.WALLS[1]);        
-        SEGMENTS[21][13] = new TexturedSegment(21,   14, 22, 13 , TextureBank.WALLS[1]);
-        */
 
         for (int x = 0; x < WIDTH; ++x) {
             for (int y = 0; y < HEIGHT; ++y) {
@@ -796,16 +796,139 @@ public final class Map {
         new Text(FontBank.FONT_OUTLINE, "demo", new Vector2(250, 150));
         
         
-        MUSIC = SoundSystem.loadSound(SoundBank.FILE_MUSIC1);
+        /*MUSIC = SoundSystem.loadSound(SoundBank.FILE_MUSIC1);
         MUSIC.setVolume(0.6f);
         MUSIC.setLooping(true);
-        MUSIC.play();
+        MUSIC.play();*/
         
         new Sprite(TextureBank.GUARD_STAND, 0, new Vector3(17.1, 14.3, 1.0)).rotate(180);
         
         //new Music("resources/snd/music/music.mp3").play(true);
         
+                
+        // кастомные сегменты
+        Texture kishka = new Texture("resources/pics/world/flat/zeltum33.jpg");
+        Material kishkaMat = new Material(kishka);
+        
+        SEGMENTS[1][ 1] = new TexturedSegment(2, 1, 1, 2, kishkaMat);
+        SEGMENTS[1][ 2] = new TexturedSegment(1, 2, 2, 3, kishkaMat);
+        SEGMENTS[1][ 3] = new TexturedSegment(2, 3, 1, 4, kishkaMat);
+        SEGMENTS[1][ 4] = new TexturedSegment(1, 4, 2, 5, kishkaMat);
+        SEGMENTS[1][ 5] = new TexturedSegment(2, 5, 1, 6, kishkaMat);
+        
+        Texture tree = new Texture("resources/pics/sprites/nature/tree0.png");
+        Material treeMat = new Material(tree);
+                
+        SEGMENTS[7][ 3] = new TexturedSegment(7, 3, 7, 4, treeMat);
+        SEGMENTS[7][ 5] = new TexturedSegment(7.5, 5, 7.5, 6, treeMat);
+        
+                        
+        /*  
+        SEGMENTS[21][ 9] = new TexturedSegment(21,    9, 22, 9.5, TextureBank.WALLS[1]);
+        SEGMENTS[22][10] = new TexturedSegment(22.5, 10, 23, 11 , TextureBank.WALLS[1]);        
+        SEGMENTS[22][12] = new TexturedSegment(22,   13, 23, 12 , TextureBank.WALLS[1]);        
+        SEGMENTS[21][13] = new TexturedSegment(21,   14, 22, 13 , TextureBank.WALLS[1]);
+        */
         
         active = true;
+    }
+    
+    
+    private static void saveTexturesAndMaterials(Json jsonLevel) {
+        Json json = new Json();      
+        
+        /* грузим текстуры */    
+        List<String> txrArray = new ArrayList<>(TextureBank.WALLS.size());
+        for (Texture txr : TextureBank.WALLS) {
+            txrArray.add(txr.getPath());
+        }
+        
+        json.writeValue("textures", txrArray);
+        
+        /* Формируем материалы */
+        /*ArrayList<JsonValue> matArray = json.readValue(ArrayList.class, jsonLevel.get("materials"));
+        for (JsonValue mat : matArray) {            
+            int[] frmNum = mat.get("textures").asIntArray();
+            Texture[] frames = new Texture[frmNum.length];
+            for (int j = 0; j < frames.length; ++j) {
+                frames[j] = TextureBank.WALLS.get(texturesCount + frmNum[j]);
+            }
+            
+            double animSpeed = mat.getDouble("animation_speed");
+            boolean playOnce = mat.getBoolean("play_once");
+            
+            Material material = new Material(frames, animSpeed, playOnce);
+            JsonValue jsonBrigthness = mat.get("brigthness");
+            if (jsonBrigthness != null) {
+                material.setBrightness(jsonBrigthness.asDouble());
+            }
+            MaterialBank.BANK.add(material);
+        }  */  
+    }
+    
+    public static void save() {        
+        File savesDir = new File("saves");
+        if (!savesDir.exists() || !savesDir.isDirectory()) {
+            savesDir.mkdir();
+        }
+        
+        StringWriter buffer = new StringWriter();
+        Json json = new Json();
+        json.setWriter(new JsonWriter(buffer));
+        
+        try {
+            // добавляем в файл информацию по текстурам
+            json.writeObjectStart();
+            String[] txrArray = new String[TextureBank.WALLS.size()];
+            for (int t = 0; t < TextureBank.WALLS.size(); ++t) {
+                txrArray[t] = "'" + TextureBank.WALLS.get(t).getPath() + "'";
+            }
+            json.writeValue("'" + "textures" + "'", txrArray);
+            json.writeObjectEnd();     
+            
+            // добавляем в файл информацию по материалам
+            class MaterialInfo {
+                int textures[];
+                double animation_speed;
+                boolean play_once;
+            }
+            MaterialInfo[] matArray = new MaterialInfo[MaterialBank.BANK.size()];
+            for (int m = 0; m < MaterialBank.BANK.size(); ++m) {
+                Material mat = MaterialBank.BANK.get(m);
+                MaterialInfo info = new MaterialInfo();
+                
+                Image[][] frames = mat.getFrames();
+                info.textures = new int[frames.length];
+                for (int f = 0; f < frames.length; ++f) {
+                    Image frame = frames[f][0];
+                    info.textures[f] = TextureBank.WALLS.indexOf(frame);
+                }
+                info.animation_speed = mat.getAnimSpeed();
+                info.play_once = mat.isPlayOnce();
+                
+                matArray[m] = info;
+            }
+            json.writeObjectStart();
+            json.writeValue("'" + "materials" + "'", matArray);
+            json.writeObjectEnd();       
+        } finally {
+            //StreamUtils.closeQuietly(buffer);
+        }
+        
+        FileHandle saveFile = Gdx.files.local("saves/save.json");
+        saveFile.writeString(buffer.toString(), false);
+        
+        
+        
+        
+                /*
+                Door.deleteAll();
+                Creature.deleteAll();
+                Sprite.deleteAll();
+                Material.deleteAll();
+                Player.deleteInstance();
+                */
+        System.out.println("Game saved.");
+            
     }
 }

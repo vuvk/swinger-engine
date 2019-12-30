@@ -7,6 +7,8 @@ package com.vuvk.swinger.res;
 
 import com.badlogic.gdx.utils.Array;
 import com.vuvk.swinger.res.TextureBank;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -21,7 +23,7 @@ public final class MaterialBank {
     public final static Material GUARD_DIE   = new Material(TextureBank.GUARD_DIE,   7.5f, true);
     public final static Material GUARD_DEAD  = new Material(TextureBank.GUARD_DEAD,  0.0f, true);    
     
-    public static Array<Material> BANK;
+    public static List<Material> BANK = new ArrayList<>();
     
     private MaterialBank() {};
 }

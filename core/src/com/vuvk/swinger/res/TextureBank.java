@@ -7,6 +7,8 @@ package com.vuvk.swinger.res;
 
 import com.badlogic.gdx.utils.Array;
 import com.vuvk.swinger.graphic.Fog;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -16,7 +18,7 @@ public final class TextureBank {
     public final static String PICS_FOLDER = "resources/pics/";    
     
     public static Texture   SKY;
-    public static Array<Texture> WALLS/*   = new Texture[11]*/;/*
+    public static List<Texture> WALLS = new ArrayList<>()/*   = new Texture[11]*/;/*
     public final static Texture[] FLOOR   = new Texture[6];
     public final static Texture[] CEIL    = new Texture[7];*/
     //public final static Texture[] SPRITES = new Texture[50];

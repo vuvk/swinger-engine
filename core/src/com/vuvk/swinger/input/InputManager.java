@@ -16,12 +16,24 @@ import com.vuvk.swinger.graphic.Fog;
 import com.vuvk.swinger.math.Vector2;
 import com.vuvk.swinger.objects.creatures.Player;
 import com.vuvk.swinger.res.Map;
+import com.vuvk.swinger.res.MaterialBank;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
  * @author tai-prg3
  */
 public final class InputManager extends InputAdapter {
+    private static final Logger LOG = Logger.getLogger(InputManager.class.getName());    
+    
     private static Vector2 location = new Vector2();
     private static int scrollAmount = 0;
     private static boolean leftClick  = false;
@@ -220,6 +232,12 @@ public final class InputManager extends InputAdapter {
                     break;
 
                 case Input.Keys.M : Config.mouseLook = !Config.mouseLook; break;
+                
+                case Input.Keys.F5 :
+                    if (player.getHealth() > 0.0) {
+                        Map.save();
+                    }
+                    break;
             }
         }
 

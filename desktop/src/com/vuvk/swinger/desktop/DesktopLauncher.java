@@ -6,7 +6,7 @@ import com.vuvk.swinger.Config;
 import com.vuvk.swinger.Game;
 
 public class DesktopLauncher {
-    public static void main (String[] arg) {
+    public static void main (String ... args) {
         LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
 
         config.allowSoftwareMode = true;

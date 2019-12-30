@@ -24,9 +24,11 @@ public/* abstract*/ class Image {
     protected int[][] pixels;
     protected int width;
     protected int height;
-    protected Vector2 center = new Vector2(0.5f, 0.5f);
+    protected final Vector2 center = new Vector2(0.5f, 0.5f);
     private boolean alphaChannel;
-    protected BoundingBox volume = new BoundingBox(0, 1, 0, 1);
+    protected final BoundingBox volume = new BoundingBox(0, 1, 0, 1);
+    protected final String path;
+    
     /*
     public Image(final BufferedImage image) {
         this(image, -1, -1);
@@ -50,6 +52,8 @@ public/* abstract*/ class Image {
     */
     
     public Image(final String path, int newWidth, int newHeight) {
+        this.path = path;
+        
         FileHandle file = Gdx.files.internal(path);
         if (file != null && file.exists()) {
             load(Gdx.files.internal(path), newWidth, newHeight);
@@ -57,7 +61,7 @@ public/* abstract*/ class Image {
     }
     
     
-    private void load(final FileHandle file, int newWidth, int newHeight) {
+    private void load(final FileHandle file, int newWidth, int newHeight) {        
         Pixmap image = new Pixmap(file);
         image.setFilter(Filter.NearestNeighbour);
         image.setBlending(Pixmap.Blending.None);
@@ -165,7 +169,7 @@ public/* abstract*/ class Image {
     }
 
     public void setCenter(Vector2 center) {
-        this.center = center;
+        this.center.set(center);
     }       
     /*
     private void load(final FileHandle file, int newWidth, int newHeight) {
@@ -225,4 +229,8 @@ public/* abstract*/ class Image {
     public boolean hasAlphaChannel() {
         return alphaChannel;
     }  
+    
+    public final String getPath() {
+        return path;
+    }
 }

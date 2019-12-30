@@ -46,6 +46,10 @@ public class Vector2 {
         this.y = y;        
     }
     
+    public void set(final Vector2 other) {
+        set(other.x, other.y);        
+    }
+    
     public Vector2 add(final Vector2 other) {
         return new Vector2(x + other.x, y + other.y);
     }
