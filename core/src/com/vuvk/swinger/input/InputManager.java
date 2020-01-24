@@ -12,6 +12,7 @@ import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.vuvk.swinger.Config;
+import static com.vuvk.swinger.Game.screenMsg;
 import com.vuvk.swinger.graphic.Fog;
 import com.vuvk.swinger.math.Vector2;
 import com.vuvk.swinger.objects.Door;
@@ -238,10 +239,12 @@ public final class InputManager extends InputAdapter {
                 case Input.Keys.R : 
                     Map.load(1); 
                     Config.draw = true; 
+                    screenMsg.setMessage("LEVEL RESTARTED");
                     break;
 
                 case Input.Keys.M : 
                     Config.mouseLook = !Config.mouseLook; 
+                    screenMsg.setMessage("MOUSELOOK " + ((Config.mouseLook) ? "ON" : "OFF"));
                     break;
                 
                 case Input.Keys.F5 :
@@ -253,12 +256,13 @@ public final class InputManager extends InputAdapter {
                         }
 
                         new SavedGame().saveToFile("saves/game.gam");
-                        System.out.println("Game saved.");
+                        screenMsg.setMessage("GAME SAVED");
                     }
                     break;
                 
                 case Input.Keys.F9 :
                     new SavedGame().loadFromFile("saves/game.gam");
+                    screenMsg.setMessage("GAME LOADED");
                     break;
             }
         }

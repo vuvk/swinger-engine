@@ -44,6 +44,7 @@ import com.vuvk.swinger.graphic.Sky;
 import com.vuvk.swinger.graphic.gui.GuiBank;
 import com.vuvk.swinger.graphic.gui.ScreenBlood;
 import com.vuvk.swinger.graphic.gui.text.FontBank;
+import com.vuvk.swinger.graphic.gui.text.ScreenMessage;
 import com.vuvk.swinger.graphic.gui.text.Text;
 import com.vuvk.swinger.graphic.weapon_in_hand.AmmoPack;
 import com.vuvk.swinger.input.InputManager;
@@ -78,7 +79,7 @@ public class Game extends ApplicationAdapter {
     private Text playerPosText;
     private Text playerHpText;
     private Text playerAmmoText;
-    private Text message;
+    public static ScreenMessage screenMsg;
     
     private Texture deathScreen;
     private ScreenBlood[] screenBloods = new ScreenBlood[Config.WIDTH];
@@ -135,6 +136,7 @@ public class Game extends ApplicationAdapter {
         playerPosText  = new Text(FontBank.FONT_BUBBLA, "", new Vector2(10, 25));
         playerHpText   = new Text(FontBank.FONT_MIDDLE);
         playerAmmoText = new Text(FontBank.FONT_MIDDLE);
+        screenMsg = new ScreenMessage(FontBank.FONT_BUBBLA, new Vector2(10, 45));
         
         cam = new OrthographicCamera(Config.WIDTH, Config.HEIGHT);
         cam.setToOrtho(false);
@@ -277,7 +279,7 @@ public class Game extends ApplicationAdapter {
             fpsText.setMessage("FPS: " + Gdx.graphics.getFramesPerSecond());
         }
 
-        if (Config.draw) {            
+        if (Config.draw) {
             Renderer renderer = Renderer.getInstance();
             Player player = Player.getInstance();
             Camera playerCamera = player.getCamera();

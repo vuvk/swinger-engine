@@ -24,7 +24,7 @@ public class Text {
     
     private Vector2 location;
     private Font font;
-    private String message;
+    protected String message;
     
     public Text(final Font font) {
         this(font, "");
@@ -78,9 +78,9 @@ public class Text {
     
     
     public void draw(Batch batch) {            
-        if (message.length() == 0 || font == null) {
+        if (message == null || message.length() == 0 || font == null) {
             return;
-        }        
+        }
          
         float x = (float) location.x,
               y = Config.HEIGHT - (float) location.y;
@@ -97,6 +97,7 @@ public class Text {
             }
         }
     }
+    
     public static void drawAll(Batch batch) {
         for (Text text : TEXTS) {
             text.draw(batch);
