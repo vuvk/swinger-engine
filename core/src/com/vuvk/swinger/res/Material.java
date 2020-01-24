@@ -7,7 +7,9 @@ package com.vuvk.swinger.res;
 
 import com.badlogic.gdx.Gdx;
 import com.vuvk.swinger.res.Image;
+import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
@@ -15,10 +17,10 @@ import java.util.List;
  *
  * @author tai-prg3
  */
-public class Material {
-    private final static List<Material> LIB = new ArrayList<>();
-    private final static List<Material> FOR_ADD_TO_LIB = new ArrayList<>();
-    private final static List<Material> FOR_DELETE_FROM_LIB = new ArrayList<>();
+public class Material implements Serializable {
+    transient public  final static List<Material> LIB = new ArrayList<>();
+    transient private final static List<Material> FOR_ADD_TO_LIB = new ArrayList<>();
+    transient private final static List<Material> FOR_DELETE_FROM_LIB = new ArrayList<>();
     
     // для анимации массив двумерный, где x - кадры, а y - текстуры для углов поворота (1 или 8 штук)
     private Image[][] frames;
@@ -83,6 +85,16 @@ public class Material {
         //synchronized(LIB) {
             LIB.remove(this);
         //}
+    }
+    
+    public static Material[] getLib() {
+        Material[] materials = new Material[LIB.size()];
+        int i = 0;
+        for (Iterator<Material> it = LIB.iterator(); it.hasNext(); ) {
+            materials[i] = it.next();
+            ++i;
+        }
+        return materials;
     }
     
     public static void deleteAll() {
@@ -172,14 +184,14 @@ public class Material {
     /**
      * Пометить объект на добавление
      */
-    private void markForAdd() {
+    public void markForAdd() {
         FOR_ADD_TO_LIB.add(this);
     }
     
     /**
      * Пометить объект на удаление
      */
-    protected void markForDelete() {
+    public void markForDelete() {
         FOR_DELETE_FROM_LIB.add(this);
     }
     

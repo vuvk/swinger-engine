@@ -12,15 +12,16 @@ import com.vuvk.swinger.math.Segment;
 import com.vuvk.swinger.math.Vector2;
 import com.vuvk.swinger.math.Vector3;
 import com.vuvk.swinger.objects.Object3D;
+import java.io.Serializable;
 import java.util.Iterator;
 
 /**
  *
  * @author tai-prg3
  */
-public abstract class Creature extends Object3D {
-    public final static List<Creature> LIB = new ArrayList<>();
-    private final static List<Creature> FOR_DELETE_FROM_LIB = new ArrayList<>();
+public abstract class Creature extends Object3D implements Serializable {
+    transient public  final static List<Creature> LIB = new ArrayList<>();
+    transient private final static List<Creature> FOR_DELETE_FROM_LIB = new ArrayList<>();
     
     protected double health;
     protected final double maxHealth;
@@ -288,6 +289,16 @@ public abstract class Creature extends Object3D {
             }
         }
         
+        return creatures;
+    }
+    
+    public static Creature[] getLib() {
+        Creature[] creatures = new Creature[LIB.size()];
+        int i = 0;
+        for (Iterator<Creature> it = LIB.iterator(); it.hasNext(); ) {
+            creatures[i] = it.next();
+            ++i;
+        }
         return creatures;
     }
 }

@@ -9,12 +9,13 @@ import com.vuvk.swinger.graphic.Side;
 import com.vuvk.swinger.res.Material;
 import com.vuvk.swinger.res.Image;
 import com.vuvk.swinger.utils.ArrayUtils;
+import java.io.Serializable;
 
 /**
  *
  * @author tai-prg3
  */
-public class WallMaterial {
+public class WallMaterial implements Serializable{
     // 4 для каждой стороны
     private final Material[] materials = new Material[4];
     private int sidesLoaded;

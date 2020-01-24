@@ -14,12 +14,13 @@ import com.vuvk.swinger.math.Vector3;
 import com.vuvk.swinger.objects.Sprite;
 import com.vuvk.swinger.objects.creatures.Player;
 import com.vuvk.swinger.res.Material;
+import java.io.Serializable;
 
 /**
  *
  * @author vuvk
  */
-public abstract class Weapon extends Sprite {
+public abstract class Weapon extends Sprite implements Serializable {
     //private Player PLAYER = Player.getInstance();
     //private final static List<Key> LIB = new ArrayList<>();
     

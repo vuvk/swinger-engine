@@ -28,12 +28,13 @@ import com.vuvk.swinger.objects.weapon.AmmoType;
 import com.vuvk.swinger.objects.Door;
 import com.vuvk.swinger.objects.Key;
 import com.vuvk.swinger.objects.weapon.Weapon;
+import java.io.Serializable;
 
 /**
  *
  * @author tai-prg3
  */
-public final class Player extends Creature {    
+public final class Player extends Creature implements Serializable {    
     private static Player instance = null;  
     
     /*
@@ -45,6 +46,9 @@ public final class Player extends Creature {
     final private WeaponInHand[] weaponsInHand = new WeaponInHand[5];
     private int curWeaponInHandNum = 0;
     
+    /** ключи, которые есть в наличии у игрока */
+    private final Set<Integer> keys = new HashSet<>();
+    
     private boolean moveL = false,
                     moveR = false,
                     moveF = false,
@@ -55,19 +59,21 @@ public final class Player extends Creature {
     
     private final static double HEALTH = 100.0;
     private final static double RADIUS = 0.25;
-    public final static double  MOVE_SPEED = 5.0;
-    public final static double  KEY_ROT_SPEED  = 3.0;
-    public final static double  MOUSE_ROT_SPEED  = 15.0;
-    public final static double  FOV = Math.toRadians(66.0);
-    public final static double  FOV_2 = FOV / 2.0;
-    
-    private final Music[] soundsNeadKey = { 
+    public  final static double MOVE_SPEED = 5.0;
+    public  final static double KEY_ROT_SPEED  = 3.0;
+    public  final static double MOUSE_ROT_SPEED  = 15.0;
+    public  final static double FOV = Math.toRadians(66.0);
+    public  final static double FOV_2 = FOV / 2.0;
+    transient private final static Music[] SOUNDS_NEAD_KEY = { 
         SoundSystem.loadSound(SoundBank.FILE_NEED_KEY1),
         SoundSystem.loadSound(SoundBank.FILE_NEED_KEY2)
     };
     
-    /** ключи, которые есть в наличии у игрока */
-    private final Set<Integer> keys = new HashSet<>();
+    transient private Music[] soundsNeadKey;
+    
+    private void init() {
+        soundsNeadKey = SOUNDS_NEAD_KEY;
+    }
     
     public boolean isRot() {
         return (rotL || rotR);
@@ -185,6 +191,15 @@ public final class Player extends Creature {
         weaponsInHand[2] = ShotgunInHand.getInstance();
         weaponsInHand[3] = RifleInHand.getInstance();
         weaponsInHand[4] = RocketLauncherInHand.getInstance();*/
+    }
+    
+    public void initWeaponsInHand() {
+        for (int i = 0; i < weaponsInHand.length; ++i) {
+            WeaponInHand weapon = weaponsInHand[i];
+            if (weapon != null) {
+                weapon.init();
+            }
+        }
     }
     
     public void addWeaponInHand(Weapon weapon) {
@@ -475,8 +490,15 @@ public final class Player extends Creature {
         if (instance != null) {
             //deleteInstance();
             instance.finalize();
-        } else {
-            instance = new Player(pos);
+        }
+        
+        instance = new Player(pos);
+    }
+    
+    public static void setInstance(Player instance) {
+        if (instance != null) {
+            Player.instance = instance;
+            Player.instance.init();
         }
     }
     
@@ -492,5 +514,6 @@ public final class Player extends Creature {
         createWeaponsInHand();
         camera.setPos(pos);
         camera.rotate(Math.toRadians(-90));
+        init();
     }
 }

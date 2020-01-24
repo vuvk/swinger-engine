@@ -10,12 +10,13 @@ import com.badlogic.gdx.files.FileHandle;
 import com.vuvk.swinger.audio.SoundBank;
 import com.vuvk.swinger.math.Vector3;
 import com.vuvk.swinger.res.MaterialBank;
+import java.io.Serializable;
 
 /**
  *
  * @author tai-prg3
  */
-public class Guard extends RayEnemy {
+public class Guard extends RayEnemy implements Serializable {
     private final static double VIEW_ANGLE = 90;
     private final static double VIEW_DISTANCE = 10;
     private final static double MIN_ATK_DISTANCE = 2;
@@ -28,18 +29,18 @@ public class Guard extends RayEnemy {
     
     private final static double HEALTH = 100.0;
     private final static double RADIUS = 0.3;
-    private final static FileHandle[] ATK_SOUNDS = { SoundBank.FILE_PISTOL };
-    private final static FileHandle[] ALARM_SOUNDS = { 
+    transient private final static FileHandle[] ATK_SOUNDS = { SoundBank.FILE_PISTOL };
+    transient private final static FileHandle[] ALARM_SOUNDS = { 
         SoundBank.FILE_ALARM1,
         SoundBank.FILE_ALARM2,
         SoundBank.FILE_ALARM3,
         SoundBank.FILE_ALARM4
     };
-    private final static FileHandle[] PAIN_SOUNDS = {
+    transient private final static FileHandle[] PAIN_SOUNDS = {
         SoundBank.FILE_PAIN1,
         SoundBank.FILE_PAIN2
     };
-    private final static FileHandle[] DIE_SOUNDS  = {
+    transient private final static FileHandle[] DIE_SOUNDS  = {
         SoundBank.FILE_DIE1,
         SoundBank.FILE_DIE2
     };

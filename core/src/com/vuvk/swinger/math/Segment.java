@@ -5,13 +5,14 @@
  */
 package com.vuvk.swinger.math;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
  *
  * @author tai-prg3
  */
-public class Segment {
+public class Segment implements Serializable {
     protected Vector2 a;
     protected Vector2 b;
     

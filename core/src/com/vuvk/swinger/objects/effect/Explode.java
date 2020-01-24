@@ -11,12 +11,13 @@ import com.vuvk.swinger.audio.SoundSystem;
 import com.vuvk.swinger.graphic.Fog;
 import com.vuvk.swinger.math.Vector3;
 import com.vuvk.swinger.res.TextureBank;
+import java.io.Serializable;
 
 /**
  *
  * @author tai-prg3
  */
-public class Explode extends Effect {
+public class Explode extends Effect implements Serializable {
     private final static double ANIM_SPEED = 10.0;
     
     public Explode(Vector3 pos) {

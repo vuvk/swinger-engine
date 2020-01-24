@@ -21,12 +21,13 @@ import com.vuvk.swinger.audio.SoundSystem;
 import com.vuvk.swinger.math.Vector3;
 import com.vuvk.swinger.objects.creatures.Player;
 import com.vuvk.swinger.res.Material;
+import java.io.Serializable;
 
 /**
  * Валяющиеся аптечки
  * @author vuvk
  */
-public class MedKit extends Sprite {
+public class MedKit extends Sprite implements Serializable {
     private final double volume;
     
     public MedKit(Material material, Vector3 pos, double volume) {

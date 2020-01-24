@@ -16,16 +16,17 @@ import com.vuvk.swinger.math.Vector2;
 import com.vuvk.swinger.objects.creatures.Creature;
 import com.vuvk.swinger.res.Image;
 import com.vuvk.swinger.res.Texture;
+import java.io.Serializable;
 
 /**
  *
  * @author tai-prg3
  */
-public class Sprite extends Material implements Comparable<Sprite> {
+public class Sprite extends Material implements Comparable<Sprite>, Serializable {
     //private final static Player PLAYER = Player.getInstance();
-    public final static Array<Sprite> LIB = new Array<>(false, 50);
+    transient public final static List<Sprite> LIB = new ArrayList<>();
     //private final static List<Sprite> FOR_ADD_TO_LIB = new ArrayList<>();
-    private final static Array<Sprite> FOR_DELETE_FROM_LIB = new Array<>(false, 50);
+    transient private final static List<Sprite> FOR_DELETE_FROM_LIB = new ArrayList<>();
     //public final static double DEPTH_FACTOR = Texture.HEIGHT * ((int)(Math.ceil((double)Window.HEIGHT / Texture.HEIGHT)) >> Config.quality);
     //public final static double DEPTH_FACTOR = Window.HEIGHT >> Config.quality;
     
@@ -130,7 +131,7 @@ public class Sprite extends Material implements Comparable<Sprite> {
     public void destroy() {
         super.destroy();
         //synchronized(LIB) {
-            LIB.removeValue(this, true);
+            LIB.remove(this);
         //}
     }
 
@@ -309,6 +310,16 @@ public class Sprite extends Material implements Comparable<Sprite> {
     public static void deleteAll() {
         LIB.clear();
         FOR_DELETE_FROM_LIB.clear();
+    }
+    
+    public static Sprite[] getLib() {
+        Sprite[] sprites = new Sprite[LIB.size()];
+        int i = 0;
+        for (Iterator<Sprite> it = LIB.iterator(); it.hasNext(); ) {
+            sprites[i] = it.next();
+            ++i;
+        }
+        return sprites;
     }
 
     @Override

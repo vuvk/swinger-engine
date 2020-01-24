@@ -16,12 +16,13 @@
 package com.vuvk.swinger.objects;
 
 import com.vuvk.swinger.math.Vector3;
+import java.io.Serializable;
 
 /**
  *
  * @author tai-prg3
  */
-public abstract class Object3D {   
+public abstract class Object3D implements Serializable {   
     protected Vector3 pos = new Vector3();
     
     public Vector3 getPos() {

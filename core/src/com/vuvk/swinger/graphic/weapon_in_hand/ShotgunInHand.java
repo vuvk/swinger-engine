@@ -36,9 +36,9 @@ public class ShotgunInHand extends RayWeaponInHand {
     private final static double DAMAGE = 5.0;
     private final static int FRAME_FOR_SHOOT = 1;
     private final static AmmoType AMMO_TYPE = AmmoType.SHOTGUN;
-    
-    private ShotgunInHand() {
-        super();
+
+    @Override
+    public void init() {
         setFrames(FRAMES);
         setDistance(DISTANCE);
         setDamage(DAMAGE);
@@ -47,8 +47,13 @@ public class ShotgunInHand extends RayWeaponInHand {
         setShootDelay(SHOOT_DELAY);
         setAccuracy(ACCURACY);
         setBulletPerShoot(BULLETS_PER_SHOOT);
-//        setSoundShoot(SoundBank.SOUND_BUFFER_SHOTGUN);
+        // setSoundShoot(SoundBank.SOUND_BUFFER_SHOTGUN);
         setAmmoType(AMMO_TYPE);
+    }
+    
+    private ShotgunInHand() {
+        super();
+        init();
     }
     
     public static void loadFrames() {

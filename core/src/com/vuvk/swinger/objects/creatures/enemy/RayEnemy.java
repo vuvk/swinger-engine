@@ -12,13 +12,14 @@ import com.vuvk.swinger.objects.creatures.Creature;
 import com.vuvk.swinger.objects.effect.Blood;
 import com.vuvk.swinger.objects.effect.Puff;
 import com.vuvk.swinger.res.Material;
+import java.io.Serializable;
 import java.util.List;
 
 /**
  *
  * @author tai-prg3
  */
-public abstract class RayEnemy extends Enemy {
+public abstract class RayEnemy extends Enemy implements Serializable {
     
     protected RayEnemy(Material idle, 
                     Material atk, 

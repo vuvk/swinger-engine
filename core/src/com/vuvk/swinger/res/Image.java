@@ -13,13 +13,14 @@ import com.badlogic.gdx.graphics.Pixmap.Format;
 import java.util.logging.Logger;
 import com.vuvk.swinger.math.BoundingBox;
 import com.vuvk.swinger.math.Vector2;
+import java.io.Serializable;
 
 /**
  *
  * @author tai-prg3
  */
-public/* abstract*/ class Image {  
-    private static final Logger LOG = Logger.getLogger(Image.class.getName());    
+public/* abstract*/ class Image implements Serializable {  
+    transient private static final Logger LOG = Logger.getLogger(Image.class.getName());    
     
     protected int[][] pixels;
     protected int width;

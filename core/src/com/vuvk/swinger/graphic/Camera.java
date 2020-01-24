@@ -18,15 +18,16 @@ package com.vuvk.swinger.graphic;
 import com.vuvk.swinger.math.Vector2;
 import com.vuvk.swinger.math.Vector3;
 import com.vuvk.swinger.objects.Object3D;
+import java.io.Serializable;
 import static java.lang.Math.PI;
 
 /**
  *
  * @author tai-prg3
  */
-public class Camera extends Object3D {
-    private final static double DEG_TO_RAD = 1.0 / 180.0 * PI;
-    private final static double RAD_TO_DEG = 180.0 / PI;
+public class Camera extends Object3D implements Serializable {
+    transient private final static double DEG_TO_RAD = 1.0 / 180.0 * PI;
+    transient private final static double RAD_TO_DEG = 180.0 / PI;
     
     private double direction = 180.0;
     private Vector2 view = new Vector2(-1, 0);   // see to 0

@@ -10,12 +10,13 @@ import java.io.File;
 import com.vuvk.swinger.math.Vector3;
 import com.vuvk.swinger.objects.Sprite;
 import com.vuvk.swinger.res.Texture;
+import java.io.Serializable;
 
 /**
  *
  * @author tai-prg3
  */
-public abstract class Effect extends Sprite {
+public abstract class Effect extends Sprite implements Serializable {
 //    private Sound soundEffect;
     /*
     private final static List<Effect> LIB = new ArrayList<>();

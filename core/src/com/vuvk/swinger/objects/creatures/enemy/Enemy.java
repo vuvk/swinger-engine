@@ -19,11 +19,12 @@ import com.vuvk.swinger.objects.Sprite;
 import com.vuvk.swinger.objects.creatures.Creature;
 import com.vuvk.swinger.objects.creatures.Player;
 import com.vuvk.swinger.res.Map;
+import java.io.Serializable;
 /**
  *
  * @author tai-prg3
  */
-public abstract class Enemy extends Creature {   
+public abstract class Enemy extends Creature implements Serializable {   
     /** список всех вражин */
     //public final static List<Enemy> LIB = new ArrayList<>();
     /** список вражин на удаление */

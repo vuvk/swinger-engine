@@ -5,6 +5,7 @@
  */
 package com.vuvk.swinger.math;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,7 +13,7 @@ import java.util.List;
  *
  * @author tai-prg3
  */
-public class BoundingBox {
+public class BoundingBox implements Serializable {
     double left, 
            right, 
            top, 

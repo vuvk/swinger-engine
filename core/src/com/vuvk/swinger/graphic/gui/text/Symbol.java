@@ -15,7 +15,7 @@ import java.util.logging.Logger;
  * @author vuvk
  */
 public class Symbol {
-    private static final Logger LOG = Logger.getLogger(Symbol.class.getName());
+    transient private static final Logger LOG = Logger.getLogger(Symbol.class.getName());
     
     
     /*

@@ -11,12 +11,13 @@ import com.vuvk.swinger.math.Vector3;
 import com.vuvk.swinger.objects.effect.Explode;
 import com.vuvk.swinger.objects.effect.Smoke;
 import com.vuvk.swinger.res.TextureBank;
+import java.io.Serializable;
 
 /**
  *
  * @author tai-prg3
  */
-public class Rocket extends Projectile {
+public class Rocket extends Projectile  implements Serializable{
     private final static double DAMAGE = 100.0;
     private final static double RADIUS = 0.1;
     private final static double MOVE_SPEED = 5.0;

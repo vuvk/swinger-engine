@@ -14,9 +14,18 @@ import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.vuvk.swinger.Config;
 import com.vuvk.swinger.graphic.Fog;
 import com.vuvk.swinger.math.Vector2;
+import com.vuvk.swinger.objects.Door;
+import com.vuvk.swinger.objects.Sprite;
+import com.vuvk.swinger.objects.creatures.Creature;
 import com.vuvk.swinger.objects.creatures.Player;
 import com.vuvk.swinger.res.Map;
+import com.vuvk.swinger.res.Material;
+import com.vuvk.swinger.res.TextureBank;
 import com.vuvk.swinger.res.MaterialBank;
+import com.vuvk.swinger.res.Texture;
+import com.vuvk.swinger.res.WallMaterial;
+import com.vuvk.swinger.res.WallMaterialBank;
+import com.vuvk.swinger.utils.SavedGame;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -231,12 +240,25 @@ public final class InputManager extends InputAdapter {
                     Config.draw = true; 
                     break;
 
-                case Input.Keys.M : Config.mouseLook = !Config.mouseLook; break;
+                case Input.Keys.M : 
+                    Config.mouseLook = !Config.mouseLook; 
+                    break;
                 
                 case Input.Keys.F5 :
                     if (player.getHealth() > 0.0) {
-                        Map.save();
+                        //Map.save();      
+                        File savesDir = new File("saves");
+                        if (!savesDir.exists() || !savesDir.isDirectory()) {
+                            savesDir.mkdir();
+                        }
+
+                        new SavedGame().saveToFile("saves/game.gam");
+                        System.out.println("Game saved.");
                     }
+                    break;
+                
+                case Input.Keys.F9 :
+                    new SavedGame().loadFromFile("saves/game.gam");
                     break;
             }
         }

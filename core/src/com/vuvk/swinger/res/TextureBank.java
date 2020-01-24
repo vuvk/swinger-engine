@@ -8,6 +8,7 @@ package com.vuvk.swinger.res;
 import com.badlogic.gdx.utils.Array;
 import com.vuvk.swinger.graphic.Fog;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -18,11 +19,11 @@ public final class TextureBank {
     public final static String PICS_FOLDER = "resources/pics/";    
     
     public static Texture   SKY;
-    public static List<Texture> WALLS = new ArrayList<>()/*   = new Texture[11]*/;/*
+    public static final List<Texture> WALLS = new ArrayList<>()/*   = new Texture[11]*/;/*
     public final static Texture[] FLOOR   = new Texture[6];
     public final static Texture[] CEIL    = new Texture[7];*/
     //public final static Texture[] SPRITES = new Texture[50];
-    public final static Texture[] DOORS   = new Texture[3];
+    //public final static Texture[] DOORS   = new Texture[3];
     
     // для анимации массив двумерный, где x - кадры, а y - текстуры для углов поворота (1 или 8 штук)
     public final static Texture[][] GUARD_ATK   = new Texture[3][1];
@@ -216,9 +217,21 @@ public final class TextureBank {
             SMOKE[i] = new Texture(PICS_FOLDER + "effects/smoke/smoke_" + i + ".png"); 
         }        
         
+        /*
         DOORS[0] = new Texture(PICS_FOLDER + "Door.png");
         DOORS[1] = new Texture(PICS_FOLDER + "Door2.png");
-        DOORS[2] = new Texture(PICS_FOLDER + "door_iron_upper.png");        
+        DOORS[2] = new Texture(PICS_FOLDER + "door_iron_upper.png");   
+        */
+    }
+    
+    public static Texture[] getWalls() {
+        Texture[] textures = new Texture[WALLS.size()];
+        int i = 0;
+        for (Iterator<Texture> it = WALLS.iterator(); it.hasNext(); ) {
+            textures[i] = it.next();
+            ++i;
+        }
+        return textures;
     }
     
     private TextureBank() {}

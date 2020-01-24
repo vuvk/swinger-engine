@@ -7,12 +7,13 @@ package com.vuvk.swinger.res;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.Serializable;
 
 /**
  *
  * @author tai-prg3
  */
-public final class Texture extends Image {
+public final class Texture extends Image implements Serializable {
     public final static int WIDTH  = 128;
     public final static int HEIGHT = 128;
     public final static int WIDTH_POT  = 7;

@@ -18,12 +18,14 @@ import com.vuvk.swinger.res.Map;
 import com.vuvk.swinger.res.Material;
 import com.vuvk.swinger.audio.SoundBank;
 import com.vuvk.swinger.audio.SoundSystem;
+import java.io.Serializable;
+import java.util.Iterator;
 
 /**
  *
  * @author tai-prg3
  */
-public class Door extends TexturedSegment {  
+public class Door extends TexturedSegment implements Serializable {  
 //    private final Sound openSound  = new Sound(SoundBank.SOUND_BUFFER_DOOR_OPEN );
 //    private final Sound closeSound = new Sound(SoundBank.SOUND_BUFFER_DOOR_CLOSE);
     
@@ -51,7 +53,7 @@ public class Door extends TexturedSegment {
     private int keyForOpen;
     
     //private Player PLAYER = Player.getInstance();    
-    private final static List<Door> LIB = new ArrayList<>();
+    public final static List<Door> LIB = new ArrayList<>();
     
     public Door(final Vector2 a, final Vector2 b, final Material material) {
         this(a, b, material, -1);
@@ -170,5 +172,15 @@ public class Door extends TexturedSegment {
         for (Door door : LIB) {
             door.update();
         }
+    }
+    
+    public static Door[] getLib() {
+        Door[] doors = new Door[LIB.size()];
+        int i = 0;
+        for (Iterator<Door> it = LIB.iterator(); it.hasNext(); ) {
+            doors[i] = it.next();
+            ++i;
+        }
+        return doors;
     }
 }

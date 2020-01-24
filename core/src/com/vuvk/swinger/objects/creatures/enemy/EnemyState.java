@@ -5,11 +5,13 @@
  */
 package com.vuvk.swinger.objects.creatures.enemy;
 
+import java.io.Serializable;
+
 /**
  *
  * @author tai-prg3
  */
-public enum EnemyState {
+public enum EnemyState implements Serializable {
     IDLE,
     WALK,
     ATTACK,

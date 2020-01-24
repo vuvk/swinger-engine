@@ -19,12 +19,13 @@ import com.vuvk.swinger.objects.creatures.Creature;
 import com.vuvk.swinger.objects.creatures.Player;
 import com.vuvk.swinger.res.Map;
 import com.vuvk.swinger.res.Texture;
+import java.io.Serializable;
 
 /**
  *
  * @author tai-prg3
  */
-public abstract class Projectile extends Sprite {
+public abstract class Projectile extends Sprite implements Serializable {
     private Vector2 viewVector = new Vector2();
     private double radius;
     private double moveSpeed;

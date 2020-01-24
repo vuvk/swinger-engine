@@ -7,12 +7,13 @@ package com.vuvk.swinger.objects.effect;
 
 import com.vuvk.swinger.math.Vector3;
 import com.vuvk.swinger.res.TextureBank;
+import java.io.Serializable;
 
 /**
  *
  * @author tai-prg3
  */
-public class Puff extends Effect {
+public class Puff extends Effect implements Serializable {
     public final static double ANIM_SPEED = 10.0;
     
     public Puff(Vector3 pos) {

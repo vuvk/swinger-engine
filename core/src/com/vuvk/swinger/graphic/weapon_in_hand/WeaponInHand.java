@@ -17,13 +17,14 @@ import com.vuvk.swinger.graphic.Renderer;
 import com.vuvk.swinger.math.Vector2;
 import com.vuvk.swinger.objects.creatures.Player;
 import com.vuvk.swinger.res.Image;
+import java.io.Serializable;
 
 /**
  *
  * @author tai-prg3
  */
-public abstract class WeaponInHand {    
-    private static final Logger LOG = Logger.getLogger(WeaponInHand.class.getName());
+public abstract class WeaponInHand implements Serializable {    
+    transient private static final Logger LOG = Logger.getLogger(WeaponInHand.class.getName());
         
     private Vector2 startPos;
     private Vector2 pos;
@@ -50,7 +51,7 @@ public abstract class WeaponInHand {
     private double shootDelay = 0;
     private double _shootDelay = 0;
     
-    private FileHandle soundShoot;
+    transient private FileHandle soundShoot;
     
     private AmmoType ammoType;
     
@@ -153,6 +154,7 @@ public abstract class WeaponInHand {
     }
     
     protected abstract void shoot(double direction);
+    public abstract void init();
     
     public void update() {
         Player player = Player.getInstance();

@@ -32,9 +32,9 @@ public class RifleInHand extends RayWeaponInHand {
     private final static double DAMAGE = 20.0;
     private final static int FRAME_FOR_SHOOT = 1;
     private final static AmmoType AMMO_TYPE = AmmoType.PISTOL;
-    
-    private RifleInHand() {
-        super();
+
+    @Override
+    public void init() {
         setFrames(FRAMES);
         setDistance(DISTANCE);
         setDamage(DAMAGE);
@@ -45,6 +45,11 @@ public class RifleInHand extends RayWeaponInHand {
         setBulletPerShoot(BULLETS_PER_SHOOT);
         setSoundShoot(SoundBank.FILE_RIFLE);
         setAmmoType(AMMO_TYPE);
+    }
+    
+    private RifleInHand() {
+        super();
+        init();
     }
     
     public static void loadFrames() {

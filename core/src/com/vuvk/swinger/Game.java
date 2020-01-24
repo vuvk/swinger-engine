@@ -78,6 +78,7 @@ public class Game extends ApplicationAdapter {
     private Text playerPosText;
     private Text playerHpText;
     private Text playerAmmoText;
+    private Text message;
     
     private Texture deathScreen;
     private ScreenBlood[] screenBloods = new ScreenBlood[Config.WIDTH];

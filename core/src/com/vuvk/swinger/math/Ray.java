@@ -9,12 +9,13 @@ import java.util.List;
 import com.vuvk.swinger.objects.creatures.Creature;
 import com.vuvk.swinger.objects.creatures.Player;
 import com.vuvk.swinger.res.Map;
+import java.io.Serializable;
 
 /**
  *
  * @author tai-prg3
  */
-public final class Ray {
+public final class Ray implements Serializable {
     private Vector2 start, dir;
     private Segment segment;
     private double length;

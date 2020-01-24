@@ -8,6 +8,7 @@ package com.vuvk.swinger.res;
 import com.badlogic.gdx.utils.Array;
 import com.vuvk.swinger.res.TextureBank;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -24,6 +25,16 @@ public final class MaterialBank {
     public final static Material GUARD_DEAD  = new Material(TextureBank.GUARD_DEAD,  0.0f, true);    
     
     public static List<Material> BANK = new ArrayList<>();
+    
+    public static Material[] getBank() {
+        Material[] materials = new Material[BANK.size()];
+        int i = 0;
+        for (Iterator<Material> it = BANK.iterator(); it.hasNext(); ) {
+            materials[i] = it.next();
+            ++i;
+        }
+        return materials;
+    }
     
     private MaterialBank() {};
 }

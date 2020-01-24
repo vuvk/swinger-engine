@@ -31,9 +31,9 @@ public class KnifeInHand extends RayWeaponInHand {
     private final static double DAMAGE = 40.0;
     private final static int FRAME_FOR_SHOOT = 3;
     private final static AmmoType AMMO_TYPE = AmmoType.NOTHING;
-    
-    private KnifeInHand() {
-        super();
+
+    @Override
+    public void init() {
         setFrames(FRAMES);
         setDistance(DISTANCE);
         setDamage(DAMAGE);
@@ -43,6 +43,11 @@ public class KnifeInHand extends RayWeaponInHand {
         setBulletPerShoot(BULLETS_PER_SHOOT);
         setSoundShoot(SoundBank.FILE_KNIFE);
         setAmmoType(AMMO_TYPE);
+    }
+    
+    private KnifeInHand() {
+        super();
+        init();
     }
     
     public static void loadFrames() {

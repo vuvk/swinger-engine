@@ -9,12 +9,13 @@ import com.vuvk.swinger.math.Segment;
 import com.vuvk.swinger.math.Vector2;
 import com.vuvk.swinger.res.Material;
 import com.vuvk.swinger.res.Texture;
+import java.io.Serializable;
 
 /**
  *
  * @author tai-prg3
  */
-public class TexturedSegment extends Segment {
+public class TexturedSegment extends Segment implements Serializable {
     private Material material;
     
     public TexturedSegment(final Vector2 a, final Vector2 b, final Material material) {

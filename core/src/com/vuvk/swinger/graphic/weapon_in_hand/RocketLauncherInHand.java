@@ -36,9 +36,9 @@ public class RocketLauncherInHand extends ProjectileWeaponInHand {
     private final static double DAMAGE = 25.0;
     private final static int FRAME_FOR_SHOOT = 2;
     private final static AmmoType AMMO_TYPE = AmmoType.ROCKET;
-    
-    private RocketLauncherInHand() {
-        super();
+
+    @Override
+    public void init() {
         setFrames(FRAMES);
         setDistance(DISTANCE);
         setDamage(DAMAGE);
@@ -47,8 +47,13 @@ public class RocketLauncherInHand extends ProjectileWeaponInHand {
         setShootDelay(SHOOT_DELAY);
         setAccuracy(ACCURACY);
         setBulletPerShoot(BULLETS_PER_SHOOT);
-//        setSoundShoot(SoundBank.SOUND_BUFFER_BAZOOKA);
+        // setSoundShoot(SoundBank.SOUND_BUFFER_BAZOOKA);
         setAmmoType(AMMO_TYPE);
+    }
+    
+    private RocketLauncherInHand() {
+        super();
+        init();
     }
     
     public static void loadFrames() {        

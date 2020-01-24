@@ -9,12 +9,13 @@ import com.badlogic.gdx.Gdx;
 import com.vuvk.swinger.math.Vector2;
 import com.vuvk.swinger.math.Vector3;
 import com.vuvk.swinger.res.TextureBank;
+import java.io.Serializable;
 
 /**
  *
  * @author tai-prg3
  */
-public class Blood extends Effect {
+public class Blood extends Effect implements Serializable {
     public final static double ANIM_SPEED = 7.5;
     private Vector2 direction;
     

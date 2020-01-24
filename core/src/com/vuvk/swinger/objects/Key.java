@@ -11,12 +11,13 @@ import com.vuvk.swinger.audio.SoundSystem;
 import com.vuvk.swinger.math.Vector3;
 import com.vuvk.swinger.objects.creatures.Player;
 import com.vuvk.swinger.res.Material;
+import java.io.Serializable;
 
 /**
  *
  * @author tai-prg3
  */
-public class Key extends Sprite {
+public class Key extends Sprite implements Serializable {
         
     //private Player PLAYER = Player.getInstance();
     //private final static List<Key> LIB = new ArrayList<>();

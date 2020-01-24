@@ -5,11 +5,13 @@
  */
 package com.vuvk.swinger.objects.weapon;
 
+import java.io.Serializable;
+
 /**
  *
  * @author vuvk
  */
-public enum AmmoType {   
+public enum AmmoType implements Serializable {   
     NOTHING (0  ),
     PISTOL  (250),
     SHOTGUN (50 ),

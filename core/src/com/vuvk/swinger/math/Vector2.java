@@ -5,11 +5,13 @@
  */
 package com.vuvk.swinger.math;
 
+import java.io.Serializable;
+
 /**
  *
  * @author tai-prg3
  */
-public class Vector2 {
+public class Vector2 implements Serializable {
     public double x;
     public double y;    
     

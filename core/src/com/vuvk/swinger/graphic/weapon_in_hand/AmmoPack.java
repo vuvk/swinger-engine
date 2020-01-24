@@ -16,6 +16,7 @@
 package com.vuvk.swinger.graphic.weapon_in_hand;
 
 import com.vuvk.swinger.objects.weapon.AmmoType;
+import java.io.Serializable;
 import java.util.Map;
 import java.util.HashMap;
 
@@ -23,7 +24,7 @@ import java.util.HashMap;
  *
  * @author tai-prg3
  */
-public final class AmmoPack {
+public final class AmmoPack implements Serializable {
     public final static Map<AmmoType, Integer> PACK = new HashMap<>();
         
     public static void reset() {

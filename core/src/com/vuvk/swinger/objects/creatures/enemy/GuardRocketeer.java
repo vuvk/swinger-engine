@@ -12,12 +12,13 @@ import com.vuvk.swinger.math.Vector3;
 import com.vuvk.swinger.objects.projectiles.Projectile;
 import com.vuvk.swinger.objects.projectiles.Rocket;
 import com.vuvk.swinger.res.MaterialBank;
+import java.io.Serializable;
 
 /**
  *
  * @author tai-prg3
  */
-public class GuardRocketeer extends ProjectileEnemy {
+public class GuardRocketeer extends ProjectileEnemy implements Serializable {
     private final static double VIEW_ANGLE = 90;
     private final static double VIEW_DISTANCE = 10;
     private final static double MIN_ATK_DISTANCE = 2;
@@ -29,18 +30,18 @@ public class GuardRocketeer extends ProjectileEnemy {
     
     private final static double HEALTH = 100.0;
     private final static double RADIUS = 0.3;
-    private final static FileHandle[] ATK_SOUNDS = { SoundBank.FILE_BAZOOKA };
-    private final static FileHandle[] ALARM_SOUNDS = {
+    transient private final static FileHandle[] ATK_SOUNDS = { SoundBank.FILE_BAZOOKA };
+    transient private final static FileHandle[] ALARM_SOUNDS = {
         SoundBank.FILE_ALARM1,
         SoundBank.FILE_ALARM2,
         SoundBank.FILE_ALARM3,
         SoundBank.FILE_ALARM4
     };
-    private final static FileHandle[] PAIN_SOUNDS = {
+    transient private final static FileHandle[] PAIN_SOUNDS = {
         SoundBank.FILE_PAIN1,
         SoundBank.FILE_PAIN2 
     };
-    private final static FileHandle[] DIE_SOUNDS  = {
+    transient private final static FileHandle[] DIE_SOUNDS  = {
         SoundBank.FILE_DIE1,
         SoundBank.FILE_DIE2 
     };

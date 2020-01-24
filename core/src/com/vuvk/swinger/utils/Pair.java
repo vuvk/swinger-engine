@@ -5,11 +5,13 @@
  */
 package com.vuvk.swinger.utils;
 
+import java.io.Serializable;
+
 /**
  *
  * @author tai-prg3
  */
-public class Pair<T,V> {
+public class Pair<T,V> implements Serializable {
     private T left;
     private V right; 
     

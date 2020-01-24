@@ -34,9 +34,9 @@ public class MinigunInHand  extends RayWeaponInHand {
     private final static double DAMAGE = 15.0;
     private final static int FRAME_FOR_SHOOT = 2;
     private final static AmmoType AMMO_TYPE = AmmoType.PISTOL;
-    
-    private MinigunInHand() {
-        super();
+
+    @Override
+    public void init() {
         setFrames(FRAMES);
         setDistance(DISTANCE);
         setDamage(DAMAGE);
@@ -47,6 +47,11 @@ public class MinigunInHand  extends RayWeaponInHand {
         setBulletPerShoot(BULLETS_PER_SHOOT);
         setSoundShoot(SoundBank.FILE_MINIGUN);
         setAmmoType(AMMO_TYPE);
+    }
+    
+    private MinigunInHand() {
+        super();
+        init();
     }
     
     public static void loadFrames() {

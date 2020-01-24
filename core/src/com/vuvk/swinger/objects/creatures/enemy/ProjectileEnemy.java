@@ -8,12 +8,13 @@ package com.vuvk.swinger.objects.creatures.enemy;
 import com.vuvk.swinger.math.Vector3;
 import com.vuvk.swinger.objects.projectiles.Projectile;
 import com.vuvk.swinger.res.Material;
+import java.io.Serializable;
 
 /**
  *
  * @author tai-prg3
  */
-public abstract class ProjectileEnemy extends Enemy {
+public abstract class ProjectileEnemy extends Enemy implements Serializable {
     
     protected ProjectileEnemy(Material idle, 
                               Material atk, 

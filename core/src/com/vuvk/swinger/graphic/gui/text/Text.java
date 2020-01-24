@@ -20,7 +20,7 @@ import java.util.logging.Logger;
 public class Text {
     
     private final static Array<Text> TEXTS = new Array<>(false, 50);
-    private static final Logger LOG = Logger.getLogger(Text.class.getName());    
+    transient private static final Logger LOG = Logger.getLogger(Text.class.getName());    
     
     private Vector2 location;
     private Font font;

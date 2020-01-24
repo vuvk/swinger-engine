@@ -10,12 +10,13 @@ import com.vuvk.swinger.graphic.weapon_in_hand.WeaponInHand;
 import com.vuvk.swinger.math.Vector3;
 import com.vuvk.swinger.objects.weapon.AmmoType;
 import com.vuvk.swinger.res.Material;
+import java.io.Serializable;
 
 /**
  *
  * @author vuvk
  */
-public class Rifle extends Weapon {
+public class Rifle extends Weapon implements Serializable {
     
     private final static int WEAPON_NUM = 2;
     private final static AmmoType AMMO_TYPE = AmmoType.PISTOL;

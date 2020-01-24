@@ -61,6 +61,7 @@ import com.vuvk.swinger.objects.weapon.Rifle;
 import com.vuvk.swinger.utils.ArrayUtils;
 import com.vuvk.swinger.utils.ImmutablePair;
 import com.vuvk.swinger.utils.Pair;
+import com.vuvk.swinger.utils.SavedGame;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
@@ -276,8 +277,8 @@ public final class Map {
         {2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,0,0,0,0,0,0,7,0,0},
         {2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,0,0,0,0,0,0,0,0,0}
     }*/;
-    
-    public final static double[][] SPRITES = {/*
+    /*
+    public final static double[][] SPRITES = {
         //{20.5, 11.5, 0.0, 2}, //green light in front of playerstart
         //green lights in every room
         {10.0, 4.5,  0.0, 2},
@@ -337,8 +338,8 @@ public final class Map {
         
         //skeleton
         {15.5, 21.5, 0.0,  9},
-        {22.5, 21.5, 0.0,  9},*/
-    };
+        {22.5, 21.5, 0.0,  9},
+    };*/
     
     private static void loadTexturesAndMaterials(JsonValue jsonLevel) {
         Json json = new Json();
@@ -872,7 +873,10 @@ public final class Map {
             savesDir.mkdir();
         }
         
-        StringWriter buffer = new StringWriter();
+        SavedGame game = new SavedGame();
+        game.saveToFile("saves/game.gam");
+        
+        /*StringWriter buffer = new StringWriter();
         Json json = new Json();
         json.setWriter(new JsonWriter(buffer));
         
@@ -884,7 +888,7 @@ public final class Map {
                 txrArray[t] = "'" + TextureBank.WALLS.get(t).getPath() + "'";
             }
             json.writeValue("'" + "textures" + "'", txrArray);
-            json.writeObjectEnd();     
+            json.writeObjectEnd();
             
             // добавляем в файл информацию по материалам
             class MaterialInfo {
@@ -910,24 +914,24 @@ public final class Map {
             }
             json.writeObjectStart();
             json.writeValue("'" + "materials" + "'", matArray);
-            json.writeObjectEnd();       
+            json.writeObjectEnd();
         } finally {
             //StreamUtils.closeQuietly(buffer);
         }
         
         FileHandle saveFile = Gdx.files.local("saves/save.json");
-        saveFile.writeString(buffer.toString(), false);
+        saveFile.writeString(buffer.toString(), false);*/
         
         
         
         
-                /*
-                Door.deleteAll();
-                Creature.deleteAll();
-                Sprite.deleteAll();
-                Material.deleteAll();
-                Player.deleteInstance();
-                */
+        /*
+        Door.deleteAll();
+        Creature.deleteAll();
+        Sprite.deleteAll();
+        Material.deleteAll();
+        Player.deleteInstance();
+        */
         System.out.println("Game saved.");
             
     }
