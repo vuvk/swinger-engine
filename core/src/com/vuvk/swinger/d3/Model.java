@@ -1,5 +1,6 @@
 package com.vuvk.swinger.d3;
 
+import com.badlogic.gdx.math.Matrix4;
 import com.vuvk.swinger.math.Vector3;
 import com.vuvk.swinger.objects.Object3D;
 import java.io.Serializable;
@@ -41,6 +42,10 @@ public class Model extends Object3D implements Serializable {
 
     public boolean isVisible() {
         return visible;
+    }
+    
+    public Matrix4 getModelMtx() {
+        return new Matrix4().setToTranslation((float)pos.x, (float)pos.z, (float)pos.y);
     }
 
     public void setMesh(Mesh mesh) {

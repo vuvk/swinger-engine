@@ -62,8 +62,6 @@ public final class Player extends Creature implements Serializable {
     public  final static double MOVE_SPEED = 5.0;
     public  final static double KEY_ROT_SPEED  = 3.0;
     public  final static double MOUSE_ROT_SPEED  = 15.0;
-    public  final static double FOV = Math.toRadians(66.0);
-    public  final static double FOV_2 = FOV / 2.0;
     transient private final static Music[] SOUNDS_NEAD_KEY = { 
         SoundSystem.loadSound(SoundBank.FILE_NEED_KEY1),
         SoundSystem.loadSound(SoundBank.FILE_NEED_KEY2)

@@ -15,9 +15,12 @@
  */
 package com.vuvk.swinger.objects;
 
+import com.badlogic.gdx.math.Matrix4;
+import com.vuvk.swinger.Config;
 import com.vuvk.swinger.math.Vector2;
 import com.vuvk.swinger.math.Vector3;
 import com.vuvk.swinger.objects.Object3D;
+import com.vuvk.swinger.res.Map;
 import java.io.Serializable;
 import static java.lang.Math.PI;
 
@@ -26,14 +29,23 @@ import static java.lang.Math.PI;
  * @author tai-prg3
  */
 public class Camera extends Object3D implements Serializable {
-    transient private final static double DEG_TO_RAD = 1.0 / 180.0 * PI;
+    transient private final static double DEG_TO_RAD = PI / 180.0;
     transient private final static double RAD_TO_DEG = 180.0 / PI;
     
+    private Matrix4 projMtx;
+    private Matrix4 viewMtx = new Matrix4();
     private double direction = 180.0;
     private Vector2 view = new Vector2(-1, 0);   // see to 0
     /** the 2d raycaster version of camera plane */
     private Vector2 plane = new Vector2(0, 0.66);  // fov 66
+    public  final static double FOV = Math.toRadians(66.0);
+    public  final static double FOV_2 = FOV * 0.5;
 
+    public Camera() {
+        projMtx = new Matrix4().idt().setToProjection(0.1f, Map.WIDTH * Map.HEIGHT, (float) FOV, Config.ASPECT_RATIO);
+        setViewMtx();
+    }
+    
     public double getDirection() {
         return direction;
     }
@@ -45,9 +57,18 @@ public class Camera extends Object3D implements Serializable {
     public Vector2 getView() {
         return view;
     }
+    
+    public Matrix4 getProjectionMtx() {
+        return projMtx.cpy();
+    }
+    
+    public Matrix4 getViewMtx() {
+        return viewMtx.cpy();
+    }
 
     void setView(Vector2 view) {
         this.view = view;
+        setViewMtx();
     }
 
     void setPlane(Vector2 plane) {
@@ -83,6 +104,12 @@ public class Camera extends Object3D implements Serializable {
         this.plane = plane;
     }*/
     
+    private void setViewMtx() {
+        viewMtx.setToLookAt(new com.badlogic.gdx.math.Vector3((float)pos.x,  (float)pos.z, (float)pos.y ), 
+                            new com.badlogic.gdx.math.Vector3((float)view.x, 0,            (float)view.y), 
+                            com.badlogic.gdx.math.Vector3.Y);
+    }
+    
     public void rotate(double rad) {        
         double sin = Math.sin(rad);
         double cos = Math.cos(rad);
@@ -96,6 +123,8 @@ public class Camera extends Object3D implements Serializable {
         plane.x = plane.x   * cos - plane.y * sin;
         plane.y = oldPlaneX * sin + plane.y * cos;
         
+        setViewMtx();
+        
         setDirection(direction + rad * RAD_TO_DEG);
     }
     
@@ -105,9 +134,11 @@ public class Camera extends Object3D implements Serializable {
         Vector2 plane = new Vector2(another.getPlane());
         double dir    = another.getDirection();
         
-        this.setPos(pos);
-        this.setPlane(plane);
-        this.setView(view);
-        this.setDirection(dir);
+        setPos(pos);
+        setPlane(plane);
+        setView(view);
+        setDirection(dir);
+        
+        setViewMtx();
     }
 }
