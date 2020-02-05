@@ -9,28 +9,33 @@ import java.io.Serializable;
  * @author Shcherbatykh
  */
 public class Polygon implements Serializable {
-    private Vector3[] pointsV = new Vector3[3];
+    private Vector3[] verticiesV = new Vector3[3];
     private Vector2[] texCoordsV = new Vector2[3];
     private Vector3 normalV;
     
-    private double[] points    = new double[9];
+    private double[] verticies    = new double[9];
     private double[] texCoords = new double[6];
     private double[] normal    = new double[3];
     
-    public Polygon(Vector3[] points, Vector2[] texCoords, Vector3 normal) {
-        setPoints(points);
+    public Polygon(Vector3[] verticies, Vector3 normal) {
+        setPoints(verticies);
+        setNormal(normal);
+    }
+    
+    public Polygon(Vector3[] verticies, Vector2[] texCoords, Vector3 normal) {
+        setPoints(verticies);
         setTexCoords(texCoords);
         setNormal(normal);
     }
     
-    public Polygon(double[] points, double[] texCoords, double[] normal) {
-        setPoints(points);
+    public Polygon(double[] verticies, double[] texCoords, double[] normal) {
+        setPoints(verticies);
         setTexCoords(texCoords);
         setNormal(normal);
     }
 
-    public Vector3[] getPointsV() {
-        return pointsV;
+    public Vector3[] getVerticiesV() {
+        return verticiesV;
     }
 
     public Vector2[] getTexCoordsV() {
@@ -41,8 +46,8 @@ public class Polygon implements Serializable {
         return normalV;
     }
 
-    public double[] getPoints() {
-        return points;
+    public double[] getVerticies() {
+        return verticies;
     }
 
     public double[] getTexCoords() {
@@ -53,28 +58,28 @@ public class Polygon implements Serializable {
         return normal;
     }
     
-    public void setPoints(Vector3[] points) {
-        this.pointsV = points;
+    public void setPoints(Vector3[] verticies) {
+        this.verticiesV = verticies;
         
-        this.points[0] = points[0].x;
-        this.points[1] = points[0].y;
-        this.points[2] = points[0].z;
+        this.verticies[0] = verticies[0].x;
+        this.verticies[1] = verticies[0].y;
+        this.verticies[2] = verticies[0].z;
         
-        this.points[3] = points[1].x;
-        this.points[4] = points[1].y;
-        this.points[5] = points[1].z;
+        this.verticies[3] = verticies[1].x;
+        this.verticies[4] = verticies[1].y;
+        this.verticies[5] = verticies[1].z;
         
-        this.points[6] = points[2].x;
-        this.points[7] = points[2].y;
-        this.points[8] = points[2].z;    
+        this.verticies[6] = verticies[2].x;
+        this.verticies[7] = verticies[2].y;
+        this.verticies[8] = verticies[2].z;    
     }
     
-    public void setPoints(double[] points) {
-        this.points = points;
+    public void setPoints(double[] verticies) {
+        this.verticies = verticies;
         
-        this.pointsV[0] = new Vector3(points[0], points[1], points[2]);
-        this.pointsV[1] = new Vector3(points[3], points[4], points[5]);
-        this.pointsV[2] = new Vector3(points[6], points[7], points[8]);
+        this.verticiesV[0] = new Vector3(verticies[0], verticies[1], verticies[2]);
+        this.verticiesV[1] = new Vector3(verticies[3], verticies[4], verticies[5]);
+        this.verticiesV[2] = new Vector3(verticies[6], verticies[7], verticies[8]);
     }
     
     public void setTexCoords(Vector2[] texCoords) {

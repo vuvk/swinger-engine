@@ -29,6 +29,7 @@ import com.vuvk.swinger.audio.SoundBank;
 import com.vuvk.swinger.audio.SoundSystem;
 import com.vuvk.swinger.d3.Mesh;
 import com.vuvk.swinger.d3.Model;
+import com.vuvk.swinger.d3.Polygon;
 import java.io.FileReader;
 import java.io.Reader;
 import java.util.Arrays;
@@ -645,6 +646,50 @@ public final class Map {
         }
     }
     
+    private static void loadMeshesAndModels(int levelNum) {            
+        System.out.println("\tMeshes...");  
+        
+        Json json = new Json();
+        JsonValue jsonLevel = new JsonReader().parse(Gdx.files.internal("resources/maps/" + levelNum + "/models.json"));        
+        // читаем инфу по мешам
+        ArrayList<JsonValue> meshesArray = json.readValue(ArrayList.class, jsonLevel.get("meshes"));
+        for (JsonValue jsonMesh : meshesArray) {
+            // собираем вершины
+            List<Vector3> verticies = new ArrayList<>();
+            ArrayList<Array<Float>> jsonVerticies = json.readValue(ArrayList.class, jsonMesh.get("verticies"));
+            for(Array<Float> jsonVertex : jsonVerticies) {
+                verticies.add(new Vector3(jsonVertex.get(0), jsonVertex.get(1), jsonVertex.get(2)));
+            }
+            
+            // собираем вершины
+            List<Vector3> normals = new ArrayList<>();
+            ArrayList<Array<Float>> jsonNormals = json.readValue(ArrayList.class, jsonMesh.get("normals"));
+            for(Array<Float> jsonNormal : jsonNormals) {
+                normals.add(new Vector3(jsonNormal.get(0), jsonNormal.get(1), jsonNormal.get(2)));
+            }
+            
+            // собираем полигоны
+            List<Polygon> polys = new ArrayList<>();
+            ArrayList<JsonValue> jsonFaces = json.readValue(ArrayList.class, jsonMesh.get("faces"));
+            for(JsonValue jsonFace : jsonFaces) {
+                int idxNormal = jsonFace.getInt("normal");
+                int[] idxVertex = jsonFace.get("verticies").asIntArray();
+                
+                Vector3[] verts = new Vector3[3];
+                verts[0] = verticies.get(idxVertex[0]);
+                verts[1] = verticies.get(idxVertex[1]);
+                verts[2] = verticies.get(idxVertex[2]);
+                
+                Vector3 normal = normals.get(idxNormal);
+                
+                polys.add(new Polygon(verts, normal));
+            }
+            
+            // создаем меш
+            new Mesh(polys);
+        }
+    }
+    
     public static void reset() {
         Config.draw = false;
         
@@ -774,7 +819,9 @@ public final class Map {
         /* грузим ключи и двери */
         loadKeysDoors(levelNum);
         //Interpreter.addListing(new File("resources/maps/" + levelNum + "/keys_doors.js"));
-               
+
+        /* грузим меши и модели */
+        loadMeshesAndModels(levelNum);
         
         //Interpreter.runListing();
         
