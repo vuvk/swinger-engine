@@ -1,6 +1,8 @@
 package com.vuvk.swinger.utils;
 
 import com.vuvk.swinger.Config;
+import com.vuvk.swinger.d3.Mesh;
+import com.vuvk.swinger.d3.Model;
 import com.vuvk.swinger.graphic.TexturedSegment;
 import com.vuvk.swinger.objects.Door;
 import com.vuvk.swinger.objects.Sprite;
@@ -36,6 +38,8 @@ public class SavedGame implements Serializable {
     public Sprite[]   spritesLib;
     public Creature[] creaturesLib;
     public Door[]     doorsLib;
+    public Mesh[]     meshesLib;
+    public Model[]    modelsLib;
     public WallMaterial[] wallMaterialsBank;  
     
     public boolean[][] mapSolids;
@@ -55,6 +59,8 @@ public class SavedGame implements Serializable {
         spritesLib    = Sprite.getLib(); 
         creaturesLib  = Creature.getLib();
         doorsLib      = Door.getLib();
+        meshesLib     = Mesh.getLib();
+        modelsLib     = Model.getLib();        
         wallMaterialsBank = WallMaterialBank.BANK;   
         
         mapSolids   = Map.SOLIDS;
@@ -102,19 +108,19 @@ public class SavedGame implements Serializable {
                 MaterialBank.BANK.add(mat);
             }
 
-            Material.LIB.clear();
+            Material.deleteAll();
             for (Material mat : game.materialsLib) {
                 Material.LIB.add(mat);
             }
 
             WallMaterialBank.BANK = game.wallMaterialsBank;
 
-            Sprite.LIB.clear();
+            Sprite.deleteAll();
             for (Sprite spr : game.spritesLib) {
                 Sprite.LIB.add(spr);
             }
 
-            Creature.LIB.clear();
+            Creature.deleteAll();
             for (Creature creature : game.creaturesLib) {
                 if (creature instanceof Player) {                            
                     Player.setInstance((Player) creature);
@@ -123,9 +129,19 @@ public class SavedGame implements Serializable {
                 Creature.LIB.add(creature);                        
             }
 
-            Door.LIB.clear();
-            for (Door spr : game.doorsLib) {
-                Door.LIB.add(spr);
+            Door.deleteAll();
+            for (Door door : game.doorsLib) {
+                Door.LIB.add(door);
+            }
+
+            Mesh.deleteAll();
+            for (Mesh mesh : game.meshesLib) {
+                Mesh.LIB.add(mesh);
+            }
+
+            Model.deleteAll();
+            for (Model model : game.modelsLib) {
+                Model.LIB.add(model);
             }
 
             for (int x = 0; x < Map.WIDTH; ++x) {

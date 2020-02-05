@@ -27,6 +27,8 @@ import com.vuvk.retard_sound_system.SoundSystem;
 import com.vuvk.swinger.Config;
 import com.vuvk.swinger.audio.SoundBank;
 import com.vuvk.swinger.audio.SoundSystem;
+import com.vuvk.swinger.d3.Mesh;
+import com.vuvk.swinger.d3.Model;
 import java.io.FileReader;
 import java.io.Reader;
 import java.util.Arrays;
@@ -340,6 +342,7 @@ public final class Map {
         {15.5, 21.5, 0.0,  9},
         {22.5, 21.5, 0.0,  9},
     };*/
+    //public final static Model[][] MODELS = new Model[WIDTH][HEIGHT];
     
     private static void loadTexturesAndMaterials(JsonValue jsonLevel) {
         Json json = new Json();
@@ -650,6 +653,8 @@ public final class Map {
         Creature.deleteAll();
         Sprite.deleteAll();
         Material.deleteAll();
+        Mesh.deleteAll();
+        Model.deleteAll();
         Player.deleteInstance();
         
         if (MUSIC != null) {
