@@ -44,6 +44,7 @@ import java.util.logging.Logger;
 public final class InputManager extends InputAdapter {
     private static final Logger LOG = Logger.getLogger(InputManager.class.getName());    
     
+    private static Vector2 prevLoc  = new Vector2();
     private static Vector2 location = new Vector2();
     private static int scrollAmount = 0;
     private static boolean leftClick  = false;
@@ -52,18 +53,22 @@ public final class InputManager extends InputAdapter {
     public InputManager () {}     
     
     public static double getDeltaX() {
-        return Gdx.input.getDeltaX();
+        //return Gdx.input.getDeltaX();
+        return prevLoc.x - location.x;
     }
     
     public static double getDeltaY() {
-        return Gdx.input.getDeltaY();
+        //return Gdx.input.getDeltaY();
+        return prevLoc.y - location.y;
     }
     
     public static Vector2 getDelta() {
-        return new Vector2(getDeltaX(), getDeltaY());
+        //return new Vector2(getDeltaX(), getDeltaY());
+        return prevLoc.sub(location);
     }
     
     public static void setLocation(int x, int y) {
+        prevLoc.set(location);
         location.set(x, y);
         Gdx.input.setCursorPosition(x, y);
     }
@@ -123,6 +128,7 @@ public final class InputManager extends InputAdapter {
         
     @Override
     public boolean mouseMoved(int screenX, int screenY) {
+        prevLoc.set(location);
         location.set(screenX, screenY);
         return false;
     }

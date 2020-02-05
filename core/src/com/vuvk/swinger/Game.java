@@ -341,13 +341,6 @@ public class Game extends ApplicationAdapter {
                     font.draw(batch, Config.consoleCommand, 10, 25);                      
                 }
 
-                batch.end();
-
-                //Gdx.gl.glViewport(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-                stage.getViewport().apply();
-                stage.draw();
-                stage.act();
-
                 // вращение мышкой и фиксация курсора в центре окна
                 if (Config.mouseLook) {
                     double deltaX = InputManager.getDeltaX();
@@ -355,8 +348,8 @@ public class Game extends ApplicationAdapter {
                         double mouseSpeed = deltaX / Config.WIDTH;
                         playerCamera.rotate(Math.toRadians(mouseSpeed * Player.MOUSE_ROT_SPEED ));                      
                     }  
-                    /*
-                    if (deltaX < 0.0) {
+                    
+                    /*if (deltaX < 0.0) {
                         player.setRotL(false);
                         player.setRotR(true);
                     } else if (deltaX > 0.0) {
@@ -368,7 +361,14 @@ public class Game extends ApplicationAdapter {
                     }*/
 
                     InputManager.setLocation(windowCenter);
-                }    
+                }   
+
+                batch.end();
+
+                //Gdx.gl.glViewport(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+                stage.getViewport().apply();
+                stage.draw();
+                stage.act(); 
             }
             // игрок умер
             else {

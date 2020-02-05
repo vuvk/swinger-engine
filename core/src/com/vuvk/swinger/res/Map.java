@@ -648,7 +648,7 @@ public final class Map {
     public static void reset() {
         Config.draw = false;
         
-//        SoundSystem.stopAll();
+//      SoundSystem.stopAll();
         Door.deleteAll();
         Creature.deleteAll();
         Sprite.deleteAll();
