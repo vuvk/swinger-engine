@@ -397,7 +397,13 @@ public final class Map {
                 Map.SOLIDS[(int)pos.x][(int)pos.y] = true;
             }
             
-            new Sprite(mat, pos);          
+            Sprite sprite = new Sprite(mat, pos);
+            
+            // применяем скейл, если он есть в инфе
+            if (jsonSprite.has("scale")) {
+                float[] scale = jsonSprite.get("scale").asFloatArray();
+                sprite.setScale(new Vector2(scale[0], scale[1]));
+            }
         }
     }
     

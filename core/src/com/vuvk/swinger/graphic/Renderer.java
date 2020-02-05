@@ -1269,6 +1269,7 @@ public final class Renderer/* extends JPanel*/ {
             
             //translate sprite position to relative to camera
             Vector3 sprPos = sprite.getPos().sub(pos);
+            Vector2 scale = sprite.getScale();
 
             //transform sprite with the inverse camera matrix
             // [ planeX   dirX ] -1                                       [ dirY      -dirX ]
@@ -1285,12 +1286,12 @@ public final class Renderer/* extends JPanel*/ {
                 int spriteScreenX = (int)(HALF_WIDTH * (1.0 + transform.x * invTransformY));
 
                 //calculate height of the sprite on screen
-                int spriteHeight = /*Math.abs*/((int)(HEIGHT * invTransformY)); //using "transformY" instead of the real distance prevents fisheye
+                int spriteHeight = /*Math.abs*/((int)(HEIGHT * invTransformY * scale.y)); //using "transformY" instead of the real distance prevents fisheye
                 double invSpriteHeight = 1.0 / spriteHeight;
                 int halfSpriteHeight = spriteHeight >> 1;
                 //calculate lowest and highest pixel to fill in current stripe
-                int depth = (int)((sprPos.z) * invTransformY * (Config.HEIGHT >> Config.quality));    // поправка по высоте (глубина)
-                int dSY = HALF_HEIGHT - (halfSpriteHeight + depth);
+                int depth = (int)((sprPos.z * invTransformY * (Config.HEIGHT >> Config.quality)));    // поправка по высоте (глубина)
+                int dSY = HALF_HEIGHT - (int)((halfSpriteHeight + depth));
                 int drawStartY = dSY + 
                                  (int)(txr.getVolume().getTop() * spriteHeight)/* +     // смещаем до полезного объема сверху
                                  (int)(spriteHeight * pos.z)*/;
@@ -1307,8 +1308,8 @@ public final class Renderer/* extends JPanel*/ {
                 } 
 
                 //calculate width of the sprite
-                int spriteWidth = spriteHeight;//Math.abs((int)(HEIGHT / transform.y));
-                int halfSpriteWidth = halfSpriteHeight;//spriteWidth >> 1;
+                int spriteWidth = ((int)(HEIGHT * invTransformY * scale.x));//Math.abs((int)(HEIGHT / transform.y));
+                int halfSpriteWidth = spriteWidth >> 1;
                 int dSX = spriteScreenX - halfSpriteWidth;
                 int drawStartX = dSX + (int)(txr.getVolume().getLeft() * spriteWidth);
                 int drawEndX = dSX /*+ spriteWidth*/ + (int)Math.ceil(txr.getVolume().getRight() * spriteWidth);   
@@ -1330,7 +1331,7 @@ public final class Renderer/* extends JPanel*/ {
 
                 // loop through every vertical stripe of the sprite on screen
                 
-                double invSpriteWidth = invSpriteHeight;
+                double invSpriteWidth = 1.0 / spriteWidth;
                 /*int prevTexX = -1;
                 int[][] pixels = txr.getPixels();
                 int[]   pixelsColumn = null;*/

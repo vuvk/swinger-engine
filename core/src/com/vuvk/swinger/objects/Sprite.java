@@ -40,6 +40,7 @@ public class Sprite extends Material implements Comparable<Sprite>, Serializable
     //private double depth;
     //private boolean isAnimate;
     //private boolean hasSides;
+    protected Vector2 scale = new Vector2(1,1);
     
     private double direction = 0.0;
     private double distance = 0;  
@@ -142,6 +143,15 @@ public class Sprite extends Material implements Comparable<Sprite>, Serializable
     public void setPos(final Vector3 pos) {
         this.pos = pos;
     }
+
+    public Vector2 getScale() {
+        return scale;
+    }
+
+    public void setScale(Vector2 scale) {
+        this.scale = scale;
+    }
+     
     
     /*
     public void setTexture(final Texture ... texture) {
