@@ -5,6 +5,7 @@
  */
 package com.vuvk.swinger.graphic;
 
+import com.vuvk.swinger.objects.Camera;
 import com.vuvk.swinger.objects.creatures.Player;
 import com.vuvk.swinger.res.Image;
 import com.vuvk.swinger.res.TextureBank;

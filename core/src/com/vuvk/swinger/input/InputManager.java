@@ -123,7 +123,7 @@ public final class InputManager extends InputAdapter {
 
     @Override
     public boolean touchDragged(int screenX, int screenY, int pointer) {
-        return false;
+        return mouseMoved(screenX, screenY);
     }
         
     @Override

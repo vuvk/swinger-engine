@@ -1,6 +1,7 @@
 package com.vuvk.swinger.d3;
 
 import com.vuvk.swinger.math.Vector3;
+import com.vuvk.swinger.objects.Object3D;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -10,11 +11,10 @@ import java.util.List;
  *
  * @author Shcherbatykh
  */
-public class Model implements Serializable {
+public class Model extends Object3D implements Serializable {
     transient public final static List<Model> LIB = new ArrayList<>();
     
     private Mesh mesh;
-    private Vector3 position;
     private boolean visible = true;
     
     public Model(Mesh mesh) {
@@ -23,7 +23,6 @@ public class Model implements Serializable {
     
     public Model(Mesh mesh, Vector3 position) {
         this.mesh = mesh;
-        this.position = position;
         LIB.add(this);
     }
     
@@ -40,20 +39,12 @@ public class Model implements Serializable {
         return mesh;
     }
 
-    public Vector3 getPosition() {
-        return position;
-    }
-
     public boolean isVisible() {
         return visible;
     }
 
     public void setMesh(Mesh mesh) {
         this.mesh = mesh;
-    }
-
-    public void setPosition(Vector3 position) {
-        this.position = position;
     }
 
     public void setVisible(boolean visible) {

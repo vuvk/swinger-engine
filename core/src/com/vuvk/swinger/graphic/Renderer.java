@@ -5,6 +5,7 @@
  */
 package com.vuvk.swinger.graphic;
 
+import com.vuvk.swinger.objects.Camera;
 import com.vuvk.swinger.res.WallMaterial;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Pixmap;

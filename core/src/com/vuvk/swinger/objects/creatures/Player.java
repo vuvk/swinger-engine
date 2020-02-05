@@ -22,7 +22,7 @@ import com.vuvk.swinger.math.Vector2;
 import com.vuvk.swinger.math.Vector3;
 import com.vuvk.swinger.audio.SoundBank;
 import com.vuvk.swinger.audio.SoundSystem;
-import com.vuvk.swinger.graphic.Camera;
+import com.vuvk.swinger.objects.Camera;
 import com.vuvk.swinger.graphic.weapon_in_hand.AmmoPack;
 import com.vuvk.swinger.objects.weapon.AmmoType;
 import com.vuvk.swinger.objects.Door;
