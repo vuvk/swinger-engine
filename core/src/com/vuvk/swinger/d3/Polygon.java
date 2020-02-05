@@ -2,12 +2,13 @@ package com.vuvk.swinger.d3;
 
 import com.vuvk.swinger.math.Vector2;
 import com.vuvk.swinger.math.Vector3;
+import java.io.Serializable;
 
 /**
  *
  * @author Shcherbatykh
  */
-public class Polygon {
+public class Polygon implements Serializable {
     private Vector3[] pointsV = new Vector3[3];
     private Vector2[] texCoordsV = new Vector2[3];
     private Vector3 normalV;
