@@ -26,6 +26,10 @@ public class Vector2 implements Serializable {
     public Vector2(final Vector2 other) {
         this(other.x, other.y);
     }
+    
+    public Vector2(final double[] components) {
+        this(components[0], components[0]);
+    }
 
     public double getX() {
         return x;
@@ -110,6 +114,10 @@ public class Vector2 implements Serializable {
     
     public double distance(final Vector2 other) {
         return (this.sub(other)).length();
+    }
+        
+    public double[] toArray() {
+        return new double[]{x, y};
     }
     
     @Override

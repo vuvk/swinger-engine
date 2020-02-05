@@ -24,6 +24,10 @@ public class Vector3 extends Vector2 {
         this(other.x, other.y, other.z);
     }
     
+    public Vector3(final double[] components) {
+        this(components[0], components[0], components[0]);
+    }
+    
     public Vector3(double x, double y) {
         this(x, y, 0);
     }
@@ -91,6 +95,11 @@ public class Vector3 extends Vector2 {
     
     public double distance(final Vector3 another) {
         return (this.sub(another)).length();
+    }    
+        
+    @Override
+    public double[] toArray() {
+        return new double[]{x, y, z};
     }
     
     @Override
