@@ -27,6 +27,30 @@ public class Polygon {
         setTexCoords(texCoords);
         setNormal(normal);
     }
+
+    public Vector3[] getPointsV() {
+        return pointsV;
+    }
+
+    public Vector2[] getTexCoordsV() {
+        return texCoordsV;
+    }
+
+    public Vector3 getNormalV() {
+        return normalV;
+    }
+
+    public double[] getPoints() {
+        return points;
+    }
+
+    public double[] getTexCoords() {
+        return texCoords;
+    }
+
+    public double[] getNormal() {
+        return normal;
+    }
     
     public void setPoints(Vector3[] points) {
         this.pointsV = points;
