@@ -650,7 +650,9 @@ public final class Map {
         System.out.println("\tMeshes...");  
         
         Json json = new Json();
-        JsonValue jsonLevel = new JsonReader().parse(Gdx.files.internal("resources/maps/" + levelNum + "/models.json"));        
+        JsonValue jsonLevel = new JsonReader().parse(Gdx.files.internal("resources/maps/" + levelNum + "/models.json")); 
+        
+        List<Mesh> meshes = new ArrayList<>();
         // читаем инфу по мешам
         ArrayList<JsonValue> meshesArray = json.readValue(ArrayList.class, jsonLevel.get("meshes"));
         for (JsonValue jsonMesh : meshesArray) {
@@ -686,7 +688,19 @@ public final class Map {
             }
             
             // создаем меш
-            new Mesh(polys);
+            meshes.add(new Mesh(polys));
+        }
+        
+        System.out.println("\tModels placing...");  
+        // читаем инфу по моделям и создаём
+        ArrayList<JsonValue> modelsArray = json.readValue(ArrayList.class, jsonLevel.get("models"));
+        for (JsonValue jsonModel : modelsArray) {
+            int idxMesh = jsonModel.getInt("mesh");
+            
+            float[] jsonPos = jsonModel.get("position").asFloatArray();
+            Vector3 pos = new Vector3(jsonPos[0], jsonPos[1], jsonPos[2]);
+            
+            new Model(meshes.get(idxMesh), pos);
         }
     }
     
