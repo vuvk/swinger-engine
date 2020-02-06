@@ -24,8 +24,24 @@ public class Vector3 extends Vector2 {
         this(other.x, other.y, other.z);
     }
     
+    public Vector3(final Vector4 other) {        
+        double w;
+        if (other.w != 0.0)
+            w = 1.0 / other.w;
+        else
+            w = 0.0;
+
+        x = other.x * w;
+        y = other.y * w;
+        z = other.z * w;
+    }
+    
+    public Vector3(final float[] components) {
+        this(components[0], components[1], components[2]);
+    }
+    
     public Vector3(final double[] components) {
-        this(components[0], components[0], components[0]);
+        this(components[0], components[1], components[2]);
     }
     
     public Vector3(double x, double y) {
@@ -91,6 +107,24 @@ public class Vector3 extends Vector2 {
         return x * other.x + 
                y * other.y + 
                z * other.z;
+    }
+    
+    public Vector3 cross(Vector3 other) {
+        return new Vector3(
+            y * other.z - z * other.y,
+            z * other.x - x * other.z,
+            x * other.y - y * other.x
+        );
+    }
+    
+    @Override
+    public Vector3 normalize() {
+        return div(length());
+    }
+    
+    @Override
+    public double length() {
+        return Math.sqrt(x*x + y*y + z*z);
     }
     
     public double distance(final Vector3 another) {

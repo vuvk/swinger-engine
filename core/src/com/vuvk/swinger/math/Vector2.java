@@ -25,10 +25,25 @@ public class Vector2 implements Serializable {
     
     public Vector2(final Vector2 other) {
         this(other.x, other.y);
+    }    
+    
+    public Vector2(final Vector3 other) {        
+        double z;
+        if (other.z != 0.0)
+            z = 1.0 / other.z;
+        else
+            z = 0.0;
+
+        x = other.x * z;
+        y = other.y * z;
+    }
+    
+    public Vector2(final float[] components) {
+        this(components[0], components[1]);
     }
     
     public Vector2(final double[] components) {
-        this(components[0], components[0]);
+        this(components[0], components[1]);
     }
 
     public double getX() {

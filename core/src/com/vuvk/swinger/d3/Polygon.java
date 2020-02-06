@@ -13,7 +13,7 @@ public class Polygon implements Serializable {
     private Vector2[] texCoordsV = new Vector2[3];
     private Vector3 normalV;
     
-    private double[] verticies    = new double[9];
+    private double[] verticies = new double[9];
     private double[] texCoords = new double[6];
     private double[] normal    = new double[3];
     
@@ -111,5 +111,24 @@ public class Polygon implements Serializable {
     public void setNormal(double[] normal) {
         this.normal = normal;        
         this.normalV = new Vector3(normal);
+    }
+    
+    public Vector3 calcNormal() {
+	/* расчет нормали по трем вершинам из книги Краснова */
+        double Qx, Qy, Qz, Px, Py, Pz;
+
+        Qx = verticiesV[1].x - verticiesV[0].x;
+        Qy = verticiesV[1].y - verticiesV[0].y;
+        Qz = verticiesV[1].z - verticiesV[0].z;
+
+        Px = verticiesV[2].x - verticiesV[0].x;
+        Py = verticiesV[2].y - verticiesV[0].y;
+        Pz = verticiesV[2].z - verticiesV[0].z;
+
+        return new Vector3(
+            Py * Qz - Pz * Qy,
+            Pz * Qx - Px * Qz,
+            Px * Qy - Py * Qx
+        );
     }
 }
