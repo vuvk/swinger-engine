@@ -107,6 +107,22 @@ public class Matrix4 {
         return translate(vec.x, vec.y, vec.z);
     }
     
+    public Matrix4 rotateX(double rad) {
+        Matrix4 tmp = new Matrix4();
+        tmp.identity();
+
+        double s = Math.sin(rad);
+        double c = Math.cos(rad);
+
+        tmp.data[5]  = c;
+        tmp.data[6]  = s;
+
+        tmp.data[9]  = -s;
+        tmp.data[10] = c;
+
+        return this.mul(tmp);        
+    }
+    
     public Matrix4 scale(double x, double y, double z) {
         Matrix4 tmp = new Matrix4();
         tmp.identity();

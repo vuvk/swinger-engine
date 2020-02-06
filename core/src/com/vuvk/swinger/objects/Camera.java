@@ -42,7 +42,7 @@ public class Camera extends Object3D implements Serializable {
     public  final static double FOV_2 = FOV * 0.5;
 
     public Camera() {
-        projMtx = Matrix4.perspective(0.1f, Map.WIDTH * Map.HEIGHT, (float) FOV, Config.ASPECT_RATIO);
+        projMtx = Matrix4.perspective(0.1f, Map.WIDTH * Map.HEIGHT, 66.0, Config.ASPECT_RATIO);
         setViewMtx();
     }
     
@@ -59,11 +59,11 @@ public class Camera extends Object3D implements Serializable {
     }
     
     public Matrix4 getProjectionMtx() {
-        return projMtx.cpy();
+        return projMtx;
     }
     
     public Matrix4 getViewMtx() {
-        return viewMtx.cpy();
+        return viewMtx;
     }
 
     void setView(Vector2 view) {
@@ -110,9 +110,9 @@ public class Camera extends Object3D implements Serializable {
     }*/
     
     private void setViewMtx() {
-        viewMtx.lookAt(pos.x,  -pos.z, pos.y, 
-                       pos.x + view.x, -pos.z, pos.y + view.y, 
-                       0, 1, 0);
+        viewMtx = Matrix4.lookAt(pos.x, pos.z, pos.y,
+                                 (pos.x + view.x), pos.z, (pos.y + view.y), 
+                                 0, -1, 0);
     }
     
     public void rotate(double rad) {        

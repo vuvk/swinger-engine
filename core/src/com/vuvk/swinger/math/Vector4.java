@@ -16,7 +16,7 @@ public class Vector4 extends Vector3 {
     }
     
     public Vector4(final Vector3 other) {
-        this(other.x, other.y, 0.0, 1.0);
+        this(other.x, other.y, other.z, 1.0);
     }
     
     public Vector4(final Vector4 other) {

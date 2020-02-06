@@ -294,6 +294,10 @@ public class Game extends ApplicationAdapter {
                 Door.updateAll();
                 Creature.updateAll();
                 Model.updateAll();
+                
+                for (Model mdl : Model.LIB) {
+                    mdl.rotateX(Gdx.graphics.getDeltaTime());
+                }
 
                 Sky.getInstance().update();
 

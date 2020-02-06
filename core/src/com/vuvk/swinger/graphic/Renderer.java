@@ -7,7 +7,6 @@ package com.vuvk.swinger.graphic;
 
 import com.vuvk.swinger.objects.Camera;
 import com.vuvk.swinger.res.WallMaterial;
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Pixmap.Filter;
 import com.badlogic.gdx.graphics.Pixmap.Format;
@@ -27,15 +26,20 @@ import java.util.concurrent.Executors;
 import java.util.logging.Logger;
 //import javax.swing.JPanel;
 import com.vuvk.swinger.Config;
-import com.vuvk.swinger.graphic.gui.text.FontBank;
-import com.vuvk.swinger.graphic.gui.text.Text;
+import com.vuvk.swinger.d3.Mesh;
+import com.vuvk.swinger.d3.Model;
+import com.vuvk.swinger.d3.Polygon;
 import com.vuvk.swinger.graphic.weapon_in_hand.WeaponInHand;
+import com.vuvk.swinger.math.Matrix4;
+import com.vuvk.swinger.math.Vector4;
 import com.vuvk.swinger.objects.creatures.Player;
 import com.vuvk.swinger.res.Image;
 import com.vuvk.swinger.res.MaterialBank;
 import com.vuvk.swinger.utils.ArrayUtils;
 import java.nio.IntBuffer;
-import java.util.logging.Level;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 /**
  *
@@ -169,7 +173,8 @@ public final class Renderer/* extends JPanel*/ {
     //private /*final static*/ Thread[] RENDER_THREADS = new Thread[4];
     private final /*static*/ ExecutorService EXECUTOR = Executors.newFixedThreadPool(Config.THREADS_COUNT);
     //private boolean[] render = {false,false,false,false};
-    private final /*static*/ Array<Sprite> SPRITES_FOR_DRAW = new Array<>(false, 50);
+    private final /*static*/ List<Sprite> SPRITES_FOR_DRAW = new ArrayList<>(50);
+    private final /*static*/ List<Model> MODELS_FOR_DRAW = new ArrayList<>(50);
     
     private static boolean started = false;     // рендерер запущен
     private boolean canRender = true;           // можно ли рендерить в итоговую пиксельную карту 
@@ -1258,9 +1263,9 @@ public final class Renderer/* extends JPanel*/ {
             } 
         }
         // сортируем в порядке от меньшего расстояния к большему
-        //Collections.sort(SPRITES_FOR_DRAW, Collections.reverseOrder());
+        Collections.sort(SPRITES_FOR_DRAW, Collections.reverseOrder());
         //Collections.sort(SPRITES_FOR_DRAW);
-        SPRITES_FOR_DRAW.sort();
+        //SPRITES_FOR_DRAW.sort();
         
         for (Sprite sprite : SPRITES_FOR_DRAW) {
             Texture txr = sprite.getTexture();
@@ -1399,6 +1404,109 @@ public final class Renderer/* extends JPanel*/ {
                             }
                         }
                     }                    
+                }
+            }
+        }
+        
+        
+        // MODEL CASTING
+        MODELS_FOR_DRAW.clear();
+        for (Model model : Model.LIB) {
+            //sprite.update();
+            int x = (int)model.getPos().x;
+            int y = (int)model.getPos().y;
+            
+            if (model.isVisible() &&
+                x >= 0 && x < Map.WIDTH  &&
+                y >= 0 && y < Map.HEIGHT &&
+                Map.VISIBLE_CELLS[x][y]) {
+                MODELS_FOR_DRAW.add(model);
+            } 
+        }
+        
+        // сортируем в порядке от меньшего расстояния к большему
+        Collections.sort(MODELS_FOR_DRAW, Collections.reverseOrder());
+        
+        Matrix4 projMtx = activeCamera.getProjectionMtx();
+        Matrix4 viewMtx = activeCamera.getViewMtx();
+        Matrix4 pv = projMtx.mul(viewMtx);
+        for (Model model : Model.LIB) {   
+            Matrix4 mdlMtx = model.getModelMtx();
+            Matrix4 wldMtx = pv.mul(mdlMtx);
+            
+            Mesh mesh = model.getMesh();
+            for (Polygon poly : mesh.getPolygons()) {
+                ArrayList<Vector2> points = new ArrayList<>();
+                for (Vector3 vec3 : poly.getVerticiesV()) {
+                    Vector4 vec4 = new Vector4(vec3);
+                    Vector4 mul = wldMtx.mul(vec4);
+                    Vector3 vec4_to_3 = new Vector3(mul);
+                    Vector2 point = new Vector2(vec4_to_3);
+                    points.add(point);
+
+                    /*int x = (int)((point.x + 1) * HALF_WIDTH);
+                    int y = (int)((point.y + 1) * HALF_HEIGHT);
+
+                    if (x >= 0 && x < WIDTH &&
+                        y >= 0 && y < HEIGHT) {
+                        TEMP_BUFFER.put(y * WIDTH + x, 0xFF00FFFF);
+                    }*/
+                    
+                }
+                
+                for (Vector2 point : points) {
+                    point.x = (point.x + 1) * HALF_WIDTH;
+                    point.y = (point.y + 1) * HALF_HEIGHT;
+                }
+                
+                Vector2 start;
+                Vector2 point0 = points.get(0);
+                Vector2 point1 = points.get(1);   
+                Vector2 point2 = points.get(2);  
+                
+                double distance = point0.distance(point1);
+                Vector2 pDir = point1.sub(point0).normalize();
+                start = new Vector2(point0);
+                while(distance > 0) {                    
+                    int x = (int) start.x;
+                    int y = (int) start.y;
+                    
+                    start = start.add(pDir);
+                    --distance;   
+                    if (x >= 0 && x < WIDTH &&
+                        y >= 0 && y < HEIGHT) {
+                        TEMP_BUFFER.put(y * WIDTH + x, 0xFF00FFFF);
+                    }                 
+                }
+                
+                distance = point0.distance(point2);
+                pDir = point2.sub(point0).normalize();
+                start = new Vector2(point0);
+                while(distance > 0) {                    
+                    int x = (int) start.x;
+                    int y = (int) start.y;
+                    
+                    start = start.add(pDir);
+                    --distance;   
+                    if (x >= 0 && x < WIDTH &&
+                        y >= 0 && y < HEIGHT) {
+                        TEMP_BUFFER.put(y * WIDTH + x, 0xFF00FFFF);
+                    }                 
+                }
+                
+                distance = point1.distance(point2);
+                pDir = point2.sub(point1).normalize();
+                start = new Vector2(point1);
+                while(distance > 0) {                    
+                    int x = (int) start.x;
+                    int y = (int) start.y;
+                    
+                    start = start.add(pDir);
+                    --distance;   
+                    if (x >= 0 && x < WIDTH &&
+                        y >= 0 && y < HEIGHT) {
+                        TEMP_BUFFER.put(y * WIDTH + x, 0xFF00FFFF);
+                    }                 
                 }
             }
         }

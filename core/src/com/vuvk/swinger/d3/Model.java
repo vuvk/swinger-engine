@@ -17,10 +17,11 @@ import java.util.List;
 public class Model extends Object3D implements Comparable<Model>, Serializable {
     transient public final static List<Model> LIB = new ArrayList<>();
     
-    private Matrix4 mdlMtx;
+    private Matrix4 mdlMtx = new Matrix4();
     private Mesh mesh;
     private boolean visible = true;
-    private double distance = 0;  
+    private double distance = 0;
+    private Vector3 rotation = new Vector3();
     
     public Model(Mesh mesh) {
         this(mesh, new Vector3());
@@ -28,6 +29,7 @@ public class Model extends Object3D implements Comparable<Model>, Serializable {
     
     public Model(Mesh mesh, Vector3 position) {
         this.mesh = mesh;
+        setPos(position);
         setModelMtx();
         LIB.add(this);
     }
@@ -62,13 +64,22 @@ public class Model extends Object3D implements Comparable<Model>, Serializable {
     }
     
     private void setModelMtx() {
-        mdlMtx = new Matrix4().translate(pos.x, -pos.z, pos.y);
+        mdlMtx.identity();
+        mdlMtx = mdlMtx.translate(pos.x, pos.z,pos.y);
+        
+        if (rotation.x != 0) {    
+            mdlMtx = mdlMtx.rotateX(rotation.x);
+        }
     }
     
     @Override
     public void setPos(Vector3 pos) {
         super.setPos(pos);
         setModelMtx();
+    }
+    
+    public void rotateX(double rad) {
+        rotation.x += rad;        
     }
 
     @Override
