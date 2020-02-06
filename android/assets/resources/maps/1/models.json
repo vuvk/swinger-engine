@@ -39,6 +39,6 @@ f 5//3 3//3 2//3
 	],
 	
 	"models":[
-        {"mesh": 0, "position": [15.5, 4.5, 0.0], "solid": true }
+        {"mesh": 0, "position": [11.5, 6.5, 0.0], "solid": true }
 	]
 }

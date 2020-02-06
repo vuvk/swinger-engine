@@ -142,7 +142,7 @@ public class Matrix4 {
         return result;
     }
 
-    public static Matrix4 perspective(double fovy, double aspect, double zNear, double zFar) {
+    public static Matrix4 perspective(double zNear, double zFar, double fovy, double aspect) {
         if (fovy <= 0.0 || fovy >= 180.0) {
             return null;
         }
@@ -182,5 +182,11 @@ public class Matrix4 {
         result.data[15] = 1.0f;
 
         return result.translate(-eyeX, -eyeY, -eyeZ);
+    }
+    
+    public static Matrix4 lookAt(Vector3 eye, Vector3 target, Vector3 up) {
+        return lookAt(eye.x, eye.y, eye.z, 
+                      target.x, target.y, target.z,
+                      up.x, up.y, up.z);
     }
 }

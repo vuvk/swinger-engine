@@ -37,6 +37,7 @@ import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.vuvk.swinger.audio.SoundBank;
 import com.vuvk.swinger.audio.SoundSystem;
+import com.vuvk.swinger.d3.Model;
 import com.vuvk.swinger.objects.Camera;
 import com.vuvk.swinger.graphic.Fog;
 import com.vuvk.swinger.graphic.Renderer;
@@ -292,6 +293,7 @@ public class Game extends ApplicationAdapter {
                 Sprite.updateAll();
                 Door.updateAll();
                 Creature.updateAll();
+                Model.updateAll();
 
                 Sky.getInstance().update();
 

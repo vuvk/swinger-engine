@@ -15,8 +15,8 @@
  */
 package com.vuvk.swinger.objects;
 
-import com.badlogic.gdx.math.Matrix4;
 import com.vuvk.swinger.Config;
+import com.vuvk.swinger.math.Matrix4;
 import com.vuvk.swinger.math.Vector2;
 import com.vuvk.swinger.math.Vector3;
 import com.vuvk.swinger.objects.Object3D;
@@ -42,7 +42,7 @@ public class Camera extends Object3D implements Serializable {
     public  final static double FOV_2 = FOV * 0.5;
 
     public Camera() {
-        projMtx = new Matrix4().idt().setToProjection(0.1f, Map.WIDTH * Map.HEIGHT, (float) FOV, Config.ASPECT_RATIO);
+        projMtx = Matrix4.perspective(0.1f, Map.WIDTH * Map.HEIGHT, (float) FOV, Config.ASPECT_RATIO);
         setViewMtx();
     }
     
@@ -73,7 +73,12 @@ public class Camera extends Object3D implements Serializable {
 
     void setPlane(Vector2 plane) {
         this.plane = plane;
-    } 
+    }     
+
+    public void setPos(Vector3 pos) {
+        super.setPos(pos);
+        setViewMtx();
+    }    
     
     void setDirection(double degree) {
         this.direction = degree;
@@ -105,9 +110,9 @@ public class Camera extends Object3D implements Serializable {
     }*/
     
     private void setViewMtx() {
-        viewMtx.setToLookAt(new com.badlogic.gdx.math.Vector3((float)pos.x,  (float)pos.z, (float)pos.y ), 
-                            new com.badlogic.gdx.math.Vector3((float)view.x, 0,            (float)view.y), 
-                            com.badlogic.gdx.math.Vector3.Y);
+        viewMtx.lookAt(pos.x,  -pos.z, pos.y, 
+                       pos.x + view.x, -pos.z, pos.y + view.y, 
+                       0, 1, 0);
     }
     
     public void rotate(double rad) {        
