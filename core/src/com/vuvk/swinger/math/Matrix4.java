@@ -136,16 +136,36 @@ public class Matrix4 {
     
     public Matrix4 scale(Vector3 vec) {
         return scale(vec.x, vec.y, vec.z);
-    }
+    }    
     
-    public static Matrix4 frustum(double left, double right, double bottom, double top, double zNear, double zFar) {
-	/*if ((right - left) == 0.0 ||
-              (top - bottom) == 0.0 ||
-              (zFar - zNear) == 0.0) {
-		return null;
-	}*/
+    public static Matrix4 ortho(double left, double right, double bottom, double top, double zNear, double zFar) {
+	Matrix4 result = new Matrix4();
         
+	if ((right - left) == 0.0 ||
+            (top - bottom) == 0.0 ||
+            (zFar - zNear) == 0.0) {
+		return result;
+	}
+
+        result.data[0]  =  2.0 / (right - left);
+        result.data[5]  =  2.0 / (top - bottom);
+        result.data[10] = -2.0 / (zFar - zNear);
+        result.data[12] = -(right + left) / (right - left);
+        result.data[13] = -(top + bottom) / (top - bottom);
+        result.data[14] = -(zFar + zNear)   / (zFar - zNear);
+        result.data[15] =  1.0f;
+
+        return result;
+}
+    
+    public static Matrix4 frustum(double left, double right, double bottom, double top, double zNear, double zFar) {        
         Matrix4 result = new Matrix4();
+        
+	if ((right - left) == 0.0 ||
+            (top - bottom) == 0.0 ||
+            (zFar - zNear) == 0.0) {
+		return result;
+	}
 
 	result.data[0]  =  2.0 * zNear / (right - left);
         result.data[5]  =  2.0 * zNear / (top - bottom);
