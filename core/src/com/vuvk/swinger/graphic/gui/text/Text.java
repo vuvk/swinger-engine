@@ -25,6 +25,7 @@ public class Text {
     private Vector2 location;
     private Font font;
     protected String message;
+    protected boolean visible = true;
     
     public Text(final Font font) {
         this(font, "");
@@ -64,6 +65,10 @@ public class Text {
         return message;
     }
 
+    public boolean isVisible() {
+        return visible;
+    }   
+
     public void setLocation(Vector2 location) {
         this.location = location;
     }
@@ -75,10 +80,17 @@ public class Text {
     public void setMessage(String message) {
         this.message = message;
     }    
-    
+
+    public void setVisible(boolean visible) {
+        this.visible = visible;
+    }
     
     public void draw(Batch batch) {            
-        if (message == null || message.length() == 0 || font == null) {
+        if (message == null       || 
+            message.length() == 0 || 
+            font == null          || 
+            !isVisible()
+           ) {
             return;
         }
          

@@ -865,9 +865,7 @@ public final class Map {
         
         new GuardRocketeer(new Vector3(12.5, 18.5, 0.0), 
                             0);
-        
-        new Text(FontBank.FONT_OUTLINE, "demo", new Vector2(250, 150));
-        
+                
         
         /*MUSIC = SoundSystem.loadSound(SoundBank.FILE_MUSIC1);
         MUSIC.setVolume(0.6f);

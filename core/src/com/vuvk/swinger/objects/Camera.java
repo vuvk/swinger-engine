@@ -38,11 +38,12 @@ public class Camera extends Object3D implements Serializable {
     private Vector2 view = new Vector2(-1, 0);   // see to 0
     /** the 2d raycaster version of camera plane */
     private Vector2 plane = new Vector2(0, 0.66);  // fov 66
-    public  final static double FOV = Math.toRadians(66.0);
-    public  final static double FOV_2 = FOV * 0.5;
+    public  final static double FOV = 66;
+    //public  final static double FOV = Math.toRadians(FOV_VALUE);
+    //public  final static double FOV_2 = FOV * 0.5;
 
     public Camera() {
-        projMtx = Matrix4.perspective(0.1f, Map.WIDTH * Map.HEIGHT, 66.0, Config.ASPECT_RATIO);
+        projMtx = Matrix4.perspective(0.1f, Map.WIDTH * Map.HEIGHT, FOV, Config.ASPECT_RATIO);
         setViewMtx();
     }
     

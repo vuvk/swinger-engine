@@ -14,6 +14,7 @@ import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.vuvk.swinger.Config;
 import static com.vuvk.swinger.Game.screenMsg;
 import com.vuvk.swinger.graphic.Fog;
+import com.vuvk.swinger.graphic.gui.Menu;
 import com.vuvk.swinger.math.Vector2;
 import com.vuvk.swinger.objects.Door;
 import com.vuvk.swinger.objects.Sprite;
@@ -54,17 +55,17 @@ public final class InputManager extends InputAdapter {
     
     public static double getDeltaX() {
         //return Gdx.input.getDeltaX();
-        return prevLoc.x - location.x;
+        return location.x - prevLoc.x;
     }
     
     public static double getDeltaY() {
         //return Gdx.input.getDeltaY();
-        return prevLoc.y - location.y;
+        return location.y - prevLoc.y;
     }
     
     public static Vector2 getDelta() {
         //return new Vector2(getDeltaX(), getDeltaY());
-        return prevLoc.sub(location);
+        return location.sub(prevLoc);
     }
     
     public static void setLocation(int x, int y) {
@@ -208,7 +209,16 @@ public final class InputManager extends InputAdapter {
                 break;
 
             case Input.Keys.ESCAPE : 
-                Config.QUIT = true;
+                //Config.QUIT = true;
+                
+                if (Menu.isActive()) {
+                    Menu.deactivate();
+                    Map.active = true;
+                } else {
+                    Menu.activate();
+                    Map.active = false;
+                }
+                
                 break;
         }
 
@@ -223,10 +233,18 @@ public final class InputManager extends InputAdapter {
         if (!Config.console) {
             switch (keycode) {
                 case Input.Keys.UP:
-                case Input.Keys.W : player.setMoveF(false); break;
+                case Input.Keys.W : 
+                    if (Config.draw == true && player.getHealth() > 0.0) {
+                        player.setMoveF(false); 
+                    }
+                    break;
 
                 case Input.Keys.DOWN:
-                case Input.Keys.S : player.setMoveB(false); break;
+                case Input.Keys.S : 
+                    if (Config.draw == true && player.getHealth() > 0.0) {
+                        player.setMoveB(false);                         
+                    }
+                    break;
 
                 case Input.Keys.A : player.setMoveL(false); break;
                 case Input.Keys.D : player.setMoveR(false); break;

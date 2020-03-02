@@ -65,7 +65,7 @@ public class Model extends Object3D implements Comparable<Model>, Serializable {
     
     private void setModelMtx() {
         mdlMtx.identity();
-        mdlMtx = mdlMtx.translate(pos.x, pos.z,pos.y);
+        mdlMtx = mdlMtx.translate(pos.x, pos.z, pos.y);
         
         if (rotation.x != 0) {    
             mdlMtx = mdlMtx.rotateX(rotation.x);
