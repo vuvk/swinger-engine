@@ -81,7 +81,7 @@ public class Camera extends Object3D implements Serializable {
         setViewMtx();
     }    
     
-    void setDirection(double degree) {
+    private void setDirection(double degree) {
         this.direction = degree;
         while (direction < 0.0) {
             direction += 360.0;

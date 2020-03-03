@@ -646,6 +646,7 @@ public final class Map {
         }
     }
     
+    /*
     private static void loadMeshesAndModels(int levelNum) {            
         System.out.println("\tMeshes...");  
         
@@ -702,7 +703,7 @@ public final class Map {
             
             new Model(meshes.get(idxMesh), pos);
         }
-    }
+    }*/
     
     public static void reset() {
         Config.draw = false;
@@ -835,7 +836,7 @@ public final class Map {
         //Interpreter.addListing(new File("resources/maps/" + levelNum + "/keys_doors.js"));
 
         /* грузим меши и модели */
-        loadMeshesAndModels(levelNum);
+        //loadMeshesAndModels(levelNum);
         
         //Interpreter.runListing();
         
@@ -904,39 +905,6 @@ public final class Map {
         active = true;
     }
     
-    
-    private static void saveTexturesAndMaterials(Json jsonLevel) {
-        Json json = new Json();      
-        
-        /* грузим текстуры */    
-        List<String> txrArray = new ArrayList<>(TextureBank.WALLS.size());
-        for (Texture txr : TextureBank.WALLS) {
-            txrArray.add(txr.getPath());
-        }
-        
-        json.writeValue("textures", txrArray);
-        
-        /* Формируем материалы */
-        /*ArrayList<JsonValue> matArray = json.readValue(ArrayList.class, jsonLevel.get("materials"));
-        for (JsonValue mat : matArray) {            
-            int[] frmNum = mat.get("textures").asIntArray();
-            Texture[] frames = new Texture[frmNum.length];
-            for (int j = 0; j < frames.length; ++j) {
-                frames[j] = TextureBank.WALLS.get(texturesCount + frmNum[j]);
-            }
-            
-            double animSpeed = mat.getDouble("animation_speed");
-            boolean playOnce = mat.getBoolean("play_once");
-            
-            Material material = new Material(frames, animSpeed, playOnce);
-            JsonValue jsonBrigthness = mat.get("brigthness");
-            if (jsonBrigthness != null) {
-                material.setBrightness(jsonBrigthness.asDouble());
-            }
-            MaterialBank.BANK.add(material);
-        }  */  
-    }
-    
     public static void save() {        
         File savesDir = new File("saves");
         if (!savesDir.exists() || !savesDir.isDirectory()) {
@@ -944,65 +912,6 @@ public final class Map {
         }
         
         SavedGame game = new SavedGame();
-        game.saveToFile("saves/game.gam");
-        
-        /*StringWriter buffer = new StringWriter();
-        Json json = new Json();
-        json.setWriter(new JsonWriter(buffer));
-        
-        try {
-            // добавляем в файл информацию по текстурам
-            json.writeObjectStart();
-            String[] txrArray = new String[TextureBank.WALLS.size()];
-            for (int t = 0; t < TextureBank.WALLS.size(); ++t) {
-                txrArray[t] = "'" + TextureBank.WALLS.get(t).getPath() + "'";
-            }
-            json.writeValue("'" + "textures" + "'", txrArray);
-            json.writeObjectEnd();
-            
-            // добавляем в файл информацию по материалам
-            class MaterialInfo {
-                int textures[];
-                double animation_speed;
-                boolean play_once;
-            }
-            MaterialInfo[] matArray = new MaterialInfo[MaterialBank.BANK.size()];
-            for (int m = 0; m < MaterialBank.BANK.size(); ++m) {
-                Material mat = MaterialBank.BANK.get(m);
-                MaterialInfo info = new MaterialInfo();
-                
-                Image[][] frames = mat.getFrames();
-                info.textures = new int[frames.length];
-                for (int f = 0; f < frames.length; ++f) {
-                    Image frame = frames[f][0];
-                    info.textures[f] = TextureBank.WALLS.indexOf(frame);
-                }
-                info.animation_speed = mat.getAnimSpeed();
-                info.play_once = mat.isPlayOnce();
-                
-                matArray[m] = info;
-            }
-            json.writeObjectStart();
-            json.writeValue("'" + "materials" + "'", matArray);
-            json.writeObjectEnd();
-        } finally {
-            //StreamUtils.closeQuietly(buffer);
-        }
-        
-        FileHandle saveFile = Gdx.files.local("saves/save.json");
-        saveFile.writeString(buffer.toString(), false);*/
-        
-        
-        
-        
-        /*
-        Door.deleteAll();
-        Creature.deleteAll();
-        Sprite.deleteAll();
-        Material.deleteAll();
-        Player.deleteInstance();
-        */
-        System.out.println("Game saved.");
-            
+        game.saveToFile("saves/game.gam");            
     }
 }

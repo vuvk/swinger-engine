@@ -1408,7 +1408,7 @@ public final class Renderer/* extends JPanel*/ {
             }
         }
         
-        
+        /*
         // MODEL CASTING
         MODELS_FOR_DRAW.clear();
         for (Model model : Model.LIB) {
@@ -1442,16 +1442,7 @@ public final class Renderer/* extends JPanel*/ {
                     Vector4 mul = wldMtx.mul(vec4);
                     Vector3 vec4_to_3 = new Vector3(mul);
                     Vector2 point = new Vector2(vec4_to_3);
-                    points.add(point);
-
-                    /*int x = (int)((point.x + 1) * HALF_WIDTH);
-                    int y = (int)((point.y + 1) * HALF_HEIGHT);
-
-                    if (x >= 0 && x < WIDTH &&
-                        y >= 0 && y < HEIGHT) {
-                        TEMP_BUFFER.put(y * WIDTH + x, 0xFF00FFFF);
-                    }*/
-                    
+                    points.add(point);                    
                 }
                 
                 for (Vector2 point : points) {
@@ -1509,7 +1500,7 @@ public final class Renderer/* extends JPanel*/ {
                     }                 
                 }
             }
-        }
+        }*/
         
         Player player = Player.getInstance();
         WeaponInHand weapon = player.getWeaponInHand();
