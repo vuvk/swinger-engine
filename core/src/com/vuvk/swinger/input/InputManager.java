@@ -14,7 +14,7 @@ import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.vuvk.swinger.Config;
 import static com.vuvk.swinger.Game.screenMsg;
 import com.vuvk.swinger.graphic.Fog;
-import com.vuvk.swinger.graphic.gui.Menu;
+import com.vuvk.swinger.graphic.gui.menu.Menu;
 import com.vuvk.swinger.math.Vector2;
 import com.vuvk.swinger.objects.Door;
 import com.vuvk.swinger.objects.Sprite;
@@ -146,10 +146,30 @@ public final class InputManager extends InputAdapter {
             Player player = Player.getInstance();
             switch (keycode) {
                 case Input.Keys.UP:
-                case Input.Keys.W : player.setMoveF(true); break;
+                case Input.Keys.W : 
+                    if (Map.isLoaded() &&
+                        Map.active     && 
+                        player.getHealth() > 0.0
+                       ) {
+                        player.setMoveF(true); 
+                    }
+                    if (Menu.isActive()) {
+                        Menu.CURRENT.prev();
+                    }
+                    break;
 
                 case Input.Keys.DOWN:
-                case Input.Keys.S : player.setMoveB(true); break;
+                case Input.Keys.S : 
+                    if (Map.isLoaded() &&
+                        Map.active     && 
+                        player.getHealth() > 0.0
+                       ) {
+                        player.setMoveB(true);                         
+                    }
+                    if (Menu.isActive()) {
+                        Menu.CURRENT.next();
+                    }
+                    break;
 
                 case Input.Keys.A : player.setMoveL(true); break;
                 case Input.Keys.D : player.setMoveR(true); break;
@@ -182,30 +202,34 @@ public final class InputManager extends InputAdapter {
 
         switch (keycode) {
             case Input.Keys.ENTER :  
-                if (Config.console) {
-                    switch (Config.consoleCommand.trim().toLowerCase()) {
-                        case "interlacing 0" : Config.interlacing = false; break;
-                        case "interlacing 1" : Config.interlacing = true;  break;
+                if (!Menu.isActive()) {
+                    if (Config.console) {
+                        switch (Config.consoleCommand.trim().toLowerCase()) {
+                            case "interlacing 0" : Config.interlacing = false; break;
+                            case "interlacing 1" : Config.interlacing = true;  break;
 
-                        case "fog 0" : Config.fog = Fog.NOTHING; break;
-                        case "fog 1" : Config.fog = Fog.OLD;     break;
-                        case "fog 2" : Config.fog = Fog.SMOOTH;  break;
+                            case "fog 0" : Config.fog = Fog.NOTHING; break;
+                            case "fog 1" : Config.fog = Fog.OLD;     break;
+                            case "fog 2" : Config.fog = Fog.SMOOTH;  break;
 
-                        case "antialiasing 0" : Config.antialiasing = false; break;
-                        case "antialiasing 1" : Config.antialiasing = true;  break;
+                            case "antialiasing 0" : Config.antialiasing = false; break;
+                            case "antialiasing 1" : Config.antialiasing = true;  break;
 
-                        case "multithreading 0" : Config.multithreading = false; break;
-                        case "multithreading 1" : Config.multithreading = true;  break;
+                            case "multithreading 0" : Config.multithreading = false; break;
+                            case "multithreading 1" : Config.multithreading = true;  break;
 
-                        case "mouselook 0" : Config.mouseLook = false; break;
-                        case "mouselook 1" : Config.mouseLook = true;  break; 
+                            case "mouselook 0" : Config.mouseLook = false; break;
+                            case "mouselook 1" : Config.mouseLook = true;  break; 
 
-                        case "sky 0" : Config.drawSky = false; break;
-                        case "sky 1" : Config.drawSky = true;  break;
-                    } 
-                    Config.consoleCommand = "";
+                            case "sky 0" : Config.drawSky = false; break;
+                            case "sky 1" : Config.drawSky = true;  break;
+                        } 
+                        Config.consoleCommand = "";
+                    }
+                    Config.console = !Config.console;                    
+                } else {
+                    Menu.CURRENT.getCurrentButton().click();
                 }
-                Config.console = !Config.console;
                 break;
 
             case Input.Keys.ESCAPE : 
@@ -213,10 +237,21 @@ public final class InputManager extends InputAdapter {
                 
                 if (Menu.isActive()) {
                     Menu.deactivate();
-                    Map.active = true;
+                    //Map.active = true;
                 } else {
                     Menu.activate();
-                    Map.active = false;
+                    //Map.active = false;
+                    
+                    Player player = Player.getInstance();
+                    if (player.getHealth() > 0.0) {
+                        player.setMoveB(false);
+                        player.setMoveF(false);
+                        player.setMoveL(false);
+                        player.setMoveR(false);
+                        
+                        player.setRotL(false);
+                        player.setRotR(false);
+                    }
                 }
                 
                 break;
@@ -234,14 +269,14 @@ public final class InputManager extends InputAdapter {
             switch (keycode) {
                 case Input.Keys.UP:
                 case Input.Keys.W : 
-                    if (Config.draw == true && player.getHealth() > 0.0) {
+                    if (Map.active && player.getHealth() > 0.0) {
                         player.setMoveF(false); 
                     }
                     break;
 
                 case Input.Keys.DOWN:
                 case Input.Keys.S : 
-                    if (Config.draw == true && player.getHealth() > 0.0) {
+                    if (Map.active && player.getHealth() > 0.0) {
                         player.setMoveB(false);                         
                     }
                     break;
@@ -272,21 +307,11 @@ public final class InputManager extends InputAdapter {
                     break;
                 
                 case Input.Keys.F5 :
-                    if (player.getHealth() > 0.0) {
-                        //Map.save();      
-                        File savesDir = new File("saves");
-                        if (!savesDir.exists() || !savesDir.isDirectory()) {
-                            savesDir.mkdir();
-                        }
-
-                        new SavedGame().saveToFile("saves/game.gam");
-                        screenMsg.setMessage("GAME SAVED");
-                    }
+                    SavedGame.save();
                     break;
                 
                 case Input.Keys.F9 :
-                    new SavedGame().loadFromFile("saves/game.gam");
-                    screenMsg.setMessage("GAME LOADED");
+                    SavedGame.load();
                     break;
             }
         }

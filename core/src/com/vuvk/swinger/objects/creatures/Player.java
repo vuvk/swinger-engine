@@ -22,6 +22,7 @@ import com.vuvk.swinger.math.Vector2;
 import com.vuvk.swinger.math.Vector3;
 import com.vuvk.swinger.audio.SoundBank;
 import com.vuvk.swinger.audio.SoundSystem;
+import com.vuvk.swinger.graphic.gui.ScreenBlood;
 import com.vuvk.swinger.objects.Camera;
 import com.vuvk.swinger.graphic.weapon_in_hand.AmmoPack;
 import com.vuvk.swinger.objects.weapon.AmmoType;
@@ -268,6 +269,24 @@ public final class Player extends Creature implements Serializable {
     }
  */   
     @Override
+    public void applyDamage(double damage) { 
+        double prevHealth = health;
+        
+        super.applyDamage(damage);
+        
+        // только что был жив и умер
+        if (prevHealth > 0.0 && health <= 0.0) {      
+            SoundSystem.playOnce(SoundBank.FILE_PLAYER_DIE);
+
+            for (int i = 0; i < ScreenBlood.DROPS.length; ++i) {
+                ScreenBlood.DROPS[i] = new ScreenBlood(new Vector2(i, 0));
+            }
+
+            //Map.active = false;
+        }
+    }
+    
+    @Override
     public void setPos(final Vector3 pos) {
         super.setPos(pos);
         if (camera != null) {
@@ -326,7 +345,12 @@ public final class Player extends Creature implements Serializable {
     }
     
     @Override
-    public void update() {      
+    public void update() {    
+        
+        if (health <= 0.0) {
+            return;
+        }
+        
         final double deltaTime = Gdx.graphics.getDeltaTime();
         
         // обновляем оружие в руках

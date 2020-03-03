@@ -43,7 +43,7 @@ import com.vuvk.swinger.graphic.Fog;
 import com.vuvk.swinger.graphic.Renderer;
 import com.vuvk.swinger.graphic.Sky;
 import com.vuvk.swinger.graphic.gui.GuiBank;
-import com.vuvk.swinger.graphic.gui.Menu;
+import com.vuvk.swinger.graphic.gui.menu.Menu;
 import com.vuvk.swinger.graphic.gui.ScreenBlood;
 import com.vuvk.swinger.graphic.gui.text.FontBank;
 import com.vuvk.swinger.graphic.gui.text.ScreenMessage;
@@ -84,7 +84,6 @@ public class Game extends ApplicationAdapter {
     public static ScreenMessage screenMsg;
     
     private Texture lastFrame;
-    private ScreenBlood[] screenBloods = new ScreenBlood[Config.WIDTH];
     
     int renderX,
         renderY,
@@ -122,6 +121,8 @@ public class Game extends ApplicationAdapter {
     public void create () {                 
         Config.init();
         
+        ScreenBlood.DROPS = new ScreenBlood[Config.WIDTH];
+        
         Fog.init();
         Renderer.init();
         GuiBank.init();
@@ -133,6 +134,7 @@ public class Game extends ApplicationAdapter {
         font = new BitmapFont();
         batch = new SpriteBatch();
         consoleBackground = new Texture(Config.WIDTH, 40, Pixmap.Format.RGB888);
+        lastFrame      = TextureBank.MAIN_MENU;
         fpsText        = new Text(FontBank.FONT_BUBBLA, "", new Vector2(10, 15));
         playerPosText  = new Text(FontBank.FONT_BUBBLA, "", new Vector2(10, 25));
         playerHpText   = new Text(FontBank.FONT_MIDDLE);
@@ -184,7 +186,7 @@ public class Game extends ApplicationAdapter {
             kishPoints[(i - 1) * 2 + 1] = new KishPoint(Map.SEGMENTS[1][i].getB());
         }*/
         
-        Map.load(1);
+        /*Map.load(1);
         
         kishPoints[0] = new KishPoint(Map.SEGMENTS[1][1].getA());
         kishPoints[1] = new KishPoint(Map.SEGMENTS[1][1].getB());
@@ -195,9 +197,14 @@ public class Game extends ApplicationAdapter {
         kishPoints[6] = new KishPoint(Map.SEGMENTS[1][4].getA());
         kishPoints[7] = new KishPoint(Map.SEGMENTS[1][4].getB());
         kishPoints[8] = new KishPoint(Map.SEGMENTS[1][5].getA());
-        kishPoints[9] = new KishPoint(Map.SEGMENTS[1][5].getB());
+        kishPoints[9] = new KishPoint(Map.SEGMENTS[1][5].getB());*/
                 
         Config.draw = true;
+        Menu.activate();
+        
+        Map.MUSIC = SoundSystem.loadSound(SoundBank.FILE_MUSIC_TITLE);
+        Map.MUSIC.setLooping(true);
+        Map.MUSIC.play();
     }
 
     @Override
@@ -215,7 +222,7 @@ public class Game extends ApplicationAdapter {
             Map.SEGMENTS[1][i].setA(kishPoints[i - 1].a);
             //Map.SEGMENTS[1][i].setB(kishPoints[(i - 1) * 2 + 1].a);
         }*/
-        for (int i = 0; i < 10; ++i) {
+        /*for (int i = 0; i < 10; ++i) {
             kishPoints[i].update();
         }
         
@@ -277,7 +284,7 @@ public class Game extends ApplicationAdapter {
         a.x += 7.5;
         b.x += 7.5;
         a.y += 5.5;
-        b.y += 5.5;      
+        b.y += 5.5;    */  
                 
         timeForFPS += Gdx.graphics.getDeltaTime();
         if (timeForFPS > 0.5) {
@@ -286,149 +293,151 @@ public class Game extends ApplicationAdapter {
         }
 
         if (Config.draw) {
-            Renderer renderer = Renderer.getInstance();
-            Player player = Player.getInstance();
-            Camera playerCamera = player.getCamera();
+            if (!Map.isLoaded() && !lastFrame.equals(TextureBank.MAIN_MENU)) {
+                lastFrame = TextureBank.MAIN_MENU;
+                playerPosText.setVisible(false);
+                playerHpText.setVisible(false);
+                playerAmmoText.setVisible(false);
+            }
             
             camViewport.apply();
             batch.setProjectionMatrix(cam.combined);
             
-            if (Map.active) {
-                
-                /*batch.begin();
-                if (lastFrame != null) {
-                    batch.draw(lastFrame, 0, 0, Config.WIDTH + 1, Config.HEIGHT + 1);
-                }
-                batch.end();*/
-                
-                if (player.getHealth() > 0.0) {
-                    Material.updateAll();
-                    Sprite.updateAll();
-                    Door.updateAll();
-                    Creature.updateAll();
-                    Model.updateAll();
+            if (Map.isLoaded()) {
+                Renderer renderer = Renderer.getInstance();
+                Player player = Player.getInstance();
+                Camera playerCamera = player.getCamera();
 
-                    for (Model mdl : Model.LIB) {
-                        mdl.rotateX(Gdx.graphics.getDeltaTime());
+                if (Map.active) {
+
+                    /*batch.begin();
+                    if (lastFrame != null) {
+                        batch.draw(lastFrame, 0, 0, Config.WIDTH + 1, Config.HEIGHT + 1);
                     }
+                    batch.end();*/
 
-                    Sky.getInstance().update();
+                    if (player.getHealth() > 0.0) {
+                        Material.updateAll();
+                        Sprite.updateAll();
+                        Door.updateAll();
+                        Creature.updateAll();
+                        Model.updateAll();
 
-                    renderer.setActiveCamera(playerCamera);
-
-                    // set viewport
-                    //Gdx.gl.glViewport((int) viewport.x,     (int) viewport.y,
-                    //                  (int) viewport.width, (int) viewport.height);
-
-                    //Renderer.canRender = false;
-                    //Renderer.SCREEN.draw(Renderer.getInstance().SCREEN_RASTER, 0, 0);
-
-                    lastFrame = renderer.getFrame();
-                    //batch.begin();
-                    //batch.draw(renderer.getFrame(), 0, 0, Config.WIDTH + 1, Config.HEIGHT + 1);
-                    //Renderer.canRender = true;
-
-                    /*
-                    font.draw(batch, processors, 10, 450);  
-                    font.draw(batch, fpsString,  10, 470);  
-                    */
-
-                    // GUI            
-                    if (!Config.STEP_BY_STEP_RENDERING) {                
-                        Vector2 pos = player.getPos();
-                        playerPosText.setMessage(String.format(Locale.ENGLISH, "PLAYER POS: %.2f %.2f", pos.x, pos.y));
-
-                        playerHpText.setLocation(new Vector2(16, Config.HEIGHT - 16));
-                        playerHpText.setMessage(String.format(Locale.ENGLISH, "HP %.0f", player.getHealth()));
-
-                        String ammoText = "";
-                        AmmoType ammoType = player.getWeaponInHand().getAmmoType();
-                        switch (ammoType) {
-                            case PISTOL:
-                            case SHOTGUN:
-                            case ROCKET:
-                                ammoText = "AMMO " + AmmoPack.PACK.get(ammoType);
-                                break;
+                        for (Model mdl : Model.LIB) {
+                            mdl.rotateX(Gdx.graphics.getDeltaTime());
                         }
-                        playerAmmoText.setLocation(new Vector2(16, Config.HEIGHT - 40));
-                        playerAmmoText.setMessage(ammoText);
-                    }
 
-                    /*
-                    if (Config.console) {
-                        batch.begin();
-                        batch.draw(consoleBackground, 0, 0);
-                        font.draw(batch, Config.consoleCommand, 10, 25);  
-                        batch.end();
-                    }*/
+                        Sky.getInstance().update();
 
-                    // вращение мышкой и фиксация курсора в центре окна
-                    if (Config.mouseLook) {
-                        double deltaX = InputManager.getDeltaX();
-                        if (deltaX != 0.0) {
-                            double mouseSpeed = deltaX / Config.WIDTH;
-                            playerCamera.rotate(Math.toRadians(mouseSpeed * Player.MOUSE_ROT_SPEED ));                      
-                        }  
+                        renderer.setActiveCamera(playerCamera);
 
-                        /*if (deltaX < 0.0) {
-                            player.setRotL(false);
-                            player.setRotR(true);
-                        } else if (deltaX > 0.0) {
-                            player.setRotL(true);
-                            player.setRotR(false);
-                        } else {                    
-                            player.setRotL(false);
-                            player.setRotR(false);
+                        // set viewport
+                        //Gdx.gl.glViewport((int) viewport.x,     (int) viewport.y,
+                        //                  (int) viewport.width, (int) viewport.height);
+
+                        //Renderer.canRender = false;
+                        //Renderer.SCREEN.draw(Renderer.getInstance().SCREEN_RASTER, 0, 0);
+
+                        lastFrame = renderer.getFrame();
+                        //batch.begin();
+                        //batch.draw(renderer.getFrame(), 0, 0, Config.WIDTH + 1, Config.HEIGHT + 1);
+                        //Renderer.canRender = true;
+
+                        /*
+                        font.draw(batch, processors, 10, 450);  
+                        font.draw(batch, fpsString,  10, 470);  
+                        */
+
+                        // GUI            
+                        if (!Config.STEP_BY_STEP_RENDERING) {                
+                            Vector2 pos = player.getPos();
+                            playerPosText.setMessage(String.format(Locale.ENGLISH, "PLAYER POS: %.2f %.2f", pos.x, pos.y));
+
+                            playerHpText.setLocation(new Vector2(16, Config.HEIGHT - 16));
+                            playerHpText.setMessage(String.format(Locale.ENGLISH, "HP %.0f", player.getHealth()));
+
+                            String ammoText = "";
+                            AmmoType ammoType = player.getWeaponInHand().getAmmoType();
+                            switch (ammoType) {
+                                case PISTOL:
+                                case SHOTGUN:
+                                case ROCKET:
+                                    ammoText = "AMMO " + AmmoPack.PACK.get(ammoType);
+                                    break;
+                            }
+                            playerAmmoText.setLocation(new Vector2(16, Config.HEIGHT - 40));
+                            playerAmmoText.setMessage(ammoText);                            
+                            
+                            playerPosText.setVisible(true);
+                            playerHpText.setVisible(true);
+                            playerAmmoText.setVisible(true);
+                        }
+
+                        /*
+                        if (Config.console) {
+                            batch.begin();
+                            batch.draw(consoleBackground, 0, 0);
+                            font.draw(batch, Config.consoleCommand, 10, 25);  
+                            batch.end();
                         }*/
 
-                        InputManager.setLocation(windowCenter);
-                    }   
+                        // вращение мышкой и фиксация курсора в центре окна
+                        if (Config.mouseLook) {
+                            double deltaX = InputManager.getDeltaX();
+                            if (deltaX != 0.0) {
+                                double mouseSpeed = deltaX / Config.WIDTH;
+                                playerCamera.rotate(Math.toRadians(mouseSpeed * Player.MOUSE_ROT_SPEED ));                      
+                            }  
 
-                    //batch.end();
+                            /*if (deltaX < 0.0) {
+                                player.setRotL(false);
+                                player.setRotR(true);
+                            } else if (deltaX > 0.0) {
+                                player.setRotL(true);
+                                player.setRotR(false);
+                            } else {                    
+                                player.setRotL(false);
+                                player.setRotR(false);
+                            }*/
 
-                    //Gdx.gl.glViewport(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-                    stage.getViewport().apply();
-                    stage.draw();
-                    stage.act(); 
-                }
-                // игрок умер
-                else {
-                    //deathScreen = renderer.getFrame();
-                    if (screenBloods[0] == null/*Map.active*/) {
-                        //deathScreen = renderer.getFrame();
-                        SoundSystem.playOnce(SoundBank.FILE_PLAYER_DIE);
+                            InputManager.setLocation(windowCenter);
+                        }   
 
-                        for (int i = 0; i < screenBloods.length; ++i) {
-                            screenBloods[i] = new ScreenBlood(new Vector2(i, 0));
-                        }
+                        //batch.end();
 
-                        //Map.active = false;
+                        //Gdx.gl.glViewport(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+                        /*stage.getViewport().apply();
+                        stage.draw();
+                        stage.act();*/ 
                     }
-
-                    for (int i = 0; i < screenBloods.length; ++i) {
-                        screenBloods[i].update();
-                        Vector2 pos = screenBloods[i].getPos();
-                        lastFrame.draw(ScreenBlood.DROP, (int)pos.x, (int)pos.y);
+                    // игрок умер
+                    else {
+                        for (int i = 0; i < ScreenBlood.DROPS.length; ++i) {
+                            ScreenBlood.DROPS[i].update();
+                            Vector2 pos = ScreenBlood.DROPS[i].getPos();
+                            lastFrame.draw(ScreenBlood.DROP, (int)pos.x, (int)pos.y);
+                        }     
                     }
-                    
-                    /*batch.begin();
-                    batch.draw(lastFrame, 0, 0, Config.WIDTH + 1, Config.HEIGHT + 1);
-                    batch.end();    */            
-                }
+                }  
             }
             
             batch.begin();
             if (lastFrame != null) {
                 batch.draw(lastFrame, 0, 0, Config.WIDTH + 1, Config.HEIGHT + 1);
             }
+                    
+            Text.drawAll(batch);
             
-            if (Config.console) {
+            if (!Menu.isActive() && Config.console) {
                 batch.draw(consoleBackground, 0, 0);
                 font.draw(batch, Config.consoleCommand, 10, 25);  
             }
-                    
-            Text.drawAll(batch);
-            batch.end();   
+            
+            batch.end();  
+            
+            stage.getViewport().apply();
+            stage.draw();
+            stage.act();
         }
         InputManager.reset();
         

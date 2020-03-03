@@ -1,6 +1,7 @@
 package com.vuvk.swinger.utils;
 
 import com.vuvk.swinger.Config;
+import com.vuvk.swinger.Game;
 import com.vuvk.swinger.d3.Mesh;
 import com.vuvk.swinger.d3.Model;
 import com.vuvk.swinger.graphic.TexturedSegment;
@@ -15,6 +16,7 @@ import com.vuvk.swinger.res.Texture;
 import com.vuvk.swinger.res.TextureBank;
 import com.vuvk.swinger.res.WallMaterial;
 import com.vuvk.swinger.res.WallMaterialBank;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -169,5 +171,23 @@ public class SavedGame implements Serializable {
         } catch (ClassNotFoundException | IOException ex) {
             Logger.getLogger(SavedGame.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+    
+    public static void save() {
+        if (Player.getInstance().getHealth() > 0.0) {
+            File savesDir = new File("saves");
+            if (!savesDir.exists() || !savesDir.isDirectory()) {
+                savesDir.mkdir();
+            }
+
+            new SavedGame().saveToFile("saves/game.gam");
+            Game.screenMsg.setMessage("GAME SAVED");
+        }        
+    }
+    
+    public static void load() {
+        new SavedGame().loadFromFile("saves/game.gam");
+        Game.screenMsg.setMessage("GAME LOADED");      
+        Map.setLoaded(true);
     }
 }

@@ -13,6 +13,8 @@ import java.util.Random;
  * @author tai-prg3
  */
 public class ScreenBlood {
+    public static ScreenBlood[] DROPS;
+    
     private Vector2 pos;
     private double speed;
     

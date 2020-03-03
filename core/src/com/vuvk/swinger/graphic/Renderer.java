@@ -1263,8 +1263,8 @@ public final class Renderer/* extends JPanel*/ {
             } 
         }
         // сортируем в порядке от меньшего расстояния к большему
-        Collections.sort(SPRITES_FOR_DRAW, Collections.reverseOrder());
-        //Collections.sort(SPRITES_FOR_DRAW);
+        //Collections.sort(SPRITES_FOR_DRAW, Collections.reverseOrder());
+        Collections.sort(SPRITES_FOR_DRAW);
         //SPRITES_FOR_DRAW.sort();
         
         for (Sprite sprite : SPRITES_FOR_DRAW) {

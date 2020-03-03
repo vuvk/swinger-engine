@@ -121,3 +121,4 @@ Thumbs.db
 /html/
 /.nb-gradle/
 *.gam
+*.db:encryptable

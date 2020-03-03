@@ -30,6 +30,7 @@ import com.vuvk.swinger.audio.SoundSystem;
 import com.vuvk.swinger.d3.Mesh;
 import com.vuvk.swinger.d3.Model;
 import com.vuvk.swinger.d3.Polygon;
+import com.vuvk.swinger.graphic.Renderer;
 import java.io.FileReader;
 import java.io.Reader;
 import java.util.Arrays;
@@ -94,8 +95,10 @@ public final class Map {
     
     // уровень активен?
     public static boolean active = false;
+    // уровень загружен?
+    private static boolean loaded = false;
     
-    private static Music MUSIC = null;
+    public static Music MUSIC = null;
     
     
     private Map() {}    
@@ -705,8 +708,24 @@ public final class Map {
         }
     }*/
     
+    public static boolean isLoaded() {
+        return loaded;
+    }
+
+    public static void setLoaded(boolean loaded) {
+        Map.loaded = loaded;
+    }
+    
+    public static void unloadMusic() {
+        if (MUSIC != null) {
+            MUSIC.stop();
+            MUSIC.dispose();
+            MUSIC = null;
+        }      
+    }
+    
     public static void reset() {
-        Config.draw = false;
+        //Config.draw = false;
         
 //      SoundSystem.stopAll();
         Door.deleteAll();
@@ -717,13 +736,10 @@ public final class Map {
         Model.deleteAll();
         Player.deleteInstance();
         
-        if (MUSIC != null) {
-            MUSIC.stop();
-            MUSIC.dispose();
-            MUSIC = null;
-        }        
+        unloadMusic();
         
         active = false;
+        loaded = false;
     }
     
     public static void load(int levelNum) {
@@ -903,6 +919,7 @@ public final class Map {
         */
         
         active = true;
+        loaded = true;
     }
     
     public static void save() {        

@@ -1,13 +1,14 @@
 package com.vuvk.swinger.math;
 
 import com.vuvk.swinger.utils.ArrayUtils;
+import java.io.Serializable;
 import java.util.Arrays;
 
 /**
  *
  * @author Shcherbatykh
  */
-public class Matrix4 {
+public class Matrix4 implements Serializable {
     private double[] data = new double[16];
 
     public double[] getData() {

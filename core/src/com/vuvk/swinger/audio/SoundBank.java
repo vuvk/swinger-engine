@@ -60,7 +60,13 @@ public final class SoundBank {
     private final static String PATH_PLAYER_DIE = "resources/snd/player/Player Dies.wav";
     
     /* music */
+    private final static String PATH_MUSIC_TITLE = "resources/snd/music/title.ogg";
     private final static String PATH_MUSIC1 = "resources/snd/music/music.ogg";
+    
+    /* menu */
+    private final static String PATH_MENU_SELECT = "resources/snd/menu/Menu Select.wav";
+    private final static String PATH_MENU_TOGGLE = "resources/snd/menu/Menu Toggle.wav";
+    
     
     
     /* handles */
@@ -103,7 +109,13 @@ public final class SoundBank {
     public final static FileHandle FILE_PLAYER_DIE = Gdx.files.internal(PATH_PLAYER_DIE);
     
     /* music */
+    public static final FileHandle FILE_MUSIC_TITLE = Gdx.files.internal(PATH_MUSIC_TITLE);
     public static final FileHandle FILE_MUSIC1 = Gdx.files.internal(PATH_MUSIC1);
+    
+    /* menu */
+    public static final FileHandle FILE_MENU_SELECT = Gdx.files.internal(PATH_MENU_SELECT);
+    public static final FileHandle FILE_MENU_TOGGLE = Gdx.files.internal(PATH_MENU_TOGGLE);
+    
     
     /* все звуки здесь? */
     public final static Array<FileHandle> HANDLES = new Array<>(false, 10);

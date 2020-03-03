@@ -40,6 +40,8 @@ public final class TextureBank {
     public final static Texture[] PUFF = new Texture[4];
     public final static Texture[] SMOKE = new Texture[16];
     
+    public static com.badlogic.gdx.graphics.Texture MAIN_MENU;
+    
     public static void load() {
         SKY = new Texture(PICS_FOLDER + "sky.png");
         /*
@@ -222,6 +224,8 @@ public final class TextureBank {
         DOORS[1] = new Texture(PICS_FOLDER + "Door2.png");
         DOORS[2] = new Texture(PICS_FOLDER + "door_iron_upper.png");   
         */
+        
+        MAIN_MENU = new com.badlogic.gdx.graphics.Texture(PICS_FOLDER + "gui/main_menu.png");
     }
     
     public static Texture[] getWalls() {
