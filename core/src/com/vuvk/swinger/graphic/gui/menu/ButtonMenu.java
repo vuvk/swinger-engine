@@ -25,16 +25,39 @@ import com.vuvk.swinger.graphic.gui.text.Text;
  */
 public class ButtonMenu {
     private Text text;
-    private Runnable method;
+    private Runnable click, left, right;
 
-    public ButtonMenu(Text text, Runnable method) {
+    public ButtonMenu(Text text, Runnable click) {
         this.text = text;
-        this.method = method;
+        this.click = click;
+        this.left  = click;
+        this.right = click;
+    }
+    
+    public ButtonMenu(Text text, Runnable click, Runnable left, Runnable right) {
+        this.text = text;
+        this.click = click;
+        this.left = left;
+        this.right = right;
     }
 
     public void click() {
         SoundSystem.playOnce(SoundBank.FILE_MENU_TOGGLE);
-        method.run();
+        click.run();
+    }
+    
+    public void left() {
+        SoundSystem.playOnce(SoundBank.FILE_MENU_TOGGLE);
+        if (left != null) {
+            left.run();
+        }        
+    }
+    
+    public void right() {
+        SoundSystem.playOnce(SoundBank.FILE_MENU_TOGGLE);
+        if (right != null) {
+            right.run();
+        }        
     }
 
     public Text getText() {

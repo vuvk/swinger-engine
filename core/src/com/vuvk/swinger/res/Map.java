@@ -98,9 +98,6 @@ public final class Map {
     // уровень загружен?
     private static boolean loaded = false;
     
-    public static Music MUSIC = null;
-    
-    
     private Map() {}    
     
     /*public final static WallMaterial[] WALLS_MATERIALS = {
@@ -716,14 +713,6 @@ public final class Map {
         Map.loaded = loaded;
     }
     
-    public static void unloadMusic() {
-        if (MUSIC != null) {
-            MUSIC.stop();
-            MUSIC.dispose();
-            MUSIC = null;
-        }      
-    }
-    
     public static void reset() {
         //Config.draw = false;
         
@@ -736,7 +725,7 @@ public final class Map {
         Model.deleteAll();
         Player.deleteInstance();
         
-        unloadMusic();
+        SoundSystem.stopMusic();
         
         active = false;
         loaded = false;

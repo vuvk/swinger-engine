@@ -215,9 +215,7 @@ public class Game extends ApplicationAdapter {
         Config.draw = true;
         Menu.activate();
         
-        Map.MUSIC = SoundSystem.loadSound(SoundBank.FILE_MUSIC_TITLE);
-        Map.MUSIC.setLooping(true);
-        Map.MUSIC.play();
+        SoundSystem.playMusic(SoundBank.FILE_MUSIC_TITLE);
     }
 
     @Override

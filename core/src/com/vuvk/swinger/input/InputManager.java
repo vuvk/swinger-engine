@@ -171,14 +171,54 @@ public final class InputManager extends InputAdapter {
                     }
                     break;
 
-                case Input.Keys.A : player.setMoveL(true); break;
-                case Input.Keys.D : player.setMoveR(true); break;
+                case Input.Keys.A : 
+                    if (Map.isLoaded() &&
+                        Map.active     && 
+                        player.getHealth() > 0.0
+                       ) {
+                        player.setMoveL(true);
+                    } 
+                    if (Menu.isActive()) {
+                        Menu.CURRENT.getCurrentButton().left();
+                    }
+                    break;
+                case Input.Keys.D : 
+                    if (Map.isLoaded() &&
+                        Map.active     && 
+                        player.getHealth() > 0.0
+                       ) {
+                        player.setMoveR(true);
+                    } 
+                    if (Menu.isActive()) {
+                        Menu.CURRENT.getCurrentButton().right();
+                    }
+                    break;
 
                 case Input.Keys.Q : player.getPos().z -= Gdx.graphics.getDeltaTime() * 15; break;
                 case Input.Keys.Z : player.getPos().z += Gdx.graphics.getDeltaTime() * 15; break;
 
-                case Input.Keys.LEFT : player.setRotL(true); break;
-                case Input.Keys.RIGHT: player.setRotR(true); break;
+                case Input.Keys.LEFT : 
+                    if (Map.isLoaded() &&
+                        Map.active     && 
+                        player.getHealth() > 0.0
+                       ) {
+                        player.setRotL(true);
+                    } 
+                    if (Menu.isActive()) {
+                        Menu.CURRENT.getCurrentButton().left();
+                    }
+                    break;
+                case Input.Keys.RIGHT: 
+                    if (Map.isLoaded() &&
+                        Map.active     && 
+                        player.getHealth() > 0.0
+                       ) {
+                        player.setRotR(true);
+                    } 
+                    if (Menu.isActive()) {
+                        Menu.CURRENT.getCurrentButton().right();
+                    }
+                    break;
             }
         } else {
             switch (keycode) {

@@ -22,8 +22,6 @@ import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.utils.Array;
 import java.util.Iterator;
 import java.util.Random;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
@@ -32,6 +30,10 @@ import java.util.logging.Logger;
 public final class SoundSystem {
     private final static Array<Music> LIB = new Array<>(false, 50);
     private static boolean started = false;
+    
+    private static Music MUSIC = null;
+    private static float MUSIC_VOLUME = 1.0f;
+    private static float VOLUME = 1.0f;
     
     private SoundSystem() {}
     
@@ -68,6 +70,52 @@ public final class SoundSystem {
         soundThread.setPriority(Thread.MIN_PRIORITY);
         soundThread.start();
     }
+
+    public static float getVolume() {
+        return VOLUME;
+    }
+    
+    public static float getMusicVolume() {
+        return MUSIC_VOLUME;
+    }
+
+    public static void setVolume(float volume) {
+        if (volume < 0.0f) {
+            volume = 0.0f;
+        } else {
+            if (volume > 1.0f) {
+                volume = 1.0f;
+            }
+        }
+        VOLUME = volume;
+        
+        updateVolume();
+    }    
+
+    public static void setMusicVolume(float volume) {
+        if (volume < 0.0f) {
+            volume = 0.0f;
+        } else {
+            if (volume > 1.0f) {
+                volume = 1.0f;
+            }
+        }
+        MUSIC_VOLUME = volume;
+        
+        updateVolume();
+    }    
+    
+    public static void updateVolume() {
+        for (Music sound : LIB) {
+            if (sound != null) {
+                sound.setVolume(VOLUME);
+            }
+        }        
+        
+        if (MUSIC != null) {
+            MUSIC.setVolume(MUSIC_VOLUME);
+        }
+    }
     
     public static void unload() {
         started = false;
@@ -80,6 +128,7 @@ public final class SoundSystem {
     public static void play(Music sound, boolean looping) {
         sound.stop();        
         sound.setLooping(looping);
+        sound.setVolume(VOLUME);
         sound.play();
         LIB.add(sound);
     }
@@ -90,6 +139,7 @@ public final class SoundSystem {
      */
     public static void playOnce(FileHandle file) {
         Music sound = loadSound(file);
+        sound.setVolume(VOLUME);
         sound.play();
         LIB.add(sound);
     }    
@@ -118,7 +168,7 @@ public final class SoundSystem {
         }
 
         int variant = Math.abs(new Random().nextInt()) % sounds.length;
-        sounds[variant].play();
+        sounds[variant].play(VOLUME);
     }
     
     /**
@@ -154,6 +204,23 @@ public final class SoundSystem {
         }
 
         int variant = Math.abs(new Random().nextInt()) % sounds.length;
+        sounds[variant].setVolume(VOLUME);
         sounds[variant].play();
+    }
+
+    public static void playMusic(FileHandle music) {     
+        stopMusic();
+        MUSIC = loadSound(music);
+        MUSIC.setLooping(true);
+        MUSIC.setVolume(MUSIC_VOLUME);
+        MUSIC.play();
+    }
+    
+    public static void stopMusic() {
+        if (MUSIC != null) {
+            MUSIC.stop();
+            MUSIC.dispose();
+            MUSIC = null;
+        }      
     }
 }

@@ -33,7 +33,7 @@ import java.util.Date;
  * @author tai-prg3
  */
 public class Menu {     
-    public final static Text CURSOR = new Text(FontBank.FONT_MENU, "@", new Vector2(Renderer.HALF_WIDTH - 64,1));
+    public final static Text CURSOR = new Text(FontBank.FONT_MENU, "@", new Vector2(Renderer.HALF_WIDTH - 82,1));
     
     private static boolean active = false;
     /* для меню сохранения/загрузки. Если true, то загружать при выборе, если false, то сохранять */
@@ -52,63 +52,63 @@ public class Menu {
     public static void init() {             
         // меню при входе в игру
         MAIN_MENU.addButton(new ButtonMenu(new Text(FontBank.FONT_MENU, "NEW GAME", 
-                                                    new Vector2(Renderer.HALF_WIDTH - 32, Renderer.HALF_HEIGHT - 32)), 
+                                                    new Vector2(Renderer.HALF_WIDTH - 50, Renderer.HALF_HEIGHT - 32)), 
                                            () -> {
                                                Map.load(1); 
                                                changeSubMenu(IN_GAME);
                                                deactivate();
                                            }));        
         MAIN_MENU.addButton(new ButtonMenu(new Text(FontBank.FONT_MENU, "LOAD GAME", 
-                                                    new Vector2(Renderer.HALF_WIDTH - 32, Renderer.HALF_HEIGHT)), 
+                                                    new Vector2(Renderer.HALF_WIDTH - 50, Renderer.HALF_HEIGHT)), 
                                            () -> {                 
                                                loadSubMenu = true;
                                                updateLoadSaveSubMenu();
                                                changeSubMenu(LOAD_SAVE_GAME);
                                            })); 
         MAIN_MENU.addButton(new ButtonMenu(new Text(FontBank.FONT_MENU, "OPTIONS", 
-                                                    new Vector2(Renderer.HALF_WIDTH - 32, Renderer.HALF_HEIGHT + 32)), 
+                                                    new Vector2(Renderer.HALF_WIDTH - 50, Renderer.HALF_HEIGHT + 32)), 
                                            () -> {
                                                updateOptionsSubMenu();
                                                changeSubMenu(OPTIONS);
                                            }));
         MAIN_MENU.addButton(new ButtonMenu(new Text(FontBank.FONT_MENU, "HELP", 
-                                                    new Vector2(Renderer.HALF_WIDTH - 32, Renderer.HALF_HEIGHT + 64)), 
+                                                    new Vector2(Renderer.HALF_WIDTH - 50, Renderer.HALF_HEIGHT + 64)), 
                                            () -> {}));
         MAIN_MENU.addButton(new ButtonMenu(new Text(FontBank.FONT_MENU, "QUIT GAME", 
-                                                    new Vector2(Renderer.HALF_WIDTH - 32, Renderer.HALF_HEIGHT + 96)), 
+                                                    new Vector2(Renderer.HALF_WIDTH - 50, Renderer.HALF_HEIGHT + 96)), 
                                            () -> changeSubMenu(CLOSE_GAME_CONFIRM) ));
         
         // меню внутри игры
         IN_GAME.addButton(new ButtonMenu(new Text(FontBank.FONT_MENU, "BACK", 
-                                                  new Vector2(Renderer.HALF_WIDTH - 32, Renderer.HALF_HEIGHT - 32)), 
+                                                  new Vector2(Renderer.HALF_WIDTH - 50, Renderer.HALF_HEIGHT - 32)), 
                                          () -> deactivate())); 
         IN_GAME.addButton(new ButtonMenu(new Text(FontBank.FONT_MENU, "LOAD GAME", 
-                                                  new Vector2(Renderer.HALF_WIDTH - 32, Renderer.HALF_HEIGHT)), 
+                                                  new Vector2(Renderer.HALF_WIDTH - 50, Renderer.HALF_HEIGHT)), 
                                          () -> {                
                                              loadSubMenu = true;
                                              updateLoadSaveSubMenu();
                                              changeSubMenu(LOAD_SAVE_GAME);
                                          }));
         IN_GAME.addButton(new ButtonMenu(new Text(FontBank.FONT_MENU, "SAVE GAME", 
-                                                  new Vector2(Renderer.HALF_WIDTH - 32, Renderer.HALF_HEIGHT + 32)), 
+                                                  new Vector2(Renderer.HALF_WIDTH - 50, Renderer.HALF_HEIGHT + 32)), 
                                          () -> {
                                              loadSubMenu = false;
                                              updateLoadSaveSubMenu();
                                              changeSubMenu(LOAD_SAVE_GAME);
                                          }));
         IN_GAME.addButton(new ButtonMenu(new Text(FontBank.FONT_MENU, "OPTIONS", 
-                                                  new Vector2(Renderer.HALF_WIDTH - 32, Renderer.HALF_HEIGHT + 64)), 
+                                                  new Vector2(Renderer.HALF_WIDTH - 50, Renderer.HALF_HEIGHT + 64)), 
                                          () -> {
                                              updateOptionsSubMenu();
                                              changeSubMenu(OPTIONS);
                                          }));
         IN_GAME.addButton(new ButtonMenu(new Text(FontBank.FONT_MENU, "EXIT TO MAIN", 
-                                                  new Vector2(Renderer.HALF_WIDTH - 32, Renderer.HALF_HEIGHT + 96)), 
+                                                  new Vector2(Renderer.HALF_WIDTH - 50, Renderer.HALF_HEIGHT + 96)), 
                                          () -> changeSubMenu(EXIT_MAIN_CONFIRM) ));
         
         // меню со слотами сохранения/загрузки
         LOAD_SAVE_GAME.addButton(new ButtonMenu(new Text(FontBank.FONT_MENU, "BACK", 
-                                                         new Vector2(Renderer.HALF_WIDTH - 32, Renderer.HALF_HEIGHT - 32)), 
+                                                         new Vector2(Renderer.HALF_WIDTH - 50, Renderer.HALF_HEIGHT - 32)), 
                                                 () -> setMainSubMenu() ));
         // слоты
         for (int i = 1; i < 6; ++i) {
@@ -118,22 +118,42 @@ public class Menu {
         
         // меню опций
         OPTIONS.addButton(new ButtonMenu(new Text(FontBank.FONT_MENU, "BACK", 
-                                                  new Vector2(Renderer.HALF_WIDTH - 32, Renderer.HALF_HEIGHT - 96)), 
+                                                  new Vector2(Renderer.HALF_WIDTH - 50, Renderer.HALF_HEIGHT - 96)), 
                                          () -> setMainSubMenu() )); 
-        OPTIONS.addButton(new ButtonMenu(new Text(FontBank.FONT_MENU, "MUSIC          100%", 
-                                                  new Vector2(Renderer.HALF_WIDTH - 32, Renderer.HALF_HEIGHT - 64)), 
-                                         () -> {} ));  
-        OPTIONS.addButton(new ButtonMenu(new Text(FontBank.FONT_MENU, "VOLUME         100%", 
-                                                  new Vector2(Renderer.HALF_WIDTH - 32, Renderer.HALF_HEIGHT - 32)), 
-                                         () -> {} ));
-        OPTIONS.addButton(new ButtonMenu(new Text(FontBank.FONT_MENU, "FOG            LOW", 
-                                                  new Vector2(Renderer.HALF_WIDTH - 32, Renderer.HALF_HEIGHT)), 
+        OPTIONS.addButton(new ButtonMenu(new Text(FontBank.FONT_MENU, "MUSIC    100%", 
+                                                  new Vector2(Renderer.HALF_WIDTH - 50, Renderer.HALF_HEIGHT - 64)), 
+                                         () -> {},
+                                         () -> {
+                                             float volume = SoundSystem.getMusicVolume() - 0.05f;
+                                             SoundSystem.setMusicVolume(volume);
+                                             updateOptionsSubMenu();
+                                         },
+                                         () -> {
+                                             float volume = SoundSystem.getMusicVolume() + 0.05f;
+                                             SoundSystem.setMusicVolume(volume);
+                                             updateOptionsSubMenu();                                            
+                                         }));  
+        OPTIONS.addButton(new ButtonMenu(new Text(FontBank.FONT_MENU, "VOLUME   100%", 
+                                                  new Vector2(Renderer.HALF_WIDTH - 50, Renderer.HALF_HEIGHT - 32)), 
+                                         () -> {},
+                                         () -> {
+                                             float volume = SoundSystem.getVolume() - 0.05f;
+                                             SoundSystem.setVolume(volume);
+                                             updateOptionsSubMenu();
+                                         },
+                                         () -> {
+                                             float volume = SoundSystem.getVolume() + 0.05f;
+                                             SoundSystem.setVolume(volume);
+                                             updateOptionsSubMenu();                                            
+                                         }));
+        OPTIONS.addButton(new ButtonMenu(new Text(FontBank.FONT_MENU, "FOG      LOW", 
+                                                  new Vector2(Renderer.HALF_WIDTH - 50, Renderer.HALF_HEIGHT)), 
                                          () -> {
                                              Config.fog = (Config.fog == Fog.SMOOTH) ? Fog.OLD : Fog.SMOOTH;
                                              updateOptionsSubMenu();
                                          } ));
         OPTIONS.addButton(new ButtonMenu(new Text(FontBank.FONT_MENU, "ANTIALIASING   OFF", 
-                                                  new Vector2(Renderer.HALF_WIDTH - 32, Renderer.HALF_HEIGHT + 32)), 
+                                                  new Vector2(Renderer.HALF_WIDTH - 50, Renderer.HALF_HEIGHT + 32)), 
                                          () -> {
                                              Config.antialiasing = !Config.antialiasing;
                                              if (Config.interlacing && Config.antialiasing) {
@@ -142,7 +162,7 @@ public class Menu {
                                              updateOptionsSubMenu();                                             
                                          } ));
         OPTIONS.addButton(new ButtonMenu(new Text(FontBank.FONT_MENU, "INTERLACING    OFF", 
-                                                  new Vector2(Renderer.HALF_WIDTH - 32, Renderer.HALF_HEIGHT + 64)), 
+                                                  new Vector2(Renderer.HALF_WIDTH - 50, Renderer.HALF_HEIGHT + 64)), 
                                          () -> {
                                              Config.interlacing = !Config.interlacing;
                                              if (Config.interlacing && Config.antialiasing) {
@@ -151,13 +171,13 @@ public class Menu {
                                              updateOptionsSubMenu();                                             
                                          } ));
         OPTIONS.addButton(new ButtonMenu(new Text(FontBank.FONT_MENU, "MULTITHREADING ON", 
-                                                  new Vector2(Renderer.HALF_WIDTH - 32, Renderer.HALF_HEIGHT + 96)), 
+                                                  new Vector2(Renderer.HALF_WIDTH - 50, Renderer.HALF_HEIGHT + 96)), 
                                          () -> {
                                              Config.multithreading = !Config.multithreading;
                                              updateOptionsSubMenu();
                                          } ));
         OPTIONS.addButton(new ButtonMenu(new Text(FontBank.FONT_MENU, "MOUSELOOK      ON", 
-                                                  new Vector2(Renderer.HALF_WIDTH - 32, Renderer.HALF_HEIGHT + 128)), 
+                                                  new Vector2(Renderer.HALF_WIDTH - 50, Renderer.HALF_HEIGHT + 128)), 
                                          () -> {
                                              Config.mouseLook = !Config.mouseLook;
                                              updateOptionsSubMenu();
@@ -166,24 +186,22 @@ public class Menu {
         
         // меню подтверждения выхода в меню
         EXIT_MAIN_CONFIRM.addButton(new ButtonMenu(new Text(FontBank.FONT_MENU, "NO", 
-                                                            new Vector2(Renderer.HALF_WIDTH - 32, Renderer.HALF_HEIGHT - 32)), 
+                                                            new Vector2(Renderer.HALF_WIDTH - 50, Renderer.HALF_HEIGHT - 32)), 
                                                    () -> setMainSubMenu() ));
         EXIT_MAIN_CONFIRM.addButton(new ButtonMenu(new Text(FontBank.FONT_MENU, "YES", 
-                                                            new Vector2(Renderer.HALF_WIDTH - 32, Renderer.HALF_HEIGHT)), 
+                                                            new Vector2(Renderer.HALF_WIDTH - 50, Renderer.HALF_HEIGHT)), 
                                                    () -> {
                                                        Map.reset();
-                                                       Map.MUSIC = SoundSystem.loadSound(SoundBank.FILE_MUSIC_TITLE);
-                                                       Map.MUSIC.setLooping(true);
-                                                       Map.MUSIC.play();
+                                                       SoundSystem.playMusic(SoundBank.FILE_MUSIC_TITLE);
                                                        changeSubMenu(MAIN_MENU);
                                                    }));
         
         // меню подтверждения выхода из игры
         CLOSE_GAME_CONFIRM.addButton(new ButtonMenu(new Text(FontBank.FONT_MENU, "NO", 
-                                                             new Vector2(Renderer.HALF_WIDTH - 32, Renderer.HALF_HEIGHT - 32)), 
+                                                             new Vector2(Renderer.HALF_WIDTH - 50, Renderer.HALF_HEIGHT - 32)), 
                                                     () -> setMainSubMenu() ));
         CLOSE_GAME_CONFIRM.addButton(new ButtonMenu(new Text(FontBank.FONT_MENU, "YES", 
-                                                             new Vector2(Renderer.HALF_WIDTH - 32, Renderer.HALF_HEIGHT)), 
+                                                             new Vector2(Renderer.HALF_WIDTH - 50, Renderer.HALF_HEIGHT)), 
                                                     () -> {
                                                         System.out.println("Bye-bye.");
                                                         Config.QUIT = true;
@@ -222,9 +240,15 @@ public class Menu {
     
     private static void updateOptionsSubMenu() {
         ButtonMenu btn;
+        //music
+        btn = OPTIONS.getButton(1);
+        btn.getText().setMessage("MUSIC    " + (int) (SoundSystem.getMusicVolume() * 100) + "%");  
+        //volume
+        btn = OPTIONS.getButton(2);
+        btn.getText().setMessage("VOLUME   " + (int) (SoundSystem.getVolume() * 100) + "%");        
         // fog
         btn = OPTIONS.getButton(3);
-        btn.getText().setMessage("FOG            " + ((Config.fog == Fog.SMOOTH) ? "HIGH" : "LOW"));
+        btn.getText().setMessage("FOG      " + ((Config.fog == Fog.SMOOTH) ? "HIGH" : "LOW"));
         // antialising
         btn = OPTIONS.getButton(4);
         btn.getText().setMessage("ANTIALIASING   " + ((Config.antialiasing) ? "ON" : "OFF"));   
@@ -241,7 +265,7 @@ public class Menu {
     
     private static void addSlotToLoadSaveSubMenu(final int num) {
         LOAD_SAVE_GAME.addButton(new ButtonMenu(new Text(FontBank.FONT_MENU, "FREE SLOT " + num, 
-                                                         new Vector2(Renderer.HALF_WIDTH - 32, Renderer.HALF_HEIGHT + 32 * (num - 1))), 
+                                                         new Vector2(Renderer.HALF_WIDTH - 50, Renderer.HALF_HEIGHT + 32 * (num - 1))), 
                                  () -> {
                                      if (loadSubMenu) {
                                          SavedGame.load("save" + num + ".sav"); 
