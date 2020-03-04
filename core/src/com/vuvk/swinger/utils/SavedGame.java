@@ -5,10 +5,12 @@ import com.vuvk.swinger.Game;
 import com.vuvk.swinger.d3.Mesh;
 import com.vuvk.swinger.d3.Model;
 import com.vuvk.swinger.graphic.TexturedSegment;
+import com.vuvk.swinger.graphic.weapon_in_hand.AmmoPack;
 import com.vuvk.swinger.objects.Door;
 import com.vuvk.swinger.objects.Sprite;
 import com.vuvk.swinger.objects.creatures.Creature;
 import com.vuvk.swinger.objects.creatures.Player;
+import com.vuvk.swinger.objects.weapon.AmmoType;
 import com.vuvk.swinger.res.Map;
 import com.vuvk.swinger.res.Material;
 import com.vuvk.swinger.res.MaterialBank;
@@ -23,6 +25,9 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -53,6 +58,8 @@ public class SavedGame implements Serializable {
     public TexturedSegment[][] mapSegments; 
     public WallMaterial[][][]  mapWallsMaterialsMap;
     
+    public java.util.Map<AmmoType, Integer> ammoPack;
+    
     
     public SavedGame() {
         textureWalls  = TextureBank.getWalls();   
@@ -73,6 +80,8 @@ public class SavedGame implements Serializable {
         mapCeil     = Map.CEIL;
         mapVisibleCells = Map.VISIBLE_CELLS;   
         mapWallsMaterialsMap = Map.WALLS_MATERIALS_MAP;
+        
+        ammoPack = AmmoPack.PACK;
     }
     
     public void saveToFile(String path) {
@@ -165,6 +174,9 @@ public class SavedGame implements Serializable {
                     }
                 }
             }
+            
+            AmmoPack.PACK.clear();
+            AmmoPack.PACK.putAll(game.ammoPack);
 
             Map.active = true;
             Config.draw = true; 
@@ -173,20 +185,24 @@ public class SavedGame implements Serializable {
         }
     }
     
-    public static void save() {
+    public static void save(String name) {
         if (Player.getInstance().getHealth() > 0.0) {
             File savesDir = new File("saves");
             if (!savesDir.exists() || !savesDir.isDirectory()) {
                 savesDir.mkdir();
             }
 
-            new SavedGame().saveToFile("saves/game.gam");
+            new SavedGame().saveToFile("saves/" + name);
             Game.screenMsg.setMessage("GAME SAVED");
         }        
     }
     
-    public static void load() {
-        new SavedGame().loadFromFile("saves/game.gam");
+    public static void load(String name) {
+        if (!Files.exists(Paths.get("saves/" + name))) {
+            return;
+        }
+        
+        new SavedGame().loadFromFile("saves/" + name);
         Game.screenMsg.setMessage("GAME LOADED");      
         Map.setLoaded(true);
     }

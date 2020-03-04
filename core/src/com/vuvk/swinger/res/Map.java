@@ -858,12 +858,14 @@ public final class Map {
         
         System.out.println("\tWeapons in player's hand...");
         //Sprite.loadAll();
+        /*
         KnifeInHand.loadFrames();
         PistolInHand.loadFrames();
         ShotgunInHand.loadFrames();
         RifleInHand.loadFrames();
         MinigunInHand.loadFrames();
         RocketLauncherInHand.loadFrames();
+        */
         AmmoPack.reset();
         //Player.getInstance().createWeaponsInHand();
         

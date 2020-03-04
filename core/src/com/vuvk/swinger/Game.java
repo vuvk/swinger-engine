@@ -49,6 +49,12 @@ import com.vuvk.swinger.graphic.gui.text.FontBank;
 import com.vuvk.swinger.graphic.gui.text.ScreenMessage;
 import com.vuvk.swinger.graphic.gui.text.Text;
 import com.vuvk.swinger.graphic.weapon_in_hand.AmmoPack;
+import com.vuvk.swinger.graphic.weapon_in_hand.KnifeInHand;
+import com.vuvk.swinger.graphic.weapon_in_hand.MinigunInHand;
+import com.vuvk.swinger.graphic.weapon_in_hand.PistolInHand;
+import com.vuvk.swinger.graphic.weapon_in_hand.RifleInHand;
+import com.vuvk.swinger.graphic.weapon_in_hand.RocketLauncherInHand;
+import com.vuvk.swinger.graphic.weapon_in_hand.ShotgunInHand;
 import com.vuvk.swinger.input.InputManager;
 import com.vuvk.swinger.math.Segment;
 import com.vuvk.swinger.math.Vector2;
@@ -131,7 +137,14 @@ public class Game extends ApplicationAdapter {
         SoundSystem.load();
         FontBank.load();
         
-        font = new BitmapFont();
+        KnifeInHand.loadFrames();
+        PistolInHand.loadFrames();
+        ShotgunInHand.loadFrames();
+        RifleInHand.loadFrames();
+        MinigunInHand.loadFrames();
+        RocketLauncherInHand.loadFrames();
+        
+        font  = new BitmapFont();
         batch = new SpriteBatch();
         consoleBackground = new Texture(Config.WIDTH, 40, Pixmap.Format.RGB888);
         lastFrame      = TextureBank.MAIN_MENU;
@@ -139,7 +152,7 @@ public class Game extends ApplicationAdapter {
         playerPosText  = new Text(FontBank.FONT_BUBBLA, "", new Vector2(10, 25));
         playerHpText   = new Text(FontBank.FONT_MIDDLE);
         playerAmmoText = new Text(FontBank.FONT_MIDDLE);
-        screenMsg = new ScreenMessage(FontBank.FONT_BUBBLA, new Vector2(10, 45));
+        screenMsg      = new ScreenMessage(FontBank.FONT_BUBBLA, new Vector2(10, 45));
         //new Text(FontBank.FONT_OUTLINE, "demo", new Vector2(250, 150));
         
         cam = new OrthographicCamera(Config.WIDTH, Config.HEIGHT);

@@ -239,6 +239,7 @@ public final class InputManager extends InputAdapter {
                     Menu.deactivate();
                     //Map.active = true;
                 } else {
+                    Menu.setMainSubMenu();
                     Menu.activate();
                     //Map.active = false;
                     
@@ -307,11 +308,11 @@ public final class InputManager extends InputAdapter {
                     break;
                 
                 case Input.Keys.F5 :
-                    SavedGame.save();
+                    SavedGame.save("quick.sav");
                     break;
                 
                 case Input.Keys.F9 :
-                    SavedGame.load();
+                    SavedGame.load("quick.sav");
                     break;
             }
         }
