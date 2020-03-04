@@ -120,5 +120,6 @@ Thumbs.db
 /ios-moe/xcode/native/
 /html/
 /.nb-gradle/
-*.gam
+*.sav
 *.db:encryptable
+/android/assets/saves/
