@@ -1,11 +1,16 @@
 /**
- * о подписи для андроида
- * https://stackoverflow.com/questions/47310006/android-studio-failed-to-create-keystore
- * 
- * о вьюпортах
- * https://www.gamefromscratch.com/post/2014/12/09/LibGDX-Tutorial-Part-17-Viewports.aspx
- */
-
+    Copyright (C) 2019-2020 Anton "Vuvk" Shcherbatykh <vuvk69@gmail.com>
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <https://www.gnu.org/licenses/>.
+*/
 package com.vuvk.swinger;
 
 import com.badlogic.gdx.Application;
@@ -69,6 +74,10 @@ import com.vuvk.swinger.res.TextureBank;
 import com.vuvk.swinger.objects.weapon.AmmoType;
 import java.util.Locale;
 
+/**
+ * 
+ * @author Anton "Vuvk" Shcherbatykh
+ */
 public class Game extends ApplicationAdapter {    
     private SpriteBatch batch;
     private Renderer renderer;
