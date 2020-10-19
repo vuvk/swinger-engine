@@ -47,6 +47,7 @@ public final class SoundSystem {
                         if (sound != null) {
                             if (!sound.isPlaying()) {
                                 sound.dispose();
+                                sound = null;
                                 it.remove();
                             }
                         }
@@ -58,8 +59,11 @@ public final class SoundSystem {
                 }
                 
                 for (Music sound : LIB) {
-                    sound.stop();
-                    sound.dispose();
+                    if (sound != null) {
+                        sound.stop();
+                        sound.dispose();
+                        sound = null;
+                    }
                 }
                 LIB.clear();
             }
@@ -120,10 +124,21 @@ public final class SoundSystem {
     }
         
     public static Music loadSound(FileHandle file) {
-        return Gdx.audio.newMusic(file);
+        Music sound = null;
+        if (file != null && !file.isDirectory() && file.exists()) {            
+            try {
+                sound = Gdx.audio.newMusic(file);
+            } catch (Exception ignored) {}
+        }
+            
+        return sound;
     }
     
     public static void play(Music sound, boolean looping) {
+        if (sound == null) {
+            return;
+        }
+        
         sound.stop();        
         sound.setLooping(looping);
         sound.setVolume(VOLUME);
@@ -137,6 +152,10 @@ public final class SoundSystem {
      */
     public static void playOnce(FileHandle file) {
         Music sound = loadSound(file);
+        if (sound == null) {
+            return;
+        }
+        
         sound.setVolume(VOLUME);
         sound.play();
         LIB.add(sound);
@@ -162,11 +181,16 @@ public final class SoundSystem {
         }
 
         for (Sound sound : sounds) {
-            sound.stop();
+            if (sound != null) {
+                sound.stop();
+            }
         }
 
         int variant = Math.abs(new Random().nextInt()) % sounds.length;
-        sounds[variant].play(VOLUME);
+        Sound soundForPlay = sounds[variant];
+        if (soundForPlay != null) {
+            sounds[variant].play(VOLUME);
+        }
     }
     
     /**
@@ -191,27 +215,34 @@ public final class SoundSystem {
         
         if (checkPlaying) {
             for (Music sound : sounds) {
-                if (sound.isPlaying()) {
+                if (sound != null && sound.isPlaying()) {
                     return;
                 }
             }
         } else {
             for (Music sound : sounds) {
-                sound.stop();
+                if (sound != null) {
+                    sound.stop();
+                }
             }
         }
 
         int variant = Math.abs(new Random().nextInt()) % sounds.length;
-        sounds[variant].setVolume(VOLUME);
-        sounds[variant].play();
+        Music soundForPlay = sounds[variant];
+        if (soundForPlay != null) {
+            sounds[variant].setVolume(VOLUME);
+            sounds[variant].play();
+        }
     }
 
     public static void playMusic(FileHandle music) {     
         stopMusic();
         MUSIC = loadSound(music);
-        MUSIC.setLooping(true);
-        MUSIC.setVolume(MUSIC_VOLUME);
-        MUSIC.play();
+        if (MUSIC != null) {
+            MUSIC.setLooping(true);
+            MUSIC.setVolume(MUSIC_VOLUME);
+            MUSIC.play();
+        }
     }
     
     public static void stopMusic() {
