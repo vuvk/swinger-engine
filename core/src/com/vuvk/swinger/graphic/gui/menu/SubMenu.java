@@ -40,17 +40,23 @@ public class SubMenu {
     public void prev() {
         if (pos > 0) {
             --pos;
-            SoundSystem.playOnce(SoundBank.FILE_MENU_SELECT);
-            updateCursorLocation();
+        } else {
+            pos = getButtonsCount() - 1;
         }
+        
+        SoundSystem.playOnce(SoundBank.FILE_MENU_SELECT);
+        updateCursorLocation();
     }
 
     public void next() {
         if (pos < getButtonsCount() - 1) {
             ++pos;
-            SoundSystem.playOnce(SoundBank.FILE_MENU_SELECT);
-            updateCursorLocation();
+        } else {
+            pos = 0;
         }
+        
+        SoundSystem.playOnce(SoundBank.FILE_MENU_SELECT);
+        updateCursorLocation();
     }
 
     public void addButton(ButtonMenu button) {
