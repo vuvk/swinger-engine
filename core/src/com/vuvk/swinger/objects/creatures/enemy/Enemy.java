@@ -32,7 +32,7 @@ import java.io.Serializable;
  *
  * @author Anton "Vuvk" Shcherbatykh
  */
-public abstract class Enemy extends Creature implements Serializable {   
+public abstract class Enemy extends Breakable implements Serializable {   
     /** список всех вражин */
     //public final static List<Enemy> LIB = new ArrayList<>();
     /** список вражин на удаление */
@@ -44,25 +44,38 @@ public abstract class Enemy extends Creature implements Serializable {
     private Texture[][] pain;
     private Texture[][] die;
     private Texture     dead;*/
-    private Material idle;
+//    private Material idle;
     private Material atk;
     private Material walk;
-    private Material pain;
-    private Material die;
-    private Material dead;
+//    private Material pain;
+//    private Material die;
+//    private Material dead;
     
-    private Vector2 viewVector = new Vector2(1, 0);
-    private Sprite sprite;
+    protected FileHandle[] alarmSounds;
+    protected FileHandle[] attackSounds;
+    
+//    private Vector2 viewVector = new Vector2(1, 0);
+//    private Sprite sprite;
     //private int curFrame;
     //private double frameDelay;
-    private double stateDelay = 0.0;
+//    private double stateDelay = 0.0;
     private double shootDelay = 0.0;
     private double prevStateDelay;
-    private EnemyState state     = EnemyState.IDLE;    
-    private EnemyState prevState = state;
+//    private EnemyState state     = EnemyState.IDLE;    
+//    private EnemyState prevState = state;
     
     /* знает ли о существовании игрока */
-    private boolean noticed = false;
+    private boolean noticed = false;    
+        
+    protected double viewDistance;
+    protected double viewAngle;
+    
+    protected double minAttackDistance;
+    protected double maxAttackDistance;
+    protected double damage;
+    protected double accuracy;    
+    protected int    bulletsPerShoot;
+    protected double shootSpeed;
     
     //private Vector2 pos;
     //private double direction;
@@ -89,34 +102,26 @@ public abstract class Enemy extends Creature implements Serializable {
                  double health,
                  double radius
     ) {
-        super(pos, health, radius);
-        sprite = new Sprite(idle, pos);
+        super(idle, pain, die, dead, pos, direction, health, radius);
+        //sprite = new Sprite(idle, pos);
         //sprite.markForAdd();
-        rotate(direction);
-        setIdleAnimation(idle);
         setAttackAnimation(atk);
         setWalkAnimation(walk);
-        setPainAnimation(pain);
-        setDieAnimation(die);
-        setDeadAnimation(dead);
-        setState(EnemyState.IDLE);
-        
-        //LIB.add(this);
     }
-    
+    /*
     @Override
     public void finalize() {
         super.finalize();
         sprite.markForDelete();
         //LIB.remove(this);
     }
-    
+    */
     /*
     public static void deleteAll() {
         LIB.clear();
     }
     */
-        
+    /*    
     @Override
     public void setPos(final Vector3 pos) {
         super.setPos(pos);
@@ -128,7 +133,7 @@ public abstract class Enemy extends Creature implements Serializable {
     public void setIdleAnimation(final Material animation) {
         idle = animation;
     }
-    
+    */
     public void setWalkAnimation(final Material animation) {
         walk = animation;
     }    
@@ -136,7 +141,7 @@ public abstract class Enemy extends Creature implements Serializable {
     public void setAttackAnimation(final Material animation) {
         atk = animation;
     }    
-    
+    /*
     public void setPainAnimation(final Material animation) {
         pain = animation;
     }    
@@ -148,20 +153,23 @@ public abstract class Enemy extends Creature implements Serializable {
     public void setDeadAnimation(final Material animation) {
         dead = animation;
     }   
+    */
     
+    @Override
     public void setState(final EnemyState state) {
-        prevState = this.state;
+        /*prevState = this.state;
         this.state = state;
         //curFrame = 0;
-        stateDelay = 0.0;
+        stateDelay = 0.0;*/
         shootDelay = 0.0;
         //frameDelay = 0.0;
+        super.setState(state);
         switch (state) {
-            case IDLE:
+            /*case IDLE:
                 sprite.duplicate(idle);
                 //sprite.setAnimSpeed(0.0);
                 //curAnim = idle;
-                break;
+                break;*/
                 
             case WALK:
                 sprite.duplicate(walk);
@@ -175,7 +183,7 @@ public abstract class Enemy extends Creature implements Serializable {
                 sprite.playOnce();
                 break;
                 
-            case PAIN:
+           /* case PAIN:
                 SoundSystem.playOnceRandom(getPainSounds());
                 sprite.setFrames(pain.getFrames()[(int)(Math.random() * 2)][0]);
                 sprite.playOnce();
@@ -185,15 +193,64 @@ public abstract class Enemy extends Creature implements Serializable {
                 SoundSystem.playOnceRandom(getDieSounds());
                 sprite.duplicate(die);
                 sprite.playOnce();
-                break;                
+                break;  */              
         }
     }
+
+    protected void setAlarmSounds(FileHandle[] alarmSounds) {
+        this.alarmSounds = alarmSounds;
+    }
+
+    protected void setAttackSounds(FileHandle[] attackSounds) {
+        this.attackSounds = attackSounds;
+    }
+
+    protected void setViewDistance(double viewDistance) {
+        this.viewDistance = viewDistance;
+    }
+
+    protected void setViewAngle(double viewAngle) {
+        this.viewAngle = viewAngle;
+    }
+
+    protected void setMinAttackDistance(double minAttackDistance) {
+        this.minAttackDistance = minAttackDistance;
+    }
+
+    protected void setMaxAttackDistance(double maxAttackDistance) {
+        this.maxAttackDistance = maxAttackDistance;
+    }
+
+    protected void setShootSpeed(double shootSpeed) {
+        this.shootSpeed = shootSpeed;
+    }
+
+    protected void setDamage(double damage) {
+        this.damage = damage;
+    }
+
+    protected void setAccuracy(double accuracy) {
+        this.accuracy = accuracy;
+    }
+
+    protected void setBulletsPerShoot(int bulletsPerShoot) {
+        this.bulletsPerShoot = bulletsPerShoot;
+    }  
     
+    /*
     protected abstract FileHandle[] getAlarmSounds();
     protected abstract FileHandle[] getAttackSounds();
     protected abstract FileHandle[] getPainSounds();
-    protected abstract FileHandle[] getDieSounds();
-    
+    protected abstract FileHandle[] getDieSounds();*/
+
+    protected FileHandle[] getAlarmSounds() {
+        return alarmSounds;
+    }
+
+    protected FileHandle[] getAttackSounds() {
+        return attackSounds;
+    }
+/*        
     protected abstract double getViewDistance();
     protected abstract double getViewAngle();
     
@@ -203,6 +260,41 @@ public abstract class Enemy extends Creature implements Serializable {
     protected abstract double getDamage();
     protected abstract double getAccuracy();    
     protected abstract int getBulletsPerShoot();
+*/
+
+    protected double getViewDistance() {
+        return viewDistance;
+    }
+
+    protected double getViewAngle() {
+        return viewAngle;
+    }
+
+    protected double getMinAttackDistance() {
+        return minAttackDistance;
+    }
+
+    protected double getMaxAttackDistance() {
+        return maxAttackDistance;
+    }
+
+    protected double getShootSpeed() {
+        return shootSpeed;
+    }
+
+    protected double getDamage() {
+        return damage;
+    }
+
+    protected double getAccuracy() {
+        return accuracy;
+    }
+
+    protected int getBulletsPerShoot() {
+        return bulletsPerShoot;
+    }
+    
+    
     protected abstract void shoot();
     
     /*
@@ -211,7 +303,7 @@ public abstract class Enemy extends Creature implements Serializable {
     }
     */
 
-    public EnemyState getState() {
+    /*public EnemyState getState() {
         return state;
     }   
     
@@ -250,7 +342,7 @@ public abstract class Enemy extends Creature implements Serializable {
         //viewVector = viewVector.normalize();
         
         sprite.rotate(degree);
-    }
+    }*/
     
     /**
      * Получить урон
@@ -260,10 +352,10 @@ public abstract class Enemy extends Creature implements Serializable {
     public void applyDamage(double damage) {  
         super.applyDamage(damage);
         if (health > 0.0) { 
-            if (state != EnemyState.PAIN) {
+            /*if (state != EnemyState.PAIN) {
                 setState(EnemyState.IDLE);
                 setState(EnemyState.PAIN);
-            }
+            }*/
             
             if (!noticed) {
                 notice();
@@ -407,7 +499,7 @@ public abstract class Enemy extends Creature implements Serializable {
                         setDirection(angleToPlayer);
                         
                         // пришло время стрелять? Стрельни
-                        if (shootDelay < getShootDelay()) {
+                        if (shootDelay < getShootSpeed()) {
                             shootDelay += deltaTime;
                         } else {
                             shootDelay = 0.0;

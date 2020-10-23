@@ -14,7 +14,7 @@
     "config": [
         /* 0 */ {"material": 0, "volume": 25},
         /* 1 */ {"material": 1, "volume": 15},
-        /* 1 */ {"material": 2, "volume": 25}
+        /* 2 */ {"material": 2, "volume": 25}
     ],
 
     "map": [

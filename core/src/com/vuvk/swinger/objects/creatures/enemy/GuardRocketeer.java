@@ -31,7 +31,7 @@ public class GuardRocketeer extends ProjectileEnemy implements Serializable {
     private final static double VIEW_DISTANCE = 10;
     private final static double MIN_ATK_DISTANCE = 2;
     private final static double MAX_ATK_DISTANCE = VIEW_DISTANCE;
-    private final static double SHOOT_DELAY = 0.5;
+    private final static double SHOOT_SPEED = 0.5;
     private final static double ACCURACY = 5.0;
     private final static int BULLETS_PER_SHOOT = 3;
     private final static double DAMAGE = 25.0;    
@@ -63,8 +63,22 @@ public class GuardRocketeer extends ProjectileEnemy implements Serializable {
               MaterialBank.GUARD_DEAD,
               pos, direction,
               HEALTH, RADIUS);
+        
+        setAttackSounds(ATK_SOUNDS);
+        setAlarmSounds(ALARM_SOUNDS);
+        setPainSounds(PAIN_SOUNDS);
+        setDieSounds(DIE_SOUNDS);
+        
+        setViewAngle(VIEW_ANGLE);
+        setViewDistance(VIEW_DISTANCE);
+        setMinAttackDistance(MIN_ATK_DISTANCE);
+        setMaxAttackDistance(MAX_ATK_DISTANCE);
+        setShootSpeed(SHOOT_SPEED);
+        setAccuracy(ACCURACY);
+        setBulletsPerShoot(BULLETS_PER_SHOOT);
+        setDamage(DAMAGE);
     }
-
+/*
     @Override
     protected FileHandle[] getAlarmSounds() {
         return ALARM_SOUNDS;
@@ -84,7 +98,6 @@ public class GuardRocketeer extends ProjectileEnemy implements Serializable {
     protected FileHandle[] getDieSounds() {
         return DIE_SOUNDS;
     }
-
     @Override
     protected double getViewDistance() {
         return VIEW_DISTANCE;
@@ -124,6 +137,7 @@ public class GuardRocketeer extends ProjectileEnemy implements Serializable {
     protected int getBulletsPerShoot() {
         return BULLETS_PER_SHOOT;
     }
+*/
 
     @Override
     protected Projectile createProjectile(Vector3 pos, double direction) {
