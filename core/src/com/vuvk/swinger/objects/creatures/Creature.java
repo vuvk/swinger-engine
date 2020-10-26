@@ -34,6 +34,7 @@ public abstract class Creature extends Object3D implements Serializable {
     protected double health;
     protected final double maxHealth;
     protected double radius;
+    protected boolean live = false; // является ли объект живым - живой испускает кровь, неживой  пыль
     protected final BoundingBox bb = new BoundingBox();
     
     public Creature(final Vector3 pos, double health, double radius) {
@@ -107,6 +108,14 @@ public abstract class Creature extends Object3D implements Serializable {
     
     private void setRadius(double radius) {
         this.radius = radius;
+    }
+
+    public boolean isLive() {
+        return live;
+    }
+
+    public void setLive(boolean live) {
+        this.live = live;
     }
     
     /**

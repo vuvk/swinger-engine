@@ -76,6 +76,8 @@ public class Guard extends RayEnemy implements Serializable {
         setAccuracy(ACCURACY);
         setBulletsPerShoot(BULLETS_PER_SHOOT);
         setDamage(DAMAGE);
+        
+        setLive(true);
     }
 /*
     @Override

@@ -25,8 +25,6 @@ import com.vuvk.swinger.math.Vector3;
 import com.vuvk.swinger.res.Material;
 import com.vuvk.swinger.objects.Sprite;
 import com.vuvk.swinger.objects.creatures.Creature;
-import com.vuvk.swinger.objects.creatures.Player;
-import com.vuvk.swinger.res.Map;
 import java.io.Serializable;
 /**
  *

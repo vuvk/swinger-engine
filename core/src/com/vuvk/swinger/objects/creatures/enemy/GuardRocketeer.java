@@ -77,6 +77,8 @@ public class GuardRocketeer extends ProjectileEnemy implements Serializable {
         setAccuracy(ACCURACY);
         setBulletsPerShoot(BULLETS_PER_SHOOT);
         setDamage(DAMAGE);
+        
+        setLive(true);
     }
 /*
     @Override

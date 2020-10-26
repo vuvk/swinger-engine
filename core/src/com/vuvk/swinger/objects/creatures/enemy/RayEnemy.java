@@ -86,7 +86,11 @@ public abstract class RayEnemy extends Enemy implements Serializable {
                     }
                     
                     // создать кровь в месте столкновения
-                    new Blood(new Vector3(collisionPoint))/*.markForAdd()*/;
+                    if (target.isLive()) {
+                        new Blood(new Vector3(collisionPoint))/*.markForAdd()*/;
+                    } else {
+                        new Puff(new Vector3(collisionPoint.sub(dir.mul(0.05))))/*.markForAdd()*/;   
+                    }
                     targetShooted = true;
                 }
             }

@@ -541,6 +541,8 @@ public final class Player extends Creature implements Serializable {
     
     private Player(Vector3 pos) {
         super(pos, HEALTH, RADIUS);
+        setLive(true);
+        
         createWeaponsInHand();
         camera.setPos(pos);
         camera.rotate(Math.toRadians(-90));

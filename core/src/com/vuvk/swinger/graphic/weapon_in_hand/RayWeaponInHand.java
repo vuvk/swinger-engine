@@ -18,6 +18,7 @@ import com.vuvk.swinger.math.Vector2;
 import com.vuvk.swinger.math.Vector3;
 import com.vuvk.swinger.objects.creatures.enemy.Enemy;
 import com.vuvk.swinger.objects.creatures.Player;
+import com.vuvk.swinger.objects.creatures.enemy.Breakable;
 import com.vuvk.swinger.objects.effect.Blood;
 import com.vuvk.swinger.objects.effect.Puff;
 import java.util.List;
@@ -44,7 +45,7 @@ public abstract class RayWeaponInHand extends WeaponInHand {
         Ray ray = new Ray(pos.add(dir.mul(player.getRadius())), dir, getDistance());
         
         double wallDist = ray.getSolid(new Vector2(), collisionPoint); 
-        Enemy target = (Enemy) ray.getCreature(player);
+        Breakable target = (Breakable) ray.getCreature(player);
         boolean targetShooted = false;  // была ли поражена живая цель
                             
         if (target != null) {
@@ -72,7 +73,11 @@ public abstract class RayWeaponInHand extends WeaponInHand {
                     }
                     
                     // создать кровь в месте столкновения
-                    new Blood(new Vector3(collisionPoint))/*.markForAdd()*/;
+                    if (target.isLive()) {
+                        new Blood(new Vector3(collisionPoint))/*.markForAdd()*/;
+                    } else {
+                        new Puff(new Vector3(collisionPoint.sub(dir.mul(0.05))))/*.markForAdd()*/;  
+                    }
                     targetShooted = true;
                 }
             }
