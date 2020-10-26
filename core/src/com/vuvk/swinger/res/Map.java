@@ -65,6 +65,7 @@ import com.vuvk.swinger.objects.Key;
 import com.vuvk.swinger.objects.MedKit;
 import com.vuvk.swinger.objects.creatures.Creature;
 import com.vuvk.swinger.objects.creatures.Player;
+import com.vuvk.swinger.objects.creatures.enemy.Breakable;
 import com.vuvk.swinger.objects.creatures.enemy.Guard;
 import com.vuvk.swinger.objects.creatures.enemy.GuardRocketeer;
 import com.vuvk.swinger.objects.weapon.Minigun;
@@ -532,21 +533,21 @@ public final class Map {
         ArrayList<JsonValue> medkitsArray = json.readValue(ArrayList.class, jsonLevel.get("config"));   
         Pair<Material, Double>[] presets = new Pair[medkitsArray.size()];
         for (int i = 0; i < medkitsArray.size(); ++i) {
-            JsonValue jsonClip = medkitsArray.get(i);
+            JsonValue jsonValue = medkitsArray.get(i);
             presets[i] = new Pair<>();
                     
-            int matNum = jsonClip.getInt("material");
+            int matNum = jsonValue.getInt("material");
             if (matNum >= 0) {
                 presets[i].setLeft(MaterialBank.BANK.get(materialsCount + matNum));
             }
-            presets[i].setRight(jsonClip.getDouble("volume"));
+            presets[i].setRight(jsonValue.getDouble("volume"));
         }        
         
         ArrayList<JsonValue> clipsMap = json.readValue(ArrayList.class, jsonLevel.get("map"));  
-        for (JsonValue jsonClip : clipsMap) {
-            int num = jsonClip.getInt("medkit");
+        for (JsonValue jsonValue : clipsMap) {
+            int num = jsonValue.getInt("medkit");
             
-            float[] jsonPos = jsonClip.get("position").asFloatArray();
+            float[] jsonPos = jsonValue.get("position").asFloatArray();
             Vector3 pos = new Vector3(jsonPos[0], jsonPos[1], jsonPos[2]);
             
             new MedKit(presets[num].getLeft(), pos, presets[num].getRight());
@@ -651,6 +652,65 @@ public final class Map {
                     DOORS[x][y] = -1;
                 }                  
             } 
+        }
+    }
+    
+    private static void loadBreakables(int levelNum) {
+        System.out.println("\nBreakables...");
+        
+        int materialsCount = MaterialBank.BANK.size();    
+        
+        Json json = new Json();
+        JsonValue jsonLevel = new JsonReader().parse(Gdx.files.internal("resources/maps/" + levelNum + "/breakables.json"));        
+         
+        System.out.println("\t\tTextures and materials...");
+        loadTexturesAndMaterials(jsonLevel);
+        
+        ArrayList<JsonValue> breakablesArray = json.readValue(ArrayList.class, jsonLevel.get("config"));   
+        List<Object>[] presets = new ArrayList[breakablesArray.size()];
+        for (int i = 0; i < breakablesArray.size(); ++i) {
+            JsonValue jsonValue = breakablesArray.get(i);
+            presets[i] = new ArrayList<>();
+                    
+            int idleNum = jsonValue.getInt("idle");
+            presets[i].add(MaterialBank.BANK.get(materialsCount + idleNum));
+                    
+            int painNum = jsonValue.getInt("pain");
+            presets[i].add(MaterialBank.BANK.get(materialsCount + painNum));
+                    
+            int dieNum = jsonValue.getInt("die");
+            presets[i].add(MaterialBank.BANK.get(materialsCount + dieNum));
+                    
+            int deadNum = jsonValue.getInt("dead");
+            presets[i].add(MaterialBank.BANK.get(materialsCount + deadNum));
+            
+            double health = jsonValue.getDouble("health");
+            presets[i].add(health);
+            
+            boolean live = jsonValue.getBoolean("live");
+            presets[i].add(live);
+            
+            double radius = jsonValue.getFloat("radius");
+            presets[i].add(radius);
+        }
+        
+        ArrayList<JsonValue> clipsMap = json.readValue(ArrayList.class, jsonLevel.get("map"));  
+        for (JsonValue jsonValue : clipsMap) {
+            int num = jsonValue.getInt("breakable");            
+            Material idle = (Material) presets[num].get(0);
+            Material pain = (Material) presets[num].get(1);
+            Material die  = (Material) presets[num].get(2);
+            Material dead = (Material) presets[num].get(3);
+            double health = (Double)   presets[num].get(4);
+            boolean live  = (Boolean)  presets[num].get(5);
+            double radius = (Double)   presets[num].get(6);
+            
+            double[] jsonPos = jsonValue.get("position").asDoubleArray();
+            Vector3 pos = new Vector3(jsonPos[0], jsonPos[1], jsonPos[2]);
+            
+            double direction = jsonValue.get("direction").asFloat(); 
+            
+            new Breakable(idle, pain, die, dead, pos, direction, health, radius).setLive(live);
         }
     }
     
@@ -865,6 +925,9 @@ public final class Map {
         */
         AmmoPack.reset();
         //Player.getInstance().createWeaponsInHand();
+        
+        /* грузим разрушаемое */  
+        loadBreakables(levelNum);
         
         System.out.println("\tEnemies...");
         new Guard(new Vector3(15.5, 21.5, 0.0), 
