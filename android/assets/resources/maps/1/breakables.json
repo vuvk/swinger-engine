@@ -1,0 +1,36 @@
+{
+    "textures":[
+        /* barrel */
+        /* 0 */	"resources/pics/sprites/breakables/barrel/tile000.png",
+        /* 1 */	"resources/pics/sprites/breakables/barrel/tile001.png",
+        /* 2 */	"resources/pics/sprites/breakables/barrel/tile002.png",
+        /* 3 */	"resources/pics/sprites/breakables/barrel/tile003.png",
+        /* 4 */	"resources/pics/sprites/breakables/barrel/tile004.png",
+        /* 5 */	"resources/pics/sprites/breakables/barrel/tile005.png",
+        /* 6 */	"resources/pics/sprites/breakables/barrel/tile006.png"
+    ],
+
+    "materials": [
+        /* barrel idle */
+        /* 0 */	{"textures": [0], "animation_speed": 0, "play_once": true},
+        /* barrel pain */        
+        /* 1 */	{"textures": [1, 2], "animation_speed": 30, "play_once": true},
+        /* barrel die */        
+        /* 2 */	{"textures": [3, 4, 5], "animation_speed": 10, "play_once": true},
+        /* barrel dead */        
+        /* 3 */	{"textures": [6], "animation_speed": 0, "play_once": true}
+    ],
+
+    "config": [
+		/* barrel */
+        /* 0 */ {"idle": 0, "pain": 1, "die": 2, "dead": 3, "health": 50, "live": false, "radius": 0.25}
+    ],
+
+    "map": [
+        /* barrels */
+        {"breakable": 0, "position": [2.5, 1.5, 0.0], "direction": 0},
+        {"breakable": 0, "position": [3.5, 1.5, 0.0], "direction": 0},
+        {"breakable": 0, "position": [4.5, 1.5, 0.0], "direction": 0},
+        {"breakable": 0, "position": [3.5, 2.5, 0.0], "direction": 0}
+    ]
+}
