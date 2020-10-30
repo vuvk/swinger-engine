@@ -23,7 +23,7 @@ import com.vuvk.swinger.audio.SoundSystem;
 import java.util.logging.Logger;
 import com.vuvk.swinger.graphic.Renderer;
 import com.vuvk.swinger.math.Vector2;
-import com.vuvk.swinger.objects.creatures.Player;
+import com.vuvk.swinger.objects.mortals.Player;
 import com.vuvk.swinger.res.Image;
 import java.io.Serializable;
 

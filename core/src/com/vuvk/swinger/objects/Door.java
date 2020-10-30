@@ -15,8 +15,8 @@ package com.vuvk.swinger.objects;
 
 //import com.vuvk.retard_sound_system.Sound;
 import com.badlogic.gdx.Gdx;
-import com.vuvk.swinger.objects.creatures.Creature;
-import com.vuvk.swinger.objects.creatures.Player;
+import com.vuvk.swinger.objects.mortals.Mortal;
+import com.vuvk.swinger.objects.mortals.Player;
 import java.util.ArrayList;
 import java.util.List;
 import com.vuvk.swinger.graphic.Renderer;
@@ -146,7 +146,7 @@ public class Door extends TexturedSegment implements Serializable {
                     // проверить можно ли закрывать дверь
                     boolean canClose = true;
                     if (!Map.SOLIDS[(int)openPos.x][(int)openPos.y]) {
-                        for (Creature creature : Creature.LIB) {
+                        for (Mortal creature : Mortal.LIB) {
                             if (center.distance(creature.getPos()) <= 1.5) {
                                 canClose = false;
                                 break;

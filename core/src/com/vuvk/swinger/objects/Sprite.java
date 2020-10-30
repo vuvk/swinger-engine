@@ -15,13 +15,13 @@ package com.vuvk.swinger.objects;
 
 import com.badlogic.gdx.utils.Array;
 import com.vuvk.swinger.res.Material;
-import com.vuvk.swinger.objects.creatures.Player;
+import com.vuvk.swinger.objects.mortals.Player;
 import com.vuvk.swinger.math.Vector3;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import com.vuvk.swinger.math.Vector2;
-import com.vuvk.swinger.objects.creatures.Creature;
+import com.vuvk.swinger.objects.mortals.Mortal;
 import com.vuvk.swinger.res.Image;
 import com.vuvk.swinger.res.Texture;
 import java.io.Serializable;

@@ -23,8 +23,8 @@ import com.vuvk.swinger.graphic.TexturedSegment;
 import com.vuvk.swinger.graphic.weapon_in_hand.AmmoPack;
 import com.vuvk.swinger.objects.Door;
 import com.vuvk.swinger.objects.Sprite;
-import com.vuvk.swinger.objects.creatures.Creature;
-import com.vuvk.swinger.objects.creatures.Player;
+import com.vuvk.swinger.objects.mortals.Mortal;
+import com.vuvk.swinger.objects.mortals.Player;
 import com.vuvk.swinger.objects.weapon.AmmoType;
 import com.vuvk.swinger.res.Map;
 import com.vuvk.swinger.res.Material;
@@ -58,7 +58,7 @@ public class SavedGame implements Serializable {
     public Material[] materialsLib;
     public Material[] materialsBank;
     public Sprite[]   spritesLib;
-    public Creature[] creaturesLib;
+    public Mortal[]   mortalsLib;
     public Door[]     doorsLib;
     public Mesh[]     meshesLib;
     public Model[]    modelsLib;
@@ -81,7 +81,7 @@ public class SavedGame implements Serializable {
         materialsBank = MaterialBank.getBank(); 
         materialsLib  = Material.getLib();
         spritesLib    = Sprite.getLib(); 
-        creaturesLib  = Creature.getLib();
+        mortalsLib    = Mortal.getLib();
         doorsLib      = Door.getLib();
         meshesLib     = Mesh.getLib();
         modelsLib     = Model.getLib();        
@@ -146,13 +146,13 @@ public class SavedGame implements Serializable {
                 Sprite.LIB.add(spr);
             }
 
-            Creature.deleteAll();
-            for (Creature creature : game.creaturesLib) {
-                if (creature instanceof Player) {                            
-                    Player.setInstance((Player) creature);
+            Mortal.deleteAll();
+            for (Mortal mortal : game.mortalsLib) {
+                if (mortal instanceof Player) {                            
+                    Player.setInstance((Player) mortal);
                     Player.getInstance().initWeaponsInHand();
                 }
-                Creature.LIB.add(creature);                        
+                Mortal.LIB.add(mortal);                        
             }
 
             Door.deleteAll();

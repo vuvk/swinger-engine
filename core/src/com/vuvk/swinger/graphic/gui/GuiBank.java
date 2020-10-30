@@ -20,7 +20,7 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.vuvk.swinger.Config;
-import com.vuvk.swinger.objects.creatures.Player;
+import com.vuvk.swinger.objects.mortals.Player;
 
 /**
  *

@@ -14,8 +14,8 @@
 package com.vuvk.swinger.math;
 
 import java.util.List;
-import com.vuvk.swinger.objects.creatures.Creature;
-import com.vuvk.swinger.objects.creatures.Player;
+import com.vuvk.swinger.objects.mortals.Mortal;
+import com.vuvk.swinger.objects.mortals.Player;
 import com.vuvk.swinger.res.Map;
 import java.io.Serializable;
 
@@ -138,18 +138,18 @@ public final class Ray implements Serializable {
      * @param whoIgnore Какое существо игнорировать в проверке
      * @return Создание, если есть попадание. Или null, если ни в кого не попал
      */
-    public Creature getCreature(Creature whoIgnore) {        
-        List<Creature> creatures = Creature.whoIntersectSegment(segment, whoIgnore);
-        Creature target = null;
+    public Mortal getMortal(Mortal whoIgnore) {        
+        List<Mortal> mortals = Mortal.whoIntersectSegment(segment, whoIgnore);
+        Mortal target = null;
         
-        if (creatures.size() > 0) {
+        if (mortals.size() > 0) {
             double targetDistance = Double.MAX_VALUE;
 
             // из всех созданий ищем ближайшее
-            for (Creature creature : creatures) {                
-                double distance = start.distance(creature.getPos());
+            for (Mortal mortal : mortals) {                
+                double distance = start.distance(mortal.getPos());
                 if (target == null || targetDistance > distance) {
-                    target = creature;
+                    target = mortal;
                     targetDistance = distance;
                 }
             }

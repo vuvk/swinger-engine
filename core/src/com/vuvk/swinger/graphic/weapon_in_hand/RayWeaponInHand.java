@@ -16,9 +16,9 @@ package com.vuvk.swinger.graphic.weapon_in_hand;
 import com.vuvk.swinger.math.Ray;
 import com.vuvk.swinger.math.Vector2;
 import com.vuvk.swinger.math.Vector3;
-import com.vuvk.swinger.objects.creatures.enemy.Enemy;
-import com.vuvk.swinger.objects.creatures.Player;
-import com.vuvk.swinger.objects.creatures.enemy.Breakable;
+import com.vuvk.swinger.objects.mortals.enemy.Enemy;
+import com.vuvk.swinger.objects.mortals.Player;
+import com.vuvk.swinger.objects.mortals.enemy.Breakable;
 import com.vuvk.swinger.objects.effect.Blood;
 import com.vuvk.swinger.objects.effect.Puff;
 import java.util.List;
@@ -45,7 +45,7 @@ public abstract class RayWeaponInHand extends WeaponInHand {
         Ray ray = new Ray(pos.add(dir.mul(player.getRadius())), dir, getDistance());
         
         double wallDist = ray.getSolid(new Vector2(), collisionPoint); 
-        Breakable target = (Breakable) ray.getCreature(player);
+        Breakable target = (Breakable) ray.getMortal(player);
         boolean targetShooted = false;  // была ли поражена живая цель
                             
         if (target != null) {

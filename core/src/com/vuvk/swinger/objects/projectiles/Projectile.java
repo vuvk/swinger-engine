@@ -23,8 +23,8 @@ import com.vuvk.swinger.math.Segment;
 import com.vuvk.swinger.math.Vector2;
 import com.vuvk.swinger.math.Vector3;
 import com.vuvk.swinger.objects.Sprite;
-import com.vuvk.swinger.objects.creatures.Creature;
-import com.vuvk.swinger.objects.creatures.Player;
+import com.vuvk.swinger.objects.mortals.Mortal;
+import com.vuvk.swinger.objects.mortals.Player;
 import com.vuvk.swinger.res.Map;
 import com.vuvk.swinger.res.Texture;
 import java.io.Serializable;
@@ -95,7 +95,7 @@ public abstract class Projectile extends Sprite implements Serializable {
         int newPosX = (int)newPos.x;
         int newPosY = (int)newPos.y;
         boolean canMove = false;
-        List<Creature> targets = null;        
+        List<Mortal> targets = null;        
         
         // если не столкнулся со стеной
         if (newPosX >= 0 && newPosX < Map.WIDTH &&
@@ -106,7 +106,7 @@ public abstract class Projectile extends Sprite implements Serializable {
             Segment segment = Map.SEGMENTS[newPosX][newPosY];
             if (segment == null || (segment != null && segment.intersect(bb).isEmpty())) {
                 // и не столкнулся с живым
-                targets = Creature.whoIntersectBox(bb);
+                targets = Mortal.whoIntersectBox(bb);
                 if (targets.isEmpty()) {
                     canMove = true;
                 }
@@ -118,8 +118,8 @@ public abstract class Projectile extends Sprite implements Serializable {
         } else {
             // нанести урон всем жертвам
             if (targets != null && !targets.isEmpty()) {
-                for (Creature creature : targets) {
-                    creature.applyDamage(damage);
+                for (Mortal mortal : targets) {
+                    mortal.applyDamage(damage);
                 }
             }
             

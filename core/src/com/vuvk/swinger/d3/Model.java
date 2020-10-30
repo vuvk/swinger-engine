@@ -17,7 +17,7 @@ import com.vuvk.swinger.math.Matrix4;
 import com.vuvk.swinger.math.Vector2;
 import com.vuvk.swinger.math.Vector3;
 import com.vuvk.swinger.objects.Object3D;
-import com.vuvk.swinger.objects.creatures.Player;
+import com.vuvk.swinger.objects.mortals.Player;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;

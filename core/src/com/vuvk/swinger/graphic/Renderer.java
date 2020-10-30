@@ -40,7 +40,7 @@ import com.vuvk.swinger.d3.Polygon;
 import com.vuvk.swinger.graphic.weapon_in_hand.WeaponInHand;
 import com.vuvk.swinger.math.Matrix4;
 import com.vuvk.swinger.math.Vector4;
-import com.vuvk.swinger.objects.creatures.Player;
+import com.vuvk.swinger.objects.mortals.Player;
 import com.vuvk.swinger.res.Image;
 import com.vuvk.swinger.res.MaterialBank;
 import com.vuvk.swinger.utils.ArrayUtils;

@@ -66,8 +66,8 @@ import com.vuvk.swinger.math.Vector2;
 import com.vuvk.swinger.math.Vector3;
 import com.vuvk.swinger.objects.Door;
 import com.vuvk.swinger.objects.Sprite;
-import com.vuvk.swinger.objects.creatures.Creature;
-import com.vuvk.swinger.objects.creatures.Player;
+import com.vuvk.swinger.objects.mortals.Mortal;
+import com.vuvk.swinger.objects.mortals.Player;
 import com.vuvk.swinger.res.Map;
 import com.vuvk.swinger.res.Material;
 import com.vuvk.swinger.res.TextureBank;
@@ -340,7 +340,7 @@ public class Game extends ApplicationAdapter {
                         Material.updateAll();
                         Sprite.updateAll();
                         Door.updateAll();
-                        Creature.updateAll();
+                        Mortal.updateAll();
                         Model.updateAll();
 
                         for (Model mdl : Model.LIB) {

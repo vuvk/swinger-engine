@@ -63,11 +63,11 @@ import com.vuvk.swinger.objects.Clip;
 import com.vuvk.swinger.objects.Door;
 import com.vuvk.swinger.objects.Key;
 import com.vuvk.swinger.objects.MedKit;
-import com.vuvk.swinger.objects.creatures.Creature;
-import com.vuvk.swinger.objects.creatures.Player;
-import com.vuvk.swinger.objects.creatures.enemy.Breakable;
-import com.vuvk.swinger.objects.creatures.enemy.Guard;
-import com.vuvk.swinger.objects.creatures.enemy.GuardRocketeer;
+import com.vuvk.swinger.objects.mortals.Mortal;
+import com.vuvk.swinger.objects.mortals.Player;
+import com.vuvk.swinger.objects.mortals.enemy.Breakable;
+import com.vuvk.swinger.objects.mortals.enemy.Guard;
+import com.vuvk.swinger.objects.mortals.enemy.GuardRocketeer;
 import com.vuvk.swinger.objects.weapon.Minigun;
 import com.vuvk.swinger.objects.weapon.Pistol;
 import com.vuvk.swinger.objects.weapon.Rifle;
@@ -786,7 +786,7 @@ public final class Map {
         
 //      SoundSystem.stopAll();
         Door.deleteAll();
-        Creature.deleteAll();
+        Mortal.deleteAll();
         Sprite.deleteAll();
         Material.deleteAll();
         Mesh.deleteAll();
