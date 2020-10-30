@@ -51,6 +51,8 @@ import java.util.logging.Logger;
  * @author Anton "Vuvk" Shcherbatykh
  */
 public class SavedGame implements Serializable {
+
+    private static final Logger LOG = Logger.getLogger(SavedGame.class.getName()); 
     
     private static final long serialVersionUID = 1L;
    
@@ -108,7 +110,7 @@ public class SavedGame implements Serializable {
             objectOutputStream.writeObject(this);  
             objectOutputStream.close();          
         } catch (IOException ex) {
-            Logger.getLogger(SavedGame.class.getName()).log(Level.SEVERE, null, ex);
+           LOG.log(Level.SEVERE, null, ex);
         } finally {            
         }
         
@@ -196,7 +198,7 @@ public class SavedGame implements Serializable {
             Map.active = true;
             Config.draw = true; 
         } catch (ClassNotFoundException | IOException ex) {
-            Logger.getLogger(SavedGame.class.getName()).log(Level.SEVERE, null, ex);
+            LOG.log(Level.SEVERE, null, ex);
         }
     }
     
@@ -207,8 +209,13 @@ public class SavedGame implements Serializable {
                 savesDir.mkdir();
             }
 
-            new SavedGame().saveToFile("saves/" + name);
-            Game.screenMsg.setMessage("GAME SAVED");
+            try {
+                new SavedGame().saveToFile("saves/" + name);
+                Game.screenMsg.setMessage("GAME SAVED");
+            } catch (Exception ex) {
+                Game.screenMsg.setMessage("GAME NOT SAVED");
+                LOG.log(Level.SEVERE, null, ex);
+            }
         }        
     }
     
@@ -217,8 +224,13 @@ public class SavedGame implements Serializable {
             return;
         }
         
-        new SavedGame().loadFromFile("saves/" + name);
-        Game.screenMsg.setMessage("GAME LOADED");      
+        try {
+            new SavedGame().loadFromFile("saves/" + name);
+            Game.screenMsg.setMessage("GAME LOADED");   
+        } catch (Exception ex) {
+            Game.screenMsg.setMessage("GAME NOT LOADED");   
+            LOG.log(Level.SEVERE, null, ex);
+        }   
         
         SoundSystem.playMusic(SoundBank.FILE_MUSIC1);
         Map.setLoaded(true);
