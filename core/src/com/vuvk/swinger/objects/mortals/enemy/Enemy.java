@@ -51,8 +51,8 @@ public abstract class Enemy extends Breakable implements Serializable {
 //    private Material die;
 //    private Material dead;
     
-    protected FileHandle[] alarmSounds;
-    protected FileHandle[] attackSounds;
+    protected String[] alarmSounds;
+    protected String[] attackSounds;
     
 //    private Vector2 viewVector = new Vector2(1, 0);
 //    private Sprite sprite;
@@ -197,12 +197,26 @@ public abstract class Enemy extends Breakable implements Serializable {
         }
     }
 
-    protected void setAlarmSounds(FileHandle[] alarmSounds) {
+    protected void setAlarmSounds(String[] painSounds) {
         this.alarmSounds = alarmSounds;
     }
 
-    protected void setAttackSounds(FileHandle[] attackSounds) {
+    protected void setAlarmSounds(FileHandle[] alarmSounds) {
+        this.alarmSounds = new String[alarmSounds.length];
+        for (int i = 0; i < alarmSounds.length; ++i) {
+            this.alarmSounds[i] = alarmSounds[i].file().getAbsolutePath();
+        }
+    }
+
+    protected void setAttackSounds(String[] attackSounds) {
         this.attackSounds = attackSounds;
+    }
+
+    protected void setAttackSounds(FileHandle[] attackSounds) {
+        this.attackSounds = new String[attackSounds.length];
+        for (int i = 0; i < attackSounds.length; ++i) {
+            this.attackSounds[i] = attackSounds[i].file().getAbsolutePath();
+        }
     }
 
     protected void setViewDistance(double viewDistance) {
@@ -242,14 +256,23 @@ public abstract class Enemy extends Breakable implements Serializable {
     protected abstract FileHandle[] getAttackSounds();
     protected abstract FileHandle[] getPainSounds();
     protected abstract FileHandle[] getDieSounds();*/
-
+        
     protected FileHandle[] getAlarmSounds() {
-        return alarmSounds;
+        FileHandle[] sounds = new FileHandle[alarmSounds.length];
+        for (int i = 0; i < alarmSounds.length; ++i) {
+            sounds[i] = new FileHandle(alarmSounds[i]);
+        }
+        return sounds;
+    }
+        
+    protected FileHandle[] getAttackSounds() {
+        FileHandle[] sounds = new FileHandle[attackSounds.length];
+        for (int i = 0; i < attackSounds.length; ++i) {
+            sounds[i] = new FileHandle(attackSounds[i]);
+        }
+        return sounds;
     }
 
-    protected FileHandle[] getAttackSounds() {
-        return attackSounds;
-    }
 /*        
     protected abstract double getViewDistance();
     protected abstract double getViewAngle();

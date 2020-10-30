@@ -36,8 +36,8 @@ public class Breakable extends Mortal implements Serializable {
     protected Material die;
     protected Material dead;
     
-    protected FileHandle[] painSounds;
-    protected FileHandle[] dieSounds;
+    protected String[] painSounds;
+    protected String[] dieSounds;
     
     protected Vector2 viewVector = new Vector2(1, 0);
     protected Sprite sprite;    
@@ -128,20 +128,42 @@ public class Breakable extends Mortal implements Serializable {
         }
     }
 
-    protected void setPainSounds(FileHandle[] painSounds) {
+    protected void setPainSounds(String[] painSounds) {
         this.painSounds = painSounds;
     }
 
-    protected void setDieSounds(FileHandle[] dieSounds) {
+    protected void setPainSounds(FileHandle[] painSounds) {
+        this.painSounds = new String[painSounds.length];
+        for (int i = 0; i < painSounds.length; ++i) {
+            this.painSounds[i] = painSounds[i].file().getAbsolutePath();
+        }
+    }
+
+    protected void setDieSounds(String[] dieSounds) {
         this.dieSounds = dieSounds;
+    } 
+    
+    protected void setDieSounds(FileHandle[] dieSounds) {
+        this.dieSounds = new String[dieSounds.length];
+        for (int i = 0; i < dieSounds.length; ++i) {
+            this.dieSounds[i] = dieSounds[i].file().getAbsolutePath();
+        }
     }  
         
     protected FileHandle[] getPainSounds() {
-        return painSounds;
+        FileHandle[] sounds = new FileHandle[painSounds.length];
+        for (int i = 0; i < painSounds.length; ++i) {
+            sounds[i] = new FileHandle(painSounds[i]);
+        }
+        return sounds;
     }
     
     protected FileHandle[] getDieSounds() {
-        return dieSounds;
+        FileHandle[] sounds = new FileHandle[dieSounds.length];
+        for (int i = 0; i < dieSounds.length; ++i) {
+            sounds[i] = new FileHandle(dieSounds[i]);
+        }
+        return sounds;
     }
 
     public EnemyState getState() {
