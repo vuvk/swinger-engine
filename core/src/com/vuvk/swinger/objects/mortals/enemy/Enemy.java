@@ -204,7 +204,7 @@ public abstract class Enemy extends Breakable implements Serializable {
     protected void setAlarmSounds(FileHandle[] alarmSounds) {
         this.alarmSounds = new String[alarmSounds.length];
         for (int i = 0; i < alarmSounds.length; ++i) {
-            this.alarmSounds[i] = alarmSounds[i].file().getAbsolutePath();
+            this.alarmSounds[i] = alarmSounds[i].file().getPath();
         }
     }
 
@@ -215,7 +215,7 @@ public abstract class Enemy extends Breakable implements Serializable {
     protected void setAttackSounds(FileHandle[] attackSounds) {
         this.attackSounds = new String[attackSounds.length];
         for (int i = 0; i < attackSounds.length; ++i) {
-            this.attackSounds[i] = attackSounds[i].file().getAbsolutePath();
+            this.attackSounds[i] = attackSounds[i].file().getPath();
         }
     }
 
@@ -260,7 +260,7 @@ public abstract class Enemy extends Breakable implements Serializable {
     protected FileHandle[] getAlarmSounds() {
         FileHandle[] sounds = new FileHandle[alarmSounds.length];
         for (int i = 0; i < alarmSounds.length; ++i) {
-            sounds[i] = new FileHandle(alarmSounds[i]);
+            sounds[i] = Gdx.files.internal(alarmSounds[i]);
         }
         return sounds;
     }
@@ -268,7 +268,7 @@ public abstract class Enemy extends Breakable implements Serializable {
     protected FileHandle[] getAttackSounds() {
         FileHandle[] sounds = new FileHandle[attackSounds.length];
         for (int i = 0; i < attackSounds.length; ++i) {
-            sounds[i] = new FileHandle(attackSounds[i]);
+            sounds[i] = Gdx.files.internal(attackSounds[i]);
         }
         return sounds;
     }

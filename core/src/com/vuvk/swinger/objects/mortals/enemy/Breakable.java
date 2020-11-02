@@ -128,32 +128,32 @@ public class Breakable extends Mortal implements Serializable {
         }
     }
 
-    protected void setPainSounds(String[] painSounds) {
+    public void setPainSounds(String[] painSounds) {
         this.painSounds = painSounds;
     }
 
-    protected void setPainSounds(FileHandle[] painSounds) {
+    public void setPainSounds(FileHandle[] painSounds) {
         this.painSounds = new String[painSounds.length];
         for (int i = 0; i < painSounds.length; ++i) {
-            this.painSounds[i] = painSounds[i].file().getAbsolutePath();
+            this.painSounds[i] = painSounds[i].file().getPath();
         }
     }
 
-    protected void setDieSounds(String[] dieSounds) {
+    public void setDieSounds(String[] dieSounds) {
         this.dieSounds = dieSounds;
     } 
     
-    protected void setDieSounds(FileHandle[] dieSounds) {
+    public void setDieSounds(FileHandle[] dieSounds) {
         this.dieSounds = new String[dieSounds.length];
         for (int i = 0; i < dieSounds.length; ++i) {
-            this.dieSounds[i] = dieSounds[i].file().getAbsolutePath();
+            this.dieSounds[i] = dieSounds[i].file().getPath();
         }
     }  
         
     protected FileHandle[] getPainSounds() {
         FileHandle[] sounds = new FileHandle[painSounds.length];
         for (int i = 0; i < painSounds.length; ++i) {
-            sounds[i] = new FileHandle(painSounds[i]);
+            sounds[i] = Gdx.files.internal(painSounds[i]);
         }
         return sounds;
     }
@@ -161,7 +161,7 @@ public class Breakable extends Mortal implements Serializable {
     protected FileHandle[] getDieSounds() {
         FileHandle[] sounds = new FileHandle[dieSounds.length];
         for (int i = 0; i < dieSounds.length; ++i) {
-            sounds[i] = new FileHandle(dieSounds[i]);
+            sounds[i] = Gdx.files.internal(dieSounds[i]);
         }
         return sounds;
     }
