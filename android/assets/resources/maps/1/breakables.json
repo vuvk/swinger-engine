@@ -20,10 +20,18 @@
         /* barrel dead */        
         /* 3 */	{"textures": [6], "animation_speed": 0, "play_once": true}
     ],
+    
+    "sounds":[
+        /* wood */
+        /* 0 */	"resources/snd/breakables/wood1.wav",
+        /* 1 */	"resources/snd/breakables/wood2.wav",
+        /* 2 */	"resources/snd/breakables/wood3.wav",
+        /* 3 */	"resources/snd/breakables/wood4.wav"
+    ],
 
     "config": [
 		/* barrel */
-        /* 0 */ {"idle": 0, "pain": 1, "die": 2, "dead": 3, "health": 50, "live": false, "radius": 0.25}
+        /* 0 */ {"idle": 0, "pain": 1, "die": 2, "dead": 3, "health": 50, "live": false, "radius": 0.25, "pain sounds": [0,1,2,3], "die sounds": [0,1,2,3]}
     ],
 
     "map": [

@@ -666,6 +666,9 @@ public final class Map {
         System.out.println("\t\tTextures and materials...");
         loadTexturesAndMaterials(jsonLevel);
         
+        System.out.println("\t\tSounds...");
+        ArrayList<String> sndArray = json.readValue(ArrayList.class, jsonLevel.get("sounds"));            
+        
         ArrayList<JsonValue> breakablesArray = json.readValue(ArrayList.class, jsonLevel.get("config"));   
         List<Object>[] presets = new ArrayList[breakablesArray.size()];
         for (int i = 0; i < breakablesArray.size(); ++i) {
@@ -692,6 +695,12 @@ public final class Map {
             
             double radius = jsonValue.getFloat("radius");
             presets[i].add(radius);
+            
+            int[] painSoundsIdx = jsonValue.get("pain sounds").asIntArray();
+            presets[i].add(painSoundsIdx);
+            
+            int[] dieSoundsIdx = jsonValue.get("die sounds").asIntArray();
+            presets[i].add(dieSoundsIdx);
         }
         
         ArrayList<JsonValue> clipsMap = json.readValue(ArrayList.class, jsonLevel.get("map"));  
@@ -704,13 +713,28 @@ public final class Map {
             double health = (Double)   presets[num].get(4);
             boolean live  = (Boolean)  presets[num].get(5);
             double radius = (Double)   presets[num].get(6);
+            int[] painSoundsIdx = (int[]) presets[num].get(7);
+            int[] dieSoundsIdx  = (int[]) presets[num].get(8);
             
             double[] jsonPos = jsonValue.get("position").asDoubleArray();
             Vector3 pos = new Vector3(jsonPos[0], jsonPos[1], jsonPos[2]);
             
             double direction = jsonValue.get("direction").asFloat(); 
             
-            new Breakable(idle, pain, die, dead, pos, direction, health, radius).setLive(live);
+            String[] painSounds = new String[painSoundsIdx.length];
+            for (int i = 0; i < painSounds.length; ++i) {
+                painSounds[i] = sndArray.get(painSoundsIdx[i]);
+            }
+            
+            String[] dieSounds = new String[dieSoundsIdx.length];
+            for (int i = 0; i < dieSounds.length; ++i) {
+                dieSounds[i] = sndArray.get(dieSoundsIdx[i]);
+            }
+            
+            Breakable breakable = new Breakable(idle, pain, die, dead, pos, direction, health, radius);
+            breakable.setLive(live);
+            breakable.setPainSounds(painSounds);
+            breakable.setDieSounds(dieSounds);
         }
     }
     
