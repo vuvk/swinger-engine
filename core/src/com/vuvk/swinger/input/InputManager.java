@@ -55,7 +55,8 @@ public final class InputManager extends InputAdapter {
     
     private static Vector2 prevLoc  = new Vector2();
     private static Vector2 location = new Vector2();
-    private static int scrollAmount = 0;
+    private static float scrollAmountX = 0,
+                         scrollAmountY = 0;
     private static boolean leftClick  = false;
     private static boolean rightClick = false;
     
@@ -91,11 +92,11 @@ public final class InputManager extends InputAdapter {
     } 
     
     public static boolean isScrollDown() {
-        return (scrollAmount > 0);
+        return (scrollAmountY > 0);
     }
     
     public static boolean isScrollUp() {
-        return (scrollAmount < 0);
+        return (scrollAmountY < 0);
     }
     
     public static boolean isLeftClick() {
@@ -109,7 +110,7 @@ public final class InputManager extends InputAdapter {
     public static void reset() {
         //leftClick = rightClick = false;
         //location.set(0, 0);
-        scrollAmount = 0;
+        scrollAmountX = scrollAmountY = 0;
     }
 
     @Override
@@ -143,8 +144,9 @@ public final class InputManager extends InputAdapter {
     }
 
     @Override
-    public boolean scrolled(int amount) {
-        scrollAmount = amount;
+    public boolean scrolled(float amountX, float amountY) {
+        scrollAmountX = amountX;
+        scrollAmountY = amountY;
         return false;
     }
     
