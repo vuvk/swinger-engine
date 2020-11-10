@@ -397,26 +397,48 @@ public final class Map {
         System.out.println("\t\tTextures and materials...");
         loadTexturesAndMaterials(jsonLevel);
         
-        ArrayList<JsonValue> spritesArray = json.readValue(ArrayList.class, jsonLevel.get("map"));  
-        for (JsonValue jsonSprite : spritesArray) {            
-            int matNum = materialsCount + jsonSprite.getInt("material");
-            Material mat = MaterialBank.BANK.get(matNum);
+        ArrayList<JsonValue> spritersArray = json.readValue(ArrayList.class, jsonLevel.get("config"));   
+        List<Object>[] presets = new ArrayList[spritersArray.size()];
+        for (int i = 0; i < spritersArray.size(); ++i) {
+            JsonValue jsonValue = spritersArray.get(i);
+            presets[i] = new ArrayList<>();
+                    
+            int materialNum = jsonValue.getInt("material");
+            presets[i].add(MaterialBank.BANK.get(materialsCount + materialNum));
+                    
+            boolean solid = jsonValue.getBoolean("solid");
+            presets[i].add(solid);
             
-            float[] jsonPos = jsonSprite.get("position").asFloatArray();
+            // по умолчанию масштабирования нет
+            float[] scale = {1, 1};
+            JsonValue scaleValue = jsonValue.get("scale");
+            if (scaleValue.isValue()) {
+                scale = scaleValue.asFloatArray();
+            }
+            presets[i].add(scale[0]);
+            presets[i].add(scale[1]);
+        }
+                    
+            
+        ArrayList<JsonValue> spritesArray = json.readValue(ArrayList.class, jsonLevel.get("map"));  
+        for (JsonValue jsonValue : spritesArray) {          
+            int num = jsonValue.getInt("sprite");   
+            List<Object> preset = presets[num];
+            
+            Material mat  = (Material) preset.get(0);
+            boolean solid = (Boolean)  preset.get(1);
+            float scaleX  = (Float)    preset.get(2);
+            float scaleY  = (Float)    preset.get(3);
+            Vector2 scale = new Vector2(scaleX, scaleY);
+            
+            float[] jsonPos = jsonValue.get("position").asFloatArray();
             Vector3 pos = new Vector3(jsonPos[0], jsonPos[1], jsonPos[2]);
             
-            boolean solid = jsonSprite.getBoolean("solid");  
             if (solid) {
                 Map.SOLIDS[(int)pos.x][(int)pos.y] = true;
             }
             
-            Sprite sprite = new Sprite(mat, pos);
-            
-            // применяем скейл, если он есть в инфе
-            if (jsonSprite.has("scale")) {
-                float[] scale = jsonSprite.get("scale").asFloatArray();
-                sprite.setScale(new Vector2(scale[0], scale[1]));
-            }
+            new Sprite(mat, pos).setScale(scale);
         }
     }
     
@@ -705,16 +727,18 @@ public final class Map {
         
         ArrayList<JsonValue> clipsMap = json.readValue(ArrayList.class, jsonLevel.get("map"));  
         for (JsonValue jsonValue : clipsMap) {
-            int num = jsonValue.getInt("breakable");            
-            Material idle = (Material) presets[num].get(0);
-            Material pain = (Material) presets[num].get(1);
-            Material die  = (Material) presets[num].get(2);
-            Material dead = (Material) presets[num].get(3);
-            double health = (Double)   presets[num].get(4);
-            boolean live  = (Boolean)  presets[num].get(5);
-            double radius = (Double)   presets[num].get(6);
-            int[] painSoundsIdx = (int[]) presets[num].get(7);
-            int[] dieSoundsIdx  = (int[]) presets[num].get(8);
+            int num = jsonValue.getInt("breakable");   
+            List<Object> preset = presets[num];
+            
+            Material idle = (Material) preset.get(0);
+            Material pain = (Material) preset.get(1);
+            Material die  = (Material) preset.get(2);
+            Material dead = (Material) preset.get(3);
+            double health = (Double)   preset.get(4);
+            boolean live  = (Boolean)  preset.get(5);
+            double radius = (Double)   preset.get(6);
+            int[] painSoundsIdx = (int[]) preset.get(7);
+            int[] dieSoundsIdx  = (int[]) preset.get(8);
             
             double[] jsonPos = jsonValue.get("position").asDoubleArray();
             Vector3 pos = new Vector3(jsonPos[0], jsonPos[1], jsonPos[2]);
