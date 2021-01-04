@@ -25,7 +25,7 @@ allprojects {
     version = '1.0'
     ext {
         appName = "swinger-gdx"
-        gdxVersion = '1.9.12'
+        gdxVersion = '1.9.13'
         roboVMVersion = '2.3.12'
         box2DLightsVersion = "1.5"
         ashleyVersion = '1.7.3'
