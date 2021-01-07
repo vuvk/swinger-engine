@@ -238,7 +238,7 @@ public final class InputManager extends InputAdapter {
                     if (Config.console) {
                         String fullCommand = Config.consoleCommand.trim().toLowerCase();
                         Scanner scanCommand = new Scanner(fullCommand);
-                        
+
                         if (scanCommand.hasNext()) {
                             switch (scanCommand.next()) {
                                 case "interlacing" :
@@ -252,6 +252,34 @@ public final class InputManager extends InputAdapter {
                                             case 1 : Config.fog = Fog.OLD;     break;
                                             case 2 : Config.fog = Fog.SMOOTH;  break;
                                         }
+                                    }
+                                    break;
+
+                                case "fog_start" :
+                                    if (scanCommand.hasNextFloat()) {
+                                        float start = scanCommand.nextFloat();
+                                        if (start < 0.1f) {
+                                            start = 0.1f;
+                                        }
+                                        if (start > Fog.END) {
+                                            start = Fog.END;
+                                        }
+                                        Fog.START = start;
+                                        Fog.init();
+                                    }
+                                    break;
+
+                                case "fog_end" :
+                                    if (scanCommand.hasNextFloat()) {
+                                        float end = scanCommand.nextFloat();
+                                        if (end < 0.1f) {
+                                            end = 0.1f;
+                                        }
+                                        if (end < Fog.START) {
+                                            end = Fog.START;
+                                        }
+                                        Fog.END = end;
+                                        Fog.init();
                                     }
                                     break;
 
@@ -374,9 +402,12 @@ public final class InputManager extends InputAdapter {
     public boolean keyTyped (char character) {
         if (Config.console) {
             if (Character.isLetterOrDigit(character) ||
-                character == ' ' ||
+                Character.isWhitespace(character) ||
+                Character.isSpaceChar(character) ||
                 character == ',' ||
-                character == '.'
+                character == '.' ||
+                character == '_' ||
+                character == '-'
                ) {
                 Config.consoleCommand += character;
             }

@@ -13,6 +13,8 @@
 */
 package com.vuvk.swinger.graphic;
 
+import com.vuvk.swinger.Config;
+
 /**
  *
  * @author Anton "Vuvk" Shcherbatykh
@@ -20,22 +22,31 @@ package com.vuvk.swinger.graphic;
 public enum Fog {
     NOTHING,
     OLD,
-    SMOOTH;    
-    
-    public final static float   START = 2.0f;
-    public final static float   END   = 8.0f;
-    public final static float   FACTOR = 1.0f / (END - START);
-    public final static int      SIMPLE_QUALITY = 8;  // чем больше, тем лучше качество
-    public final static float   SIMPLE_DISTANCE_STEP = (END - START) / SIMPLE_QUALITY;
-    public final static float   INV_SIMPLE_DISTANCE_STEP = 1.0f / SIMPLE_DISTANCE_STEP;
-    public final static float[] SIMPLE_BRIGHTNESS = new float[SIMPLE_QUALITY];
-    
+    SMOOTH;
+
+    public /*final*/ static float   START = 2.0f;
+    public /*final*/ static float   END   = 8.0f;
+    public /*final*/ static float   FACTOR;
+    public /*final*/ static int     SIMPLE_QUALITY;  // чем больше, тем лучше качество
+    public /*final*/ static float   SIMPLE_DISTANCE_STEP;
+    public /*final*/ static float   INV_SIMPLE_DISTANCE_STEP;
+    public /*final*/ static float[] SIMPLE_BRIGHTNESS;
+    public static int[]         GRADIENT_TABLE;
+
     public static void init() {
+        FACTOR = 1.0f / (END - START);
+        SIMPLE_QUALITY = 8;
+        SIMPLE_DISTANCE_STEP = (END - START) / SIMPLE_QUALITY;
+        INV_SIMPLE_DISTANCE_STEP = 1.0f / SIMPLE_DISTANCE_STEP;
+        SIMPLE_BRIGHTNESS = new float[SIMPLE_QUALITY];
+
         final float brightnessStep = 1.0f / SIMPLE_QUALITY;
         float brightness = 1.0f - brightnessStep;
         for (int i = 0; i < SIMPLE_QUALITY; ++i) {
             SIMPLE_BRIGHTNESS[i] = brightness;
             brightness -= brightnessStep;
         }
+
+        GRADIENT_TABLE = new int[Config.HEIGHT];
     }
 }
