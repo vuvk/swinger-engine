@@ -24,16 +24,25 @@ public enum Fog {
     OLD,
     SMOOTH;
 
-    public /*final*/ static float   START = 2.0f;
-    public /*final*/ static float   END   = 8.0f;
-    public /*final*/ static float   FACTOR;
-    public /*final*/ static int     SIMPLE_QUALITY;  // чем больше, тем лучше качество
-    public /*final*/ static float   SIMPLE_DISTANCE_STEP;
-    public /*final*/ static float   INV_SIMPLE_DISTANCE_STEP;
-    public /*final*/ static float[] SIMPLE_BRIGHTNESS;
-    public static int[]         GRADIENT_TABLE;
+    public static int COLOR = 0xFF2244FF;
+    public static int RED;
+    public static int GREEN;
+    public static int BLUE;
+
+    public static float   START = 2.0f;
+    public static float   END   = 8.0f;
+    public static float   FACTOR;
+    public static int     SIMPLE_QUALITY;  // чем больше, тем лучше качество
+    public static float   SIMPLE_DISTANCE_STEP;
+    public static float   INV_SIMPLE_DISTANCE_STEP;
+    public static float[] SIMPLE_BRIGHTNESS;
+    public static int[]   GRADIENT_TABLE;
 
     public static void init() {
+        RED   = (COLOR >> 24) & 0xFF;
+        GREEN = (COLOR >> 16) & 0xFF;
+        BLUE  = (COLOR >>  8) & 0xFF;
+
         FACTOR = 1.0f / (END - START);
         SIMPLE_QUALITY = 8;
         SIMPLE_DISTANCE_STEP = (END - START) / SIMPLE_QUALITY;

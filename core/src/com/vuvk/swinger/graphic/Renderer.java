@@ -13,41 +13,35 @@
 */
 package com.vuvk.swinger.graphic;
 
-import com.vuvk.swinger.objects.Camera;
-import com.vuvk.swinger.res.WallMaterial;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Pixmap.Filter;
 import com.badlogic.gdx.graphics.Pixmap.Format;
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.utils.Array;
-import com.vuvk.swinger.objects.Sprite;
-import com.vuvk.swinger.res.Texture;
-import com.vuvk.swinger.res.Map;
+import com.vuvk.swinger.Config;
+import com.vuvk.swinger.d3.Model;
+import com.vuvk.swinger.graphic.weapon_in_hand.WeaponInHand;
+import com.vuvk.swinger.math.Segment;
 import com.vuvk.swinger.math.Vector2;
 import com.vuvk.swinger.math.Vector3;
-import com.vuvk.swinger.math.Segment;
-
-import java.util.Iterator;
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.logging.Logger;
-//import javax.swing.JPanel;
-import com.vuvk.swinger.Config;
-import com.vuvk.swinger.d3.Mesh;
-import com.vuvk.swinger.d3.Model;
-import com.vuvk.swinger.d3.Polygon;
-import com.vuvk.swinger.graphic.weapon_in_hand.WeaponInHand;
-import com.vuvk.swinger.math.Matrix4;
-import com.vuvk.swinger.math.Vector4;
+import com.vuvk.swinger.objects.Camera;
+import com.vuvk.swinger.objects.Sprite;
 import com.vuvk.swinger.objects.mortals.Player;
 import com.vuvk.swinger.res.Image;
+import com.vuvk.swinger.res.Map;
 import com.vuvk.swinger.res.MaterialBank;
+import com.vuvk.swinger.res.Texture;
+import com.vuvk.swinger.res.WallMaterial;
 import com.vuvk.swinger.utils.ArrayUtils;
 import java.nio.IntBuffer;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.logging.Logger;
 
 /**
  *
@@ -58,19 +52,19 @@ public final class Renderer/* extends JPanel*/ {
     private static Renderer instance = null;
     //private final static Player PLAYER = Player.getInstance();
     /*private final static RepaintManager REPAINT_MANAGER;
-    static {        
+    static {
         REPAINT_MANAGER = RepaintManager.currentManager(INSTANCE);
     };*/
-    
+
     public /*final*/ static int WIDTH/*  = Window.WIDTH  >> 2*/;
     public /*final*/ static int HEIGHT/* = Window.HEIGHT >> 2*/;
     public /*final*/ static int HALF_WIDTH/*  = WIDTH  >> 1*/;
     public /*final*/ static int HALF_HEIGHT/* = HEIGHT >> 1*/;
     public /*final*/ static int QUARTER_WIDTH/* = HALF_WIDTH >> 1*/;
-    
+
     private /*final*/ static double RAY_STEP/* = 1.0 / WIDTH*/;
     //private/* final*/ static double ANG_STEP/* = Player.FOV / WIDTH*/;
-    
+
     //private final /*static*/ BufferedImage SCREEN/* = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_ARGB)*/;
     private static com.badlogic.gdx.graphics.Texture SCREEN;
     //private/* final*/ static BufferedImage SCREEN_SMALL;
@@ -81,28 +75,28 @@ public final class Renderer/* extends JPanel*/ {
     private Pixmap SCREEN_RASTER;
     //private final DataBuffer SCREEN_BUFFER;
     private final /*static*/ double[][] ZBUFFER/* = new double[WIDTH]*/;
-    
+
     /** time of current frame */
-//    private long time = System.currentTimeMillis(); 
+//    private long time = System.currentTimeMillis();
     /** time of previous frame */
-//    private long oldTime = time; 
+//    private long oldTime = time;
     /** */
 //    private static double deltaTime = 0;
     /** */
 /*    private static int fps = 0;
     private int fpsCounter = 0;
     private double fpsTimer = 0;*/
-    
+
     private int evenFactor = 0;
     private int xStep;
     private Camera nextActiveCamera = null;
     private Camera activeCamera = new Camera();
-/*    
+/*
     private Text fpsText = new Text(FontBank.FONT_BUBBLA, "", new Point(10, 15));
     private Text playerPosText = new Text(FontBank.FONT_BUBBLA, "", new Point(10, 25));
     private Text playerHpText = new Text(FontBank.FONT_MIDDLE, "", new Point());
-  */  
-/*    
+  */
+/*
     @Struct
     private class RenderTarget {
         int x, y;
@@ -132,17 +126,17 @@ public final class Renderer/* extends JPanel*/ {
         double wallDist;
         Vector2 collisionPoint = new Vector2();
     }
-    
+
     private class RenderTask implements Runnable {
         CountDownLatch latch;
         final private int fromX, toX;
-        
+
         RenderTask(final String name, int fromX, int toX) {
             this.fromX = fromX;
             this.toX   = toX;
             //setName(name);
         }
-        
+
         public void setLatch(CountDownLatch latch) {
             this.latch = latch;
         }
@@ -153,17 +147,17 @@ public final class Renderer/* extends JPanel*/ {
             latch.countDown();
         }
     }
-    
+
     private class AntialiasingTask implements Runnable {
         CountDownLatch latch;
         final private int fromX, toX;
-        
+
         AntialiasingTask(final String name, int fromX, int toX) {
             this.fromX = fromX;
             this.toX   = toX;
             //setName(name);
         }
-        
+
         public void setLatch(CountDownLatch latch) {
             this.latch = latch;
         }
@@ -174,7 +168,7 @@ public final class Renderer/* extends JPanel*/ {
             latch.countDown();
         }
     }
-    
+
     // ПОТОКИ РЕНДЕРИНГА
     private final /*static*/ RenderTask[] RENDER_TASKS = new RenderTask[Config.THREADS_COUNT];
     private final /*static*/ AntialiasingTask[] ANTIALIASING_TASKS = new AntialiasingTask[Config.THREADS_COUNT];
@@ -183,12 +177,12 @@ public final class Renderer/* extends JPanel*/ {
     //private boolean[] render = {false,false,false,false};
     private final /*static*/ List<Sprite> SPRITES_FOR_DRAW = new ArrayList<>(50);
     private final /*static*/ List<Model> MODELS_FOR_DRAW = new ArrayList<>(50);
-    
+
     private static boolean started = false;     // рендерер запущен
-    private boolean canRender = true;           // можно ли рендерить в итоговую пиксельную карту 
+    private boolean canRender = true;           // можно ли рендерить в итоговую пиксельную карту
     private boolean alreadyRendered = false;    // уже отрендерил в память
-    
-    
+
+
     public static Renderer getInstance() {
         if (instance == null) {
             instance = new Renderer();
@@ -196,7 +190,7 @@ public final class Renderer/* extends JPanel*/ {
             instance.setIgnoreRepaint(true);
             instance.setOpaque(false);*/
         }
-        
+
         return instance;
     }
 /*
@@ -213,12 +207,12 @@ public final class Renderer/* extends JPanel*/ {
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
         g.drawImage(SCREEN, 0, 0, Window.WIDTH, Window.HEIGHT, null);
-        
-        if (!Config.STEP_BY_STEP_RENDERING) {       
+
+        if (!Config.STEP_BY_STEP_RENDERING) {
             g.setColor(Color.WHITE);
             //g.drawString("FPS: " + fps, 10, 15); //FPS counter
             fpsText.setMessage("FPS: " + fps);
-                    
+
             Player player = Player.getInstance();
             Vector2 pos = player.getPos();
             //g.drawString(String.format(Locale.ENGLISH, "Player pos: %.2f %.2f", pos.x, pos.y), 10, 30);
@@ -227,21 +221,21 @@ public final class Renderer/* extends JPanel*/ {
             playerHpText.setLocation(new Point(16, Window.HEIGHT - 48));
             playerHpText.setMessage(String.format(Locale.ENGLISH, "HP %.0f", player.getHealth()));
         }
-        
+
         Text.drawAll(g);
-        
+
         // рисуем консоль
         if (Config.console) {
             int y = Window.HEIGHT - 50;
             g.setColor(Color.BLACK);
             g.fillRect(0, y, Window.WIDTH, Window.HEIGHT);
-            
+
             g.setColor(Color.WHITE);
-            g.drawString("Enter command: " + Config.consoleCommand, 10, y + 15); //FPS counter            
+            g.drawString("Enter command: " + Config.consoleCommand, 10, y + 15); //FPS counter
         }
-    } 
+    }
     */
-    
+
     /*
     protected void putPixel(int x, int y, int color) {
         int row;
@@ -254,7 +248,7 @@ public final class Renderer/* extends JPanel*/ {
         }
     }
     */
-    
+
     /**
      * Сделать пиксель темнее
      * @param color цвет пикселя в формате ARGB
@@ -270,16 +264,16 @@ public final class Renderer/* extends JPanel*/ {
             int r = (int)(((color >> 24) & 0xFF) * brightness);
             int g = (int)(((color >> 16) & 0xFF) * brightness);
             int b = (int)(((color >>  8) & 0xFF) * brightness);
-            
+
             return (a/* << 24*/) | (r << 24) | (g << 16) | (b << 8);
             //return (color & 0xFF000000) | (r << 16) | (g << 8) | b;
             //return (0xFF000000) | (r << 16) | (g << 8) | b;
         }
         return color;
     }
-    
+
     /* минимальное видмое значение полупрозрачности */
-    final static int MIN_VISIBLE_TRANSPARENT  = 25; 
+    final static int MIN_VISIBLE_TRANSPARENT  = 25;
     /* значение полупрозрачности, выше которого уже 100% непрозрачность */
     final static int MAX_ADDITIVE_TRANSPARENT = 230;
     final static double INV_255 = 1.0 / 255.0;
@@ -293,7 +287,7 @@ public final class Renderer/* extends JPanel*/ {
         /* альфа полупрозрачного пикселя */
         int aA = (additive/* >> 24*/) & 0xFF;
         //int aP = (pixel >> 24) & 0xFF;
-                
+
         /* добавляемый пиксель вообще не виден */
         if (aA <= MIN_VISIBLE_TRANSPARENT) {
             return pixel;
@@ -301,12 +295,12 @@ public final class Renderer/* extends JPanel*/ {
         } else if (aA >= MAX_ADDITIVE_TRANSPARENT) {
             return additive;
         /* надо смешивать */
-        } else {        
+        } else {
             /* считаем яркость добавляемого и исходного пикселя с учетом накладываемого */
             double aBrightness = aA * INV_255;
             double pBrightness = 1.0 - aBrightness;
 
-            /* раскладываем */        
+            /* раскладываем */
             int rA = (int)(((additive >> 24) & 0xFF) * aBrightness);
             int gA = (int)(((additive >> 16) & 0xFF) * aBrightness);
             int bA = (int)(((additive >>  8) & 0xFF) * aBrightness);
@@ -319,10 +313,10 @@ public final class Renderer/* extends JPanel*/ {
             return 0xFF |
                    ((rA + rP) << 24) |
                    ((gA + gP) << 16) |
-                   ((bA + bP) <<  8); 
+                   ((bA + bP) <<  8);
         }
     }
-    
+
     /**
      * Нарисовать на полотне пиксель
      * @param x координата X на полотне
@@ -334,147 +328,173 @@ public final class Renderer/* extends JPanel*/ {
         int arrayPos = y * WIDTH + x;
         int oldPixel = TEMP_BUFFER.get(arrayPos);
         int newPixel = makeAdditive(oldPixel, pixel/*makeColorDarker(pixel, brightness)*/);
-        if (oldPixel != newPixel)  {
+        if (oldPixel != newPixel) {
             TEMP_BUFFER.put(arrayPos, newPixel);
         }
     }
-    
+
     /**
      * Применить туман к пикселю (проверка расстояния)
-     * @param color Исходный цвет пикселя в формате ARGB
+     * @param pixel Исходный цвет пикселя в формате ARGB
      * @param distance Дистанция до пикселя
      * @return полученный цвет
      */
-    private int applyFog(int color, double distance) {
+    private int applyFog(int pixel, double distance) {
         // близко - вернуть оригинальный пиксель
         if (distance < Fog.START) {
-            return color;
+            return pixel;
         // дистанция между началом и концом тумана
         } else if (distance < Fog.END) {
+            // определяем яркость/силу тумана в точке
+            double fogBrightness;
+
             if (Config.fog == Fog.OLD) {
                 int pos = (int)((distance - Fog.START) * Fog.INV_SIMPLE_DISTANCE_STEP);
-                color = makeColorDarker(color, Fog.SIMPLE_BRIGHTNESS[pos]); 
-                //color = makeColorDarker(color, Fog.SIMPLE_BRIGHTNESS[(int)(distance - Fog.START)]);      
+                fogBrightness = Fog.SIMPLE_BRIGHTNESS[pos];
             } else {
-                color = makeColorDarker(color, 1.0 - (distance - Fog.START) * Fog.FACTOR);
+                fogBrightness = /*1.0 - */(distance - Fog.START) * Fog.FACTOR;
             }
-            return color;
+
+            // яркость/сила пикселя обратная силе тумана
+            double pixelBrightness = 1.0 - fogBrightness;
+            if (pixelBrightness <= 0.0) {
+                pixel = Fog.COLOR;
+            } else {
+                /* раскладываем */
+                int rF = (int)(Fog.RED   * fogBrightness);
+                int gF = (int)(Fog.GREEN * fogBrightness);
+                int bF = (int)(Fog.BLUE  * fogBrightness);
+
+                int rP = (int)(((pixel >> 24) & 0xFF) * pixelBrightness);
+                int gP = (int)(((pixel >> 16) & 0xFF) * pixelBrightness);
+                int bP = (int)(((pixel >>  8) & 0xFF) * pixelBrightness);
+                int aP = (int)(((pixel      ) & 0xFF)/* * pixelBrightness*/);
+
+                // складываем компоненты цветов
+                // берем альфу пикселя, потому что он может быть полупрозрачным
+                pixel = aP |
+                        ((rF + rP) << 24) |
+                        ((gF + gP) << 16) |
+                        ((bF + bP) <<  8);
+            }
+
+            return pixel;
         }
-        // очень далеко - просто черный цвет
-        return 0xFF;
+        // очень далеко - просто цвет тумана
+        return Fog.COLOR;
     }
-    
+
     /**
      * Избавиться от острых краев, размазав граничные пиксели
      * @param fromX с какой позиции обрабатывать
      * @param toX по какую
      */
-    private void antialiasing(int fromX, int toX) {        
+    private void antialiasing(int fromX, int toX) {
         for (int i = fromX; i < toX; ++i) {
             /*if (i % WIDTH == 1) {
                 continue;
             }*/
-            
+
             int pixel = TEMP_BUFFER.get(i);
             int next  = TEMP_BUFFER.get(i + 1);
             if (pixel != next) {
-                int r = (((pixel >> 24) & 0xFF) + ((next >> 24) & 0xFF)) >> 1, 
-                    g = (((pixel >> 16) & 0xFF) + ((next >> 16) & 0xFF)) >> 1, 
+                int r = (((pixel >> 24) & 0xFF) + ((next >> 24) & 0xFF)) >> 1,
+                    g = (((pixel >> 16) & 0xFF) + ((next >> 16) & 0xFF)) >> 1,
                     b = (((pixel >>  8) & 0xFF) + ((next >>  8) & 0xFF)) >> 1;
-                TEMP_BUFFER.put(i, 0xFF | 
-                                     (r << 24)  | 
-                                     (g << 16)  | 
+                TEMP_BUFFER.put(i, 0xFF |
+                                     (r << 24)  |
+                                     (g << 16)  |
                                      (b <<  8));
                 //++i;
             }
         }
     }
-    
+
     /**
      * Задача рендеринга мира (стен и дверей).
      * @param fromX Позиция X с которой начинать
      * @param toX Позиция X до которой рендерить
      */
-    private void renderWorld(int fromX, int toX) {   
+    private void renderWorld(int fromX, int toX) {
         if (activeCamera == null) {
             return;
         }
-        
+
         /*Player player = Player.getInstance();
-        
+
         final Vector3 pos    = player.getPos();
         final Vector2 dir    = player.getCamera().getView();
         final Vector2 plane  = player.getCamera().getPlane();*/
         final Vector3 pos    = activeCamera.getPos();
         final Vector2 dir    = activeCamera.getView();
         final Vector2 plane  = activeCamera.getPlane();
-        final Vector2 ray    = new Vector2(); 
+        final Vector2 ray    = new Vector2();
         final Vector2 invRay = new Vector2();
-            
+
         // length of ray from current position to next x or y-side
         final Vector2 sideDist = new Vector2();
-        
+
         // length of ray from one x or y-side to next x or y-side
         final Vector2 deltaDist = new Vector2();
         double wallDist = 0.0;
 
         // what direction to step in x or y-direction (either +1 or -1)
         int stepX, stepY;
-        
+
         // which box of the map we're in
         int mapX, mapY;
-        
+
         // coordinates on the texture
         int texX = 0,
             texY = 0;
-                            
+
         double wallX; //where exactly the wall was hit
-        
+
         // draw door or wall?
         //boolean drawDoor;
         // is door side wall ?
-        //boolean doorWall; 
-        
+        //boolean doorWall;
+
         //double ang = -Player.FOV_2;
-        //int step = 1 << Config.quality;   
+        //int step = 1 << Config.quality;
         final Array<RenderTarget>[] renderTargets = new Array[Map.LEVELS_COUNT];
-        for (int level = 0; level < Map.LEVELS_COUNT; ++level) { 
-            renderTargets[level] = new Array<>(false, 50);    
+        for (int level = 0; level < Map.LEVELS_COUNT; ++level) {
+            renderTargets[level] = new Array<>(false, 50);
         }
         /*
         RenderTargetList[] renderTargets = new RenderTargetList[Map.LEVELS_COUNT];
-        for (int level = 0; level < Map.LEVELS_COUNT; ++level) { 
-            renderTargets[level] = new RenderTargetList(Map.WIDTH*Map.HEIGHT);    
+        for (int level = 0; level < Map.LEVELS_COUNT; ++level) {
+            renderTargets[level] = new RenderTargetList(Map.WIDTH*Map.HEIGHT);
         }*/
-            
+
         /*
         int skyX = Map.SKY.getXStart();
         int skyWidth = Map.SKY.getWidth();
-        for (int x = evenFactor; x < WIDTH; x += xStep) {      
+        for (int x = evenFactor; x < WIDTH; x += xStep) {
             int[] pixels = Map.SKY.getColumn(skyX);
             for (int y = 0; y < HEIGHT; ++y) {
                 TEMP_BUFFER[y * WIDTH + x] = pixels[y];
             }
-            
+
             skyX -= xStep;
             if (skyX < 0) {
                 skyX = skyWidth - 1;
-            }   
+            }
         }
         */
         //int skyX = fromX + Map.SKY.getXStart();
         //int skyWidth = Map.SKY.getWidth();
-        
+
         for (int x = fromX + evenFactor; x < toX; x += xStep) {
             // сколько пикселей нарисовано в столбце (если меньше высоты, значит есть пустые области под небо)
             int pixelsInColumn = 0;
-                    
+
             mapX = (int)pos.x;
             mapY = (int)pos.y;
-            
+
             // calculate ray position and direction
             final double cameraX = (x << 1) * RAY_STEP - 1; // x-coordinate in camera space
-            
+
             ray.set(dir.x + plane.x * cameraX,
                     dir.y + plane.y * cameraX);
             invRay.set(1.0 / ray.x, 1.0 / ray.y);
@@ -482,7 +502,7 @@ public final class Renderer/* extends JPanel*/ {
             deltaDist.set(Math.abs(invRay.x),
                           Math.abs(invRay.y));
 
-            
+
             // calculate step and initial sideDist
             if (ray.x < 0.0) {
                 stepX = -1;
@@ -491,7 +511,7 @@ public final class Renderer/* extends JPanel*/ {
                 stepX = 1;
                 sideDist.x = (mapX + 1.0 - pos.x) * deltaDist.x;
             }
-      
+
             if (ray.y < 0.0) {
                 stepY = -1;
                 sideDist.y = (pos.y - mapY) * deltaDist.y;
@@ -499,40 +519,40 @@ public final class Renderer/* extends JPanel*/ {
                 stepY = 1;
                 sideDist.y = (mapY + 1.0 - pos.y) * deltaDist.y;
             }
-            
+
             //was a NS or a EW wall hit?
             int side = (sideDist.x < sideDist.y) ? 0 : 1;
-      
+
             // perform DDA
             //drawDoor = false;
             //boolean doorWall = false;
-                        
+
             for (Array<RenderTarget> list : renderTargets) {
                 list.clear();
             }/*
             for (RenderTargetList list : renderTargets) {
                 list.clear();
             }*/
-            
-            
+
+
             // пока луч не долетел до края карты
             while (mapX >= 0 && mapX < Map.WIDTH &&
                    mapY >= 0 && mapY < Map.HEIGHT) {
-                
+
                 Map.VISIBLE_CELLS[mapX][mapY] = true;
-                
+
                 for (int level = 0; level < Map.LEVELS_COUNT; ++level) {
                     int[][] levelMap = Map.WALLS_MAP[level];
                     WallMaterial[][] wallsMat = Map.WALLS_MATERIALS_MAP[level];
-                    boolean visibleWall = false;                    
-                    Texture left  = null, 
-                            right = null, 
+                    boolean visibleWall = false;
+                    Texture left  = null,
+                            right = null,
                             front = null,
                             back  = null;
                     int cell = levelMap[mapX][mapY];
                     Texture texture = null;
                     RenderTarget target = null;
-                    
+
                     if (level == 0 && cell < 0) {
                         // проверяем столкновение с сегментом
                         TexturedSegment segment = Map.SEGMENTS[mapX][mapY];
@@ -558,7 +578,7 @@ public final class Renderer/* extends JPanel*/ {
                             }
                         }
                     }
-                            
+
                     if (cell >= 0 && target == null) {
                         Side boxSide;
                         // добавить в очередь только потенциально видимые стены
@@ -568,14 +588,14 @@ public final class Renderer/* extends JPanel*/ {
                             } else {                        // луч летит вправо
                                 boxSide = Side.RIGHT;
                             }
-                        } else {                         
+                        } else {
                             if (ray.y > 0) {                // луч летит вверх
                                 boxSide = Side.FRONT;
                             } else {
                                 boxSide = Side.BACK;
                             }
                         }
-                        
+
                         //texture = TextureBank.WALLS[cell];
                         texture = (Texture) wallsMat[mapX][mapY].getTexture(boxSide);
                         if (mapX > 0) {
@@ -622,7 +642,7 @@ public final class Renderer/* extends JPanel*/ {
                                     visibleWall = right.hasAlphaChannel();// или может быть стена, но с прозрачной текстурой?
                                 }
                             }
-                        } else {                         
+                        } else {
                             if (ray.y > 0) {                // луч летит вверх
                                 if (front == null) {        // вверху нет стены?
                                     visibleWall = true;
@@ -643,7 +663,7 @@ public final class Renderer/* extends JPanel*/ {
                         /*if (texture.isAlphaChannel()) {
                             visibleWall = true;
                             //
-                            int mX = 0, mY = 0, sd; 
+                            int mX = 0, mY = 0, sd;
                             if (sideDist.x < sideDist.y) {
                                 mX = mapX + stepX;
                                 sd = 0;
@@ -657,7 +677,7 @@ public final class Renderer/* extends JPanel*/ {
                             target.y = mY;
                             target.side = sd;
                             target.doorWall = false;
-                            renderTargets[level].add(target);                                
+                            renderTargets[level].add(target);
                         }*/
 
                         if (visibleWall) {
@@ -671,14 +691,14 @@ public final class Renderer/* extends JPanel*/ {
                                 wallX = pos.x + wallDist * ray.x;
                             }
                             wallX -= (int)wallX;
-                                                        
+
                             texX = (int)(wallX * Texture.WIDTH);
                             if ((side == 0 && ray.x > 0) ||
                                 (side == 1 && ray.y < 0)
                                ) {
                                 texX = Texture.WIDTH - texX - 1;
                             }
-                            target.texX = texX;                                
+                            target.texX = texX;
 
                             if (side == 0 && ray.x > 0) {
                                 target.collisionPoint.x = mapX;
@@ -698,7 +718,7 @@ public final class Renderer/* extends JPanel*/ {
                     }
 
                     // была найдена цель для рендеринга
-                    if (target != null) {                            
+                    if (target != null) {
                         /*if (side == 0) {
                             wallX = pos.y + wallDist * ray.y;
                         }
@@ -722,7 +742,7 @@ public final class Renderer/* extends JPanel*/ {
                                 texX = Texture.WIDTH - texX - 1;
                             }
 
-                            target.texX = texX;                                
+                            target.texX = texX;
 
                             if (side == 0 && ray.x > 0) {
                                 target.collisionPoint.x = mapX;
@@ -740,9 +760,9 @@ public final class Renderer/* extends JPanel*/ {
                         }*/
 
                         renderTargets[level].add(target);
-                    }                 
+                    }
                 }
-                
+
                 // jump to next map square, OR in x-direction, OR in y-direction
                 if (sideDist.x < sideDist.y) {
                     sideDist.x += deltaDist.x;
@@ -754,7 +774,7 @@ public final class Renderer/* extends JPanel*/ {
                     side = 1;
                 }
             }
-            
+
             // максимальная длина на предыдущем этаже
             double prevMaxWallDist = 0.0;
             for (int level = 0; level < Map.LEVELS_COUNT; ++level) {
@@ -767,16 +787,16 @@ public final class Renderer/* extends JPanel*/ {
                         continue;
                     }*/
                 //    RenderTarget target = renderLevelTargets.get(t);
-                
+
                     texX = target.texX;
                     if (texX < 0 || texX >= Texture.WIDTH) {
                         continue;
                     }
-                    
+
                     mapX = target.x;
                     mapY = target.y;
                     //side = target.side;
-                    //wallX = target.wallX;                    
+                    //wallX = target.wallX;
 
                     /*if (!target.drawDoor) {
                         // Calculate distance projected on camera direction (Euclidean distance will give fisheye effect!)
@@ -898,21 +918,21 @@ public final class Renderer/* extends JPanel*/ {
                         if (texY < 0 || texY >= Texture.HEIGHT) {
                             continue;
                         }
-                        
-                        /*int color = txr.getPixel(texX, texY); 
+
+                        /*int color = txr.getPixel(texX, texY);
                         if ((color >> 24) == 0) {
                             continue;
                         }*/
-                        int color = pixelsColumn[texY]; 
+                        int color = pixelsColumn[texY];
                         int a = (color/* >> 24*/) & 0xFF;
                         if (a <= MAX_ADDITIVE_TRANSPARENT) {
                             continue;
                         }
-                        
+
                         if (Config.fog != Fog.NOTHING) {
                             color = applyFog(color, wallDist);
                         }
-                        
+
                         //Color color = new Color(Texture.WALLS[texNum].getPixel(texX, texY));
                         //make color darker for y-sides: R, G and B byte each divided through two with a "shift" and an "and"
                         /*if (side == 1) {
@@ -932,21 +952,21 @@ public final class Renderer/* extends JPanel*/ {
                             ++pixelsInColumn;
                         }
                     }
-                    
-                    /*    
+
+                    /*
                     if (Config.STEP_BY_STEP_RENDERING) {
-                        try { 
-                            Thread.sleep(Config.STEP_BY_STEP_DELAY); 
+                        try {
+                            Thread.sleep(Config.STEP_BY_STEP_DELAY);
                         } catch (InterruptedException ex) {}
                         SCREEN_RASTER.setDataElements(0, 0, WIDTH, HEIGHT, TEMP_BUFFER);
                         repaint();
                     }
                     */
-                    
+
                     if (level > 0) {
-                        // если нарисована полная строка 
+                        // если нарисована полная строка
                         // И расстояние на предыдущем этаже меньше или равно
-                        // то обход по очереди прекратить 
+                        // то обход по очереди прекратить
                         if ((pixelsDrawed == pixelsForDraw) &&
                             (wallDist >= prevMaxWallDist)) {
                             prevMaxWallDist = wallDist;
@@ -998,9 +1018,9 @@ public final class Renderer/* extends JPanel*/ {
                     }
 
                     //draw the floor from drawEnd to the bottom of the screen
-                    Texture floorTex = null, 
+                    Texture floorTex = null,
                             ceilTex  = null;
-                    /*int[][] floorPixels = null, 
+                    /*int[][] floorPixels = null,
                             ceilPixels  = null;*/
                     int prevFloorX = -1,
                         prevFloorY = -1;
@@ -1023,7 +1043,7 @@ public final class Renderer/* extends JPanel*/ {
                         if (floorX < 0 || floorX >= Map.WIDTH ||
                             floorY < 0 || floorY >= Map.HEIGHT) {
                             continue;
-                        }                  
+                        }
 
                         int floorTexX, floorTexY;
                         floorTexX = (int)(currentFloorX * Texture.WIDTH ) % Texture.WIDTH;
@@ -1032,15 +1052,15 @@ public final class Renderer/* extends JPanel*/ {
                         if (floorX != prevFloorX ||
                             floorY != prevFloorY) {
                             prevFloorX = floorX;
-                            prevFloorY = floorY; 
-                            
+                            prevFloorY = floorY;
+
                             floorCell = Map.FLOOR[floorX][floorY];
                             if (floorCell >= 0) {
                                 //floorTex = TextureBank.FLOOR[floorCell];
                                 //floorPixels = floorTex.getPixels();
                                 floorTex = (Texture) MaterialBank.BANK.get(floorCell).getSideFrames()[0];
                             }
-                            
+
                             ceilCell = Map.CEIL[floorX][floorY];
                             if (ceilCell >= 0) {
                                 //ceilTex = TextureBank.CEIL[ceilCell];
@@ -1048,14 +1068,14 @@ public final class Renderer/* extends JPanel*/ {
                                 ceilTex = (Texture) MaterialBank.BANK.get(ceilCell).getSideFrames()[0];
                             }
                         }
-                        
+
                         int color;
-                        
+
                         // floor
                         //int arrayPos = (y - 1) * WIDTH + x;
                         //int pixelPos = (floorTexY << Texture.WIDTH_POT) + floorTexX;
                         //if (ZBUFFER[arrayPos] > currentDist) {
-                        if (floorCell >= 0) {                            
+                        if (floorCell >= 0) {
                             if (ZBUFFER[x][y - 1] > currentDist) {
                                 //TEMP_BUFFER.setRGB(x, y, Texture.WALLS[3].getPixel(floorTexX, floorTexY));
                                 //buffer[(y - 1) * WIDTH + x] = Texture.WALLS[3].getPixel(floorTexX, floorTexY);
@@ -1102,16 +1122,16 @@ public final class Renderer/* extends JPanel*/ {
                             }
                         }
                     }
-                            
+
                     /*
                     if (Config.STEP_BY_STEP_RENDERING) {
-                        try { 
-                            Thread.sleep(Config.STEP_BY_STEP_DELAY); 
+                        try {
+                            Thread.sleep(Config.STEP_BY_STEP_DELAY);
                         } catch (InterruptedException ex) {}
                         SCREEN_RASTER.setDataElements(0, 0, WIDTH, HEIGHT, TEMP_BUFFER);
                         repaint();
                     }*/
-                    
+
                     // нарисована вся высота на первом этаже, дальнейший обход не нужен
                     if (level == 0 && pixelsDrawed == pixelsForDraw) {
                         prevMaxWallDist = wallDist;
@@ -1119,17 +1139,17 @@ public final class Renderer/* extends JPanel*/ {
                     }
                 }
             }
-                
+
             // после рисовки стен и пола/потолка, закрашиваем небо, если есть что закрашивать
             if (pixelsInColumn < HEIGHT - 1) {
-                if (Config.drawSky) {                      
-                        
+                if (Config.drawSky) {
+
                     if (Config.STEP_BY_STEP_RENDERING) {
-                        try { 
-                            Thread.sleep(5); 
+                        try {
+                            Thread.sleep(5);
                         } catch (InterruptedException ex) {}
                     }
-                    
+
                     Sky sky = Sky.getInstance();
                     int skyX = sky.getXStart() - x;
                     if (skyX < 0) {
@@ -1153,15 +1173,15 @@ public final class Renderer/* extends JPanel*/ {
                         if (ZBUFFER[x][y] == Double.MAX_VALUE) {
                             TEMP_BUFFER.put(y * WIDTH + x, 0xFF000000);
                             //TEMP_BUFFER.setElem(arrayPos, 0xFF000000);
-                            ++pixelsInColumn;  
+                            ++pixelsInColumn;
                         }
-                    }                    
+                    }
                 }
-                
+
                 /*
                 if (Config.STEP_BY_STEP_RENDERING) {
-                    try { 
-                        Thread.sleep(Config.STEP_BY_STEP_DELAY); 
+                    try {
+                        Thread.sleep(Config.STEP_BY_STEP_DELAY);
                     } catch (InterruptedException ignored) {}
                     SCREEN_RASTER.setDataElements(0, 0, WIDTH, HEIGHT, TEMP_BUFFER);
                     repaint();
@@ -1170,13 +1190,13 @@ public final class Renderer/* extends JPanel*/ {
             }
         }
     }
-    
+
     private void render() {
         while (alreadyRendered || nextActiveCamera == null) {
             Thread.yield();
         }
         activeCamera.duplicate(nextActiveCamera);
-        
+
         //Graphics g = SCREEN.getGraphics();
         //final WritableRaster raster = SCREEN.getRaster();
         //DataBuffer buf = raster.getDataBuffer();
@@ -1189,36 +1209,36 @@ public final class Renderer/* extends JPanel*/ {
         final Vector3 pos = player.getPos();
         final Vector2 dir = player.getCamera().getView();
         final Vector2 plane = player.getCamera().getPlane();
-        //Vector2 ray = new Vector2();  
+        //Vector2 ray = new Vector2();
         */
         final Vector3 pos   = activeCamera.getPos();
         final Vector2 dir   = activeCamera.getView();
         final Vector2 plane = activeCamera.getPlane();
-        
+
         // calc distance to player
-        //Sprite.updateAll();   
-        
-        // прыгаем на четный/нечетный столбец, если чересстрочный режим        
+        //Sprite.updateAll();
+
+        // прыгаем на четный/нечетный столбец, если чересстрочный режим
         if (Config.interlacing) {
             evenFactor ^= 1;
             xStep = 2;
-        } else {      
+        } else {
             evenFactor = 0;
             xStep = 1;
         }
-        
+
         //g.setColor(Color.BLACK);
         //g.fillRect(0, 0, WIDTH, HEIGHT);
         /*if (Config.STEP_BY_STEP_RENDERING) {
-            ArrayUtils.fill(TEMP_BUFFER, 0);   
+            ArrayUtils.fill(TEMP_BUFFER, 0);
         }*/
-        //Arrays.fill(TEMP_BUFFER, Color.BLACK.getRGB());   
-                
+        //Arrays.fill(TEMP_BUFFER, Color.BLACK.getRGB());
+
         // забиваем Z-BUFFER и полотно
         /*if (Config.interlacing) {
             for (int y = 0; y < HEIGHT; ++y) {
                 int col = y * WIDTH;
-                for (int x = evenFactor; x < WIDTH; x += xStep) { 
+                for (int x = evenFactor; x < WIDTH; x += xStep) {
                     TEMP_BUFFER[col + x] = 0xFF000000;
                     ZBUFFER[col + x] = Double.MAX_VALUE;
                 }
@@ -1229,7 +1249,7 @@ public final class Renderer/* extends JPanel*/ {
                 ZBUFFER      [i] = Double.MAX_VALUE;
             }
         }*/
-        
+
         // забиваем Z-BUFFER
         /*for (int i = 0; i < ZBUFFER.length; ++i) {
             ZBUFFER[i] = Double.MAX_VALUE;
@@ -1238,7 +1258,7 @@ public final class Renderer/* extends JPanel*/ {
         for (double[] array : ZBUFFER) {
             ArrayUtils.fill(array, Double.MAX_VALUE);
         }
-        
+
         // WORLD RENDERING
         if (Config.multithreading) {
             CountDownLatch cdl = new CountDownLatch(RENDER_TASKS.length);
@@ -1248,39 +1268,39 @@ public final class Renderer/* extends JPanel*/ {
             }
             //try {
             //    cdl.await();
-            //} catch(InterruptedException ignored) {} 
+            //} catch(InterruptedException ignored) {}
             while (cdl.getCount() > 0) {
                 Thread.yield();
             }
         } else {
             renderWorld(0, WIDTH);
         }
-        
-        
+
+
         // SPRITE CASTING
         SPRITES_FOR_DRAW.clear();
         for (Sprite sprite : Sprite.LIB) {
             //sprite.update();
             int x = (int)sprite.getPos().x;
             int y = (int)sprite.getPos().y;
-            
+
             if (x >= 0 && x < Map.WIDTH  &&
                 y >= 0 && y < Map.HEIGHT &&
                 Map.VISIBLE_CELLS[x][y]) {
                 SPRITES_FOR_DRAW.add(sprite);
-            } 
+            }
         }
         // сортируем в порядке от меньшего расстояния к большему
         //Collections.sort(SPRITES_FOR_DRAW, Collections.reverseOrder());
         Collections.sort(SPRITES_FOR_DRAW);
         //SPRITES_FOR_DRAW.sort();
-        
+
         for (Sprite sprite : SPRITES_FOR_DRAW) {
             Texture txr = sprite.getTexture();
             if (txr == null) {
                 continue;
             }
-            
+
             //translate sprite position to relative to camera
             Vector3 sprPos = sprite.getPos().sub(pos);
             Vector2 scale = sprite.getScale();
@@ -1294,7 +1314,7 @@ public final class Renderer/* extends JPanel*/ {
 
             Vector2 transform = new Vector2(invDet * (dir.y    * sprPos.x - dir.x   * sprPos.y),
                                             invDet * (-plane.y * sprPos.x + plane.x * sprPos.y)); //this is actually the depth inside the screen, that what Z is in 3D
-            
+
             if (transform.y > 0.0) {
                 double invTransformY = 1.0 / transform.y;
                 int spriteScreenX = (int)(HALF_WIDTH * (1.0 + transform.x * invTransformY));
@@ -1306,27 +1326,27 @@ public final class Renderer/* extends JPanel*/ {
                 //calculate lowest and highest pixel to fill in current stripe
                 int depth = (int)((sprPos.z * invTransformY * (Config.HEIGHT >> Config.quality)));    // поправка по высоте (глубина)
                 int dSY = HALF_HEIGHT - (int)((halfSpriteHeight + depth));
-                int drawStartY = dSY + 
+                int drawStartY = dSY +
                                  (int)(txr.getVolume().getTop() * spriteHeight)/* +     // смещаем до полезного объема сверху
                                  (int)(spriteHeight * pos.z)*/;
                 //int dSY = drawStartY;
                 //int drawStartY = -spriteHeight / 2 + HEIGHT / 2 + depth;
                 //int drawStartY = -halfSpriteHeight + HALF_HEIGHT + depth;
-                int drawEndY = dSY /*+ spriteHeight*/ + 
-                               (int)Math.ceil(txr.getVolume().getBottom() * spriteHeight) /* смещаем до полезного объема снизу*/;            
+                int drawEndY = dSY /*+ spriteHeight*/ +
+                               (int)Math.ceil(txr.getVolume().getBottom() * spriteHeight) /* смещаем до полезного объема снизу*/;
                 if (drawStartY < 1) {
                     drawStartY = 1;
                 }
                 if (drawEndY >= HEIGHT) {
                     drawEndY = HEIGHT - 1;
-                } 
+                }
 
                 //calculate width of the sprite
                 int spriteWidth = ((int)(HEIGHT * invTransformY * scale.x));//Math.abs((int)(HEIGHT / transform.y));
                 int halfSpriteWidth = spriteWidth >> 1;
                 int dSX = spriteScreenX - halfSpriteWidth;
                 int drawStartX = dSX + (int)(txr.getVolume().getLeft() * spriteWidth);
-                int drawEndX = dSX /*+ spriteWidth*/ + (int)Math.ceil(txr.getVolume().getRight() * spriteWidth);   
+                int drawEndX = dSX /*+ spriteWidth*/ + (int)Math.ceil(txr.getVolume().getRight() * spriteWidth);
                 if (drawStartX < 0) {
                     drawStartX = 0;
                 }
@@ -1337,14 +1357,14 @@ public final class Renderer/* extends JPanel*/ {
                 // учитываем чересстрочность
                 if (Config.interlacing) {
                     // берем четный/нечетный столбец
-                    if ((drawStartX % 2 == 0 && evenFactor == 1) || 
+                    if ((drawStartX % 2 == 0 && evenFactor == 1) ||
                         (drawStartX % 2 != 0 && evenFactor == 0)) {
                         ++drawStartX;
                     }
-                }           
+                }
 
                 // loop through every vertical stripe of the sprite on screen
-                
+
                 double invSpriteWidth = 1.0 / spriteWidth;
                 /*int prevTexX = -1;
                 int[][] pixels = txr.getPixels();
@@ -1354,7 +1374,7 @@ public final class Renderer/* extends JPanel*/ {
                     if (texX < 0 || texX >= Texture.WIDTH) {
                         continue;
                     }
-                    
+
                     // for every pixel of the current stripe
                     for (int y = drawStartY; y < drawEndY; ++y) {
                         //int arrayPos = y * WIDTH + x;
@@ -1372,23 +1392,23 @@ public final class Renderer/* extends JPanel*/ {
                             continue;
                         }
 
-                        int color = txr.getPixel(texX, texY);                        
+                        int color = txr.getPixel(texX, texY);
                         int a = (color/* >> 24*/) & 0xFF;
-                        
+
                         if (a < MIN_VISIBLE_TRANSPARENT) {
                             continue;
                         } else {
                             if (Config.fog != Fog.NOTHING) {
-                                double brightness = transform.y - sprite.getBrightness();
+                                double brightness = transform.y;
                                 color = applyFog(color, brightness);
                             }
-                        
+
                             // paint pixel if it visible
-                            /*if (a == 255) { 
+                            /*if (a == 255) {
                                 TEMP_BUFFER[y * WIDTH + x] = color;
                                 //TEMP_BUFFER.setElem(arrayPos, color);
                                 //ZBUFFER[arrayPos] = transform.y;
-                                ZBUFFER[x][y] = transform.y;                                
+                                ZBUFFER[x][y] = transform.y;
 
                                 if (Config.STEP_BY_STEP_RENDERING) {
                                     try {
@@ -1403,19 +1423,19 @@ public final class Renderer/* extends JPanel*/ {
                                 int arrayPos = y * WIDTH + x;
                                 int pixel = TEMP_BUFFER[arrayPos];
                                 int newPixel = makeAdditive(pixel, color);
-                                TEMP_BUFFER[arrayPos] = newPixel;                            
+                                TEMP_BUFFER[arrayPos] = newPixel;
                             }*/
                             drawPixel(x, y, color);
                             //TEMP_BUFFER.put(y * WIDTH + x, color);
                             if (a >= MAX_ADDITIVE_TRANSPARENT) {
-                                ZBUFFER[x][y] = transform.y;                                   
+                                ZBUFFER[x][y] = transform.y;
                             }
                         }
-                    }                    
+                    }
                 }
             }
         }
-        
+
         /*
         // MODEL CASTING
         MODELS_FOR_DRAW.clear();
@@ -1423,25 +1443,25 @@ public final class Renderer/* extends JPanel*/ {
             //sprite.update();
             int x = (int)model.getPos().x;
             int y = (int)model.getPos().y;
-            
+
             if (model.isVisible() &&
                 x >= 0 && x < Map.WIDTH  &&
                 y >= 0 && y < Map.HEIGHT &&
                 Map.VISIBLE_CELLS[x][y]) {
                 MODELS_FOR_DRAW.add(model);
-            } 
+            }
         }
-        
+
         // сортируем в порядке от меньшего расстояния к большему
         Collections.sort(MODELS_FOR_DRAW, Collections.reverseOrder());
-        
+
         Matrix4 projMtx = activeCamera.getProjectionMtx();
         Matrix4 viewMtx = activeCamera.getViewMtx();
         Matrix4 pv = projMtx.mul(viewMtx);
-        for (Model model : Model.LIB) {   
+        for (Model model : Model.LIB) {
             Matrix4 mdlMtx = model.getModelMtx();
             Matrix4 wldMtx = pv.mul(mdlMtx);
-            
+
             Mesh mesh = model.getMesh();
             for (Polygon poly : mesh.getPolygons()) {
                 ArrayList<Vector2> points = new ArrayList<>();
@@ -1450,66 +1470,66 @@ public final class Renderer/* extends JPanel*/ {
                     Vector4 mul = wldMtx.mul(vec4);
                     Vector3 vec4_to_3 = new Vector3(mul);
                     Vector2 point = new Vector2(vec4_to_3);
-                    points.add(point);                    
+                    points.add(point);
                 }
-                
+
                 for (Vector2 point : points) {
                     point.x = (point.x + 1) * HALF_WIDTH;
                     point.y = (point.y + 1) * HALF_HEIGHT;
                 }
-                
+
                 Vector2 start;
                 Vector2 point0 = points.get(0);
-                Vector2 point1 = points.get(1);   
-                Vector2 point2 = points.get(2);  
-                
+                Vector2 point1 = points.get(1);
+                Vector2 point2 = points.get(2);
+
                 double distance = point0.distance(point1);
                 Vector2 pDir = point1.sub(point0).normalize();
                 start = new Vector2(point0);
-                while(distance > 0) {                    
+                while(distance > 0) {
                     int x = (int) start.x;
                     int y = (int) start.y;
-                    
+
                     start = start.add(pDir);
-                    --distance;   
+                    --distance;
                     if (x >= 0 && x < WIDTH &&
                         y >= 0 && y < HEIGHT) {
                         TEMP_BUFFER.put(y * WIDTH + x, 0xFF00FFFF);
-                    }                 
+                    }
                 }
-                
+
                 distance = point0.distance(point2);
                 pDir = point2.sub(point0).normalize();
                 start = new Vector2(point0);
-                while(distance > 0) {                    
+                while(distance > 0) {
                     int x = (int) start.x;
                     int y = (int) start.y;
-                    
+
                     start = start.add(pDir);
-                    --distance;   
+                    --distance;
                     if (x >= 0 && x < WIDTH &&
                         y >= 0 && y < HEIGHT) {
                         TEMP_BUFFER.put(y * WIDTH + x, 0xFF00FFFF);
-                    }                 
+                    }
                 }
-                
+
                 distance = point1.distance(point2);
                 pDir = point2.sub(point1).normalize();
                 start = new Vector2(point1);
-                while(distance > 0) {                    
+                while(distance > 0) {
                     int x = (int) start.x;
                     int y = (int) start.y;
-                    
+
                     start = start.add(pDir);
-                    --distance;   
+                    --distance;
                     if (x >= 0 && x < WIDTH &&
                         y >= 0 && y < HEIGHT) {
                         TEMP_BUFFER.put(y * WIDTH + x, 0xFF00FFFF);
-                    }                 
+                    }
                 }
             }
         }*/
-        
+
         Player player = Player.getInstance();
         WeaponInHand weapon = player.getWeaponInHand();
         if (weapon != null) {
@@ -1519,21 +1539,21 @@ public final class Renderer/* extends JPanel*/ {
                 int volumeRight  = (int)(image.getVolume().getRight()  * image.getWidth());
                 int volumeTop    = (int)(image.getVolume().getTop()    * image.getHeight());
                 int volumeBottom = (int)(image.getVolume().getBottom() * image.getHeight());
-                
+
                 int startX = (int)weapon.getPos().x - (int)(image.getWidth() * image.getCenter().x);
                 int startY = (int)weapon.getPos().y - image.getHeight();
-                
-                for (int y = volumeTop; y < volumeBottom; ++y) {  
+
+                for (int y = volumeTop; y < volumeBottom; ++y) {
                     if (startY + y >= HEIGHT) {
                         break;
                     }
-                    
+
                     int col = (startY + y) * WIDTH + startX;
-                    for (int x = volumeLeft; x < volumeRight; ++x) { 
+                    for (int x = volumeLeft; x < volumeRight; ++x) {
                         if (x < 0 || x >= WIDTH) {
                             continue;
                         }
-                        
+
                         int color = image.getPixel(x, y);
                         if (((color/* >> 24*/) & 0xFF) != 0) {
                             TEMP_BUFFER.put(col + x, color);
@@ -1542,7 +1562,7 @@ public final class Renderer/* extends JPanel*/ {
                 }
             }
         }
-        
+
         if (Config.antialiasing) {
             if (Config.multithreading) {
                 CountDownLatch cdl = new CountDownLatch(ANTIALIASING_TASKS.length);
@@ -1552,7 +1572,7 @@ public final class Renderer/* extends JPanel*/ {
                 }
                 //try {
                 //    cdl.await();
-                //} catch(InterruptedException ignored) {} 
+                //} catch(InterruptedException ignored) {}
                 while (cdl.getCount() > 0) {
                     Thread.yield();
                 }
@@ -1560,16 +1580,16 @@ public final class Renderer/* extends JPanel*/ {
                 antialiasing(WIDTH, TEMP_BUFFER.limit() - 1);
             }
         }
-                                
-        //SCREEN_BUFFER.setRGB(0, 0, WIDTH, HEIGHT, buffer, 0, WIDTH);   
+
+        //SCREEN_BUFFER.setRGB(0, 0, WIDTH, HEIGHT, buffer, 0, WIDTH);
         //SCREEN.getRaster().setDataElements(0, 0, WIDTH, HEIGHT, SCREEN_BUFFER);
         //raster.setDataElements(0, 0, WIDTH, HEIGHT, SCREEN_BUFFER);
         //raster.setPixels(0, 0, WIDTH >> 2, HEIGHT >> 2, SCREEN_BUFFER);
 
         //SCREEN_RASTER.setDataElements(0, 0, WIDTH, HEIGHT, SCREEN_BUFFER);
-        
+
         //g.drawImage(SCREEN_SMALL, 0, 0, Window.WIDTH, Window.HEIGHT, null);
-        
+
         //paintImmediately(0, 0, Window.WIDTH, Window.HEIGHT);
         //REPAINT_MANAGER.setDoubleBufferingEnabled(false);
         //repaint();
@@ -1577,13 +1597,13 @@ public final class Renderer/* extends JPanel*/ {
         while (!canRender) {
             Thread.yield();
         }
-        
+
         /*if (canRender)*/ {
             //SCREEN.draw(SCREEN_RASTER, 0, 0);
             for (int i = 0; i < TEMP_BUFFER.limit(); ++i) {
                 SCREEN_BUFFER.put(i, TEMP_BUFFER.get(i));
             }
-            //SCREEN_BUFFER.put(TEMP_BUFFER);            
+            //SCREEN_BUFFER.put(TEMP_BUFFER);
             alreadyRendered = true;
         }
         //IntBuffer buffer = SCREEN_RASTER.getPixels().asIntBuffer();
@@ -1591,7 +1611,7 @@ public final class Renderer/* extends JPanel*/ {
 /*        oldTime = time;
         time = System.currentTimeMillis();
         deltaTime = (time - oldTime) / 1000.0; //frameTime is the time this frame has taken, in seconds
-        
+
         // calc FPS
         ++fpsCounter;
         fpsTimer += deltaTime;
@@ -1599,29 +1619,29 @@ public final class Renderer/* extends JPanel*/ {
             fpsTimer -= 1.0;
             fps = fpsCounter;
             fpsCounter = 0;
-        }        
-*/        
+        }
+*/
         if (Config.STEP_BY_STEP_RENDERING) {
-            try { 
-                Thread.sleep(5000); 
+            try {
+                Thread.sleep(5000);
             } catch (InterruptedException ex) {}
         }
-        
+
         //alreadyRendered = true;
     }
-    
+
     public com.badlogic.gdx.graphics.Texture getFrame() {
         while (!alreadyRendered) {
             Thread.yield();
         }
-                
+
         canRender = alreadyRendered = false;
         SCREEN.draw(SCREEN_RASTER, 0, 0);
         canRender = true;
-        
+
         return SCREEN;
     }
-    
+
     public static void init() {
         WIDTH  = Config.WIDTH  >> Config.quality;
         HEIGHT = Config.HEIGHT >> Config.quality;
@@ -1641,7 +1661,7 @@ public final class Renderer/* extends JPanel*/ {
                     try {
                         Thread.sleep(500);
                     } catch (InterruptedException ignored) {}
-                    
+
 
                     final Renderer renderer = Renderer.getInstance();
                     while (started) {
@@ -1653,44 +1673,44 @@ public final class Renderer/* extends JPanel*/ {
             renderThread.start();
         }
     }
-    
+
     public void setActiveCamera(Camera camera) {
         if (nextActiveCamera == null) {
             nextActiveCamera = new Camera();
         }
         nextActiveCamera.duplicate(camera);
     }
-    
+
     public final Camera getActiveCamera() {
         return activeCamera;
     }
-    
-    public static void deinit() {  
+
+    public static void deinit() {
         started = false;
     }
-    
+
     private RenderTask newRenderTask(final String name, final int fromX, final int toX) {
         return new RenderTask(name, fromX, toX);
     }
-    
+
     private AntialiasingTask newAntialiasingTask(final String name, final int fromX, final int toX) {
         return new AntialiasingTask(name, fromX, toX);
     }
-    
+
     private Renderer() {
         init();
         //ANG_STEP = Player.FOV / WIDTH;
 
         //SCREEN = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_ARGB);
-        //SCREEN_RASTER = SCREEN.getRaster();            
+        //SCREEN_RASTER = SCREEN.getRaster();
         SCREEN_RASTER = new Pixmap(WIDTH, HEIGHT, Format.RGBA8888);
         SCREEN_RASTER.setFilter(Filter.NearestNeighbour);
         SCREEN_RASTER.setBlending(Pixmap.Blending.None);
-        
+
         TEMP_RASTER = new Pixmap(WIDTH, HEIGHT, Format.RGBA8888);
         TEMP_RASTER.setFilter(Filter.NearestNeighbour);
         TEMP_RASTER.setBlending(Pixmap.Blending.None);
-        
+
         //SCREEN_RASTER = pxmap.getPixels().asIntBuffer();
         //SCREEN_SMALL = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_ARGB);
         //SCREEN_BUFFER = new int[WIDTH * HEIGHT];
@@ -1700,7 +1720,7 @@ public final class Renderer/* extends JPanel*/ {
         SCREEN.setFilter(TextureFilter.Nearest, TextureFilter.Nearest);
         //SCREEN_BUFFER = SCREEN.getRaster().getDataBuffer();
         ZBUFFER = new double[WIDTH][HEIGHT];
-                        
+
         // инициализируем задачи для потоков
         /*
         RENDER_TASKS[0] = new RenderTask("task1", 0,                     QUARTER_WIDTH);
@@ -1715,10 +1735,10 @@ public final class Renderer/* extends JPanel*/ {
             if (toX >= WIDTH) {
                 toX = WIDTH - 1;
             }
-            
+
             RENDER_TASKS[i] = newRenderTask("render_task " + i, fromX, toX);
         }
-        
+
         int lengthStep = SCREEN_BUFFER.limit() / Config.THREADS_COUNT;
         for (int i = 0; i < Config.THREADS_COUNT; ++i) {
             int fromX = i * lengthStep;
@@ -1729,8 +1749,8 @@ public final class Renderer/* extends JPanel*/ {
             if (toX >= SCREEN_BUFFER.limit() - 1) {
                 toX = SCREEN_BUFFER.limit() - 1;
             }
-            
+
             ANTIALIASING_TASKS[i] = newAntialiasingTask("antialiasing_task " + i, fromX, toX);
-        }        
+        }
     }
 }
