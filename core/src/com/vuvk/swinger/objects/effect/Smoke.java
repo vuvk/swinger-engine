@@ -13,7 +13,6 @@
 */
 package com.vuvk.swinger.objects.effect;
 
-import com.vuvk.swinger.graphic.Fog;
 import com.vuvk.swinger.math.Vector3;
 import com.vuvk.swinger.res.TextureBank;
 import java.io.Serializable;
@@ -24,9 +23,9 @@ import java.io.Serializable;
  */
 public class Smoke extends Effect implements Serializable {
     private final static double ANIM_SPEED = 25.0;
-    
+
     public Smoke(Vector3 pos) {
         super(TextureBank.SMOKE, ANIM_SPEED, true, pos);
-        setBrightness(Fog.START);
+//        setBrightness(Fog.START);
     }
 }

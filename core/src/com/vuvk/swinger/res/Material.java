@@ -14,10 +14,8 @@
 package com.vuvk.swinger.res;
 
 import com.badlogic.gdx.Gdx;
-import com.vuvk.swinger.res.Image;
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
@@ -29,7 +27,7 @@ public class Material implements Serializable {
     transient public  final static List<Material> LIB = new ArrayList<>();
     transient private final static List<Material> FOR_ADD_TO_LIB = new ArrayList<>();
     transient private final static List<Material> FOR_DELETE_FROM_LIB = new ArrayList<>();
-    
+
     // для анимации массив двумерный, где x - кадры, а y - текстуры для углов поворота (1 или 8 штук)
     private Image[][] frames;
     private double animSpeed;
@@ -37,37 +35,37 @@ public class Material implements Serializable {
     private int frameNum = 0;
     private boolean animate = true;
     private boolean playOnce;
-    protected double brightness = 0;
-    
-    
+//    protected double brightness = 0;
+
+
     public Material(Image frame) {
         this(new Image[]{frame});
     }
-    
+
     public Material(Image[] frames) {
         this(frames, 0);
     }
-    
+
     public Material(Image[][] frames) {
         this(frames, 0);
     }
-    
+
     public Material(Image frame, double animSpeed) {
         this(new Image[]{frame}, animSpeed);
     }
-    
+
     public Material(Image[] frames, double animSpeed) {
         this(frames, animSpeed, false);
     }
-    
+
     public Material(Image[][] frames, double animSpeed) {
         this(frames, animSpeed, false);
     }
-    
+
     public Material(Image frame, double animSpeed, boolean playOnce) {
         this(new Image[]{frame}, animSpeed, playOnce);
     }
-    
+
     public Material(Image[] frames, double animSpeed, boolean playOnce) {
         setFrames(frames);
         setAnimSpeed(animSpeed);
@@ -75,7 +73,7 @@ public class Material implements Serializable {
         //LIB.add(this);
         markForAdd();
     }
-    
+
     public Material(Image[][] frames, double animSpeed, boolean playOnce) {
         setFrames(frames);
         setAnimSpeed(animSpeed);
@@ -83,18 +81,18 @@ public class Material implements Serializable {
         //LIB.add(this);
         markForAdd();
     }
-    
+
     @Override
     public void finalize() {
         destroy();
     }
-    
-    public void destroy() {        
+
+    public void destroy() {
         //synchronized(LIB) {
             LIB.remove(this);
         //}
     }
-    
+
     public static Material[] getLib() {
         Material[] materials = new Material[LIB.size()];
         int i = 0;
@@ -104,16 +102,16 @@ public class Material implements Serializable {
         }
         return materials;
     }
-    
+
     public static void deleteAll() {
         LIB.clear();
         FOR_ADD_TO_LIB.clear();
         FOR_DELETE_FROM_LIB.clear();
     }
-    
+
     /**
      * Копировать параметры из подобного объекта
-     * @param another 
+     * @param another
      */
     public void duplicate(Material another) {
         this.frames    = another.frames;
@@ -121,17 +119,17 @@ public class Material implements Serializable {
         this.frameNum  = another.frameNum;
         this.animate   = another.animate;
         this.playOnce  = another.playOnce;
-        this.brightness = another.brightness;
+//        this.brightness = another.brightness;
     }
-
+/*
     public double getBrightness() {
         return brightness;
-    }  
-
+    }
+*/
     public Image[][] getFrames() {
         return frames;
     }
-    
+
     public Image[] getSideFrames() {
         return frames[frameNum];
     }
@@ -139,28 +137,28 @@ public class Material implements Serializable {
     public double getAnimSpeed() {
         return animSpeed;
     }
-    
+
     public boolean isAnimate() {
         return animate;
-    }   
+    }
 
     public boolean isPlayOnce() {
         return playOnce;
     }
-    
+
     public boolean hasSides() {
         return (getSideFrames().length > 1);
-    }    
-    
+    }
+/*
     public void setBrightness(double brightness) {
         this.brightness = brightness;
     }
-    
+*/
     public void setFrames(Image[][] frames) {
         this.frames = frames;
         this.frameNum = 0;
     }
-    
+
     public void setFrames(Image[] frames) {
         Image[][] temp = new Image[frames.length][1];
         for (int i = 0; i < frames.length; ++i) {
@@ -168,41 +166,41 @@ public class Material implements Serializable {
         }
         setFrames(temp);
     }
-    
+
     public void setFrames(Image frame) {
         setFrames(new Image[][] {new Image[] {frame}});
     }
-    
+
     public void setAnimSpeed(double animSpeed) {
         this.animSpeed = animSpeed;
     }
-    
+
     public void play() {
         playOnce = false;
         animate = true;
-        frameNum = 0;        
+        frameNum = 0;
     }
-    
+
     public void playOnce() {
         playOnce = true;
         animate = true;
         frameNum = 0;
     }
-    
+
     /**
      * Пометить объект на добавление
      */
     public void markForAdd() {
         FOR_ADD_TO_LIB.add(this);
     }
-    
+
     /**
      * Пометить объект на удаление
      */
     public void markForDelete() {
         FOR_DELETE_FROM_LIB.add(this);
     }
-    
+
     public void update() {
         if (animate) {
             if (animSpeed > 0.0 && frames.length > 1) {
@@ -226,15 +224,15 @@ public class Material implements Serializable {
             }
         }
     }
-    
-    public static void updateAll() {                
+
+    public static void updateAll() {
         if (FOR_ADD_TO_LIB.size() > 0) {
             for (Material mat : FOR_ADD_TO_LIB) {
                 LIB.add(mat);
             }
             FOR_ADD_TO_LIB.clear();
         }
-        
+
         if (FOR_DELETE_FROM_LIB.size() > 0) {
             for (Iterator<Material> it = FOR_DELETE_FROM_LIB.iterator(); it.hasNext(); ) {
                 /*it.next().finalize();*/
@@ -242,7 +240,7 @@ public class Material implements Serializable {
             }
             FOR_DELETE_FROM_LIB.clear();
         }
-        
+
         for (Material anim : LIB) {
             anim.update();
         }
