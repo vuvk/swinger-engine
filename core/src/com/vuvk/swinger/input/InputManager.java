@@ -25,6 +25,7 @@ import com.vuvk.swinger.math.Vector2;
 import com.vuvk.swinger.objects.mortals.Player;
 import com.vuvk.swinger.res.Map;
 import com.vuvk.swinger.utils.SavedGame;
+import com.vuvk.swinger.utils.Utils;
 import java.util.Scanner;
 import java.util.logging.Logger;
 
@@ -281,6 +282,40 @@ public final class InputManager extends InputAdapter {
                                         Fog.END = end;
                                         Fog.init();
                                     }
+                                    break;
+
+                                case "fog_color" :
+                                    int red, green, blue;
+
+                                    // получаем компоненты R G B
+                                    if (scanCommand.hasNextInt()) {
+                                        red = scanCommand.nextInt();
+                                        red = Utils.limit(red, 0, 255);
+                                    } else {
+                                        break;
+                                    }
+
+                                    if (scanCommand.hasNextInt()) {
+                                        green = scanCommand.nextInt();
+                                        green = Utils.limit(green, 0, 255);
+                                    } else {
+                                        break;
+                                    }
+
+                                    if (scanCommand.hasNextInt()) {
+                                        blue = scanCommand.nextInt();
+                                        blue = Utils.limit(blue, 0, 255);
+                                    } else {
+                                        break;
+                                    }
+
+                                    // все компоненты введены - установить цвет тумана
+                                    Fog.COLOR = 0xFF |
+                                                ((red) << 24) |
+                                                ((green) << 16) |
+                                                ((blue) <<  8);
+
+                                    Fog.init();
                                     break;
 
                                 case "antialiasing" :
