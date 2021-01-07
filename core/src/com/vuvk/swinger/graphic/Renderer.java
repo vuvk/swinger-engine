@@ -352,7 +352,7 @@ public final class Renderer/* extends JPanel*/ {
                 int pos = (int)((distance - Fog.START) * Fog.INV_SIMPLE_DISTANCE_STEP);
                 fogBrightness = Fog.SIMPLE_BRIGHTNESS[pos];
             } else {
-                fogBrightness = /*1.0 - */(distance - Fog.START) * Fog.FACTOR;
+                fogBrightness = (distance - Fog.START) * Fog.FACTOR;
             }
 
             // яркость/сила пикселя обратная силе тумана

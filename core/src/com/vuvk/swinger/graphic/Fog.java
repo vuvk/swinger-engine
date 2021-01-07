@@ -24,7 +24,7 @@ public enum Fog {
     OLD,
     SMOOTH;
 
-    public static int COLOR = 0xFF2244FF;
+    public static int COLOR = 0xFF;
     public static int RED;
     public static int GREEN;
     public static int BLUE;
@@ -50,10 +50,10 @@ public enum Fog {
         SIMPLE_BRIGHTNESS = new float[SIMPLE_QUALITY];
 
         final float brightnessStep = 1.0f / SIMPLE_QUALITY;
-        float brightness = 1.0f - brightnessStep;
+        float brightness = brightnessStep;
         for (int i = 0; i < SIMPLE_QUALITY; ++i) {
             SIMPLE_BRIGHTNESS[i] = brightness;
-            brightness -= brightnessStep;
+            brightness += brightnessStep;
         }
 
         GRADIENT_TABLE = new int[Config.HEIGHT];
