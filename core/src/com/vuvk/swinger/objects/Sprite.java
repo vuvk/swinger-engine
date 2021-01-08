@@ -208,10 +208,10 @@ public class Sprite extends Material implements Comparable<Sprite>, Serializable
      */
     @Override
     public void destroy() {
-        super.destroy();
         synchronized (LIB) {
             LIB.remove(this);
         }
+        super.destroy();
     }
 
     @Override

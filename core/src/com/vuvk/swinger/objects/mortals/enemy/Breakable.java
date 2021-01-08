@@ -67,9 +67,7 @@ public class Breakable extends Mortal implements Serializable {
 
     @Override
     public void finalize() {
-        super.finalize();
-        sprite.destroy();
-        //LIB.remove(this);
+        destroy();
     }
 
     /*
@@ -221,6 +219,12 @@ public class Breakable extends Mortal implements Serializable {
     }
 
     @Override
+    public void destroy() {
+        sprite.destroy();
+        super.destroy();
+    }
+
+    @Override
     public void update() {
         super.update();
 
@@ -231,11 +235,8 @@ public class Breakable extends Mortal implements Serializable {
 
         if (state == EnemyState.DIE) {
             if (!sprite.isAnimate()) {
-                new Sprite(dead, pos)/*.markForAdd()*/;
-                //FOR_DELETE_FROM_LIB.add(this);
-                //finalize();
                 destroy();
-                return;
+                new Sprite(dead, pos);
             }
             return;
         }

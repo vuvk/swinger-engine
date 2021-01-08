@@ -484,11 +484,8 @@ public abstract class Enemy extends Breakable implements Serializable {
 
         if (state == EnemyState.DIE) {
             if (!sprite.isAnimate()) {
-                new Sprite(dead, pos);
-                //FOR_DELETE_FROM_LIB.add(this);
-                //finalize();
                 destroy();
-                return;
+                new Sprite(dead, pos);
             }
             return;
         }
