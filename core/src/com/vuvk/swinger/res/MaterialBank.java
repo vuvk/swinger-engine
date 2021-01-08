@@ -13,11 +13,9 @@
 */
 package com.vuvk.swinger.res;
 
-import com.badlogic.gdx.utils.Array;
 import com.vuvk.swinger.res.TextureBank;
-import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  *
@@ -30,19 +28,13 @@ public final class MaterialBank {
     public final static Material GUARD_WALK  = new Material(TextureBank.GUARD_WALK,  7.5f, false);
     public final static Material GUARD_PAIN  = new Material(TextureBank.GUARD_PAIN,  0.0f, true);
     public final static Material GUARD_DIE   = new Material(TextureBank.GUARD_DIE,   7.5f, true);
-    public final static Material GUARD_DEAD  = new Material(TextureBank.GUARD_DEAD,  0.0f, true);    
-    
-    public static List<Material> BANK = new ArrayList<>();
-    
+    public final static Material GUARD_DEAD  = new Material(TextureBank.GUARD_DEAD,  0.0f, true);
+
+    public static List<Material> BANK = new CopyOnWriteArrayList<>();
+
     public static Material[] getBank() {
-        Material[] materials = new Material[BANK.size()];
-        int i = 0;
-        for (Iterator<Material> it = BANK.iterator(); it.hasNext(); ) {
-            materials[i] = it.next();
-            ++i;
-        }
-        return materials;
+        return BANK.toArray(new Material[BANK.size()]);
     }
-    
+
     private MaterialBank() {};
 }

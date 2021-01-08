@@ -26,12 +26,12 @@ import java.io.Serializable;
  * @author Anton "Vuvk" Shcherbatykh
  */
 public class Key extends Sprite implements Serializable {
-        
+
     //private Player PLAYER = Player.getInstance();
     //private final static List<Key> LIB = new ArrayList<>();
-    
+
     private int keyNum;
-    
+
     public Key(Material material, Vector3 pos, int keyNum) {
         super(material, pos);
         this.keyNum = keyNum;
@@ -41,17 +41,17 @@ public class Key extends Sprite implements Serializable {
     public int getKeyNum() {
         return keyNum;
     }
-    
-    public void update() {     
+
+    public void update() {
         super.update();
-        
+
         Player player = Player.getInstance();
-        
+
         if (player.getPos().distance(getPos()) < 0.5) {
             SoundSystem.playOnce(SoundBank.FILE_GET_KEY);
             player.addKey(this);
-            
-            markForDelete();
+
+            destroy();
         }
     }
 }

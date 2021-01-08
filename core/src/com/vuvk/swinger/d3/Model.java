@@ -19,39 +19,38 @@ import com.vuvk.swinger.math.Vector3;
 import com.vuvk.swinger.objects.Object3D;
 import com.vuvk.swinger.objects.mortals.Player;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  *
  * @author Anton "Vuvk" Shcherbatykh
  */
 public class Model extends Object3D implements Comparable<Model>, Serializable {
-    transient public final static List<Model> LIB = new ArrayList<>();
-    
+    transient public final static List<Model> LIB = new CopyOnWriteArrayList<>();
+
     private Matrix4 mdlMtx = new Matrix4();
     private Mesh mesh;
     private boolean visible = true;
     private double distance = 0;
     private Vector3 rotation = new Vector3();
-    
+
     public Model(Mesh mesh) {
         this(mesh, new Vector3());
     }
-    
+
     public Model(Mesh mesh, Vector3 position) {
         this.mesh = mesh;
         setPos(position);
         setModelMtx();
         LIB.add(this);
     }
-    
+
     @Override
     public void finalize() {
         LIB.remove(this);
     }
-    
+
     public static void deleteAll() {
         LIB.clear();
     }
@@ -63,7 +62,7 @@ public class Model extends Object3D implements Comparable<Model>, Serializable {
     public boolean isVisible() {
         return visible;
     }
-    
+
     public Matrix4 getModelMtx() {
         return mdlMtx;
     }
@@ -75,24 +74,24 @@ public class Model extends Object3D implements Comparable<Model>, Serializable {
     public void setVisible(boolean visible) {
         this.visible = visible;
     }
-    
+
     private void setModelMtx() {
         mdlMtx.identity();
         mdlMtx = mdlMtx.translate(pos.x, pos.z, pos.y);
-        
-        if (rotation.x != 0) {    
+
+        if (rotation.x != 0) {
             mdlMtx = mdlMtx.rotateX(rotation.x);
         }
     }
-    
+
     @Override
     public void setPos(Vector3 pos) {
         super.setPos(pos);
         setModelMtx();
     }
-    
+
     public void rotateX(double rad) {
-        rotation.x += rad;        
+        rotation.x += rad;
     }
 
     @Override
@@ -104,38 +103,39 @@ public class Model extends Object3D implements Comparable<Model>, Serializable {
                 return 1;
             }
         }
-        
+
         return 0;
     }
-    
-    public void update() {           
+
+    public void update() {
         Player player = Player.getInstance();
-        
+
         final Vector2 plPos = player.getPos();
         final double x1 = pos.x,
                      y1 = pos.y,
                      x2 = plPos.x,
                      y2 = plPos.y;
-        
+
         final double x0 = x1 - x2;
         final double y0 = y1 - y2;
         distance = x0*x0 + y0*y0; // sqrt not taken, unneeded
     }
-    
+
     public static void updateAll() {
         for (Model mdl : LIB) {
             mdl.update();
         }
     }
-        
-    
+
+
     public static Model[] getLib() {
-        Model[] models = new Model[LIB.size()];
-        int i = 0;
-        for (Iterator<Model> it = LIB.iterator(); it.hasNext(); ) {
-            models[i] = it.next();
-            ++i;
+        return LIB.toArray(new Model[LIB.size()]);
+    }
+
+    @Override
+    public void destroy() {
+        synchronized (LIB) {
+            LIB.remove(this);
         }
-        return models;
     }
 }

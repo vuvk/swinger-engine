@@ -15,28 +15,25 @@ package com.vuvk.swinger.objects;
 
 //import com.vuvk.retard_sound_system.Sound;
 import com.badlogic.gdx.Gdx;
-import com.vuvk.swinger.objects.mortals.Mortal;
-import com.vuvk.swinger.objects.mortals.Player;
-import java.util.ArrayList;
-import java.util.List;
-import com.vuvk.swinger.graphic.Renderer;
-import com.vuvk.swinger.graphic.TexturedSegment;
-import com.vuvk.swinger.math.Vector2;
-import com.vuvk.swinger.res.Map;
-import com.vuvk.swinger.res.Material;
 import com.vuvk.swinger.audio.SoundBank;
 import com.vuvk.swinger.audio.SoundSystem;
+import com.vuvk.swinger.graphic.TexturedSegment;
+import com.vuvk.swinger.math.Vector2;
+import com.vuvk.swinger.objects.mortals.Mortal;
+import com.vuvk.swinger.res.Map;
+import com.vuvk.swinger.res.Material;
 import java.io.Serializable;
-import java.util.Iterator;
+import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  *
  * @author Anton "Vuvk" Shcherbatykh
  */
-public class Door extends TexturedSegment implements Serializable {  
+public class Door extends TexturedSegment implements Serializable {
 //    private final Sound openSound  = new Sound(SoundBank.SOUND_BUFFER_DOOR_OPEN );
 //    private final Sound closeSound = new Sound(SoundBank.SOUND_BUFFER_DOOR_CLOSE);
-    
+
     //private int side;
     /** открытая позиция */
     private Vector2 openPos;
@@ -59,29 +56,29 @@ public class Door extends TexturedSegment implements Serializable {
     /** нужен ли ключ для открывания */
     private boolean neadKey;
     private int keyForOpen;
-    
-    //private Player PLAYER = Player.getInstance();    
-    public final static List<Door> LIB = new ArrayList<>();
-    
+
+    //private Player PLAYER = Player.getInstance();
+    public final static List<Door> LIB = new CopyOnWriteArrayList<>();
+
     public Door(final Vector2 a, final Vector2 b, final Material material) {
         this(a, b, material, -1);
     }
-        
+
     public Door(final Vector2 a, final Vector2 b, final Material material, int keyForOpen) {
         super(a, b, material);
         //this.side = side;
-        
+
         openPos  = a;
         closePos = b;
-                
+
         openDir  = a.sub(b).normalize();
         closeDir = b.sub(a).normalize();
-        
+
         center   = a.add(openDir.mul(a.sub(b).length() * 0.5));
-        
+
         this.keyForOpen = keyForOpen;
         this.neadKey = (keyForOpen >= 0);
-        
+
         LIB.add(this);
     }
 
@@ -104,30 +101,30 @@ public class Door extends TexturedSegment implements Serializable {
     public int getKeyForOpen() {
         return keyForOpen;
     }
-        
+
     public void open() {
         open = true;
         SoundSystem.playOnce(SoundBank.FILE_DOOR_OPEN);
     }
-    
+
     @Override
     public void finalize() {
         LIB.remove(this);
     }
-    
+
     public static void deleteAll() {
         LIB.clear();
     }
-    
-    public void update() {        
+
+    public void update() {
         if (isOpen()) {
-            final double deltaTime = Gdx.graphics.getDeltaTime();            
+            final double deltaTime = Gdx.graphics.getDeltaTime();
             final double moveSpeed = speed * deltaTime;
-            
+
             // закрытое состояние?
             if (closed) {
-                /*if (!neadKey || 
-                    (neadKey && keyForOpen != -1 && PLAYER.keys.contains(keyForOpen)))*/ {                
+                /*if (!neadKey ||
+                    (neadKey && keyForOpen != -1 && PLAYER.keys.contains(keyForOpen)))*/ {
                     if (a.distance(closePos) > moveSpeed) {
                         Vector2 moveVector = closeDir.mul(moveSpeed);
                         a = a.add(moveVector);
@@ -141,7 +138,7 @@ public class Door extends TexturedSegment implements Serializable {
                 }
             } else {
                 if (delay < 3.0) {
-                    delay += deltaTime;   
+                    delay += deltaTime;
                 } else {
                     // проверить можно ли закрывать дверь
                     boolean canClose = true;
@@ -167,28 +164,22 @@ public class Door extends TexturedSegment implements Serializable {
                             closed = true;
                             open   = false;
                             delay  = 0.0;
-        
+
                             SoundSystem.playOnce(SoundBank.FILE_DOOR_CLOSE);
                         }
                     }
                 }
-            }            
+            }
         }
     }
-    
+
     public static void updateAll() {
         for (Door door : LIB) {
             door.update();
         }
     }
-    
+
     public static Door[] getLib() {
-        Door[] doors = new Door[LIB.size()];
-        int i = 0;
-        for (Iterator<Door> it = LIB.iterator(); it.hasNext(); ) {
-            doors[i] = it.next();
-            ++i;
-        }
-        return doors;
+        return LIB.toArray(new Door[LIB.size()]);
     }
 }

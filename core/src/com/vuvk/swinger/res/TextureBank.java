@@ -13,26 +13,23 @@
 */
 package com.vuvk.swinger.res;
 
-import com.badlogic.gdx.utils.Array;
-import com.vuvk.swinger.graphic.Fog;
-import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  *
  * @author Anton "Vuvk" Shcherbatykh
  */
 public final class TextureBank {
-    public final static String PICS_FOLDER = "resources/pics/";    
-    
+    public final static String PICS_FOLDER = "resources/pics/";
+
     public static Texture   SKY;
-    public static final List<Texture> WALLS = new ArrayList<>()/*   = new Texture[11]*/;/*
+    public static final List<Texture> WALLS = new CopyOnWriteArrayList<>()/*   = new Texture[11]*/;/*
     public final static Texture[] FLOOR   = new Texture[6];
     public final static Texture[] CEIL    = new Texture[7];*/
     //public final static Texture[] SPRITES = new Texture[50];
     //public final static Texture[] DOORS   = new Texture[3];
-    
+
     // для анимации массив двумерный, где x - кадры, а y - текстуры для углов поворота (1 или 8 штук)
     public final static Texture[][] GUARD_ATK   = new Texture[3][1];
     public final static Texture[][] GUARD_STAND = new Texture[1][8];
@@ -40,16 +37,16 @@ public final class TextureBank {
     public final static Texture[][] GUARD_PAIN  = new Texture[2][1];
     public final static Texture[][] GUARD_DIE   = new Texture[3][1];
     public static Texture     GUARD_DEAD;
-    
+
     public final static Texture[][] ROCKET = new Texture[1][8];
-    
+
     public final static Texture[] EXPLODE = new Texture[3];
     public final static Texture[] BLOOD = new Texture[3];
     public final static Texture[] PUFF = new Texture[4];
     public final static Texture[] SMOKE = new Texture[16];
-    
+
     public static com.badlogic.gdx.graphics.Texture MAIN_MENU;
-    
+
     public static void load() {
         SKY = new Texture(PICS_FOLDER + "sky.png");
         /*
@@ -66,20 +63,20 @@ public final class TextureBank {
         WALLS[10] = new Texture(PICS_FOLDER + "world/computer1.png");
         */
         /*
-        FLOOR[0] = new Texture(PICS_FOLDER + "Ceiling1.png");   
-        FLOOR[1] = new Texture(PICS_FOLDER + "Ceiling2.png");  
-        FLOOR[2] = new Texture(PICS_FOLDER + "StoneFloor.png");  
-        FLOOR[3] = new Texture(PICS_FOLDER + "Tiles1.png");  
-        FLOOR[4] = new Texture(PICS_FOLDER + "Tiles2.png");       
-        FLOOR[5] = new Texture(PICS_FOLDER + "Grass.png");    
-        
-        CEIL[0] = new Texture(PICS_FOLDER + "Ceiling1.png");   
-        CEIL[1] = new Texture(PICS_FOLDER + "Ceiling2.png");  
-        CEIL[2] = new Texture(PICS_FOLDER + "StoneFloor.png");  
-        CEIL[3] = new Texture(PICS_FOLDER + "Tiles1.png");  
-        CEIL[4] = new Texture(PICS_FOLDER + "Tiles2.png");       
-        CEIL[5] = new Texture(PICS_FOLDER + "Grass.png");      
-        CEIL[6] = new Texture(PICS_FOLDER + "iron_bars.png"); 
+        FLOOR[0] = new Texture(PICS_FOLDER + "Ceiling1.png");
+        FLOOR[1] = new Texture(PICS_FOLDER + "Ceiling2.png");
+        FLOOR[2] = new Texture(PICS_FOLDER + "StoneFloor.png");
+        FLOOR[3] = new Texture(PICS_FOLDER + "Tiles1.png");
+        FLOOR[4] = new Texture(PICS_FOLDER + "Tiles2.png");
+        FLOOR[5] = new Texture(PICS_FOLDER + "Grass.png");
+
+        CEIL[0] = new Texture(PICS_FOLDER + "Ceiling1.png");
+        CEIL[1] = new Texture(PICS_FOLDER + "Ceiling2.png");
+        CEIL[2] = new Texture(PICS_FOLDER + "StoneFloor.png");
+        CEIL[3] = new Texture(PICS_FOLDER + "Tiles1.png");
+        CEIL[4] = new Texture(PICS_FOLDER + "Tiles2.png");
+        CEIL[5] = new Texture(PICS_FOLDER + "Grass.png");
+        CEIL[6] = new Texture(PICS_FOLDER + "iron_bars.png");
         */
         /*
         SPRITES[0] = new Texture(PICS_FOLDER + "barrel.png");
@@ -95,13 +92,13 @@ public final class TextureBank {
         */
         //guard
         //attack
-        /*GUARD_ATK[0][0] = new Texture(PICS_FOLDER + "guard/SPR_GRD_SHOOT1.png"); 
-        GUARD_ATK[1][0] = new Texture(PICS_FOLDER + "guard/SPR_GRD_SHOOT2.png"); 
+        /*GUARD_ATK[0][0] = new Texture(PICS_FOLDER + "guard/SPR_GRD_SHOOT1.png");
+        GUARD_ATK[1][0] = new Texture(PICS_FOLDER + "guard/SPR_GRD_SHOOT2.png");
         GUARD_ATK[2][0] = new Texture(PICS_FOLDER + "guard/SPR_GRD_SHOOT3.png"); */
-        GUARD_ATK[0][0] = new Texture(PICS_FOLDER + "enemies/guard/gard_shoot1.png"); 
-        GUARD_ATK[1][0] = new Texture(PICS_FOLDER + "enemies/guard/gard_shoot2.png"); 
+        GUARD_ATK[0][0] = new Texture(PICS_FOLDER + "enemies/guard/gard_shoot1.png");
+        GUARD_ATK[1][0] = new Texture(PICS_FOLDER + "enemies/guard/gard_shoot2.png");
         GUARD_ATK[2][0] = new Texture(PICS_FOLDER + "enemies/guard/gard_shoot3.png");
-        
+
         //idle
         /*GUARD_STAND[0][0] = new Texture(PICS_FOLDER + "guard/SPR_GRD_S_1.png");
         GUARD_STAND[0][1] = new Texture(PICS_FOLDER + "guard/SPR_GRD_S_2.png");
@@ -178,7 +175,7 @@ public final class TextureBank {
         GUARD_WALK[3][4] = new Texture(PICS_FOLDER + "guard/SPR_GRD_W4_5.png");
         GUARD_WALK[3][5] = new Texture(PICS_FOLDER + "guard/SPR_GRD_W4_6.png");
         GUARD_WALK[3][6] = new Texture(PICS_FOLDER + "guard/SPR_GRD_W4_7.png");
-        GUARD_WALK[3][7] = new Texture(PICS_FOLDER + "guard/SPR_GRD_W4_8.png"); */  
+        GUARD_WALK[3][7] = new Texture(PICS_FOLDER + "guard/SPR_GRD_W4_8.png"); */
         GUARD_WALK[3][0] = new Texture(PICS_FOLDER + "enemies/guard/garde1.png");
         GUARD_WALK[3][1] = new Texture(PICS_FOLDER + "enemies/guard/garde2.png");
         GUARD_WALK[3][2] = new Texture(PICS_FOLDER + "enemies/guard/garde3.png");
@@ -186,65 +183,59 @@ public final class TextureBank {
         GUARD_WALK[3][4] = new Texture(PICS_FOLDER + "enemies/guard/garde5.png");
         GUARD_WALK[3][5] = new Texture(PICS_FOLDER + "enemies/guard/garde6.png");
         GUARD_WALK[3][6] = new Texture(PICS_FOLDER + "enemies/guard/garde7.png");
-        GUARD_WALK[3][7] = new Texture(PICS_FOLDER + "enemies/guard/garde8.png");        
+        GUARD_WALK[3][7] = new Texture(PICS_FOLDER + "enemies/guard/garde8.png");
         //pain
-        /*GUARD_PAIN[0][0] = new Texture(PICS_FOLDER + "guard/SPR_GRD_PAIN_1.png");   
+        /*GUARD_PAIN[0][0] = new Texture(PICS_FOLDER + "guard/SPR_GRD_PAIN_1.png");
         GUARD_PAIN[1][0] = new Texture(PICS_FOLDER + "guard/SPR_GRD_PAIN_2.png"); */
-        GUARD_PAIN[0][0] = new Texture(PICS_FOLDER + "enemies/guard/gard_pain1.png");   
-        GUARD_PAIN[1][0] = new Texture(PICS_FOLDER + "enemies/guard/gard_pain2.png"); 
+        GUARD_PAIN[0][0] = new Texture(PICS_FOLDER + "enemies/guard/gard_pain1.png");
+        GUARD_PAIN[1][0] = new Texture(PICS_FOLDER + "enemies/guard/gard_pain2.png");
         //die
-        /*GUARD_DIE[0][0] = new Texture(PICS_FOLDER + "guard/SPR_GRD_DIE_1.png"); 
-        GUARD_DIE[1][0] = new Texture(PICS_FOLDER + "guard/SPR_GRD_DIE_2.png"); 
+        /*GUARD_DIE[0][0] = new Texture(PICS_FOLDER + "guard/SPR_GRD_DIE_1.png");
+        GUARD_DIE[1][0] = new Texture(PICS_FOLDER + "guard/SPR_GRD_DIE_2.png");
         GUARD_DIE[2][0] = new Texture(PICS_FOLDER + "guard/SPR_GRD_DIE_3.png"); */
-        GUARD_DIE[0][0] = new Texture(PICS_FOLDER + "enemies/guard/gard_die1.png"); 
-        GUARD_DIE[1][0] = new Texture(PICS_FOLDER + "enemies/guard/gard_die2.png"); 
-        GUARD_DIE[2][0] = new Texture(PICS_FOLDER + "enemies/guard/gard_die3.png"); 
+        GUARD_DIE[0][0] = new Texture(PICS_FOLDER + "enemies/guard/gard_die1.png");
+        GUARD_DIE[1][0] = new Texture(PICS_FOLDER + "enemies/guard/gard_die2.png");
+        GUARD_DIE[2][0] = new Texture(PICS_FOLDER + "enemies/guard/gard_die3.png");
         //dead
-        //GUARD_DEAD = new Texture(PICS_FOLDER + "guard/SPR_GRD_DEAD.png"); 
-        GUARD_DEAD = new Texture(PICS_FOLDER + "enemies/guard/gard_dead.png"); 
-        
+        //GUARD_DEAD = new Texture(PICS_FOLDER + "guard/SPR_GRD_DEAD.png");
+        GUARD_DEAD = new Texture(PICS_FOLDER + "enemies/guard/gard_dead.png");
+
         // projectiles
         // rocket
         for (int i = 0; i < 8; ++i) {
-            ROCKET[0][i] = new Texture(PICS_FOLDER + "projectiles/rocket" + (i + 1) + ".png"); 
+            ROCKET[0][i] = new Texture(PICS_FOLDER + "projectiles/rocket" + (i + 1) + ".png");
         }
-        
+
         // effects
         // explode
         for (int i = 0; i < EXPLODE.length; ++i) {
-            EXPLODE[i] = new Texture(PICS_FOLDER + "effects/explode" + i + ".png"); 
+            EXPLODE[i] = new Texture(PICS_FOLDER + "effects/explode" + i + ".png");
         }
         // blood
         for (int i = 0; i < BLOOD.length; ++i) {
-            BLOOD[i] = new Texture(PICS_FOLDER + "effects/blood" + i + ".png"); 
+            BLOOD[i] = new Texture(PICS_FOLDER + "effects/blood" + i + ".png");
         }
         // puff
         for (int i = 0; i < PUFF.length; ++i) {
-            PUFF[i] = new Texture(PICS_FOLDER + "effects/puff" + i + ".png"); 
-        }        
+            PUFF[i] = new Texture(PICS_FOLDER + "effects/puff" + i + ".png");
+        }
         // smoke
         for (int i = 0; i < SMOKE.length; ++i) {
-            SMOKE[i] = new Texture(PICS_FOLDER + "effects/smoke/smoke_" + i + ".png"); 
-        }        
-        
+            SMOKE[i] = new Texture(PICS_FOLDER + "effects/smoke/smoke_" + i + ".png");
+        }
+
         /*
         DOORS[0] = new Texture(PICS_FOLDER + "Door.png");
         DOORS[1] = new Texture(PICS_FOLDER + "Door2.png");
-        DOORS[2] = new Texture(PICS_FOLDER + "door_iron_upper.png");   
+        DOORS[2] = new Texture(PICS_FOLDER + "door_iron_upper.png");
         */
-        
+
         MAIN_MENU = new com.badlogic.gdx.graphics.Texture(PICS_FOLDER + "gui/main_menu.png");
     }
-    
+
     public static Texture[] getWalls() {
-        Texture[] textures = new Texture[WALLS.size()];
-        int i = 0;
-        for (Iterator<Texture> it = WALLS.iterator(); it.hasNext(); ) {
-            textures[i] = it.next();
-            ++i;
-        }
-        return textures;
+        return WALLS.toArray(new Texture[WALLS.size()]);
     }
-    
+
     private TextureBank() {}
 }

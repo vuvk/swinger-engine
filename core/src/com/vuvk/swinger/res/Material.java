@@ -14,19 +14,19 @@
 package com.vuvk.swinger.res;
 
 import com.badlogic.gdx.Gdx;
+import com.vuvk.swinger.objects.Object3D;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  *
  * @author Anton "Vuvk" Shcherbatykh
  */
-public class Material implements Serializable {
-    transient public  final static List<Material> LIB = new ArrayList<>();
-    transient private final static List<Material> FOR_ADD_TO_LIB = new ArrayList<>();
-    transient private final static List<Material> FOR_DELETE_FROM_LIB = new ArrayList<>();
+public class Material extends Object3D implements Serializable {
+    transient public  final static List<Material> LIB = new CopyOnWriteArrayList<>();
+    //transient private final static List<Material> FOR_ADD_TO_LIB = new CopyOnWriteArrayList<>();
+    //transient private final static List<Material> FOR_DELETE_FROM_LIB = new CopyOnWriteArrayList<>();
 
     // для анимации массив двумерный, где x - кадры, а y - текстуры для углов поворота (1 или 8 штук)
     private Image[][] frames;
@@ -36,7 +36,6 @@ public class Material implements Serializable {
     private boolean animate = true;
     private boolean playOnce;
 //    protected double brightness = 0;
-
 
     public Material(Image frame) {
         this(new Image[]{frame});
@@ -70,16 +69,20 @@ public class Material implements Serializable {
         setFrames(frames);
         setAnimSpeed(animSpeed);
         this.playOnce = playOnce;
-        //LIB.add(this);
-        markForAdd();
+        synchronized (LIB) {
+            LIB.add(this);
+        }
+        //markForAdd();
     }
 
     public Material(Image[][] frames, double animSpeed, boolean playOnce) {
         setFrames(frames);
         setAnimSpeed(animSpeed);
         this.playOnce = playOnce;
-        //LIB.add(this);
-        markForAdd();
+        synchronized (LIB) {
+            LIB.add(this);
+        }
+        //markForAdd();
     }
 
     @Override
@@ -87,26 +90,16 @@ public class Material implements Serializable {
         destroy();
     }
 
-    public void destroy() {
-        //synchronized(LIB) {
-            LIB.remove(this);
-        //}
-    }
-
     public static Material[] getLib() {
-        Material[] materials = new Material[LIB.size()];
-        int i = 0;
-        for (Iterator<Material> it = LIB.iterator(); it.hasNext(); ) {
-            materials[i] = it.next();
-            ++i;
-        }
-        return materials;
+        return LIB.toArray(new Material[LIB.size()]);
     }
 
     public static void deleteAll() {
-        LIB.clear();
-        FOR_ADD_TO_LIB.clear();
-        FOR_DELETE_FROM_LIB.clear();
+        synchronized (LIB) {
+            LIB.clear();
+        }
+        //FOR_ADD_TO_LIB.clear();
+        //FOR_DELETE_FROM_LIB.clear();
     }
 
     /**
@@ -190,18 +183,23 @@ public class Material implements Serializable {
     /**
      * Пометить объект на добавление
      */
-    public void markForAdd() {
+    /*public void markForAdd() {
         FOR_ADD_TO_LIB.add(this);
-    }
+    }*/
 
     /**
      * Пометить объект на удаление
      */
-    public void markForDelete() {
-        FOR_DELETE_FROM_LIB.add(this);
+    @Override
+    public void destroy() {
+        synchronized (LIB) {
+            LIB.remove(this);
+        }
     }
 
     public void update() {
+        super.update();
+
         if (animate) {
             if (animSpeed > 0.0 && frames.length > 1) {
                 if (delay < 1.0) {
@@ -226,23 +224,24 @@ public class Material implements Serializable {
     }
 
     public static void updateAll() {
-        if (FOR_ADD_TO_LIB.size() > 0) {
+        /*if (FOR_ADD_TO_LIB.size() > 0) {
             for (Material mat : FOR_ADD_TO_LIB) {
                 LIB.add(mat);
             }
             FOR_ADD_TO_LIB.clear();
-        }
+        }*/
 
-        if (FOR_DELETE_FROM_LIB.size() > 0) {
+        /*if (FOR_DELETE_FROM_LIB.size() > 0) {
             for (Iterator<Material> it = FOR_DELETE_FROM_LIB.iterator(); it.hasNext(); ) {
-                /*it.next().finalize();*/
                 it.next().destroy();
             }
             FOR_DELETE_FROM_LIB.clear();
-        }
+        }*/
 
-        for (Material anim : LIB) {
-            anim.update();
+        synchronized (LIB) {
+            for (Material anim : LIB) {
+                anim.update();
+            }
         }
     }
 }

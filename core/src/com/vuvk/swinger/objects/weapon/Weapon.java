@@ -31,11 +31,11 @@ import java.io.Serializable;
 public abstract class Weapon extends Sprite implements Serializable {
     //private Player PLAYER = Player.getInstance();
     //private final static List<Key> LIB = new ArrayList<>();
-    
+
     private int weaponNum;
     private AmmoType ammoType;
     private int ammoInClip;
-    
+
     public Weapon(Material material, Vector3 pos, int weaponNum, AmmoType ammoType) {
         super(material, pos);
         this.weaponNum = weaponNum;
@@ -49,22 +49,22 @@ public abstract class Weapon extends Sprite implements Serializable {
     public void setAmmoType(AmmoType ammoType) {
         this.ammoType = ammoType;
     }
-    
+
     public int getWeaponNum() {
         return weaponNum;
     }
 
     public AmmoType getAmmoType() {
         return ammoType;
-    }   
-    
+    }
+
     abstract public WeaponInHand getInstance();
-    
+
     public Weapon setAmmoInClip(int ammoInClip) {
         this.ammoInClip = ammoInClip;
         return this;
     }
-    
+
     /**
      * Получить количество патронов в обойме
      * @return число патронов
@@ -72,16 +72,16 @@ public abstract class Weapon extends Sprite implements Serializable {
     public int getAmmoInClip() {
         return ammoInClip;
     };
-    
-    public void update() {     
+
+    public void update() {
         super.update();
-        
+
         Player player = Player.getInstance();
-        
+
         if (player.getPos().distance(getPos()) < 0.5) {
             SoundSystem.playOnce(SoundBank.FILE_GET_WEAPON);
             player.addWeaponInHand(this);
-            
+
             // добавить игроку патронов того же типа, что и оружие
             int curAmmo = AmmoPack.PACK.get(ammoType);
             curAmmo += ammoInClip;
@@ -89,10 +89,9 @@ public abstract class Weapon extends Sprite implements Serializable {
             if (curAmmo > maxAmmo) {
                 curAmmo = maxAmmo;
             }
-            AmmoPack.PACK.put(ammoType, curAmmo);            
-            
-            markForDelete();
-            //destroy();
+            AmmoPack.PACK.put(ammoType, curAmmo);
+
+            destroy();
         }
     }
 }

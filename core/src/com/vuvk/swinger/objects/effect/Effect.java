@@ -14,7 +14,6 @@
 package com.vuvk.swinger.objects.effect;
 
 //import com.vuvk.retard_sound_system.Sound;
-import java.io.File;
 import com.vuvk.swinger.math.Vector3;
 import com.vuvk.swinger.objects.Sprite;
 import com.vuvk.swinger.res.Texture;
@@ -36,28 +35,28 @@ public abstract class Effect extends Sprite implements Serializable {
     private double animDelay = 0;
     private double animSpeed;
     private boolean playOnce;*/
-    
+
     protected Effect(Texture[] frames, double animSpeed, boolean playOnce, Vector3 pos) {
-        super(frames, animSpeed, playOnce, pos);        
+        super(frames, animSpeed, playOnce, pos);
     //    LIB.add(this);
     }
 
     protected Effect(Texture[][] frames, double animSpeed, boolean playOnce, Vector3 pos) {
-        super(frames, animSpeed, playOnce, pos);        
+        super(frames, animSpeed, playOnce, pos);
     //    LIB.add(this);
     }
     /*
     protected void setSoundEffect(File audioFile) {
         soundEffect = new Sound(audioFile, true);
     }
-    
+
     protected void setSoundEffect(String audioFilePath) {
         setSoundEffect(new File(audioFilePath));
     }
 
     public void setSoundEffect(Sound soundEffect) {
         this.soundEffect = soundEffect;
-    }    
+    }
     */
 /*
     @Override
@@ -77,17 +76,17 @@ public abstract class Effect extends Sprite implements Serializable {
     @Override
     public void update() {
         super.update();
-        
+
         if (!isAnimate() && isPlayOnce()) {
-            markForDelete();
+            destroy();
         }
-        
+
         /*if (animDelay < 1.0) {
             animDelay += animSpeed * Renderer.getDeltaTime();
         } else {
             animDelay = 0.0;
             ++curFrameNum;
-            
+
             if (curFrameNum >= frames.length) {
                 if (playOnce) {
                     FOR_DELETE_FROM_LIB.add(this);
@@ -96,7 +95,7 @@ public abstract class Effect extends Sprite implements Serializable {
                     curFrameNum = 0;
                 }
             }
-            
+
             sprite.setTexture(frames[curFrameNum]);
         }*/
     }
@@ -105,7 +104,7 @@ public abstract class Effect extends Sprite implements Serializable {
         for (Effect effect : LIB) {
             effect.update();
         }
-        
+
         if (FOR_DELETE_FROM_LIB.size() > 0) {
             for (Iterator<Effect> it = FOR_DELETE_FROM_LIB.iterator(); it.hasNext(); ) {
                 it.next().finalize();

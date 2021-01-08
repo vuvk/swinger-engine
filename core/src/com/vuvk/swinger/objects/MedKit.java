@@ -27,17 +27,17 @@ import java.io.Serializable;
  */
 public class MedKit extends Sprite implements Serializable {
     private final double volume;
-    
+
     public MedKit(Material material, Vector3 pos, double volume) {
         super(material, pos);
         this.volume = volume;
     }
-    
+
     public void update() {
         super.update();
-        
+
         Player player = Player.getInstance();
-        
+
         if (player != null && player.getPos().distance(getPos()) < 0.5) {
             double hp = player.getHealth();
             double maxHp = player.getMaxHealth();
@@ -46,11 +46,11 @@ public class MedKit extends Sprite implements Serializable {
                 if (hp > maxHp) {
                     hp = maxHp;
                 }
-                
+
                 player.setHealth(hp);
                 SoundSystem.playOnceRandom(new FileHandle[] { SoundBank.FILE_GET_MEDKIT1, SoundBank.FILE_GET_MEDKIT2 });
 
-                markForDelete();
+                destroy();
             }
         }
     }

@@ -20,14 +20,14 @@ import java.io.Serializable;
  *
  * @author Anton "Vuvk" Shcherbatykh
  */
-public abstract class Object3D implements Serializable {   
+public abstract class Object3D extends GameObject implements Serializable {
     protected Vector3 pos = new Vector3();
-    
+
     public Vector3 getPos() {
         return pos;
     }
 
     public void setPos(Vector3 pos) {
         this.pos = pos;
-    }    
+    }
 }

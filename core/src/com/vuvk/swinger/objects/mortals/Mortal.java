@@ -13,30 +13,31 @@
 */
 package com.vuvk.swinger.objects.mortals;
 
-import java.util.ArrayList;
-import java.util.List;
 import com.vuvk.swinger.math.BoundingBox;
 import com.vuvk.swinger.math.Segment;
 import com.vuvk.swinger.math.Vector2;
 import com.vuvk.swinger.math.Vector3;
 import com.vuvk.swinger.objects.Object3D;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  *
  * @author Anton "Vuvk" Shcherbatykh
  */
 public abstract class Mortal extends Object3D implements Serializable {
-    transient public  final static List<Mortal> LIB = new ArrayList<>();
-    transient private final static List<Mortal> FOR_DELETE_FROM_LIB = new ArrayList<>();
-    
+    transient public final static List<Mortal> LIB = new CopyOnWriteArrayList<>();
+    //transient private final static List<Mortal> FOR_DELETE_FROM_LIB = new ArrayList<>();
+
     protected double health;
     protected final double maxHealth;
     protected double radius;
     protected boolean live = false; // является ли объект живым - живой испускает кровь, неживой  пыль
     protected final BoundingBox bb = new BoundingBox();
-    
+
     public Mortal(final Vector3 pos, double health, double radius) {
         setHealth(health);
         setRadius(radius);
@@ -45,34 +46,35 @@ public abstract class Mortal extends Object3D implements Serializable {
     //  update();
         LIB.add(this);
     }
-    
+
     @Override
     public void finalize() {
-        LIB.remove(this);
+        destroy();
     }
-    
-    abstract public void update();
-    
+
     /**
      * Пометить объект на удаление
      */
-    public void markForDelete() {
-        FOR_DELETE_FROM_LIB.add(this);
+    @Override
+    public void destroy() {
+        synchronized (LIB) {
+            LIB.remove(this);
+        }
     }
-    
+
     public static void updateAll() {
-        if (!FOR_DELETE_FROM_LIB.isEmpty()) {
+        /*if (!FOR_DELETE_FROM_LIB.isEmpty()) {
             for (Mortal mortal : FOR_DELETE_FROM_LIB) {
                 mortal.finalize();
             }
             FOR_DELETE_FROM_LIB.clear();
-        }
-        
+        }*/
+
         for (Mortal mortal : LIB) {
             mortal.update();
         }
     }
-    
+
     public static void deleteAll() {
         LIB.clear();
     }
@@ -80,7 +82,7 @@ public abstract class Mortal extends Object3D implements Serializable {
     public double getHealth() {
         return health;
     }
-    
+
     public double getMaxHealth() {
         return maxHealth;
     }
@@ -88,7 +90,7 @@ public abstract class Mortal extends Object3D implements Serializable {
     public BoundingBox getBB() {
         return bb;
     }
-    
+
     public double getRadius() {
         return radius;
     }
@@ -99,13 +101,13 @@ public abstract class Mortal extends Object3D implements Serializable {
 
     public void setPos(final Vector3 pos) {
         super.setPos(pos);
-        
+
         bb.setLeft  (pos.x - radius);
         bb.setRight (pos.x + radius);
         bb.setTop   (pos.y - radius);
         bb.setBottom(pos.y + radius);
-    }   
-    
+    }
+
     private void setRadius(double radius) {
         this.radius = radius;
     }
@@ -117,17 +119,17 @@ public abstract class Mortal extends Object3D implements Serializable {
     public void setLive(boolean live) {
         this.live = live;
     }
-    
+
     /**
      * Получить урон
-     * @param damage величина урона 
+     * @param damage величина урона
      */
-    public void applyDamage(double damage) {        
-        //if (health > 0.0) {                    
+    public void applyDamage(double damage) {
+        //if (health > 0.0) {
             health -= damage;
         //}
     }
-    
+
     /**
      * Находится ли точка внутри существа
      * @param point точка для проверки
@@ -135,13 +137,13 @@ public abstract class Mortal extends Object3D implements Serializable {
      */
     public boolean hasPoint(final Vector2 point) {
         return (
-            point.x >= bb.getLeft()  && 
-            point.x <= bb.getRight() && 
-            point.y >= bb.getTop()   && 
+            point.x >= bb.getLeft()  &&
+            point.x <= bb.getRight() &&
+            point.y >= bb.getTop()   &&
             point.y <= bb.getBottom()
         );
     }
-    
+
     /**
      * Проверка пересечения с отрезком
      * @param segment Отрезок для проверки
@@ -159,7 +161,7 @@ public abstract class Mortal extends Object3D implements Serializable {
             (segment.intersect(new Segment(bb.getRight(), bb.getTop(),    bb.getRight(), bb.getBottom())) != null)
         );
     }
-    
+
     /**
      * Проверка пересечения с квадратом
      * @param box Ограничивающая коробка для проверки
@@ -168,7 +170,7 @@ public abstract class Mortal extends Object3D implements Serializable {
     public boolean intersect(final BoundingBox box) {
         return bb.intersect(box);
     }
-    
+
     /**
      * Проверка пересечения с кругом
      * @param center Центр круга
@@ -177,24 +179,24 @@ public abstract class Mortal extends Object3D implements Serializable {
      */
     public boolean intersect(final Vector2 center, double radius) {
         double dX = getPos().x - center.x;
-        double dY = getPos().y - center.y;            
+        double dY = getPos().y - center.y;
         double distance = Math.sqrt(dX * dX + dY * dY);
-            
-        return ((distance < this.radius + radius) && 
+
+        return ((distance < this.radius + radius) &&
                 (distance > Math.abs(this.radius - radius)));
     }
-        
+
     /*
     public static void updateAll() {
         for (Creature mortal : LIB) {
             mortal.update();
         }
     }
-    */   
-    
-    
+    */
+
+
     /**
-     * Проверить есть ли какое-то создание в точке (учитывая радиус существ) 
+     * Проверить есть ли какое-то создание в точке (учитывая радиус существ)
      * @param pos Проверяемая позиция
      * @return Список существ
      */
@@ -204,22 +206,22 @@ public abstract class Mortal extends Object3D implements Serializable {
             if (mortal.hasPoint(pos)) {
                 mortals.add(mortal);
             }
-        }        
+        }
         return mortals;
     }
-    
+
     /**
-     * Проверить есть ли какое-то создание в точке (учитывая радиус существ) 
+     * Проверить есть ли какое-то создание в точке (учитывая радиус существ)
      * @param pos Проверяемая позиция
      * @param whoIgnore Какое существо игнорировать в проверке
      * @return Список существ
      */
     public static List<Mortal> whoInPos(final Vector2 pos, final Mortal whoIgnore) {
         List<Mortal> mortals = whoInPos(pos);
-        mortals.remove(whoIgnore);        
+        mortals.remove(whoIgnore);
         return mortals;
     }
-    
+
     /**
      * Проверить есть ли какое-то создание, которое пересекается с заданным квадратом
      * @param box Проверяемый квадрат
@@ -231,10 +233,10 @@ public abstract class Mortal extends Object3D implements Serializable {
             if (mortal.intersect(box)) {
                 mortals.add(mortal);
             }
-        }        
+        }
         return mortals;
     }
-    
+
     /**
      * Проверить есть ли какое-то создание, которое пересекается с заданным квадратом
      * @param box Проверяемый квадрат
@@ -243,10 +245,10 @@ public abstract class Mortal extends Object3D implements Serializable {
      */
     public static List<Mortal> whoIntersectBox(final BoundingBox box, final Mortal whoIgnore) {
         List<Mortal> mortals = whoIntersectBox(box);
-        mortals.remove(whoIgnore);        
+        mortals.remove(whoIgnore);
         return mortals;
     }
-    
+
     /**
      * Проверить есть ли какое-то создание, которое пересекается с текущим
      * @param center Центр круга
@@ -259,10 +261,10 @@ public abstract class Mortal extends Object3D implements Serializable {
             if (mortal.intersect(center, radius)) {
                 mortals.add(mortal);
             }
-        }        
+        }
         return mortals;
     }
-    
+
     /**
      * Проверить есть ли какое-то создание, которое пересекается с текущим
      * @param center Центр круга
@@ -272,10 +274,10 @@ public abstract class Mortal extends Object3D implements Serializable {
      */
     public static List<Mortal> whoIntersectCircle(final Vector2 center, double radius, final Mortal whoIgnore) {
         List<Mortal> mortals = whoIntersectCircle(center, radius);
-        mortals.remove(whoIgnore);        
+        mortals.remove(whoIgnore);
         return mortals;
     }
-    
+
     /**
      * Проверить есть ли какие-то создания, которые пересекаются с заданным сегментом
      * @param segment Проверяемый сегмент
@@ -286,11 +288,11 @@ public abstract class Mortal extends Object3D implements Serializable {
         for (Mortal mortal : LIB) {
             if (mortal.intersect(segment)) {
                 mortals.add(mortal);
-            }            
+            }
         }
         return mortals;
     }
-    
+
     /**
      * Проверить есть ли какие-то создания, которые пересекаются с заданным сегментом
      * @param segment Проверяемый сегмент
@@ -298,24 +300,18 @@ public abstract class Mortal extends Object3D implements Serializable {
      * @return Список существ
      */
     public static List<Mortal> whoIntersectSegment(final Segment segment, final Mortal whoIgnore) {
-        List<Mortal> mortals = whoIntersectSegment(segment);        
+        List<Mortal> mortals = whoIntersectSegment(segment);
         for (Iterator<Mortal> it = mortals.iterator(); it.hasNext(); ) {
             Mortal mortal = it.next();
             if (mortal.equals(whoIgnore)) {
                 it.remove();
             }
         }
-        
+
         return mortals;
     }
-    
+
     public static Mortal[] getLib() {
-        Mortal[] mortals = new Mortal[LIB.size()];
-        int i = 0;
-        for (Iterator<Mortal> it = LIB.iterator(); it.hasNext(); ) {
-            mortals[i] = it.next();
-            ++i;
-        }
-        return mortals;
+        return LIB.toArray(new Mortal[LIB.size()]);
     }
 }
