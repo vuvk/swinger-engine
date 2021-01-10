@@ -29,14 +29,14 @@ public enum Fog {
     public static int GREEN;
     public static int BLUE;
 
-    public static float   START = 2.0f;
-    public static float   END   = 8.0f;
-    public static float   FACTOR;
-    public static int     SIMPLE_QUALITY;  // чем больше, тем лучше качество
-    public static float   SIMPLE_DISTANCE_STEP;
-    public static float   INV_SIMPLE_DISTANCE_STEP;
-    public static float[] SIMPLE_BRIGHTNESS;
-    public static int[]   GRADIENT_TABLE;
+    public static double   START = 2.0;
+    public static double   END   = 8.0;
+    public static double   FACTOR;
+    public static int      SIMPLE_QUALITY;  // чем больше, тем лучше качество
+    public static double   SIMPLE_DISTANCE_STEP;
+    public static double   INV_SIMPLE_DISTANCE_STEP;
+    public static double[] SIMPLE_BRIGHTNESS;
+    public static int[]    GRADIENT_TABLE;
 
     public static void init() {
         RED   = (COLOR >> 24) & 0xFF;
@@ -47,7 +47,7 @@ public enum Fog {
         SIMPLE_QUALITY = 8;
         SIMPLE_DISTANCE_STEP = (END - START) / SIMPLE_QUALITY;
         INV_SIMPLE_DISTANCE_STEP = 1.0f / SIMPLE_DISTANCE_STEP;
-        SIMPLE_BRIGHTNESS = new float[SIMPLE_QUALITY];
+        SIMPLE_BRIGHTNESS = new double[SIMPLE_QUALITY];
 
         final float brightnessStep = 1.0f / SIMPLE_QUALITY;
         float brightness = brightnessStep;

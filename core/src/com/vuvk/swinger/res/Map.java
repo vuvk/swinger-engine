@@ -18,25 +18,13 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.JsonReader;
 import com.badlogic.gdx.utils.JsonValue;
-import com.vuvk.swinger.objects.Sprite;
-/*
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.vuvk.retard_sound_system.Music;
-import com.vuvk.retard_sound_system.SoundSystem;
-*/
 import com.vuvk.swinger.audio.SoundBank;
 import com.vuvk.swinger.audio.SoundSystem;
 import com.vuvk.swinger.d3.Mesh;
 import com.vuvk.swinger.d3.Model;
-import java.util.Arrays;
-import java.util.logging.Logger;
+import com.vuvk.swinger.graphic.Fog;
 import com.vuvk.swinger.graphic.TexturedSegment;
 import com.vuvk.swinger.graphic.weapon_in_hand.AmmoPack;
-import com.vuvk.swinger.objects.weapon.AmmoType;
 import com.vuvk.swinger.math.Segment;
 import com.vuvk.swinger.math.Vector2;
 import com.vuvk.swinger.math.Vector3;
@@ -44,18 +32,22 @@ import com.vuvk.swinger.objects.Clip;
 import com.vuvk.swinger.objects.Door;
 import com.vuvk.swinger.objects.Key;
 import com.vuvk.swinger.objects.MedKit;
+import com.vuvk.swinger.objects.Sprite;
 import com.vuvk.swinger.objects.mortals.Mortal;
 import com.vuvk.swinger.objects.mortals.Player;
 import com.vuvk.swinger.objects.mortals.enemy.Breakable;
 import com.vuvk.swinger.objects.mortals.enemy.Guard;
 import com.vuvk.swinger.objects.mortals.enemy.GuardRocketeer;
+import com.vuvk.swinger.objects.weapon.AmmoType;
 import com.vuvk.swinger.objects.weapon.Minigun;
 import com.vuvk.swinger.objects.weapon.Pistol;
 import com.vuvk.swinger.objects.weapon.Rifle;
 import com.vuvk.swinger.utils.ImmutablePair;
 import com.vuvk.swinger.utils.Pair;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.logging.Logger;
 
 /**
  *
@@ -828,6 +820,19 @@ public final class Map {
 
         Json json = new Json();
         JsonValue jsonlevel = new JsonReader().parse(Gdx.files.internal("resources/maps/" + levelNum + "/map.json"));
+
+        // получаем общие настройки
+        if (jsonlevel.has("name")) {
+            String name = jsonlevel.getString("name"); // пока бесполезно
+        }
+        if (jsonlevel.has("author")) {
+            String author = jsonlevel.getString("author"); // пока бесполезно
+        }
+
+        Fog.COLOR = (jsonlevel.has("fog_color")) ? jsonlevel.getInt("fog_color")    : 0xFF;
+        Fog.START = (jsonlevel.has("fog_start")) ? jsonlevel.getDouble("fog_start") : 2.0;
+        Fog.END   = (jsonlevel.has("fog_end"))   ? jsonlevel.getDouble("fog_end")   : 8.0;
+        Fog.init();
 
         /* убираем метку твердости */
         for (int x = 0; x < WIDTH; ++x) {

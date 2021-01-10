@@ -257,8 +257,8 @@ public final class InputManager extends InputAdapter {
                                     break;
 
                                 case "fog_start" :
-                                    if (scanCommand.hasNextFloat()) {
-                                        float start = scanCommand.nextFloat();
+                                    if (scanCommand.hasNextDouble()) {
+                                        double start = scanCommand.nextDouble();
                                         if (start < 0.1f) {
                                             start = 0.1f;
                                         }
@@ -271,8 +271,8 @@ public final class InputManager extends InputAdapter {
                                     break;
 
                                 case "fog_end" :
-                                    if (scanCommand.hasNextFloat()) {
-                                        float end = scanCommand.nextFloat();
+                                    if (scanCommand.hasNextDouble()) {
+                                        double end = scanCommand.nextDouble();
                                         if (end < 0.1f) {
                                             end = 0.1f;
                                         }
