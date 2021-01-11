@@ -18,6 +18,7 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Input.Buttons;
 import com.badlogic.gdx.InputAdapter;
 import com.vuvk.swinger.Config;
+import com.vuvk.swinger.Game;
 import static com.vuvk.swinger.Game.screenMsg;
 import com.vuvk.swinger.graphic.Fog;
 import com.vuvk.swinger.graphic.gui.menu.Menu;
@@ -334,6 +335,20 @@ public final class InputManager extends InputAdapter {
 
                                 case "sky" :
                                     Config.drawSky = (scanCommand.hasNextInt() && scanCommand.nextInt() == 1);
+                                    break;
+
+                                case "fullscreen" :
+                                    if (!Config.buildForMobiles) {
+                                        if (scanCommand.hasNextInt()) {
+                                            Game.setFullscreenMode(scanCommand.nextInt() == 1);
+                                        }
+                                    }
+                                    break;
+
+                                case "vsync" :
+                                    if (scanCommand.hasNextInt()) {
+                                        Game.setVSync(scanCommand.nextInt() == 1);
+                                    }
                                     break;
                             }
                         }
