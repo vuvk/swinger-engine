@@ -1,0 +1,14 @@
+{
+    "interlacing": false,
+    "antialiasing": false,
+    "quality": 0,  /* чем больше, тем хуже качество */
+    "multithreading": false,
+    "mouselook": false,
+    "draw_sky": true,
+    "fog": 0,
+    "window_width": 640,
+    "window_height": 480,
+    "window_title": "Wolf-Life 3D",
+    "fullscreen": false,
+    "vsync": true
+}

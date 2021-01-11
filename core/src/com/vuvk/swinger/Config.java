@@ -13,6 +13,9 @@
 */
 package com.vuvk.swinger;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.utils.JsonReader;
+import com.badlogic.gdx.utils.JsonValue;
 import com.vuvk.swinger.graphic.Fog;
 
 /**
@@ -27,32 +30,69 @@ public final class Config {
     public static boolean mouseLook = false;
     public static boolean console = false;
     public static String consoleCommand = "";
-    public static boolean drawSky = true;    
+    public static boolean drawSky = true;
     public static Fog fog = Fog.NOTHING;
+    public static boolean vSync = true;
+    public static boolean fullscreen = false;
     public final static int THREADS_COUNT = Runtime.getRuntime().availableProcessors() + 1;
     public final static boolean STEP_BY_STEP_RENDERING = false;
-    public final static int STEP_BY_STEP_DELAY = 10; 
-        
+    public final static int STEP_BY_STEP_DELAY = 10;
+
     public /*final*/ static int WIDTH  = 640;
     public /*final*/ static int HEIGHT = 480;
     public static float ASPECT_RATIO;
     public static int HALF_WIDTH;
     public static int HALF_HEIGHT;
-    public final static String TITLE = "swinger engine"; 
+    public /*final*/ static String TITLE = "swinger engine";
     public static boolean QUIT = false;
-    
+
     public static boolean buildForMobiles = false;
-    
+
     public static boolean draw = false;
-    
-    
+
+
     private Config() {}
-    
+
+    public static void load() {
+        if (Gdx.files.internal("resources/config.json").exists()) {
+            //Json json = new Json();
+            JsonValue jsonlevel = new JsonReader().parse(Gdx.files.internal("resources/config.json"));
+
+            interlacing  = (jsonlevel.has("interlacing"))  ? jsonlevel.getBoolean("interlacing")  : false;
+            antialiasing = (jsonlevel.has("antialiasing")) ? jsonlevel.getBoolean("antialiasing") : false;
+            quality      = (jsonlevel.has("quality"))      ? jsonlevel.getInt("quality")          : 0;
+            multithreading = (jsonlevel.has("multithreading")) ? jsonlevel.getBoolean("multithreading") : true;
+            mouseLook    = (jsonlevel.has("mouselook"))    ? jsonlevel.getBoolean("mouselook")    : false;
+            drawSky      = (jsonlevel.has("draw_sky"))     ? jsonlevel.getBoolean("draw_sky")     : true;
+            if (jsonlevel.has("fog")) {
+                switch (jsonlevel.getInt("fog")) {
+                    case 0 : fog = Fog.NOTHING; break;
+                    case 1 : fog = Fog.OLD;     break;
+                    default:
+                    case 2 : fog = Fog.SMOOTH;  break;
+                }
+            }
+            WIDTH  = (jsonlevel.has("window_width"))   ? jsonlevel.getInt("window_width")    : 640;
+            HEIGHT = (jsonlevel.has("window_height"))  ? jsonlevel.getInt("window_height")   : 480;
+            TITLE  = (jsonlevel.has("window_title"))   ? jsonlevel.getString("window_title") : "swinger engine";
+            fullscreen = (jsonlevel.has("fullscreen")) ? jsonlevel.getBoolean("fullscreen")  : false;
+            vSync  = (jsonlevel.has("vsync"))          ? jsonlevel.getBoolean("vsync")       : true;
+        }
+    }
+
+    public static void save() {
+
+    }
+
     public static void init() {
         HALF_WIDTH   = WIDTH  >> 1;
         HALF_HEIGHT  = HEIGHT >> 1;
         ASPECT_RATIO = (float)WIDTH / HEIGHT;
-        
+
+        if (interlacing && antialiasing) {
+            antialiasing = false;
+        }
+
         if (buildForMobiles) {
             multithreading = true;
             mouseLook = false;

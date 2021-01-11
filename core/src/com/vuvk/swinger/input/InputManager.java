@@ -244,6 +244,7 @@ public final class InputManager extends InputAdapter {
                             switch (scanCommand.next()) {
                                 case "interlacing" :
                                     Config.interlacing = (scanCommand.hasNextInt() && scanCommand.nextInt() == 1);
+                                    Config.init();
                                     break;
 
                                 case "fog" :
@@ -320,6 +321,7 @@ public final class InputManager extends InputAdapter {
 
                                 case "antialiasing" :
                                     Config.antialiasing = (scanCommand.hasNextInt() && scanCommand.nextInt() == 1);
+                                    Config.init();
                                     break;
 
                                 case "multithreading" :

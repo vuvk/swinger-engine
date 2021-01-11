@@ -13,6 +13,7 @@
 */
 package com.vuvk.swinger.desktop;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 import com.vuvk.swinger.Config;
@@ -26,11 +27,20 @@ public class DesktopLauncher {
         config.useHDPI = false;
         config.useGL30 = false;
         config.foregroundFPS = config.backgroundFPS = 120;
-        config.vSyncEnabled = true;
+        config.resizable = false;
+        /*config.vSyncEnabled = Config.vSync;
         config.width  = Config.WIDTH;
-        config.height = Config.HEIGHT;
+        config.height = Config.HEIGHT;*/
         config.title  = Config.TITLE;
 
-        new LwjglApplication(new Game(), config);
+        LwjglApplication app = new LwjglApplication(new Game(), config);
+
+        Config.load();
+        Config.init();
+
+        Gdx.graphics.setTitle(Config.TITLE);
+        
+        Game.setVSync(Config.vSync);
+        Game.setFullscreenMode(Config.fullscreen);
     }
 }
