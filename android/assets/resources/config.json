@@ -1,4 +1,6 @@
 {
+    "music_volume": 0.45,
+    "sound_volume": 1.0,
     "interlacing": false,
     "antialiasing": false,
     "quality": 0,  /* чем больше, тем хуже качество */

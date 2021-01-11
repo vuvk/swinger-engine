@@ -16,6 +16,7 @@ package com.vuvk.swinger;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.utils.JsonReader;
 import com.badlogic.gdx.utils.JsonValue;
+import com.vuvk.swinger.audio.SoundSystem;
 import com.vuvk.swinger.graphic.Fog;
 
 /**
@@ -57,6 +58,11 @@ public final class Config {
         if (Gdx.files.internal("resources/config.json").exists()) {
             //Json json = new Json();
             JsonValue jsonlevel = new JsonReader().parse(Gdx.files.internal("resources/config.json"));
+
+            float musicVolume = (jsonlevel.has("music_volume")) ? jsonlevel.getFloat("music_volume") : 1.0f;
+            float soundVolume = (jsonlevel.has("sound_volume")) ? jsonlevel.getFloat("sound_volume") : 1.0f;
+            SoundSystem.setMusicVolume(musicVolume);
+            SoundSystem.setVolume(soundVolume);
 
             interlacing  = (jsonlevel.has("interlacing"))  ? jsonlevel.getBoolean("interlacing")  : false;
             antialiasing = (jsonlevel.has("antialiasing")) ? jsonlevel.getBoolean("antialiasing") : false;

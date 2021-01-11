@@ -28,16 +28,16 @@ import java.util.Random;
 public final class SoundSystem {
     private final static Array<Music> LIB = new Array<>(false, 50);
     private static boolean started = false;
-    
+
     private static Music MUSIC = null;
     private static float MUSIC_VOLUME = 1.0f;
     private static float VOLUME = 1.0f;
-    
+
     private SoundSystem() {}
-    
+
     public static void load() {
         started = true;
-        
+
         Thread soundThread = new Thread(new Runnable() {
             @Override
             public void run() {
@@ -52,12 +52,12 @@ public final class SoundSystem {
                             }
                         }
                     }
-                    
+
                     try {
                         Thread.sleep(1000);
                     } catch (InterruptedException ignored) {}
                 }
-                
+
                 for (Music sound : LIB) {
                     if (sound != null) {
                         sound.stop();
@@ -68,7 +68,7 @@ public final class SoundSystem {
                 LIB.clear();
             }
         }, "SoundSystem Thread");
-        
+
         soundThread.setPriority(Thread.MIN_PRIORITY);
         soundThread.start();
     }
@@ -76,7 +76,7 @@ public final class SoundSystem {
     public static float getVolume() {
         return VOLUME;
     }
-    
+
     public static float getMusicVolume() {
         return MUSIC_VOLUME;
     }
@@ -90,9 +90,9 @@ public final class SoundSystem {
             }
         }
         VOLUME = volume;
-        
+
         updateVolume();
-    }    
+    }
 
     public static void setMusicVolume(float volume) {
         if (volume < 0.0f) {
@@ -103,49 +103,49 @@ public final class SoundSystem {
             }
         }
         MUSIC_VOLUME = volume;
-        
+
         updateVolume();
-    }    
-    
+    }
+
     public static void updateVolume() {
         for (Music sound : LIB) {
             if (sound != null) {
                 sound.setVolume(VOLUME);
             }
-        }        
-        
+        }
+
         if (MUSIC != null) {
             MUSIC.setVolume(MUSIC_VOLUME);
         }
     }
-    
+
     public static void unload() {
         started = false;
     }
-        
+
     public static Music loadSound(FileHandle file) {
         Music sound = null;
-        if (file != null && !file.isDirectory() && file.exists()) {            
+        if (file != null && !file.isDirectory() && file.exists()) {
             try {
                 sound = Gdx.audio.newMusic(file);
             } catch (Exception ignored) {}
         }
-            
+
         return sound;
     }
-    
+
     public static void play(Music sound, boolean looping) {
         if (sound == null) {
             return;
         }
-        
-        sound.stop();        
+
+        sound.stop();
         sound.setLooping(looping);
         sound.setVolume(VOLUME);
         sound.play();
         LIB.add(sound);
     }
-    
+
     /**
      * Проиграть звук один раз, после чего он безопасно удаляется
      * @param path Путь
@@ -155,12 +155,12 @@ public final class SoundSystem {
         if (sound == null) {
             return;
         }
-        
+
         sound.setVolume(VOLUME);
         sound.play();
         LIB.add(sound);
-    }    
-    
+    }
+
     public static void playOnceRandom(FileHandle ... files) {
         if (files == null || files.length == 0) {
             return;
@@ -169,7 +169,7 @@ public final class SoundSystem {
         int variant = Math.abs(new Random().nextInt()) % files.length;
         playOnce(files[variant]);
     }
-        
+
     /**
      * Проиграть случайный звук из массива (даже если какой-то из них уже проигрывается)
      * Play random sound
@@ -192,7 +192,7 @@ public final class SoundSystem {
             sounds[variant].play(VOLUME);
         }
     }
-    
+
     /**
      * Проиграть случайный звук из массива (даже если какой-то из них уже проигрывается)
      * Play random sound
@@ -201,7 +201,7 @@ public final class SoundSystem {
     public static void playRandom(Music ... sounds) {
         playRandom(false, sounds);
     }
-    
+
     /**
      * Проиграть случайный звук из массива
      * Play random sound
@@ -212,7 +212,7 @@ public final class SoundSystem {
         if (sounds == null || sounds.length == 0) {
             return;
         }
-        
+
         if (checkPlaying) {
             for (Music sound : sounds) {
                 if (sound != null && sound.isPlaying()) {
@@ -235,7 +235,7 @@ public final class SoundSystem {
         }
     }
 
-    public static void playMusic(FileHandle music) {     
+    public static void playMusic(FileHandle music) {
         stopMusic();
         MUSIC = loadSound(music);
         if (MUSIC != null) {
@@ -244,12 +244,12 @@ public final class SoundSystem {
             MUSIC.play();
         }
     }
-    
+
     public static void stopMusic() {
         if (MUSIC != null) {
             MUSIC.stop();
             MUSIC.dispose();
             MUSIC = null;
-        }      
+        }
     }
 }
