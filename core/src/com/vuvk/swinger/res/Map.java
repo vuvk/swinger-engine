@@ -1,5 +1,5 @@
 /**
-    Copyright (C) 2019-2020 Anton "Vuvk" Shcherbatykh <vuvk69@gmail.com>
+    Copyright (C) 2019-2021 Anton "Vuvk" Shcherbatykh <vuvk69@gmail.com>
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
@@ -829,7 +829,8 @@ public final class Map {
             String author = jsonlevel.getString("author"); // пока бесполезно
         }
 
-        Fog.COLOR = (jsonlevel.has("fog_color")) ? jsonlevel.getInt("fog_color")    : 0xFF;
+        String fogColorString = (jsonlevel.has("fog_color")) ? jsonlevel.getString("fog_color") : "0xFF";
+        Fog.COLOR = Integer.parseUnsignedInt(fogColorString, 16);
         Fog.START = (jsonlevel.has("fog_start")) ? jsonlevel.getDouble("fog_start") : 2.0;
         Fog.END   = (jsonlevel.has("fog_end"))   ? jsonlevel.getDouble("fog_end")   : 8.0;
         Fog.init();
