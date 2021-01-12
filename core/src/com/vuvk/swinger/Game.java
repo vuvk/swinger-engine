@@ -447,6 +447,7 @@ public class Game extends ApplicationAdapter {
         InputManager.reset();
 
         if (Config.QUIT) {
+            Config.save();
             Gdx.app.exit();
         }
     }

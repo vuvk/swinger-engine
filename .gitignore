@@ -122,4 +122,6 @@ Thumbs.db
 /.nb-gradle/
 *.sav
 *.db:encryptable
+
 /android/assets/saves/
+/desktop/saves/
