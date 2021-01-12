@@ -783,6 +783,10 @@ public final class Map {
         }
     }*/
 
+    public static boolean isActive() {
+        return active;
+    }
+
     public static boolean isLoaded() {
         return loaded;
     }
@@ -792,6 +796,8 @@ public final class Map {
     }
 
     public static void reset() {
+        active = false;
+        loaded = false;
         //Config.draw = false;
 
 //      SoundSystem.stopAll();
@@ -799,14 +805,13 @@ public final class Map {
         Mortal.deleteAll();
         Sprite.deleteAll();
         Material.deleteAll();
+        TextureBank.deleteWalls();
+        MaterialBank.deleteBank();
         Mesh.deleteAll();
         Model.deleteAll();
         Player.deleteInstance();
 
         SoundSystem.stopMusic();
-
-        active = false;
-        loaded = false;
     }
 
     public static void load(int levelNum) {
@@ -843,8 +848,6 @@ public final class Map {
         }
         /* грузим текстуры */
         System.out.println("\tTextures and materials...");
-        TextureBank.WALLS.clear();
-        MaterialBank.BANK.clear();
         loadTexturesAndMaterials(jsonlevel);
 
         /* формируем материалы стен */

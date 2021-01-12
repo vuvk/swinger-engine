@@ -237,5 +237,11 @@ public final class TextureBank {
         return WALLS.toArray(new Texture[WALLS.size()]);
     }
 
+    public static void deleteWalls() {
+        synchronized (WALLS) {
+            WALLS.clear();
+        }
+    }
+
     private TextureBank() {}
 }

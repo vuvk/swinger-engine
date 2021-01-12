@@ -19,6 +19,7 @@ import com.vuvk.swinger.audio.SoundBank;
 import com.vuvk.swinger.audio.SoundSystem;
 import com.vuvk.swinger.d3.Mesh;
 import com.vuvk.swinger.d3.Model;
+import com.vuvk.swinger.graphic.Renderer;
 import com.vuvk.swinger.graphic.TexturedSegment;
 import com.vuvk.swinger.graphic.weapon_in_hand.AmmoPack;
 import com.vuvk.swinger.objects.Door;
@@ -118,12 +119,14 @@ public class SavedGame implements Serializable {
     }
 
     public void loadFromFile(String path) {
+        Config.draw = false;
+        Map.reset();
+        Renderer.getInstance().stopRenderTasks();
+
         SavedGame game = null;
         try (FileInputStream fileInputStream = new FileInputStream(path)) {
             ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream);
             game = (SavedGame) objectInputStream.readObject();
-
-            Map.reset();
 
             TextureBank.WALLS.clear();
             for (Texture txr : game.textureWalls) {

@@ -473,11 +473,11 @@ public class Game extends ApplicationAdapter {
 
     @Override
     public void dispose () {
-        batch.dispose();
-        font.dispose();
         Map.reset();
         GuiBank.deinit();
         SoundSystem.unload();
+        batch.dispose();
+        font.dispose();
     }
 
     public static void setFullscreenMode(boolean fullscreen) {

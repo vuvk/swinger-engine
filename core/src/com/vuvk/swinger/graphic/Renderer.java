@@ -137,6 +137,10 @@ public final class Renderer/* extends JPanel*/ {
             //setName(name);
         }
 
+        public CountDownLatch getLatch() {
+            return latch;
+        }
+
         public void setLatch(CountDownLatch latch) {
             this.latch = latch;
         }
@@ -416,7 +420,7 @@ public final class Renderer/* extends JPanel*/ {
      * @param toX Позиция X до которой рендерить
      */
     private void renderWorld(int fromX, int toX) {
-        if (activeCamera == null) {
+        if (activeCamera == null || !Map.isActive()) {
             return;
         }
 
@@ -789,7 +793,7 @@ public final class Renderer/* extends JPanel*/ {
                 //    RenderTarget target = renderLevelTargets.get(t);
 
                     texX = target.texX;
-                    if (texX < 0 || texX >= Texture.WIDTH) {
+                    if (texX < 0 || texX >= Texture.WIDTH || !Map.isActive()) {
                         continue;
                     }
 
@@ -1033,7 +1037,7 @@ public final class Renderer/* extends JPanel*/ {
 
                         double currentFloorX = weight * floorXWall + (1.0 - weight) * pos.x;
                         double currentFloorY = weight * floorYWall + (1.0 - weight) * pos.y;
-                        if (currentFloorX < 0 || currentFloorY < 0) {
+                        if (currentFloorX < 0 || currentFloorY < 0 || !Map.isActive()) {
                             continue;
                         }
 
@@ -1192,7 +1196,7 @@ public final class Renderer/* extends JPanel*/ {
     }
 
     private void render() {
-        while (alreadyRendered || nextActiveCamera == null) {
+        while (alreadyRendered || nextActiveCamera == null || !Map.isActive()) {
             Thread.yield();
         }
         activeCamera.duplicate(nextActiveCamera);
@@ -1659,7 +1663,7 @@ public final class Renderer/* extends JPanel*/ {
                 @Override
                 public void run() {
                     try {
-                        Thread.sleep(500);
+                        Thread.sleep(5);
                     } catch (InterruptedException ignored) {}
 
 
@@ -1671,6 +1675,12 @@ public final class Renderer/* extends JPanel*/ {
             }, "Renderer thread");
             renderThread.setPriority(Thread.MAX_PRIORITY);
             renderThread.start();
+        }
+    }
+
+    public void stopRenderTasks() {
+        for (RenderTask task : RENDER_TASKS) {
+            task.getLatch().countDown();
         }
     }
 
@@ -1686,6 +1696,7 @@ public final class Renderer/* extends JPanel*/ {
     }
 
     public static void deinit() {
+        Renderer.getInstance().stopRenderTasks();
         started = false;
     }
 

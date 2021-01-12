@@ -13,7 +13,6 @@
 */
 package com.vuvk.swinger.res;
 
-import com.vuvk.swinger.res.TextureBank;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -34,6 +33,12 @@ public final class MaterialBank {
 
     public static Material[] getBank() {
         return BANK.toArray(new Material[BANK.size()]);
+    }
+
+    public static void deleteBank() {
+        synchronized (BANK) {
+            BANK.clear();
+        }
     }
 
     private MaterialBank() {};

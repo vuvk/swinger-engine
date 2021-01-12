@@ -21,6 +21,7 @@ import com.vuvk.swinger.Config;
 import com.vuvk.swinger.Game;
 import static com.vuvk.swinger.Game.screenMsg;
 import com.vuvk.swinger.graphic.Fog;
+import com.vuvk.swinger.graphic.Renderer;
 import com.vuvk.swinger.graphic.gui.menu.Menu;
 import com.vuvk.swinger.math.Vector2;
 import com.vuvk.swinger.objects.mortals.Player;
@@ -425,7 +426,11 @@ public final class InputManager extends InputAdapter {
                 case Input.Keys.SPACE : player.openDoor(); break;
 
                 case Input.Keys.R :
+                    Config.draw = false;
+                    Renderer.getInstance().stopRenderTasks();
+
                     Map.load(1);
+
                     Config.draw = true;
                     screenMsg.setMessage("LEVEL RESTARTED");
                     break;
