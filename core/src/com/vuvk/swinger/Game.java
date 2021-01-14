@@ -298,7 +298,7 @@ public class Game extends ApplicationAdapter {
         }
 
         if (Config.draw) {
-            if (!Map.isLoaded() && !lastFrame.equals(TextureBank.MAIN_MENU)) {
+            if (!Map.isLoaded() && !TextureBank.MAIN_MENU.equals(lastFrame)) {
                 lastFrame = TextureBank.MAIN_MENU;
                 playerPosText.setVisible(false);
                 playerHpText.setVisible(false);

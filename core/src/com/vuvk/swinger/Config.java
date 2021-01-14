@@ -64,7 +64,7 @@ public final class Config {
     private Config() {}
 
     public static void load() {
-        FileHandle config = Gdx.files.local("config.json");
+        FileHandle config = Gdx.files.local("./config.json");
         if (config.exists()) {
             //Json json = new Json();
             JsonValue json = new JsonReader().parse(config);
@@ -100,7 +100,7 @@ public final class Config {
     }
 
     public static void save() {
-        FileHandle config = Gdx.files.local("config.json");
+        FileHandle config = Gdx.files.local("./config.json");
         if (config.exists()) {
             config.delete();
         }

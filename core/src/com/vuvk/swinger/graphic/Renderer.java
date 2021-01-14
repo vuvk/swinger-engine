@@ -55,6 +55,7 @@ public final class Renderer/* extends JPanel*/ {
     static {
         REPAINT_MANAGER = RepaintManager.currentManager(INSTANCE);
     };*/
+    private Thread renderThread;    // основной поток рендерера
 
     public /*final*/ static int WIDTH/*  = Window.WIDTH  >> 2*/;
     public /*final*/ static int HEIGHT/* = Window.HEIGHT >> 2*/;
@@ -87,8 +88,8 @@ public final class Renderer/* extends JPanel*/ {
     private int fpsCounter = 0;
     private double fpsTimer = 0;*/
 
-    private int evenFactor = 0;
-    private int xStep;
+    private int evenFactor = 0; // фактор столбца при чересстрочном (четный/нечетный) (0/1)
+    private int xStep;          // шаг по ширине. При обычном режиме 1, при чересстрочном 2
     private Camera nextActiveCamera = null;
     private Camera activeCamera = new Camera();
 /*
@@ -177,7 +178,7 @@ public final class Renderer/* extends JPanel*/ {
     private final /*static*/ RenderTask[] RENDER_TASKS = new RenderTask[Config.THREADS_COUNT];
     private final /*static*/ AntialiasingTask[] ANTIALIASING_TASKS = new AntialiasingTask[Config.THREADS_COUNT];
     //private /*final static*/ Thread[] RENDER_THREADS = new Thread[4];
-    private final /*static*/ ExecutorService EXECUTOR = Executors.newFixedThreadPool(Config.THREADS_COUNT);
+    private final /*static*/ ExecutorService EXECUTOR = Executors.newFixedThreadPool(Config.THREADS_COUNT << 1);
     //private boolean[] render = {false,false,false,false};
     private final /*static*/ List<Sprite> SPRITES_FOR_DRAW = new ArrayList<>(50);
     private final /*static*/ List<Model> MODELS_FOR_DRAW = new ArrayList<>(50);
@@ -420,8 +421,8 @@ public final class Renderer/* extends JPanel*/ {
      * @param toX Позиция X до которой рендерить
      */
     private void renderWorld(int fromX, int toX) {
-        if (activeCamera == null || !Map.isActive()) {
-            return;
+        if (alreadyRendered || activeCamera == null || !Map.isActive()) {
+            Thread.yield();
         }
 
         /*Player player = Player.getInstance();
@@ -1197,7 +1198,7 @@ public final class Renderer/* extends JPanel*/ {
 
     private void render() {
         while (alreadyRendered || nextActiveCamera == null || !Map.isActive()) {
-            Thread.yield();
+            renderThread.yield();
         }
         activeCamera.duplicate(nextActiveCamera);
 
@@ -1274,8 +1275,9 @@ public final class Renderer/* extends JPanel*/ {
             //    cdl.await();
             //} catch(InterruptedException ignored) {}
             while (cdl.getCount() > 0) {
-                Thread.yield();
+                renderThread.yield();
             }
+
         } else {
             renderWorld(0, WIDTH);
         }
@@ -1578,7 +1580,7 @@ public final class Renderer/* extends JPanel*/ {
                 //    cdl.await();
                 //} catch(InterruptedException ignored) {}
                 while (cdl.getCount() > 0) {
-                    Thread.yield();
+                    renderThread.yield();
                 }
             } else {
                 antialiasing(WIDTH, TEMP_BUFFER.limit() - 1);
@@ -1599,7 +1601,7 @@ public final class Renderer/* extends JPanel*/ {
         //repaint();
         //REPAINT_MANAGER.setDoubleBufferingEnabled(true);
         while (!canRender) {
-            Thread.yield();
+            renderThread.yield();
         }
 
         /*if (canRender)*/ {
@@ -1627,7 +1629,7 @@ public final class Renderer/* extends JPanel*/ {
 */
         if (Config.STEP_BY_STEP_RENDERING) {
             try {
-                Thread.sleep(5000);
+                renderThread.sleep(5000);
             } catch (InterruptedException ex) {}
         }
 
@@ -1659,7 +1661,7 @@ public final class Renderer/* extends JPanel*/ {
     public void start() {
         if (!started) {
             started = true;
-            Thread renderThread = new Thread(new Runnable() {
+            renderThread = new Thread(new Runnable() {
                 @Override
                 public void run() {
                     try {
@@ -1697,6 +1699,7 @@ public final class Renderer/* extends JPanel*/ {
 
     public static void deinit() {
         Renderer.getInstance().stopRenderTasks();
+        Renderer.getInstance().renderThread = null;
         started = false;
     }
 
@@ -1740,26 +1743,34 @@ public final class Renderer/* extends JPanel*/ {
         RENDER_TASKS[3] = new RenderTask("task4", WIDTH - QUARTER_WIDTH, WIDTH);
         */
         int widthStep = WIDTH / Config.THREADS_COUNT;
+        // стартовая точка обязана быть четной, поскольку иначе при
+        // чересстрочном и многопоточном режиме может происходить
+        // несовпадение четности и нечетности рисуемых столбцов
+        // что приводит к багу отрисовки спрайтов сквозь стены
+        if (widthStep % 2 != 0) {
+            --widthStep;
+        }
         for (int i = 0; i < Config.THREADS_COUNT; ++i) {
             int fromX = i * widthStep;
-            int toX = fromX + widthStep;
-            if (toX >= WIDTH) {
-                toX = WIDTH - 1;
-            }
+            int toX = (i == Config.THREADS_COUNT - 1) ? WIDTH : fromX + widthStep;
 
             RENDER_TASKS[i] = newRenderTask("render_task " + i, fromX, toX);
         }
 
         int lengthStep = SCREEN_BUFFER.limit() / Config.THREADS_COUNT;
+        if (lengthStep % 2 != 0) {
+            --lengthStep;
+        }
         for (int i = 0; i < Config.THREADS_COUNT; ++i) {
             int fromX = i * lengthStep;
-            if (i == 0) {
+            /*if (i == 0) {
                 fromX += WIDTH;
             }
             int toX = fromX + lengthStep;
             if (toX >= SCREEN_BUFFER.limit() - 1) {
                 toX = SCREEN_BUFFER.limit() - 1;
-            }
+            }*/
+            int toX = (i == Config.THREADS_COUNT - 1) ? SCREEN_BUFFER.limit() - 1 : fromX + lengthStep;
 
             ANTIALIASING_TASKS[i] = newAntialiasingTask("antialiasing_task " + i, fromX, toX);
         }
