@@ -1,5 +1,4 @@
 buildscript {
-    
 
     repositories {
         mavenLocal()
@@ -17,6 +16,9 @@ buildscript {
         
         // https://mvnrepository.com/artifact/com.eclipsesource.j2v8/j2v8
         //classpath 'com.eclipsesource.j2v8:j2v8:5.0.103'
+        
+        //classpath 'org.beryx:badass-jlink-plugin:2.23.1'
+        classpath 'org.ow2.asm:asm:9.0'
     }
 }
 
@@ -31,7 +33,7 @@ allprojects {
         ashleyVersion = '1.7.3'
         aiVersion = '1.8.2'
         
-        j2v8Version = '6.2.0'
+        //j2v8Version = '6.2.0'
     }
 
     repositories {
@@ -45,8 +47,7 @@ allprojects {
 }
 
 project(":desktop") {
-    apply plugin: "java-library"
-
+    apply plugin: "java-library"   
 
     dependencies {
         implementation project(":core")
@@ -55,7 +56,16 @@ project(":desktop") {
         api "com.badlogicgames.gdx:gdx-controllers-desktop:$gdxVersion"
         api "com.badlogicgames.gdx:gdx-controllers-platform:$gdxVersion:natives-desktop"
         
-        api "com.eclipsesource.j2v8:j2v8_linux_x86_64:4.8.0"
+        //api "com.eclipsesource.j2v8:j2v8_linux_x86_64:4.8.0"
+    }
+}
+
+project(":distribution") {
+//    apply plugin: "org.beryx.jlink"  
+
+    dependencies {
+        //implementation project(":desktop")
+        //api "org.ow2.asm:asm:9.0"
     }
 }
 
@@ -81,7 +91,6 @@ project(":android") {
 project(":ios") {
     apply plugin: "java-library"
     apply plugin: "robovm"
-
 
     dependencies {
         implementation project(":core")
