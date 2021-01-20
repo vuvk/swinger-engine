@@ -1125,6 +1125,7 @@ public final class Renderer/* extends JPanel*/ {
                         }
 
                         int color;
+                        double fogBrightness = Fog.SMOOTH_TABLE[y];
 
                         // floor
                         //int arrayPos = (y - 1) * WIDTH + x;
@@ -1140,7 +1141,8 @@ public final class Renderer/* extends JPanel*/ {
                                 //color = floorPixels[pixelPos];
                                 //color = floorPixels[floorTexX][floorTexY];
                                 if (Config.fog != Fog.NOTHING) {
-                                    color = applyFog(color, currentDist);
+                                    //color = applyFog(color, currentDist);
+                                    color = applyFogNew(color, currentDist, fogBrightness);
                                 }
                                 TEMP_BUFFER.put((y - 1) * WIDTH + x, color);
                                 //TEMP_BUFFER.setElem(arrayPos, color);
@@ -1165,7 +1167,8 @@ public final class Renderer/* extends JPanel*/ {
                                 //color = ceilPixels[floorTexX][floorTexY];
                                 if (((color/* >> 24*/) & 0xFF) != 0) {
                                     if (Config.fog != Fog.NOTHING) {
-                                        color = applyFog(color, currentDist);
+                                        //color = applyFog(color, currentDist);
+                                        color = applyFogNew(color, currentDist, fogBrightness);
                                     }
                                     TEMP_BUFFER.put((HEIGHT - y) * WIDTH + x, color);
                                     //TEMP_BUFFER.setElem(arrayPos, color);
