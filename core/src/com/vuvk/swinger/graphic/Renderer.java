@@ -1428,6 +1428,16 @@ public final class Renderer/* extends JPanel*/ {
                 /*int prevTexX = -1;
                 int[][] pixels = txr.getPixels();
                 int[]   pixelsColumn = null;*/
+
+                // подсчитаем параметры для тумана
+                double distance = transform.y;
+                // берем полный размер спрайта, включая прозрачные зоны,
+                // игнорируем высоту расположения спрайта, словно он на уровне игрока
+                int fullSpriteHeight = (int)(HEIGHT * invTransformY);
+                int fY = HALF_HEIGHT + (fullSpriteHeight >> 1);
+                fY = Utils.limit(fY, 0, HEIGHT - 1);
+                double fogBrightness = Fog.SMOOTH_TABLE[fY];
+
                 for (int x = drawStartX; x < drawEndX; x += xStep) {
                     int texX = (int)(((x - dSX) << Texture.WIDTH_POT) * invSpriteWidth);
                     if (texX < 0 || texX >= Texture.WIDTH) {
@@ -1458,8 +1468,7 @@ public final class Renderer/* extends JPanel*/ {
                             continue;
                         } else {
                             if (Config.fog != Fog.NOTHING) {
-                                double brightness = transform.y;
-                                color = applyFog(color, brightness);
+                                color = applyFogNew(color, distance, fogBrightness);
                             }
 
                             // paint pixel if it visible
