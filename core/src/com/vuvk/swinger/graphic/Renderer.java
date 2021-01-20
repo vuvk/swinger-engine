@@ -63,6 +63,7 @@ public final class Renderer/* extends JPanel*/ {
     public /*final*/ static int HALF_HEIGHT/* = HEIGHT >> 1*/;
     public /*final*/ static int QUARTER_WIDTH/* = HALF_WIDTH >> 1*/;
 
+    public static double[] DISTANCES; // таблица дистанций до точки в координате Y на экране
     private /*final*/ static double RAY_STEP/* = 1.0 / WIDTH*/;
     //private/* final*/ static double ANG_STEP/* = Player.FOV / WIDTH*/;
 
@@ -1032,7 +1033,8 @@ public final class Renderer/* extends JPanel*/ {
                     int floorCell = -1,
                         ceilCell  = -1;
                     for (int y = /*++*/drawEnd; y < HEIGHT; ++y) {
-                        double currentDist = (double)HEIGHT / ((y << 1) - HEIGHT); //you could make a small lookup table for this instead
+                        //double currentDist = (double)HEIGHT / ((y << 1) - HEIGHT); //you could make a small lookup table for this instead
+                        double currentDist = DISTANCES[y];
 
                         double weight = currentDist * invWallDist;
 
@@ -1654,6 +1656,12 @@ public final class Renderer/* extends JPanel*/ {
         HALF_WIDTH  = WIDTH  >> 1;
         HALF_HEIGHT = HEIGHT >> 1;
         QUARTER_WIDTH = HALF_WIDTH >> 1;
+
+        DISTANCES = new double[HEIGHT];
+        DISTANCES[0] = 0.0;
+        for (int y = 0; y < HEIGHT; ++y) {
+            DISTANCES[y] = (double)HEIGHT / ((y << 1) - HEIGHT);
+        }
 
         RAY_STEP = 1.0 / WIDTH;
     }
