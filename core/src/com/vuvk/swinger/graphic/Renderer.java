@@ -33,6 +33,7 @@ import com.vuvk.swinger.res.MaterialBank;
 import com.vuvk.swinger.res.Texture;
 import com.vuvk.swinger.res.WallMaterial;
 import com.vuvk.swinger.utils.ArrayUtils;
+import com.vuvk.swinger.utils.Utils;
 import java.nio.IntBuffer;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -64,6 +65,7 @@ public final class Renderer/* extends JPanel*/ {
     public /*final*/ static int QUARTER_WIDTH/* = HALF_WIDTH >> 1*/;
 
     public static double[] DISTANCES; // таблица дистанций до точки в координате Y на экране
+
     private /*final*/ static double RAY_STEP/* = 1.0 / WIDTH*/;
     //private/* final*/ static double ANG_STEP/* = Player.FOV / WIDTH*/;
 
@@ -359,6 +361,52 @@ public final class Renderer/* extends JPanel*/ {
                 fogBrightness = Fog.SIMPLE_BRIGHTNESS[pos];
             } else {
                 fogBrightness = (distance - Fog.START) * Fog.FACTOR;
+            }
+
+            // яркость/сила пикселя обратная силе тумана
+            double pixelBrightness = 1.0 - fogBrightness;
+            if (pixelBrightness <= 0.0) {
+                pixel = Fog.COLOR;
+            } else {
+                /* раскладываем */
+                int rF = (int)(Fog.RED   * fogBrightness);
+                int gF = (int)(Fog.GREEN * fogBrightness);
+                int bF = (int)(Fog.BLUE  * fogBrightness);
+
+                int rP = (int)(((pixel >> 24) & 0xFF) * pixelBrightness);
+                int gP = (int)(((pixel >> 16) & 0xFF) * pixelBrightness);
+                int bP = (int)(((pixel >>  8) & 0xFF) * pixelBrightness);
+                int aP = (int)(((pixel      ) & 0xFF)/* * pixelBrightness*/);
+
+                // складываем компоненты цветов
+                // берем альфу пикселя, потому что он может быть полупрозрачным
+                pixel = aP |
+                        ((rF + rP) << 24) |
+                        ((gF + gP) << 16) |
+                        ((bF + bP) <<  8);
+            }
+
+            return pixel;
+        }
+        // очень далеко - просто цвет тумана
+        return Fog.COLOR;
+    }
+    /**
+     * Применить туман к пикселю (проверка расстояния)
+     * @param pixel Исходный цвет пикселя в формате ARGB
+     * @param distance Дистанция до пикселя
+     * @return полученный цвет
+     */
+    private int applyFogNew(int pixel, double distance, double fogBrightness) {
+        // близко - вернуть оригинальный пиксель
+        if (distance < Fog.START) {
+            return pixel;
+        // дистанция между началом и концом тумана
+        } else if (distance < Fog.END) {
+            // определяем яркость/силу тумана в точке
+            if (Config.fog == Fog.OLD) {
+                int pos = (int)((distance - Fog.START) * Fog.INV_SIMPLE_DISTANCE_STEP);
+                fogBrightness = Fog.SIMPLE_BRIGHTNESS[pos];
             }
 
             // яркость/сила пикселя обратная силе тумана
