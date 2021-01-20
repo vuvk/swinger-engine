@@ -13,8 +13,6 @@
 */
 package com.vuvk.swinger.graphic;
 
-import com.vuvk.swinger.Config;
-
 /**
  *
  * @author Anton "Vuvk" Shcherbatykh
@@ -35,27 +33,34 @@ public enum Fog {
     public static int      SIMPLE_QUALITY;  // чем больше, тем лучше качество
     public static double   SIMPLE_DISTANCE_STEP;
     public static double   INV_SIMPLE_DISTANCE_STEP;
+    // таблица с яркостями для олдскул-тумана
     public static double[] SIMPLE_BRIGHTNESS;
-    public static int[]    GRADIENT_TABLE;
+
+    // предрасчитанная таблица яркостей тумана в точке по координате Y
+    // для смазанного тумана
+    public static double[] SMOOTH_TABLE;
 
     public static void init() {
         RED   = (COLOR >> 24) & 0xFF;
         GREEN = (COLOR >> 16) & 0xFF;
         BLUE  = (COLOR >>  8) & 0xFF;
 
-        FACTOR = 1.0f / (END - START);
+        FACTOR = 1.0 / (END - START);
         SIMPLE_QUALITY = 8;
         SIMPLE_DISTANCE_STEP = (END - START) / SIMPLE_QUALITY;
         INV_SIMPLE_DISTANCE_STEP = 1.0f / SIMPLE_DISTANCE_STEP;
         SIMPLE_BRIGHTNESS = new double[SIMPLE_QUALITY];
 
-        final float brightnessStep = 1.0f / SIMPLE_QUALITY;
-        float brightness = brightnessStep;
+        final double brightnessStep = 1.0 / SIMPLE_QUALITY;
+        double brightness = brightnessStep;
         for (int i = 0; i < SIMPLE_QUALITY; ++i) {
             SIMPLE_BRIGHTNESS[i] = brightness;
             brightness += brightnessStep;
         }
 
-        GRADIENT_TABLE = new int[Config.HEIGHT];
+        SMOOTH_TABLE = new double[Renderer.HEIGHT];
+        for (int y = 0; y < SMOOTH_TABLE.length; ++y) {
+            SMOOTH_TABLE[y] = (Renderer.DISTANCES[y] - Fog.START) * Fog.FACTOR;
+        }
     }
 }
