@@ -503,6 +503,9 @@ public final class Renderer/* extends JPanel*/ {
             texY = 0;
 
         double wallX; //where exactly the wall was hit
+        
+        // яркость тумана для столбца/точки
+        double fogBrightness;
 
         // draw door or wall?
         //boolean drawDoor;
@@ -948,6 +951,12 @@ public final class Renderer/* extends JPanel*/ {
                     //double fogFactor = 1.0 - (wallDist - Config.FOG_START) * Config.FOG_FACTOR;
                     int pixelsForDraw = drawEnd - drawStart;
                     int pixelsDrawed = 0;
+                    
+                    // считаем яркость тумана, игнорируя этаж, как будто все стены/двери на уровне игрока
+                    int fY = HALF_HEIGHT + (lineHeight >> 1);
+                    fY = Utils.limit(fY, 0, HEIGHT - 1);
+                    fogBrightness = Fog.SMOOTH_TABLE[fY];                    
+                    
                     //int[] pixelsColumn = txr.getCol(texX);
                     for (int y = drawStart; y < drawEnd; ++y) {
                         //int arrayPos = y * WIDTH + x;
@@ -984,7 +993,8 @@ public final class Renderer/* extends JPanel*/ {
                         }
 
                         if (Config.fog != Fog.NOTHING) {
-                            color = applyFog(color, wallDist);
+                            //color = applyFog(color, wallDist);
+                            color = applyFogNew(color, wallDist, fogBrightness);
                         }
 
                         //Color color = new Color(Texture.WALLS[texNum].getPixel(texX, texY));
@@ -1125,7 +1135,7 @@ public final class Renderer/* extends JPanel*/ {
                         }
 
                         int color;
-                        double fogBrightness = Fog.SMOOTH_TABLE[y];
+                        fogBrightness = Fog.SMOOTH_TABLE[y];
 
                         // floor
                         //int arrayPos = (y - 1) * WIDTH + x;
