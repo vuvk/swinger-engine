@@ -22,15 +22,15 @@ public class DesktopLauncher {
     public static void main (String ... args) {
         LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
 
-        config.allowSoftwareMode = true;
+        config.allowSoftwareMode = false;
         config.useHDPI = false;
         config.useGL30 = false;
         config.foregroundFPS = config.backgroundFPS = 2000;
         config.resizable = false;
-        config.vSyncEnabled = Config.vSync;
+        /*config.vSyncEnabled = Config.vSync;
         config.width  = Config.WIDTH;
         config.height = Config.HEIGHT;
-        config.title  = Config.TITLE;
+        config.title  = Config.TITLE;*/
 
         LwjglApplication app = new LwjglApplication(new Game(), config);
 

@@ -56,7 +56,7 @@ public final class Renderer/* extends JPanel*/ {
     static {
         REPAINT_MANAGER = RepaintManager.currentManager(INSTANCE);
     };*/
-    private Thread renderThread;    // основной поток рендерера
+    //private Thread renderThread;    // основной поток рендерера
 
     public /*final*/ static int WIDTH/*  = Window.WIDTH  >> 2*/;
     public /*final*/ static int HEIGHT/* = Window.HEIGHT >> 2*/;
@@ -73,9 +73,9 @@ public final class Renderer/* extends JPanel*/ {
     private static com.badlogic.gdx.graphics.Texture SCREEN;
     //private/* final*/ static BufferedImage SCREEN_SMALL;
     private final /*static*/ IntBuffer SCREEN_BUFFER/* = new int[WIDTH * HEIGHT]*/;
-    private final /*static*/ IntBuffer TEMP_BUFFER/* = new int[WIDTH * HEIGHT]*/;
+    //private final /*static*/ IntBuffer TEMP_BUFFER/* = new int[WIDTH * HEIGHT]*/;
     //private final WritableRaster SCREEN_RASTER;
-    private Pixmap TEMP_RASTER;
+    //private Pixmap TEMP_RASTER;
     private Pixmap SCREEN_RASTER;
     //private final DataBuffer SCREEN_BUFFER;
     private final /*static*/ double[][] ZBUFFER/* = new double[WIDTH]*/;
@@ -181,14 +181,14 @@ public final class Renderer/* extends JPanel*/ {
     private final /*static*/ RenderTask[] RENDER_TASKS = new RenderTask[Config.THREADS_COUNT];
     private final /*static*/ AntialiasingTask[] ANTIALIASING_TASKS = new AntialiasingTask[Config.THREADS_COUNT];
     //private /*final static*/ Thread[] RENDER_THREADS = new Thread[4];
-    private final /*static*/ ExecutorService EXECUTOR = Executors.newFixedThreadPool(Config.THREADS_COUNT << 1);
+    private final /*static*/ ExecutorService EXECUTOR = Executors.newFixedThreadPool(Config.THREADS_COUNT);
     //private boolean[] render = {false,false,false,false};
     private final /*static*/ List<Sprite> SPRITES_FOR_DRAW = new ArrayList<>(50);
     private final /*static*/ List<Model> MODELS_FOR_DRAW = new ArrayList<>(50);
 
-    private static boolean started = false;     // рендерер запущен
-    private boolean canRender = true;           // можно ли рендерить в итоговую пиксельную карту
-    private boolean alreadyRendered = false;    // уже отрендерил в память
+    //private static boolean started = false;     // рендерер запущен
+    //private boolean canRender = true;           // можно ли рендерить в итоговую пиксельную карту
+    //private boolean alreadyRendered = false;    // уже отрендерил в память
 
 
     public static Renderer getInstance() {
@@ -334,10 +334,10 @@ public final class Renderer/* extends JPanel*/ {
      */
     private void drawPixel(int x, int y, int pixel/*, double brightness*/) {
         int arrayPos = y * WIDTH + x;
-        int oldPixel = TEMP_BUFFER.get(arrayPos);
+        int oldPixel = SCREEN_BUFFER.get(arrayPos);
         int newPixel = makeAdditive(oldPixel, pixel/*makeColorDarker(pixel, brightness)*/);
         if (oldPixel != newPixel) {
-            TEMP_BUFFER.put(arrayPos, newPixel);
+            SCREEN_BUFFER.put(arrayPos, newPixel);
         }
     }
 
@@ -445,13 +445,13 @@ public final class Renderer/* extends JPanel*/ {
                 continue;
             }*/
 
-            int pixel = TEMP_BUFFER.get(i);
-            int next  = TEMP_BUFFER.get(i + 1);
+            int pixel = SCREEN_BUFFER.get(i);
+            int next  = SCREEN_BUFFER.get(i + 1);
             if (pixel != next) {
                 int r = (((pixel >> 24) & 0xFF) + ((next >> 24) & 0xFF)) >> 1,
                     g = (((pixel >> 16) & 0xFF) + ((next >> 16) & 0xFF)) >> 1,
                     b = (((pixel >>  8) & 0xFF) + ((next >>  8) & 0xFF)) >> 1;
-                TEMP_BUFFER.put(i, 0xFF |
+                SCREEN_BUFFER.put(i, 0xFF |
                                      (r << 24)  |
                                      (g << 16)  |
                                      (b <<  8));
@@ -466,8 +466,9 @@ public final class Renderer/* extends JPanel*/ {
      * @param toX Позиция X до которой рендерить
      */
     private void renderWorld(int fromX, int toX) {
-        if (alreadyRendered || activeCamera == null || !Map.isActive()) {
-            Thread.yield();
+        if (/*alreadyRendered || */activeCamera == null || !Map.isActive()) {
+            //Thread.yield();
+            return;
         }
 
         /*Player player = Player.getInstance();
@@ -1008,7 +1009,7 @@ public final class Renderer/* extends JPanel*/ {
                         //TEMP_BUFFER_RASTER.setPixel(x, y, new int[]{color});
 
                         //drawPixel(x, y, color);
-                        TEMP_BUFFER.put(y * WIDTH + x, color);
+                        SCREEN_BUFFER.put(y * WIDTH + x, color);
                         //TEMP_BUFFER.setElem(arrayPos, color);
                         //putPixel(x, y, color);
                         //ZBUFFER[arrayPos] = wallDist;
@@ -1162,7 +1163,7 @@ public final class Renderer/* extends JPanel*/ {
                                     //color = applyFog(color, currentDist);
                                     color = applyFogNew(color, currentDist, fogBrightness);
                                 }
-                                TEMP_BUFFER.put((y - 1) * WIDTH + x, color);
+                                SCREEN_BUFFER.put((y - 1) * WIDTH + x, color);
                                 //TEMP_BUFFER.setElem(arrayPos, color);
                                 //putPixel(x, y - 1, Texture.FLOOR[Map.FLOOR[floorX][floorY]].getPixel(floorTexX, floorTexY));
                                 //ZBUFFER[arrayPos] = currentDist;
@@ -1188,7 +1189,7 @@ public final class Renderer/* extends JPanel*/ {
                                         //color = applyFog(color, currentDist);
                                         color = applyFogNew(color, currentDist, fogBrightness);
                                     }
-                                    TEMP_BUFFER.put((HEIGHT - y) * WIDTH + x, color);
+                                    SCREEN_BUFFER.put((HEIGHT - y) * WIDTH + x, color);
                                     //TEMP_BUFFER.setElem(arrayPos, color);
                                     //putPixel(x, HEIGHT - y, Texture.CEIL[Map.CEIL[floorX][floorY]].getPixel(floorTexX, floorTexY));
                                     //ZBUFFER[arrayPos] = currentDist;
@@ -1237,7 +1238,7 @@ public final class Renderer/* extends JPanel*/ {
                         //int arrayPos = y * WIDTH + x;
                         //if (ZBUFFER[arrayPos] == Double.MAX_VALUE) {
                         if (ZBUFFER[x][y] == Double.MAX_VALUE) {
-                            TEMP_BUFFER.put(y * WIDTH + x, pixels[y]);
+                            SCREEN_BUFFER.put(y * WIDTH + x, pixels[y]);
                             //TEMP_BUFFER.setElem(arrayPos, pixels[y]);
                             ++pixelsInColumn;
                         }
@@ -1247,7 +1248,7 @@ public final class Renderer/* extends JPanel*/ {
                         //int arrayPos = y * WIDTH + x;
                         //if (ZBUFFER[arrayPos] == Double.MAX_VALUE) {
                         if (ZBUFFER[x][y] == Double.MAX_VALUE) {
-                            TEMP_BUFFER.put(y * WIDTH + x, 0xFF000000);
+                            SCREEN_BUFFER.put(y * WIDTH + x, 0xFF000000);
                             //TEMP_BUFFER.setElem(arrayPos, 0xFF000000);
                             ++pixelsInColumn;
                         }
@@ -1268,8 +1269,9 @@ public final class Renderer/* extends JPanel*/ {
     }
 
     private void render() {
-        while (alreadyRendered || nextActiveCamera == null || !Map.isActive()) {
-            renderThread.yield();
+        while (/*alreadyRendered || */nextActiveCamera == null || !Map.isActive()) {
+            //renderThread.yield();
+            return;
         }
         activeCamera.duplicate(nextActiveCamera);
 
@@ -1342,12 +1344,12 @@ public final class Renderer/* extends JPanel*/ {
                 task.setLatch(cdl);
                 EXECUTOR.execute(task);
             }
-            //try {
-            //    cdl.await();
-            //} catch(InterruptedException ignored) {}
-            while (cdl.getCount() > 0) {
-                renderThread.yield();
-            }
+            try {
+                cdl.await();
+            } catch(InterruptedException ignored) {}
+            /*while (cdl.getCount() > 0) {
+                Thread.yield();
+            }*/
 
         } else {
             renderWorld(0, WIDTH);
@@ -1649,7 +1651,7 @@ public final class Renderer/* extends JPanel*/ {
 
                         int color = image.getPixel(x, y);
                         if (((color/* >> 24*/) & 0xFF) != 0) {
-                            TEMP_BUFFER.put(col + x, color);
+                            SCREEN_BUFFER.put(col + x, color);
                         }
                     }
                 }
@@ -1663,14 +1665,14 @@ public final class Renderer/* extends JPanel*/ {
                     task.setLatch(cdl);
                     EXECUTOR.execute(task);
                 }
-                //try {
-                //    cdl.await();
-                //} catch(InterruptedException ignored) {}
-                while (cdl.getCount() > 0) {
-                    renderThread.yield();
-                }
+                try {
+                    cdl.await();
+                } catch(InterruptedException ignored) {}
+                /*while (cdl.getCount() > 0) {
+                    Thread.yield();
+                }*/
             } else {
-                antialiasing(WIDTH, TEMP_BUFFER.limit() - 1);
+                antialiasing(WIDTH, SCREEN_BUFFER.limit() - 1);
             }
         }
 
@@ -1687,17 +1689,17 @@ public final class Renderer/* extends JPanel*/ {
         //REPAINT_MANAGER.setDoubleBufferingEnabled(false);
         //repaint();
         //REPAINT_MANAGER.setDoubleBufferingEnabled(true);
-        while (!canRender) {
+        /*while (!canRender) {
             renderThread.yield();
-        }
+        }*/
 
         /*if (canRender)*/ {
             //SCREEN.draw(SCREEN_RASTER, 0, 0);
-            for (int i = 0; i < TEMP_BUFFER.limit(); ++i) {
+            /*for (int i = 0; i < TEMP_BUFFER.limit(); ++i) {
                 SCREEN_BUFFER.put(i, TEMP_BUFFER.get(i));
-            }
+            }*/
             //SCREEN_BUFFER.put(TEMP_BUFFER);
-            alreadyRendered = true;
+            //alreadyRendered = true;
         }
         //IntBuffer buffer = SCREEN_RASTER.getPixels().asIntBuffer();
         // timing for input and FPS counter
@@ -1716,7 +1718,7 @@ public final class Renderer/* extends JPanel*/ {
 */
         if (Config.STEP_BY_STEP_RENDERING) {
             try {
-                renderThread.sleep(5000);
+                Thread.sleep(5000);
             } catch (InterruptedException ex) {}
         }
 
@@ -1724,13 +1726,16 @@ public final class Renderer/* extends JPanel*/ {
     }
 
     public com.badlogic.gdx.graphics.Texture getFrame() {
-        while (!alreadyRendered) {
+        /*while (!alreadyRendered) {
             Thread.yield();
-        }
+        }*/
+        //if (!alreadyRendered) {
+            render();
+        //}
 
-        canRender = alreadyRendered = false;
+        /*canRender = *///alreadyRendered = false;
         SCREEN.draw(SCREEN_RASTER, 0, 0);
-        canRender = true;
+        //canRender = true;
 
         return SCREEN;
     }
@@ -1753,7 +1758,7 @@ public final class Renderer/* extends JPanel*/ {
         RAY_STEP = 1.0 / WIDTH;
     }
 
-    public void start() {
+    /*public void start() {
         if (!started) {
             started = true;
             renderThread = new Thread(new Runnable() {
@@ -1773,7 +1778,7 @@ public final class Renderer/* extends JPanel*/ {
             renderThread.setPriority(Thread.MAX_PRIORITY);
             renderThread.start();
         }
-    }
+    }*/
 
     public void stopRenderTasks() {
         for (RenderTask task : RENDER_TASKS) {
@@ -1794,8 +1799,8 @@ public final class Renderer/* extends JPanel*/ {
 
     public static void deinit() {
         Renderer.getInstance().stopRenderTasks();
-        Renderer.getInstance().renderThread = null;
-        started = false;
+        //Renderer.getInstance().renderThread = null;
+        //started = false;
     }
 
     private RenderTask newRenderTask(final String name, final int fromX, final int toX) {
@@ -1816,15 +1821,15 @@ public final class Renderer/* extends JPanel*/ {
         SCREEN_RASTER.setFilter(Filter.NearestNeighbour);
         SCREEN_RASTER.setBlending(Pixmap.Blending.None);
 
-        TEMP_RASTER = new Pixmap(WIDTH, HEIGHT, Format.RGBA8888);
-        TEMP_RASTER.setFilter(Filter.NearestNeighbour);
-        TEMP_RASTER.setBlending(Pixmap.Blending.None);
+        /*TEMP_RASTER = new Pixmap(WIDTH, HEIGHT, Format.RGBA8888);
+        TEMP_RASTER.setFilter(Filter.BiLinear);
+        TEMP_RASTER.setBlending(Pixmap.Blending.None);*/
 
         //SCREEN_RASTER = pxmap.getPixels().asIntBuffer();
         //SCREEN_SMALL = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_ARGB);
         //SCREEN_BUFFER = new int[WIDTH * HEIGHT];
         SCREEN_BUFFER = SCREEN_RASTER.getPixels().asIntBuffer();
-        TEMP_BUFFER = TEMP_RASTER.getPixels().asIntBuffer();
+        //TEMP_BUFFER = TEMP_RASTER.getPixels().asIntBuffer();
         SCREEN = new com.badlogic.gdx.graphics.Texture(SCREEN_RASTER);
         SCREEN.setFilter(TextureFilter.Nearest, TextureFilter.Nearest);
         //SCREEN_BUFFER = SCREEN.getRaster().getDataBuffer();

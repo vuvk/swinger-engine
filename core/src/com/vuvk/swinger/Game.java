@@ -186,7 +186,7 @@ public class Game extends ApplicationAdapter {
         }
 
         Gdx.gl.glClearColor(0, 0, 0, 1);
-        Renderer.getInstance().start();
+//        Renderer.getInstance().start();
 
         /*for (int i = 1; i < 6; ++i) {
             kishPoints[i - 1] = new KishPoint(Map.SEGMENTS[1][i].getA());
