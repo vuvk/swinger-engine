@@ -80,9 +80,9 @@ public class Main {
                         try {
                             int param = Integer.parseInt(args[i + 1]);
                             if (param == 1) {
-                                Config.fog = Fog.OLD;
+                                Config.fog = Fog.OLDSCHOOL;
                             } else if (param == 2) {
-                                Config.fog = Fog.SMOOTH;
+                                Config.fog = Fog.LINEAR;
                             }
                         } catch (NumberFormatException ex) {}
                     }

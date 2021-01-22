@@ -1,5 +1,5 @@
 /**
-    Copyright (C) 2019-2020 Anton "Vuvk" Shcherbatykh <vuvk69@gmail.com>
+    Copyright (C) 2019-2021 Anton "Vuvk" Shcherbatykh <vuvk69@gmail.com>
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
@@ -86,9 +86,9 @@ public final class Config {
             if (json.has("fog")) {
                 switch (json.getInt("fog")) {
                     case 0 : fog = Fog.NOTHING; break;
-                    case 1 : fog = Fog.OLD;     break;
+                    case 1 : fog = Fog.OLDSCHOOL;     break;
                     default:
-                    case 2 : fog = Fog.SMOOTH;  break;
+                    case 2 : fog = Fog.LINEAR;  break;
                 }
             }
             WIDTH  = (json.has("window_width"))   ? json.getInt("window_width")    : 640;
@@ -120,8 +120,8 @@ public final class Config {
         json.writeValue("draw_sky",       drawSky);
         switch (fog) {
             case NOTHING : json.writeValue("fog", 0); break;
-            case OLD     : json.writeValue("fog", 1); break;
-            case SMOOTH  : json.writeValue("fog", 2); break;
+            case OLDSCHOOL     : json.writeValue("fog", 1); break;
+            case LINEAR  : json.writeValue("fog", 2); break;
         }
         json.writeValue("window_width",   WIDTH);
         json.writeValue("window_height",  HEIGHT);

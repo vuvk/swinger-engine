@@ -1,5 +1,5 @@
 /**
-    Copyright (C) 2019-2020 Anton "Vuvk" Shcherbatykh <vuvk69@gmail.com>
+    Copyright (C) 2019-2021 Anton "Vuvk" Shcherbatykh <vuvk69@gmail.com>
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
@@ -253,8 +253,8 @@ public final class InputManager extends InputAdapter {
                                     if (scanCommand.hasNextInt()) {
                                         switch (scanCommand.nextInt()) {
                                             case 0 : Config.fog = Fog.NOTHING; break;
-                                            case 1 : Config.fog = Fog.OLD;     break;
-                                            case 2 : Config.fog = Fog.SMOOTH;  break;
+                                            case 1 : Config.fog = Fog.OLDSCHOOL;     break;
+                                            case 2 : Config.fog = Fog.LINEAR;  break;
                                         }
                                     }
                                     break;

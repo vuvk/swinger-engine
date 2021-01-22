@@ -1,5 +1,5 @@
 /**
-    Copyright (C) 2019-2020 Anton "Vuvk" Shcherbatykh <vuvk69@gmail.com>
+    Copyright (C) 2019-2021 Anton "Vuvk" Shcherbatykh <vuvk69@gmail.com>
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
@@ -148,7 +148,7 @@ public class Menu {
         OPTIONS.addButton(new ButtonMenu(new Text(FontBank.FONT_MENU, "FOG      LOW",
                                                   new Vector2(Renderer.HALF_WIDTH - 50, Renderer.HALF_HEIGHT - 24)),
                                          () -> {
-                                             Config.fog = (Config.fog == Fog.SMOOTH) ? Fog.OLD : Fog.SMOOTH;
+                                             Config.fog = (Config.fog == Fog.LINEAR) ? Fog.OLDSCHOOL : Fog.LINEAR;
                                              updateOptionsSubMenu();
                                          } ));
         OPTIONS.addButton(new ButtonMenu(new Text(FontBank.FONT_MENU, "ANTIALIASING   OFF",
@@ -261,7 +261,7 @@ public class Menu {
         btn.getText().setMessage("VOLUME   " + (int) (SoundSystem.getVolume() * 100) + "%");
         // fog
         btn = OPTIONS.getButton(3);
-        btn.getText().setMessage("FOG      " + ((Config.fog == Fog.SMOOTH) ? "HIGH" : "LOW"));
+        btn.getText().setMessage("FOG      " + ((Config.fog == Fog.LINEAR) ? "HIGH" : "LOW"));
         // antialising
         btn = OPTIONS.getButton(4);
         btn.getText().setMessage("ANTIALIASING   " + ((Config.antialiasing) ? "ON" : "OFF"));

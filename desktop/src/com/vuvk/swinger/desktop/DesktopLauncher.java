@@ -1,5 +1,5 @@
 /**
-    Copyright (C) 2019-2020 Anton "Vuvk" Shcherbatykh <vuvk69@gmail.com>
+    Copyright (C) 2019-2021 Anton "Vuvk" Shcherbatykh <vuvk69@gmail.com>
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
@@ -25,7 +25,7 @@ public class DesktopLauncher {
         config.allowSoftwareMode = true;
         config.useHDPI = false;
         config.useGL30 = false;
-        config.foregroundFPS = config.backgroundFPS = 120;
+        config.foregroundFPS = config.backgroundFPS = 2000;
         config.resizable = false;
         config.vSyncEnabled = Config.vSync;
         config.width  = Config.WIDTH;

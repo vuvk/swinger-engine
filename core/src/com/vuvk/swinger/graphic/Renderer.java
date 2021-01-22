@@ -1,5 +1,5 @@
 /**
-    Copyright (C) 2019-2020 Anton "Vuvk" Shcherbatykh <vuvk69@gmail.com>
+    Copyright (C) 2019-2021 Anton "Vuvk" Shcherbatykh <vuvk69@gmail.com>
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
@@ -347,7 +347,7 @@ public final class Renderer/* extends JPanel*/ {
      * @param distance Дистанция до пикселя
      * @return полученный цвет
      */
-    private int applyFog(int pixel, double distance) {
+    /*private int applyFog(int pixel, double distance) {
         // близко - вернуть оригинальный пиксель
         if (distance < Fog.START) {
             return pixel;
@@ -368,7 +368,7 @@ public final class Renderer/* extends JPanel*/ {
             if (pixelBrightness <= 0.0) {
                 pixel = Fog.COLOR;
             } else {
-                /* раскладываем */
+                // раскладываем
                 int rF = (int)(Fog.RED   * fogBrightness);
                 int gF = (int)(Fog.GREEN * fogBrightness);
                 int bF = (int)(Fog.BLUE  * fogBrightness);
@@ -376,7 +376,7 @@ public final class Renderer/* extends JPanel*/ {
                 int rP = (int)(((pixel >> 24) & 0xFF) * pixelBrightness);
                 int gP = (int)(((pixel >> 16) & 0xFF) * pixelBrightness);
                 int bP = (int)(((pixel >>  8) & 0xFF) * pixelBrightness);
-                int aP = (int)(((pixel      ) & 0xFF)/* * pixelBrightness*/);
+                int aP = (int)(((pixel      ) & 0xFF)                  );
 
                 // складываем компоненты цветов
                 // берем альфу пикселя, потому что он может быть полупрозрачным
@@ -390,11 +390,13 @@ public final class Renderer/* extends JPanel*/ {
         }
         // очень далеко - просто цвет тумана
         return Fog.COLOR;
-    }
+    }*/
+
     /**
      * Применить туман к пикселю (проверка расстояния)
      * @param pixel Исходный цвет пикселя в формате ARGB
      * @param distance Дистанция до пикселя
+     * @param fogBrightness Яркость тумана в пикселе
      * @return полученный цвет
      */
     private int applyFogNew(int pixel, double distance, double fogBrightness) {
@@ -403,12 +405,6 @@ public final class Renderer/* extends JPanel*/ {
             return pixel;
         // дистанция между началом и концом тумана
         } else if (distance < Fog.END) {
-            // определяем яркость/силу тумана в точке
-            if (Config.fog == Fog.OLD) {
-                int pos = (int)((distance - Fog.START) * Fog.INV_SIMPLE_DISTANCE_STEP);
-                fogBrightness = Fog.SIMPLE_BRIGHTNESS[pos];
-            }
-
             // яркость/сила пикселя обратная силе тумана
             double pixelBrightness = 1.0 - fogBrightness;
             if (pixelBrightness <= 0.0) {
@@ -505,7 +501,7 @@ public final class Renderer/* extends JPanel*/ {
         double wallX; //where exactly the wall was hit
         
         // яркость тумана для столбца/точки
-        double fogBrightness;
+        double fogBrightness = 0.0;
 
         // draw door or wall?
         //boolean drawDoor;
