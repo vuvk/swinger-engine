@@ -145,7 +145,7 @@ public class Menu {
                                              SoundSystem.setVolume(volume);
                                              updateOptionsSubMenu();
                                          }));
-        OPTIONS.addButton(new ButtonMenu(new Text(FontBank.FONT_MENU, "FOG      LOW",
+        OPTIONS.addButton(new ButtonMenu(new Text(FontBank.FONT_MENU, "FOG      OLDSCHOOL",
                                                   new Vector2(Renderer.HALF_WIDTH - 50, Renderer.HALF_HEIGHT - 24)),
                                          () -> {
                                              Config.fog = (Config.fog == Fog.LINEAR) ? Fog.OLDSCHOOL : Fog.LINEAR;
@@ -261,7 +261,7 @@ public class Menu {
         btn.getText().setMessage("VOLUME   " + (int) (SoundSystem.getVolume() * 100) + "%");
         // fog
         btn = OPTIONS.getButton(3);
-        btn.getText().setMessage("FOG      " + ((Config.fog == Fog.LINEAR) ? "HIGH" : "LOW"));
+        btn.getText().setMessage("FOG      " + ((Config.fog == Fog.LINEAR) ? "LINEAR" : "OLDSCHOOL"));
         // antialising
         btn = OPTIONS.getButton(4);
         btn.getText().setMessage("ANTIALIASING   " + ((Config.antialiasing) ? "ON" : "OFF"));
