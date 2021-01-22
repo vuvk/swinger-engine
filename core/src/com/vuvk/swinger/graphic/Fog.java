@@ -29,38 +29,55 @@ public enum Fog {
 
     public static double   START = 2.0;
     public static double   END   = 8.0;
-    public static double   FACTOR;
-    public static int      SIMPLE_QUALITY;  // чем больше, тем лучше качество
-    public static double   SIMPLE_DISTANCE_STEP;
-    public static double   INV_SIMPLE_DISTANCE_STEP;
-    // таблица с яркостями для олдскул-тумана
-    public static double[] SIMPLE_BRIGHTNESS;
+    public static int      OLDSCHOOL_QUALITY = 8;  // чем больше, тем лучше качество
 
     // предрасчитанная таблица яркостей тумана в точке по координате Y
-    // для смазанного тумана
-    public static double[] SMOOTH_TABLE;
+    // для олдскульного тумана
+    public static double[] OLDSCHOOL_TABLE;
+    // для линейного тумана
+    public static double[] LINEAR_TABLE;
 
     public static void init() {
         RED   = (COLOR >> 24) & 0xFF;
         GREEN = (COLOR >> 16) & 0xFF;
         BLUE  = (COLOR >>  8) & 0xFF;
 
-        FACTOR = 1.0 / (END - START);
-        SIMPLE_QUALITY = 8;
-        SIMPLE_DISTANCE_STEP = (END - START) / SIMPLE_QUALITY;
-        INV_SIMPLE_DISTANCE_STEP = 1.0f / SIMPLE_DISTANCE_STEP;
-        SIMPLE_BRIGHTNESS = new double[SIMPLE_QUALITY];
+        double factor = 1.0 / (END - START);
 
-        final double brightnessStep = 1.0 / SIMPLE_QUALITY;
+        // предварительный расчет таблицы с шагами яркости тумана
+        // для олдскульного тумана
+        double oldschoolDistanceStep = (END - START) / OLDSCHOOL_QUALITY;
+        double invOldschoolDistanceStep = 1.0 / oldschoolDistanceStep;
+        // таблица с яркостями для олдскул-тумана
+        double[] oldschoolBrightnesses = new double[OLDSCHOOL_QUALITY];
+        
+        final double brightnessStep = 1.0 / OLDSCHOOL_QUALITY;
         double brightness = brightnessStep;
-        for (int i = 0; i < SIMPLE_QUALITY; ++i) {
-            SIMPLE_BRIGHTNESS[i] = brightness;
+        for (int i = 0; i < OLDSCHOOL_QUALITY; ++i) {
+            oldschoolBrightnesses[i] = brightness;
             brightness += brightnessStep;
         }
-
-        SMOOTH_TABLE = new double[Renderer.HEIGHT];
-        for (int y = 0; y < SMOOTH_TABLE.length; ++y) {
-            SMOOTH_TABLE[y] = (Renderer.DISTANCES[y] - Fog.START) * Fog.FACTOR;
+        
+        // считаем таблицу для олдскульного тумана
+        OLDSCHOOL_TABLE = new double[Renderer.HEIGHT];
+        for (int y = 0; y < OLDSCHOOL_TABLE.length; ++y) {
+            double fogBrightness;
+            if (Renderer.DISTANCES[y] < START) {
+                fogBrightness = 0.0;
+            } else if (Renderer.DISTANCES[y] >= END) {
+                fogBrightness = 1.0;
+            } else {
+                int pos = (int)((Renderer.DISTANCES[y] - START) * invOldschoolDistanceStep);
+                fogBrightness = oldschoolBrightnesses[pos];
+            }
+            
+            OLDSCHOOL_TABLE[y] = fogBrightness;
+        }
+                
+        // считаем таблицу для линейного тумана
+        LINEAR_TABLE = new double[Renderer.HEIGHT];
+        for (int y = 0; y < LINEAR_TABLE.length; ++y) {
+            LINEAR_TABLE[y] = (Renderer.DISTANCES[y] - START) * factor;
         }
     }
 }
