@@ -951,7 +951,11 @@ public final class Renderer/* extends JPanel*/ {
                     // считаем яркость тумана, игнорируя этаж, как будто все стены/двери на уровне игрока
                     int fY = HALF_HEIGHT + (lineHeight >> 1);
                     fY = Utils.limit(fY, 0, HEIGHT - 1);
-                    fogBrightness = Fog.SMOOTH_TABLE[fY];                    
+                    if (Config.fog == Fog.OLDSCHOOL) {
+                        fogBrightness = Fog.OLDSCHOOL_TABLE[fY];  
+                    } else if (Config.fog == Fog.LINEAR) {
+                        fogBrightness = Fog.LINEAR_TABLE[fY];     
+                    }
                     
                     //int[] pixelsColumn = txr.getCol(texX);
                     for (int y = drawStart; y < drawEnd; ++y) {
@@ -1131,7 +1135,11 @@ public final class Renderer/* extends JPanel*/ {
                         }
 
                         int color;
-                        fogBrightness = Fog.SMOOTH_TABLE[y];
+                        if (Config.fog == Fog.OLDSCHOOL) {
+                            fogBrightness = Fog.OLDSCHOOL_TABLE[y];  
+                        } else if (Config.fog == Fog.LINEAR) {
+                            fogBrightness = Fog.LINEAR_TABLE[y];     
+                        }
 
                         // floor
                         //int arrayPos = (y - 1) * WIDTH + x;
@@ -1442,7 +1450,12 @@ public final class Renderer/* extends JPanel*/ {
                 int fullSpriteHeight = (int)(HEIGHT * invTransformY);
                 int fY = HALF_HEIGHT + (fullSpriteHeight >> 1);
                 fY = Utils.limit(fY, 0, HEIGHT - 1);
-                double fogBrightness = Fog.SMOOTH_TABLE[fY];
+                double fogBrightness = 1.0;                
+                if (Config.fog == Fog.OLDSCHOOL) {
+                    fogBrightness = Fog.OLDSCHOOL_TABLE[fY];  
+                } else if (Config.fog == Fog.LINEAR) {
+                    fogBrightness = Fog.LINEAR_TABLE[fY];     
+                }
 
                 for (int x = drawStartX; x < drawEndX; x += xStep) {
                     int texX = (int)(((x - dSX) << Texture.WIDTH_POT) * invSpriteWidth);
