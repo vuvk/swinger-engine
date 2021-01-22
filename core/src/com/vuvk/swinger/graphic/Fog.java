@@ -13,29 +13,65 @@
 */
 package com.vuvk.swinger.graphic;
 
+import com.vuvk.swinger.utils.Utils;
+
 /**
  *
  * @author Anton "Vuvk" Shcherbatykh
  */
 public enum Fog {
-    NOTHING,
-    OLDSCHOOL,
-    LINEAR;
+    NOTHING (0),
+    OLDSCHOOL (1),
+    LINEAR (2),
+    EXPONENTIAL (3),
+    EXPONENTIAL2 (4); 
+    
+    // номер типа тумана
+    private int num;
+    public int getNum() {
+        return num;
+    }
+
+    Fog(int num) {
+        this.num = num;
+    }
+
+    /** 
+     * Получить тип тумана по номеру
+     * @param num номер 
+     * @return Константа енумератора
+     */
+    public static Fog getByNum(int num) {
+        num = Utils.limit(num, 0, 4);
+
+        switch (num) {
+            case 0 : return NOTHING;
+            case 1 : return OLDSCHOOL;
+            default:
+            case 2 : return LINEAR;
+            case 3 : return EXPONENTIAL;
+            case 4 : return EXPONENTIAL2;
+        }
+    }
 
     public static int COLOR = 0xFF;
     public static int RED;
     public static int GREEN;
     public static int BLUE;
 
-    public static double   START = 2.0;
-    public static double   END   = 8.0;
-    public static int      OLDSCHOOL_QUALITY = 8;  // чем больше, тем лучше качество
+    public static double START = 2.0;
+    public static double END   = 8.0;
+    public static double EXP_DENSITY = 0.5; // arbitrary fog density that can range from 0.0 to 1.0 (exp/exp2 fog)
+    public static int    OLDSCHOOL_QUALITY = 8;  // чем больше, тем лучше качество
 
     // предрасчитанная таблица яркостей тумана в точке по координате Y
     // для олдскульного тумана
     public static double[] OLDSCHOOL_TABLE;
     // для линейного тумана
     public static double[] LINEAR_TABLE;
+    // для экспоненциального тумана
+    public static double[] EXPONENTIAL_TABLE;
+    public static double[] EXPONENTIAL2_TABLE;
 
     public static void init() {
         RED   = (COLOR >> 24) & 0xFF;
@@ -77,7 +113,46 @@ public enum Fog {
         // считаем таблицу для линейного тумана
         LINEAR_TABLE = new double[Renderer.HEIGHT];
         for (int y = 0; y < LINEAR_TABLE.length; ++y) {
-            LINEAR_TABLE[y] = (Renderer.DISTANCES[y] - START) * factor;
+            double fogBrightness;
+            if (Renderer.DISTANCES[y] < START) {
+                fogBrightness = 0.0;
+            } else if (Renderer.DISTANCES[y] >= END) {
+                fogBrightness = 1.0;
+            } else {
+                fogBrightness = (Renderer.DISTANCES[y] - START) * factor;
+            }
+            LINEAR_TABLE[y] = fogBrightness;
+        }
+                
+        // считаем таблицу для экспоненциального тумана
+        EXPONENTIAL_TABLE = new double[Renderer.HEIGHT];
+        for (int y = 0; y < EXPONENTIAL_TABLE.length; ++y) {
+            double fogBrightness;
+            if (Renderer.DISTANCES[y] < START) {
+                fogBrightness = 0.0;
+            } else if (Renderer.DISTANCES[y] >= END) {
+                fogBrightness = 1.0;
+            } else {
+                fogBrightness = 1.0 / Math.pow(Math.E, (END - Renderer.DISTANCES[y]) * EXP_DENSITY);
+            }
+            
+            EXPONENTIAL_TABLE[y] = fogBrightness;
+        }
+        
+        EXPONENTIAL2_TABLE = new double[Renderer.HEIGHT];
+        for (int y = 0; y < EXPONENTIAL2_TABLE.length; ++y) {
+            double fogBrightness;
+            if (Renderer.DISTANCES[y] < START) {
+                fogBrightness = 0.0;
+            } else if (Renderer.DISTANCES[y] >= END) {
+                fogBrightness = 1.0;
+            } else {
+                factor = (END - Renderer.DISTANCES[y]) * EXP_DENSITY;
+                factor *= factor; // factor^2
+                fogBrightness = 1.0 / Math.pow(Math.E, factor);
+            }
+            
+            EXPONENTIAL2_TABLE[y] = fogBrightness;
         }
     }
 }
