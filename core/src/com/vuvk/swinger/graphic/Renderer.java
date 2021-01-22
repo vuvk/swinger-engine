@@ -1723,10 +1723,12 @@ public final class Renderer/* extends JPanel*/ {
         HALF_HEIGHT = HEIGHT >> 1;
         QUARTER_WIDTH = HALF_WIDTH >> 1;
 
+        // заполняем дистанции зеркально вниз и вверх
         DISTANCES = new double[HEIGHT];
-        DISTANCES[0] = 0.0;
-        for (int y = 0; y < HEIGHT; ++y) {
-            DISTANCES[y] = (double)HEIGHT / ((y << 1) - HEIGHT);
+        for (int y = 0; y < HALF_HEIGHT; ++y) {
+            double distance = (double)HEIGHT / (((y + HALF_HEIGHT) << 1) - HEIGHT);
+            DISTANCES[HALF_HEIGHT - y] = DISTANCES[HALF_HEIGHT + y] = distance;
+            
         }
 
         RAY_STEP = 1.0 / WIDTH;
