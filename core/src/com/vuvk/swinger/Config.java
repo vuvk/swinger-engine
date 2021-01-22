@@ -84,12 +84,7 @@ public final class Config {
             mouseLook    = (json.has("mouselook"))    ? json.getBoolean("mouselook")    : false;
             drawSky      = (json.has("draw_sky"))     ? json.getBoolean("draw_sky")     : true;
             if (json.has("fog")) {
-                switch (json.getInt("fog")) {
-                    case 0 : fog = Fog.NOTHING; break;
-                    case 1 : fog = Fog.OLDSCHOOL;     break;
-                    default:
-                    case 2 : fog = Fog.LINEAR;  break;
-                }
+                fog = Fog.getByNum(json.getInt("fog"));
             }
             WIDTH  = (json.has("window_width"))   ? json.getInt("window_width")    : 640;
             HEIGHT = (json.has("window_height"))  ? json.getInt("window_height")   : 480;
@@ -118,11 +113,7 @@ public final class Config {
         json.writeValue("multithreading", multithreading);
         json.writeValue("mouselook",      mouseLook);
         json.writeValue("draw_sky",       drawSky);
-        switch (fog) {
-            case NOTHING : json.writeValue("fog", 0); break;
-            case OLDSCHOOL     : json.writeValue("fog", 1); break;
-            case LINEAR  : json.writeValue("fog", 2); break;
-        }
+        json.writeValue("fog",            fog.getNum());
         json.writeValue("window_width",   WIDTH);
         json.writeValue("window_height",  HEIGHT);
         json.writeValue("window_title",   TITLE);

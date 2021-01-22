@@ -251,11 +251,7 @@ public final class InputManager extends InputAdapter {
 
                                 case "fog" :
                                     if (scanCommand.hasNextInt()) {
-                                        switch (scanCommand.nextInt()) {
-                                            case 0 : Config.fog = Fog.NOTHING; break;
-                                            case 1 : Config.fog = Fog.OLDSCHOOL;     break;
-                                            case 2 : Config.fog = Fog.LINEAR;  break;
-                                        }
+                                        Config.fog = Fog.getByNum(scanCommand.nextInt());
                                     }
                                     break;
 

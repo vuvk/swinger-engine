@@ -951,10 +951,12 @@ public final class Renderer/* extends JPanel*/ {
                     // считаем яркость тумана, игнорируя этаж, как будто все стены/двери на уровне игрока
                     int fY = HALF_HEIGHT + (lineHeight >> 1);
                     fY = Utils.limit(fY, 0, HEIGHT - 1);
-                    if (Config.fog == Fog.OLDSCHOOL) {
-                        fogBrightness = Fog.OLDSCHOOL_TABLE[fY];  
-                    } else if (Config.fog == Fog.LINEAR) {
-                        fogBrightness = Fog.LINEAR_TABLE[fY];     
+                    switch (Config.fog) {
+                        case NOTHING   : fogBrightness = 0.0; break;
+                        case OLDSCHOOL : fogBrightness = Fog.OLDSCHOOL_TABLE[fY]; break;
+                        case LINEAR    : fogBrightness = Fog.LINEAR_TABLE[fY];    break;
+                        case EXPONENTIAL  : fogBrightness = Fog.EXPONENTIAL_TABLE[fY];  break;
+                        case EXPONENTIAL2 : fogBrightness = Fog.EXPONENTIAL2_TABLE[fY]; break;                        
                     }
                     
                     //int[] pixelsColumn = txr.getCol(texX);
@@ -1135,10 +1137,12 @@ public final class Renderer/* extends JPanel*/ {
                         }
 
                         int color;
-                        if (Config.fog == Fog.OLDSCHOOL) {
-                            fogBrightness = Fog.OLDSCHOOL_TABLE[y];  
-                        } else if (Config.fog == Fog.LINEAR) {
-                            fogBrightness = Fog.LINEAR_TABLE[y];     
+                        switch (Config.fog) {
+                            case NOTHING   : fogBrightness = 0.0; break;
+                            case OLDSCHOOL : fogBrightness = Fog.OLDSCHOOL_TABLE[y]; break;
+                            case LINEAR    : fogBrightness = Fog.LINEAR_TABLE[y];    break;
+                            case EXPONENTIAL  : fogBrightness = Fog.EXPONENTIAL_TABLE[y];  break;
+                            case EXPONENTIAL2 : fogBrightness = Fog.EXPONENTIAL2_TABLE[y]; break;                        
                         }
 
                         // floor
@@ -1450,11 +1454,13 @@ public final class Renderer/* extends JPanel*/ {
                 int fullSpriteHeight = (int)(HEIGHT * invTransformY);
                 int fY = HALF_HEIGHT + (fullSpriteHeight >> 1);
                 fY = Utils.limit(fY, 0, HEIGHT - 1);
-                double fogBrightness = 1.0;                
-                if (Config.fog == Fog.OLDSCHOOL) {
-                    fogBrightness = Fog.OLDSCHOOL_TABLE[fY];  
-                } else if (Config.fog == Fog.LINEAR) {
-                    fogBrightness = Fog.LINEAR_TABLE[fY];     
+                double fogBrightness = 1.0;         
+                switch (Config.fog) {
+                    case NOTHING   : fogBrightness = 0.0; break;
+                    case OLDSCHOOL : fogBrightness = Fog.OLDSCHOOL_TABLE[fY]; break;
+                    case LINEAR    : fogBrightness = Fog.LINEAR_TABLE[fY];    break;
+                    case EXPONENTIAL  : fogBrightness = Fog.EXPONENTIAL_TABLE[fY];  break;
+                    case EXPONENTIAL2 : fogBrightness = Fog.EXPONENTIAL2_TABLE[fY]; break;                        
                 }
 
                 for (int x = drawStartX; x < drawEndX; x += xStep) {
