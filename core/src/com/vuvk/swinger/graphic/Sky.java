@@ -14,7 +14,6 @@
 package com.vuvk.swinger.graphic;
 
 import com.vuvk.swinger.objects.Camera;
-import com.vuvk.swinger.objects.mortals.Player;
 import com.vuvk.swinger.res.Image;
 import com.vuvk.swinger.res.TextureBank;
 
@@ -22,26 +21,26 @@ import com.vuvk.swinger.res.TextureBank;
  *
  * @author Anton "Vuvk" Shcherbatykh
  */
-public final class Sky extends Image {    
+public final class Sky extends Image {
     private static Sky instance = new Sky(TextureBank.PICS_FOLDER + "sky.png");
     //private final static Player PLAYER = Player.getInstance();
-    
-    private double xStep;    
+
+    private final double xStep;
     private int xStart;
-    
+
     public Sky(final String path) {
         super(path, Renderer.HEIGHT << 2, Renderer.HEIGHT);
         xStep = width / 360.0;
     }
-    
+
     public int getXStart() {
         return xStart;
     }
-    
+
     public static Sky getInstance() {
         return instance;
     }
-    
+
     public void update() {
         Camera camera = Renderer.getInstance().getActiveCamera();
         if (camera == null) {

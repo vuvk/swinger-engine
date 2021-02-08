@@ -24,10 +24,10 @@ public enum Fog {
     OLDSCHOOL (1),
     LINEAR (2),
     EXPONENTIAL (3),
-    EXPONENTIAL2 (4); 
-    
+    EXPONENTIAL2 (4);
+
     // номер типа тумана
-    private int num;
+    private final int num;
     public int getNum() {
         return num;
     }
@@ -36,9 +36,9 @@ public enum Fog {
         this.num = num;
     }
 
-    /** 
+    /**
      * Получить тип тумана по номеру
-     * @param num номер 
+     * @param num номер
      * @return Константа енумератора
      */
     public static Fog getByNum(int num) {
@@ -86,14 +86,14 @@ public enum Fog {
         double invOldschoolDistanceStep = 1.0 / oldschoolDistanceStep;
         // таблица с яркостями для олдскул-тумана
         double[] oldschoolBrightnesses = new double[OLDSCHOOL_QUALITY];
-        
+
         final double brightnessStep = 1.0 / OLDSCHOOL_QUALITY;
         double brightness = brightnessStep;
         for (int i = 0; i < OLDSCHOOL_QUALITY; ++i) {
             oldschoolBrightnesses[i] = brightness;
             brightness += brightnessStep;
         }
-        
+
         // считаем таблицу для олдскульного тумана
         OLDSCHOOL_TABLE = new double[Renderer.HEIGHT];
         for (int y = 0; y < OLDSCHOOL_TABLE.length; ++y) {
@@ -106,10 +106,10 @@ public enum Fog {
                 int pos = (int)((Renderer.DISTANCES[y] - START) * invOldschoolDistanceStep);
                 fogBrightness = oldschoolBrightnesses[pos];
             }
-            
+
             OLDSCHOOL_TABLE[y] = fogBrightness;
         }
-                
+
         // считаем таблицу для линейного тумана
         LINEAR_TABLE = new double[Renderer.HEIGHT];
         for (int y = 0; y < LINEAR_TABLE.length; ++y) {
@@ -123,7 +123,7 @@ public enum Fog {
             }
             LINEAR_TABLE[y] = fogBrightness;
         }
-                
+
         // считаем таблицу для экспоненциального тумана
         EXPONENTIAL_TABLE = new double[Renderer.HEIGHT];
         for (int y = 0; y < EXPONENTIAL_TABLE.length; ++y) {
@@ -135,10 +135,10 @@ public enum Fog {
             } else {
                 fogBrightness = 1.0 / Math.pow(Math.E, (END - Renderer.DISTANCES[y]) * EXP_DENSITY);
             }
-            
+
             EXPONENTIAL_TABLE[y] = fogBrightness;
         }
-        
+
         EXPONENTIAL2_TABLE = new double[Renderer.HEIGHT];
         for (int y = 0; y < EXPONENTIAL2_TABLE.length; ++y) {
             double fogBrightness;
@@ -151,7 +151,7 @@ public enum Fog {
                 factor *= factor; // factor^2
                 fogBrightness = 1.0 / Math.pow(Math.E, factor);
             }
-            
+
             EXPONENTIAL2_TABLE[y] = fogBrightness;
         }
     }

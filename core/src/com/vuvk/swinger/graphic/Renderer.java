@@ -116,22 +116,15 @@ public final class Renderer/* extends JPanel*/ {
         double wallDist;
     }
 */
-    private class RenderTarget {
+    private final class RenderTarget {
         int x, y;
-        //double wallX;
         int texX = 0;
-        //int side;
-        //double wallDist;
-        // draw wall or segment?
-        //boolean drawSegment = false;
-        // is door side wall ?
-        //boolean doorWall = false;
         Texture texture;
         double wallDist;
         Vector2 collisionPoint = new Vector2();
     }
 
-    private class RenderTask implements Runnable {
+    private final class RenderTask implements Runnable {
         CountDownLatch latch;
         final private int fromX, toX;
 
@@ -156,7 +149,7 @@ public final class Renderer/* extends JPanel*/ {
         }
     }
 
-    private class AntialiasingTask implements Runnable {
+    private final class AntialiasingTask implements Runnable {
         CountDownLatch latch;
         final private int fromX, toX;
 
@@ -399,7 +392,7 @@ public final class Renderer/* extends JPanel*/ {
      * @param fogBrightness Яркость тумана в пикселе
      * @return полученный цвет
      */
-    private int applyFogNew(int pixel, double distance, double fogBrightness) {
+    private int applyFog(int pixel, double distance, double fogBrightness) {
         // близко - вернуть оригинальный пиксель
         if (distance < Fog.START) {
             return pixel;
@@ -500,7 +493,7 @@ public final class Renderer/* extends JPanel*/ {
             texY = 0;
 
         double wallX; //where exactly the wall was hit
-        
+
         // яркость тумана для столбца/точки
         double fogBrightness = 0.0;
 
@@ -948,7 +941,7 @@ public final class Renderer/* extends JPanel*/ {
                     //double fogFactor = 1.0 - (wallDist - Config.FOG_START) * Config.FOG_FACTOR;
                     int pixelsForDraw = drawEnd - drawStart;
                     int pixelsDrawed = 0;
-                    
+
                     // считаем яркость тумана, игнорируя этаж, как будто все стены/двери на уровне игрока
                     int fY = HALF_HEIGHT + (lineHeight >> 1);
                     fY = Utils.limit(fY, 0, HEIGHT - 1);
@@ -957,9 +950,9 @@ public final class Renderer/* extends JPanel*/ {
                         case OLDSCHOOL : fogBrightness = Fog.OLDSCHOOL_TABLE[fY]; break;
                         case LINEAR    : fogBrightness = Fog.LINEAR_TABLE[fY];    break;
                         case EXPONENTIAL  : fogBrightness = Fog.EXPONENTIAL_TABLE[fY];  break;
-                        case EXPONENTIAL2 : fogBrightness = Fog.EXPONENTIAL2_TABLE[fY]; break;                        
+                        case EXPONENTIAL2 : fogBrightness = Fog.EXPONENTIAL2_TABLE[fY]; break;
                     }
-                    
+
                     //int[] pixelsColumn = txr.getCol(texX);
                     for (int y = drawStart; y < drawEnd; ++y) {
                         //int arrayPos = y * WIDTH + x;
@@ -996,8 +989,7 @@ public final class Renderer/* extends JPanel*/ {
                         }
 
                         if (Config.fog != Fog.NOTHING) {
-                            //color = applyFog(color, wallDist);
-                            color = applyFogNew(color, wallDist, fogBrightness);
+                            color = applyFog(color, wallDist, fogBrightness);
                         }
 
                         //Color color = new Color(Texture.WALLS[texNum].getPixel(texX, texY));
@@ -1143,7 +1135,7 @@ public final class Renderer/* extends JPanel*/ {
                             case OLDSCHOOL : fogBrightness = Fog.OLDSCHOOL_TABLE[y]; break;
                             case LINEAR    : fogBrightness = Fog.LINEAR_TABLE[y];    break;
                             case EXPONENTIAL  : fogBrightness = Fog.EXPONENTIAL_TABLE[y];  break;
-                            case EXPONENTIAL2 : fogBrightness = Fog.EXPONENTIAL2_TABLE[y]; break;                        
+                            case EXPONENTIAL2 : fogBrightness = Fog.EXPONENTIAL2_TABLE[y]; break;
                         }
 
                         // floor
@@ -1160,8 +1152,7 @@ public final class Renderer/* extends JPanel*/ {
                                 //color = floorPixels[pixelPos];
                                 //color = floorPixels[floorTexX][floorTexY];
                                 if (Config.fog != Fog.NOTHING) {
-                                    //color = applyFog(color, currentDist);
-                                    color = applyFogNew(color, currentDist, fogBrightness);
+                                    color = applyFog(color, currentDist, fogBrightness);
                                 }
                                 SCREEN_BUFFER.put((y - 1) * WIDTH + x, color);
                                 //TEMP_BUFFER.setElem(arrayPos, color);
@@ -1186,8 +1177,7 @@ public final class Renderer/* extends JPanel*/ {
                                 //color = ceilPixels[floorTexX][floorTexY];
                                 if (((color/* >> 24*/) & 0xFF) != 0) {
                                     if (Config.fog != Fog.NOTHING) {
-                                        //color = applyFog(color, currentDist);
-                                        color = applyFogNew(color, currentDist, fogBrightness);
+                                        color = applyFog(color, currentDist, fogBrightness);
                                     }
                                     SCREEN_BUFFER.put((HEIGHT - y) * WIDTH + x, color);
                                     //TEMP_BUFFER.setElem(arrayPos, color);
@@ -1456,13 +1446,13 @@ public final class Renderer/* extends JPanel*/ {
                 int fullSpriteHeight = (int)(HEIGHT * invTransformY);
                 int fY = HALF_HEIGHT + (fullSpriteHeight >> 1);
                 fY = Utils.limit(fY, 0, HEIGHT - 1);
-                double fogBrightness = 1.0;         
+                double fogBrightness = 1.0;
                 switch (Config.fog) {
                     case NOTHING   : fogBrightness = 0.0; break;
                     case OLDSCHOOL : fogBrightness = Fog.OLDSCHOOL_TABLE[fY]; break;
                     case LINEAR    : fogBrightness = Fog.LINEAR_TABLE[fY];    break;
                     case EXPONENTIAL  : fogBrightness = Fog.EXPONENTIAL_TABLE[fY];  break;
-                    case EXPONENTIAL2 : fogBrightness = Fog.EXPONENTIAL2_TABLE[fY]; break;                        
+                    case EXPONENTIAL2 : fogBrightness = Fog.EXPONENTIAL2_TABLE[fY]; break;
                 }
 
                 for (int x = drawStartX; x < drawEndX; x += xStep) {
@@ -1495,7 +1485,7 @@ public final class Renderer/* extends JPanel*/ {
                             continue;
                         } else {
                             if (Config.fog != Fog.NOTHING) {
-                                color = applyFogNew(color, distance, fogBrightness);
+                                color = applyFog(color, distance, fogBrightness);
                             }
 
                             // paint pixel if it visible
@@ -1752,7 +1742,7 @@ public final class Renderer/* extends JPanel*/ {
         for (int y = 0; y < HALF_HEIGHT; ++y) {
             double distance = (double)HEIGHT / (((y + HALF_HEIGHT) << 1) - HEIGHT);
             DISTANCES[HALF_HEIGHT - y] = DISTANCES[HALF_HEIGHT + y] = distance;
-            
+
         }
 
         RAY_STEP = 1.0 / WIDTH;

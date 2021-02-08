@@ -13,37 +13,38 @@
 */
 package com.vuvk.swinger.math;
 
-import java.util.List;
 import com.vuvk.swinger.objects.mortals.Mortal;
 import com.vuvk.swinger.objects.mortals.Player;
 import com.vuvk.swinger.res.Map;
 import java.io.Serializable;
+import java.util.List;
 
 /**
  *
  * @author Anton "Vuvk" Shcherbatykh
  */
 public final class Ray implements Serializable {
-    private Vector2 start, dir;
-    private Segment segment;
-    private double length;
-    
+    private final Vector2 start;
+    private final Vector2 dir;
+    private final Segment segment;
+    private final double length;
+
     public Ray(final Vector2 start, final Vector2 dir, double length) {
         this.start = start;
         this.dir = dir;
         this.length = length;
         this.segment = new Segment(start, start.add(dir.mul(length)));
     }
-    
+
     /**
      * Получить дистанцию до точки на карте с твердым объектом, в которую попал луч
      * @param mapPoint В точку mapPoint записываются координаты на карте
      * @param collisionPoint В точку collisionPoint записываются мировые координаты точки столкновения
-     * @return дистанция до твердого объекта. 
+     * @return дистанция до твердого объекта.
      */
     public double getSolid(Vector2 mapPoint, Vector2 collisionPoint) {
         mapPoint.set((int)start.x, (int)start.y);
-        
+
         int side; //was a NS or a EW wall hit?
         // what direction to step in x or y-direction (either +1 or -1)
         int stepX, stepY;
@@ -90,26 +91,26 @@ public final class Ray implements Serializable {
                 Map.SEGMENTS[mapPoint.x][mapPoint.y] != null*/) {
                 break;
             }
-             
+
             // луч столкнулся с сегментом
-            Segment mapSegment = Map.SEGMENTS[(int)mapPoint.x][(int)mapPoint.y];            
+            Segment mapSegment = Map.SEGMENTS[(int)mapPoint.x][(int)mapPoint.y];
             if (mapSegment != null) {
                 Vector2 point = getSegment().intersect(mapSegment);
                 if (point != null) {
                     collisionPoint.set(point.x, point.y);
-                    
+
                     Vector2 diff = point.sub(start);
                     Vector2 plane = Player.getInstance().getCamera().getPlane();
                     double distance = (-plane.y * diff.x + plane.x * diff.y) / (plane.x * dir.y - dir.x * plane.y);
-                    
+
                     return distance;
                 }
             }
         }
-        
+
         double distance = (side == 0) ? (mapPoint.x - start.x + ((1 - stepX) >> 1)) * invRay.x :
                                         (mapPoint.y - start.y + ((1 - stepY) >> 1)) * invRay.y;
-        
+
         // определяем точку мира столкновения
         double wallX = (side == 0) ? start.y + distance * ray.y :
                                      start.x + distance * ray.x;
@@ -129,24 +130,24 @@ public final class Ray implements Serializable {
             collisionPoint.y = mapPoint.y + 1.0;
         }
         //collisionPoint = dir.mul(distance);
-        
-        return distance;        
+
+        return distance;
     }
-    
+
     /**
      * Получить первую цель, попавшую в луч
      * @param whoIgnore Какое существо игнорировать в проверке
      * @return Создание, если есть попадание. Или null, если ни в кого не попал
      */
-    public Mortal getMortal(Mortal whoIgnore) {        
+    public Mortal getMortal(Mortal whoIgnore) {
         List<Mortal> mortals = Mortal.whoIntersectSegment(segment, whoIgnore);
         Mortal target = null;
-        
+
         if (mortals.size() > 0) {
             double targetDistance = Double.MAX_VALUE;
 
             // из всех созданий ищем ближайшее
-            for (Mortal mortal : mortals) {                
+            for (Mortal mortal : mortals) {
                 double distance = start.distance(mortal.getPos());
                 if (target == null || targetDistance > distance) {
                     target = mortal;
@@ -154,11 +155,15 @@ public final class Ray implements Serializable {
                 }
             }
         }
-        
+
         return target;
     }
-    
+
     public Segment getSegment() {
         return segment;
+    }
+
+    public double getLength() {
+        return length;
     }
 }

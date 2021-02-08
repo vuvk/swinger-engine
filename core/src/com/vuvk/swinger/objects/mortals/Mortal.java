@@ -63,15 +63,8 @@ public abstract class Mortal extends Object3D implements Serializable {
     }
 
     public static void updateAll() {
-        /*if (!FOR_DELETE_FROM_LIB.isEmpty()) {
-            for (Mortal mortal : FOR_DELETE_FROM_LIB) {
-                mortal.finalize();
-            }
-            FOR_DELETE_FROM_LIB.clear();
-        }*/
-
-        for (Mortal mortal : LIB) {
-            mortal.update();
+        synchronized(LIB) {
+            LIB.forEach(Mortal::update);
         }
     }
 
@@ -185,15 +178,6 @@ public abstract class Mortal extends Object3D implements Serializable {
         return ((distance < this.radius + radius) &&
                 (distance > Math.abs(this.radius - radius)));
     }
-
-    /*
-    public static void updateAll() {
-        for (Creature mortal : LIB) {
-            mortal.update();
-        }
-    }
-    */
-
 
     /**
      * Проверить есть ли какое-то создание в точке (учитывая радиус существ)

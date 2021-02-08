@@ -22,7 +22,7 @@ import com.vuvk.swinger.math.Vector2;
  * @author Anton "Vuvk" Shcherbatykh
  */
 public class ScreenMessage extends Text {
-    private static double MAX_TIME_FOR_DRAW = 3.0;
+    private final static double MAX_TIME_FOR_DRAW = 3.0;
     private double timeForDraw = 0.0;
 
     public ScreenMessage(Font font, Vector2 location) {

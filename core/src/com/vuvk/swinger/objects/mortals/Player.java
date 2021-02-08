@@ -30,7 +30,7 @@ import com.vuvk.swinger.math.Vector2;
 import com.vuvk.swinger.math.Vector3;
 import com.vuvk.swinger.objects.Camera;
 import com.vuvk.swinger.objects.Door;
-import com.vuvk.swinger.objects.Key;
+import com.vuvk.swinger.objects.items.Key;
 import com.vuvk.swinger.objects.weapon.AmmoType;
 import com.vuvk.swinger.objects.weapon.Weapon;
 import com.vuvk.swinger.res.Map;

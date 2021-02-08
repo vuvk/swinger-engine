@@ -191,13 +191,6 @@ public class Sprite extends Material implements Comparable<Sprite>, Serializable
         setDirection(direction + degree);
     }
 
-    /**
-     * Пометить объект на добавление в очередь
-     */
-    /*public void markForAdd() {
-        FOR_ADD_TO_LIB.add(this);
-    }*/
-
     @Override
     public void finalize() {
         destroy();
@@ -295,30 +288,12 @@ public class Sprite extends Material implements Comparable<Sprite>, Serializable
         }
 
         Collections.sort(LIB);*/
-        /*
-        if (FOR_ADD_TO_LIB.size() > 0) {
-            for (Sprite sprite : FOR_ADD_TO_LIB) {
-                LIB.add(sprite);
-            }
-            FOR_ADD_TO_LIB.clear();
-        }
-        */
-        /*if (!FOR_DELETE_FROM_LIB.isEmpty()) {
-            synchronized(FOR_DELETE_FROM_LIB) {
-                for (Iterator<Sprite> it = FOR_DELETE_FROM_LIB.iterator(); it.hasNext(); ) {
-
-                    it.next().destroy();
-                }
-                FOR_DELETE_FROM_LIB.clear();
-            }
-        }*/
     }
 
     public static void deleteAll() {
         synchronized (LIB) {
             LIB.clear();
         }
-        //FOR_DELETE_FROM_LIB.clear();
     }
 
     public static Sprite[] getLib() {

@@ -15,65 +15,64 @@ package com.vuvk.swinger.graphic.weapon_in_hand;
 
 //import com.vuvk.retard_sound_system.Sound;
 //import com.vuvk.retard_sound_system.SoundBuffer;
-import com.vuvk.swinger.objects.weapon.AmmoType;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.files.FileHandle;
 import com.vuvk.swinger.audio.SoundSystem;
-import java.util.logging.Logger;
 import com.vuvk.swinger.graphic.Renderer;
 import com.vuvk.swinger.math.Vector2;
 import com.vuvk.swinger.objects.mortals.Player;
+import com.vuvk.swinger.objects.weapon.AmmoType;
 import com.vuvk.swinger.res.Image;
 import java.io.Serializable;
+import java.util.logging.Logger;
 
 /**
  *
  * @author Anton "Vuvk" Shcherbatykh
  */
-public abstract class WeaponInHand implements Serializable {    
+public abstract class WeaponInHand implements Serializable {
     transient private static final Logger LOG = Logger.getLogger(WeaponInHand.class.getName());
-        
-    private Vector2 startPos;
+
+    private final Vector2 startPos;
     private Vector2 pos;
     private double angle = 0;
     private double moveSpeed;
     private double moveDistance;
-    
+
     private Image[] frames;
     private int curFrameNum = 0;
     private int frameForShoot = 0;
-    
+
     private int bulletPerShoot = 1;
     private double accuracy;
     private double distance;
     private double damage;
-    
+
     private boolean animate = false;
     private double animDelay = 0.0;
     private double animSpeed;
-    
+
     private boolean climbing;
-    
+
     private boolean canShoot = true;
     private double shootDelay = 0;
     private double _shootDelay = 0;
-    
+
     transient private FileHandle soundShoot;
-    
+
     private AmmoType ammoType;
-    
+
     protected WeaponInHand() {
         int rW = Renderer.WIDTH;
         int rH = Renderer.HEIGHT;
         int min = Math.min(rW, rH) >> 1;
         moveSpeed = min * (2.0 / 3.0);
         moveDistance = min / 12.0;
-        
+
         startPos = new Vector2(Renderer.HALF_WIDTH, Renderer.HEIGHT - 1 + moveDistance);
-        pos = new Vector2(startPos);  
+        pos = new Vector2(startPos);
     }
-    
+
     public double getDistance() {
         return distance;
     }
@@ -97,15 +96,15 @@ public abstract class WeaponInHand implements Serializable {
     public Vector2 getPos() {
         return pos;
     }
-    
+
     public boolean isCanShoot() {
         return canShoot;
     }
-    
+
     public AmmoType getAmmoType() {
         return ammoType;
     }
-    
+
     protected void setDamage(double damage) {
         this.damage = damage;
     }
@@ -121,7 +120,7 @@ public abstract class WeaponInHand implements Serializable {
     protected void setAccuracy(double accuracy) {
         this.accuracy = accuracy;
     }
-    
+
     protected void setDistance(double distance) {
         this.distance = distance;
     }
@@ -133,7 +132,7 @@ public abstract class WeaponInHand implements Serializable {
     protected void setShootDelay(double shootDelay) {
         this.shootDelay = shootDelay;
     }
-    
+
     protected void setFrames(final Image[] images) {
         this.frames = images;
     }
@@ -142,36 +141,36 @@ public abstract class WeaponInHand implements Serializable {
         this.animate = animate;
         this.canShoot = !animate;
     }
-    
+
     protected void setSoundShoot(FileHandle path) {
         soundShoot = path;
     }
-    
+
     protected void setAmmoType(AmmoType ammoType) {
         this.ammoType = ammoType;
     }
-    
+
     protected void playSoundShoot() {
         SoundSystem.playOnce(soundShoot);
     }
-    
+
     public void pullUp() {
         //pos.set(startPos.x + moveDistance * 4, startPos.y + moveDistance * 4);
         angle = 0;
         climbing = false;
     }
-    
+
     protected abstract void shoot(double direction);
     public abstract void init();
-    
+
     public void update() {
         Player player = Player.getInstance();
         double deltaTime = Gdx.graphics.getDeltaTime();
-        
+
         // если игрок движется, то двигать ствол по восьмерке
         if (player.isMove()) {
             climbing = false;
-            
+
             // определяем скорость движения ствола в зависимости от направления игрока
             double speed = moveSpeed;
             if (player.isMoveF()) {
@@ -204,7 +203,7 @@ public abstract class WeaponInHand implements Serializable {
                 }
             }
         }
-        
+
         // игрок стоит и оружие можно качать
         if (climbing) {
             double speed = moveSpeed * deltaTime * 0.25;
@@ -215,7 +214,7 @@ public abstract class WeaponInHand implements Serializable {
             pos.set(startPos.x/* + moveDistance * Math.cos(Math.toRadians(angle))*/,
                     startPos.y + moveDistance * Math.cos(Math.toRadians(angle)));
         }
-        
+
         // может стрелять только если задержка выдержана
         if (!canShoot) {
             if (_shootDelay < shootDelay) {
@@ -225,8 +224,8 @@ public abstract class WeaponInHand implements Serializable {
                 canShoot = true;
             }
         }
-        
-        if (animate) {                    
+
+        if (animate) {
             if (animDelay < 1.0) {
                 animDelay += animSpeed * deltaTime;
             } else {
@@ -238,26 +237,26 @@ public abstract class WeaponInHand implements Serializable {
                 } else {
                     animDelay = 0.0;
                 }
-                
+
                 if (curFrameNum == frameForShoot) {
                     playSoundShoot();
-                    
+
                     int curAmmo = AmmoPack.PACK.get(ammoType);
                     AmmoPack.PACK.put(ammoType, --curAmmo);
-                    
+
                     // стреляем столько раз, сколько пуль
-                    for (int i = 0; i < bulletPerShoot; ++i) {                        
+                    for (int i = 0; i < bulletPerShoot; ++i) {
                         double direction = player.getCamera().getDirection();
-                                     
+
                         // делаем смещение направления с учетом кучности
                         if (accuracy != 0.0) {
                             direction += -accuracy * 0.5 + Math.random() * accuracy;
                         }
-                        
+
                         shoot(direction);
                     }
                 }
             }
-        }        
+        }
     }
 }

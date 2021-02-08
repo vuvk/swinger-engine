@@ -28,9 +28,7 @@ public class Mesh implements Serializable {
     private List<Polygon> polys = new ArrayList<>();
 
     public Mesh(List<Polygon> polys) {
-        for (Polygon poly : polys) {
-            this.polys.add(poly);
-        }
+        this.polys.addAll(polys);
 
         LIB.add(this);
     }

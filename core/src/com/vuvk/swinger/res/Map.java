@@ -28,11 +28,11 @@ import com.vuvk.swinger.graphic.weapon_in_hand.AmmoPack;
 import com.vuvk.swinger.math.Segment;
 import com.vuvk.swinger.math.Vector2;
 import com.vuvk.swinger.math.Vector3;
-import com.vuvk.swinger.objects.Clip;
 import com.vuvk.swinger.objects.Door;
-import com.vuvk.swinger.objects.Key;
-import com.vuvk.swinger.objects.MedKit;
 import com.vuvk.swinger.objects.Sprite;
+import com.vuvk.swinger.objects.items.Clip;
+import com.vuvk.swinger.objects.items.Key;
+import com.vuvk.swinger.objects.items.MedKit;
 import com.vuvk.swinger.objects.mortals.Mortal;
 import com.vuvk.swinger.objects.mortals.Player;
 import com.vuvk.swinger.objects.mortals.enemy.Breakable;
@@ -322,9 +322,7 @@ public final class Map {
 
         /* грузим текстуры */
         ArrayList<String> txrArray = json.readValue(ArrayList.class, jsonLevel.get("textures"));
-        for (String path : txrArray) {
-            TextureBank.WALLS.add(new Texture(path));
-        }
+        txrArray.forEach(path -> TextureBank.WALLS.add(new Texture(path)));
 
         /* Формируем материалы */
         ArrayList<JsonValue> matArray = json.readValue(ArrayList.class, jsonLevel.get("materials"));

@@ -43,7 +43,7 @@ public class SubMenu {
         } else {
             pos = getButtonsCount() - 1;
         }
-        
+
         SoundSystem.playOnce(SoundBank.FILE_MENU_SELECT);
         updateCursorLocation();
     }
@@ -54,7 +54,7 @@ public class SubMenu {
         } else {
             pos = 0;
         }
-        
+
         SoundSystem.playOnce(SoundBank.FILE_MENU_SELECT);
         updateCursorLocation();
     }
@@ -62,7 +62,7 @@ public class SubMenu {
     public void addButton(ButtonMenu button) {
         buttons.add(button);
     }
-    
+
     public ButtonMenu getCurrentButton() {
         return buttons.get(pos);
     }
@@ -80,13 +80,11 @@ public class SubMenu {
     }
 
     public void setVisible(boolean visible) {
-        for (ButtonMenu btn : buttons) {
-            btn.getText().setVisible(visible);
-        }
-    }    
-    
-    private void updateCursorLocation() {            
+        buttons.forEach(btn -> btn.getText().setVisible(visible));
+    }
+
+    private void updateCursorLocation() {
         Vector2 cursorLoc = Menu.CURSOR.getLocation();
-        cursorLoc.y = buttons.get(pos).getText().getLocation().y;        
+        cursorLoc.y = buttons.get(pos).getText().getLocation().y;
     }
 }

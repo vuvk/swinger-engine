@@ -23,7 +23,7 @@ import com.vuvk.swinger.graphic.gui.text.Text;
  */
 public class ButtonMenu {
     private Text text;
-    private Runnable click, left, right;
+    private final Runnable click, left, right;
 
     public ButtonMenu(Text text, Runnable click) {
         this.text = text;
@@ -31,7 +31,7 @@ public class ButtonMenu {
         this.left  = click;
         this.right = click;
     }
-    
+
     public ButtonMenu(Text text, Runnable click, Runnable left, Runnable right) {
         this.text = text;
         this.click = click;
@@ -43,19 +43,19 @@ public class ButtonMenu {
         SoundSystem.playOnce(SoundBank.FILE_MENU_TOGGLE);
         click.run();
     }
-    
+
     public void left() {
         SoundSystem.playOnce(SoundBank.FILE_MENU_TOGGLE);
         if (left != null) {
             left.run();
-        }        
+        }
     }
-    
+
     public void right() {
         SoundSystem.playOnce(SoundBank.FILE_MENU_TOGGLE);
         if (right != null) {
             right.run();
-        }        
+        }
     }
 
     public Text getText() {
@@ -64,5 +64,5 @@ public class ButtonMenu {
 
     public void setText(Text text) {
         this.text = text;
-    }    
+    }
 }

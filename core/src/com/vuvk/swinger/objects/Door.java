@@ -174,8 +174,8 @@ public class Door extends TexturedSegment implements Serializable {
     }
 
     public static void updateAll() {
-        for (Door door : LIB) {
-            door.update();
+        synchronized(LIB) {
+            LIB.forEach(Door::update);
         }
     }
 

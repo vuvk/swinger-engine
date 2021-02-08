@@ -73,6 +73,7 @@ public abstract class Weapon extends Sprite implements Serializable {
         return ammoInClip;
     };
 
+    @Override
     public void update() {
         super.update();
 

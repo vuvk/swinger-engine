@@ -72,7 +72,6 @@ public class Material extends Object3D implements Serializable {
         synchronized (LIB) {
             LIB.add(this);
         }
-        //markForAdd();
     }
 
     public Material(Image[][] frames, double animSpeed, boolean playOnce) {
@@ -82,7 +81,6 @@ public class Material extends Object3D implements Serializable {
         synchronized (LIB) {
             LIB.add(this);
         }
-        //markForAdd();
     }
 
     @Override
@@ -98,8 +96,6 @@ public class Material extends Object3D implements Serializable {
         synchronized (LIB) {
             LIB.clear();
         }
-        //FOR_ADD_TO_LIB.clear();
-        //FOR_DELETE_FROM_LIB.clear();
     }
 
     /**
@@ -180,16 +176,6 @@ public class Material extends Object3D implements Serializable {
         frameNum = 0;
     }
 
-    /**
-     * Пометить объект на добавление
-     */
-    /*public void markForAdd() {
-        FOR_ADD_TO_LIB.add(this);
-    }*/
-
-    /**
-     * Пометить объект на удаление
-     */
     @Override
     public void destroy() {
         synchronized (LIB) {
@@ -197,6 +183,7 @@ public class Material extends Object3D implements Serializable {
         }
     }
 
+    @Override
     public void update() {
         super.update();
 
@@ -224,24 +211,8 @@ public class Material extends Object3D implements Serializable {
     }
 
     public static void updateAll() {
-        /*if (FOR_ADD_TO_LIB.size() > 0) {
-            for (Material mat : FOR_ADD_TO_LIB) {
-                LIB.add(mat);
-            }
-            FOR_ADD_TO_LIB.clear();
-        }*/
-
-        /*if (FOR_DELETE_FROM_LIB.size() > 0) {
-            for (Iterator<Material> it = FOR_DELETE_FROM_LIB.iterator(); it.hasNext(); ) {
-                it.next().destroy();
-            }
-            FOR_DELETE_FROM_LIB.clear();
-        }*/
-
         synchronized (LIB) {
-            for (Material anim : LIB) {
-                anim.update();
-            }
+            LIB.forEach(Material::update);
         }
     }
 }

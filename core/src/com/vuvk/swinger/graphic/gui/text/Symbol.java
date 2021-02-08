@@ -24,29 +24,13 @@ import java.util.logging.Logger;
  */
 public class Symbol {
     transient private static final Logger LOG = Logger.getLogger(Symbol.class.getName());
-    
-    
-    /*
-    private BufferedImage image;
 
-    public Symbol(BufferedImage image) {
-        this.image = image;
-    }
-
-    public BufferedImage getImage() {
-        return image;
-    }
-
-    public void setImage(BufferedImage image) {
-        this.image = image;
-    }*/
-    
     private Texture texture;
-    
+
     public Symbol(Pixmap pixmap) {
         setTexture(new Texture(pixmap));
     }
-        
+
     public Symbol(Texture texture) {
         setTexture(texture);
     }
@@ -58,7 +42,7 @@ public class Symbol {
     public void setTexture(Texture texture) {
         this.texture = texture;
     }
-    
+
     @Override
     public void finalize() {
         texture.dispose();
@@ -67,5 +51,5 @@ public class Symbol {
         } catch (Throwable ex) {
             LOG.log(Level.SEVERE, null, ex);
         }
-    }    
+    }
 }

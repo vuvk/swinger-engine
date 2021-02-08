@@ -17,21 +17,21 @@ package com.vuvk.swinger.graphic;
  * Енумератор стороны чего-либо в редакторе
  * @author Anton "Vuvk" Shcherbatykh
  */
-public enum Side {        
+public enum Side {
     FRONT(0), BACK  (1),
     LEFT (2), RIGHT (3);
 
     // номер стороны в массиве сторон
-    private int num;
+    private final int num;
     public int getNum() {
         return num;
     }
 
     Side(int num) {
         this.num = num;
-    }        
+    }
 
-    /** 
+    /**
      * Получить сторону по номеру
      * @param num номер стороны в промежутке [0-3]
      * @return Константа енумератора: 0 - FRONT, 1 - BACK, 2 - LEFT, 3 - RIGHT

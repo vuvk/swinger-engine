@@ -11,12 +11,13 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-package com.vuvk.swinger.objects;
+package com.vuvk.swinger.objects.items;
 
 import com.vuvk.swinger.audio.SoundBank;
 import com.vuvk.swinger.audio.SoundSystem;
 import com.vuvk.swinger.graphic.weapon_in_hand.AmmoPack;
 import com.vuvk.swinger.math.Vector3;
+import com.vuvk.swinger.objects.Sprite;
 import com.vuvk.swinger.objects.mortals.Player;
 import com.vuvk.swinger.objects.weapon.AmmoType;
 import com.vuvk.swinger.res.Material;

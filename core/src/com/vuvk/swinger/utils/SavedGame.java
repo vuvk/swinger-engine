@@ -43,6 +43,7 @@ import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -129,26 +130,18 @@ public class SavedGame implements Serializable {
             game = (SavedGame) objectInputStream.readObject();
 
             TextureBank.WALLS.clear();
-            for (Texture txr : game.textureWalls) {
-                TextureBank.WALLS.add(txr);
-            }
+            TextureBank.WALLS.addAll(Arrays.asList(game.textureWalls));
 
             MaterialBank.BANK.clear();
-            for (Material mat : game.materialsBank) {
-                MaterialBank.BANK.add(mat);
-            }
+            MaterialBank.BANK.addAll(Arrays.asList(game.materialsBank));
 
             Material.deleteAll();
-            for (Material mat : game.materialsLib) {
-                Material.LIB.add(mat);
-            }
+            Material.LIB.addAll(Arrays.asList(game.materialsLib));
 
             WallMaterialBank.BANK = game.wallMaterialsBank;
 
             Sprite.deleteAll();
-            for (Sprite spr : game.spritesLib) {
-                Sprite.LIB.add(spr);
-            }
+            Sprite.LIB.addAll(Arrays.asList(game.spritesLib));
 
             Mortal.deleteAll();
             for (Mortal mortal : game.mortalsLib) {
@@ -160,19 +153,13 @@ public class SavedGame implements Serializable {
             }
 
             Door.deleteAll();
-            for (Door door : game.doorsLib) {
-                Door.LIB.add(door);
-            }
+            Door.LIB.addAll(Arrays.asList(game.doorsLib));
 
             Mesh.deleteAll();
-            for (Mesh mesh : game.meshesLib) {
-                Mesh.LIB.add(mesh);
-            }
+            Mesh.LIB.addAll(Arrays.asList(game.meshesLib));
 
             Model.deleteAll();
-            for (Model model : game.modelsLib) {
-                Model.LIB.add(model);
-            }
+            Model.LIB.addAll(Arrays.asList(game.modelsLib));
 
             for (int x = 0; x < Map.WIDTH; ++x) {
                 for (int y = 0; y < Map.HEIGHT; ++y) {

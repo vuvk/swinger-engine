@@ -122,8 +122,8 @@ public class Model extends Object3D implements Comparable<Model>, Serializable {
     }
 
     public static void updateAll() {
-        for (Model mdl : LIB) {
-            mdl.update();
+        synchronized(LIB) {
+            LIB.forEach(Model::update);
         }
     }
 

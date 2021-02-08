@@ -14,7 +14,6 @@
 package com.vuvk.swinger.objects.projectiles;
 
 import com.badlogic.gdx.Gdx;
-import com.vuvk.swinger.graphic.Renderer;
 import com.vuvk.swinger.math.Vector3;
 import com.vuvk.swinger.objects.effect.Explode;
 import com.vuvk.swinger.objects.effect.Smoke;
@@ -31,7 +30,7 @@ public class Rocket extends Projectile  implements Serializable{
     private final static double MOVE_SPEED = 5.0;
     private final static double ANIM_SPEED = 0.0;
     private double timeToSmoke = 0.0;
-    
+
     public Rocket(Vector3 pos, double direction) {
         super(TextureBank.ROCKET, pos);
         setDirection(direction);
@@ -43,13 +42,13 @@ public class Rocket extends Projectile  implements Serializable{
 
     @Override
     protected void createDestroyEffect() {
-        new Explode(getPos())/*.markForAdd()*/;
+        new Explode(getPos());
     }
-    
+
     @Override
     public void update() {
         super.update();
-        
+
         if (timeToSmoke < 0.25) {
             timeToSmoke += Gdx.graphics.getDeltaTime();
         } else {

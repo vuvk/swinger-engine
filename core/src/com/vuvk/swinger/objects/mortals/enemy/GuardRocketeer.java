@@ -34,8 +34,8 @@ public class GuardRocketeer extends ProjectileEnemy implements Serializable {
     private final static double SHOOT_SPEED = 0.5;
     private final static double ACCURACY = 5.0;
     private final static int BULLETS_PER_SHOOT = 3;
-    private final static double DAMAGE = 25.0;    
-    
+    private final static double DAMAGE = 25.0;
+
     private final static double HEALTH = 100.0;
     private final static double RADIUS = 0.3;
     transient private final static FileHandle[] ATK_SOUNDS = { SoundBank.FILE_BAZOOKA };
@@ -47,15 +47,15 @@ public class GuardRocketeer extends ProjectileEnemy implements Serializable {
     };
     transient private final static FileHandle[] PAIN_SOUNDS = {
         SoundBank.FILE_PAIN1,
-        SoundBank.FILE_PAIN2 
+        SoundBank.FILE_PAIN2
     };
     transient private final static FileHandle[] DIE_SOUNDS  = {
         SoundBank.FILE_DIE1,
-        SoundBank.FILE_DIE2 
+        SoundBank.FILE_DIE2
     };
-    
+
     public GuardRocketeer(final Vector3 pos, double direction) {
-        super(MaterialBank.GUARD_STAND, 
+        super(MaterialBank.GUARD_STAND,
               MaterialBank.GUARD_ATK,
               MaterialBank.GUARD_WALK,
               MaterialBank.GUARD_PAIN,
@@ -63,12 +63,12 @@ public class GuardRocketeer extends ProjectileEnemy implements Serializable {
               MaterialBank.GUARD_DEAD,
               pos, direction,
               HEALTH, RADIUS);
-        
+
         setAttackSounds(ATK_SOUNDS);
         setAlarmSounds(ALARM_SOUNDS);
         setPainSounds(PAIN_SOUNDS);
         setDieSounds(DIE_SOUNDS);
-        
+
         setViewAngle(VIEW_ANGLE);
         setViewDistance(VIEW_DISTANCE);
         setMinAttackDistance(MIN_ATK_DISTANCE);
@@ -77,69 +77,9 @@ public class GuardRocketeer extends ProjectileEnemy implements Serializable {
         setAccuracy(ACCURACY);
         setBulletsPerShoot(BULLETS_PER_SHOOT);
         setDamage(DAMAGE);
-        
+
         setLive(true);
     }
-/*
-    @Override
-    protected FileHandle[] getAlarmSounds() {
-        return ALARM_SOUNDS;
-    }
-
-    @Override
-    protected FileHandle[] getAttackSounds() {
-        return ATK_SOUNDS;
-    }
-
-    @Override
-    protected FileHandle[] getPainSounds() {
-        return PAIN_SOUNDS;
-    }
-
-    @Override
-    protected FileHandle[] getDieSounds() {
-        return DIE_SOUNDS;
-    }
-    @Override
-    protected double getViewDistance() {
-        return VIEW_DISTANCE;
-    }
-
-    @Override
-    protected double getViewAngle() {
-        return VIEW_ANGLE;
-    }
-
-    @Override
-    protected double getMinAttackDistance() {
-        return MIN_ATK_DISTANCE;
-    }
-
-    @Override
-    protected double getMaxAttackDistance() {
-        return MAX_ATK_DISTANCE;
-    }
-
-    @Override
-    protected double getShootDelay() {
-        return SHOOT_DELAY;
-    }
-
-    @Override
-    protected double getDamage() {
-        return DAMAGE;
-    }
-
-    @Override
-    protected double getAccuracy() {
-        return ACCURACY;
-    }
-
-    @Override
-    protected int getBulletsPerShoot() {
-        return BULLETS_PER_SHOOT;
-    }
-*/
 
     @Override
     protected Projectile createProjectile(Vector3 pos, double direction) {
