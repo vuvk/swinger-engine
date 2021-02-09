@@ -15,6 +15,8 @@ package com.vuvk.swinger.objects;
 
 import com.vuvk.swinger.math.Vector2;
 import com.vuvk.swinger.math.Vector3;
+import com.vuvk.swinger.utils.ImmutablePair;
+import com.vuvk.swinger.utils.Utils;
 import java.awt.Color;
 import java.io.Serializable;
 import java.util.List;
@@ -28,6 +30,7 @@ public class LightSource extends Object3D implements Serializable {
     transient public final static List<LightSource> LIB = new CopyOnWriteArrayList<>();
 
     private Color color;
+    private double brightness;
     private double radius;
     private double squareRadius; // for fast check point
 
@@ -40,13 +43,18 @@ public class LightSource extends Object3D implements Serializable {
     }
 
     public LightSource(Color color, double radius) {
-        this(color, radius, new Vector3());
+        this(color, radius, Vector3.ZERO);
     }
 
     public LightSource(Color color, double radius, Vector3 pos) {
+        this(color, radius, pos, 1.0);
+    }
+
+    public LightSource(Color color, double radius, Vector3 pos, double brightness) {
         setColor(color);
         setRadius(radius);
         setPos(pos);
+        setBrightness(brightness);
         squareRadius = radius * radius;
 
         LIB.add(this);
@@ -68,18 +76,44 @@ public class LightSource extends Object3D implements Serializable {
         return color;
     }
 
+    public double getBrightness() {
+        return brightness;
+    }
+
     public double getRadius() {
         return radius;
     }
 
-    public boolean isPointInRadius(Vector2 point) {
-        double x = point.x,
-               y = point.y;
-        return (x*x + y*y <= squareRadius);
+    /** возвращаемое значение в случае, если точка не в радиусе источника света */
+    private final static ImmutablePair<Boolean, Double> POINT_NOT_IN_RADIUS = new ImmutablePair<>(false, Double.NaN);
+
+    /**
+     * Находится ли точка внутри радиуса источника освещения
+     * @param point Точка для проверки
+     * @return возвращает пару - true/false и яркость, если true
+     */
+    public final ImmutablePair<Boolean, Double> isPointInRadius(Vector2 point) {
+        double x = pos.x - point.x,
+               y = pos.y - point.y;
+        double squareLength = x*x + y*y;
+
+        if (squareLength > squareRadius) {
+            return POINT_NOT_IN_RADIUS;
+        } else {
+            // считаем расстояние до центра источника. Чем ближе к центру, тем ярче
+            double distance = Math.sqrt(squareLength);
+            double brightnessInPoint = 1.0 - distance / radius;
+            
+            return new ImmutablePair<>(true, brightnessInPoint);
+        }
     }
 
     public void setColor(Color color) {
         this.color = color;
+    }
+
+    public void setBrightness(double brightness) {
+        this.brightness = Utils.limit(brightness, 0.0, 1.0);
     }
 
     public void setRadius(double radius) {
