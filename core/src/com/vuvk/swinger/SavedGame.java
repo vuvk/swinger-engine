@@ -1,5 +1,5 @@
 /**
-    Copyright (C) 2019-2020 Anton "Vuvk" Shcherbatykh <vuvk69@gmail.com>
+    Copyright (C) 2019-2021 Anton "Vuvk" Shcherbatykh <vuvk69@gmail.com>
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
@@ -11,10 +11,8 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-package com.vuvk.swinger.utils;
+package com.vuvk.swinger;
 
-import com.vuvk.swinger.Config;
-import com.vuvk.swinger.Game;
 import com.vuvk.swinger.audio.SoundBank;
 import com.vuvk.swinger.audio.SoundSystem;
 import com.vuvk.swinger.d3.Mesh;
@@ -23,6 +21,7 @@ import com.vuvk.swinger.graphic.Renderer;
 import com.vuvk.swinger.graphic.TexturedSegment;
 import com.vuvk.swinger.graphic.weapon_in_hand.AmmoPack;
 import com.vuvk.swinger.objects.Door;
+import com.vuvk.swinger.objects.LightSource;
 import com.vuvk.swinger.objects.Sprite;
 import com.vuvk.swinger.objects.mortals.Mortal;
 import com.vuvk.swinger.objects.mortals.Player;
@@ -66,6 +65,7 @@ public class SavedGame implements Serializable {
     public Mesh[]     meshesLib;
     public Model[]    modelsLib;
     public WallMaterial[] wallMaterialsBank;
+    public LightSource[]  lightSourcesLib;
 
     public boolean[][] mapSolids;
     public boolean[][] mapVisibleCells;
@@ -89,6 +89,7 @@ public class SavedGame implements Serializable {
         meshesLib     = Mesh.getLib();
         modelsLib     = Model.getLib();
         wallMaterialsBank = WallMaterialBank.BANK;
+        lightSourcesLib   = LightSource.getLib();
 
         mapSolids   = Map.SOLIDS;
         mapWallsMap = Map.WALLS_MAP;
@@ -183,6 +184,9 @@ public class SavedGame implements Serializable {
 
             AmmoPack.PACK.clear();
             AmmoPack.PACK.putAll(game.ammoPack);
+
+            LightSource.LIB.clear();
+            LightSource.LIB.addAll(Arrays.asList(lightSourcesLib));
 
             Map.active = true;
             Config.draw = true;

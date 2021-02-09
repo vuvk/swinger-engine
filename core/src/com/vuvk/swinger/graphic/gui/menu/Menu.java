@@ -23,7 +23,7 @@ import com.vuvk.swinger.graphic.gui.text.FontBank;
 import com.vuvk.swinger.graphic.gui.text.Text;
 import com.vuvk.swinger.math.Vector2;
 import com.vuvk.swinger.res.Map;
-import com.vuvk.swinger.utils.SavedGame;
+import com.vuvk.swinger.SavedGame;
 import java.io.File;
 import java.util.Date;
 

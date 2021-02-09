@@ -49,6 +49,7 @@ import com.vuvk.swinger.input.InputManager;
 import com.vuvk.swinger.math.Vector2;
 import com.vuvk.swinger.objects.Camera;
 import com.vuvk.swinger.objects.Door;
+import com.vuvk.swinger.objects.LightSource;
 import com.vuvk.swinger.objects.Sprite;
 import com.vuvk.swinger.objects.mortals.Mortal;
 import com.vuvk.swinger.objects.mortals.Player;
@@ -322,6 +323,7 @@ public class Game extends ApplicationAdapter {
                     batch.end();*/
 
                     if (player.getHealth() > 0.0) {
+                        LightSource.updateAll();
                         Material.updateAll();
                         Sprite.updateAll();
                         Door.updateAll();

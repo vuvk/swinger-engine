@@ -29,6 +29,7 @@ import com.vuvk.swinger.math.Segment;
 import com.vuvk.swinger.math.Vector2;
 import com.vuvk.swinger.math.Vector3;
 import com.vuvk.swinger.objects.Door;
+import com.vuvk.swinger.objects.LightSource;
 import com.vuvk.swinger.objects.Sprite;
 import com.vuvk.swinger.objects.items.Clip;
 import com.vuvk.swinger.objects.items.Key;
@@ -44,6 +45,7 @@ import com.vuvk.swinger.objects.weapon.Pistol;
 import com.vuvk.swinger.objects.weapon.Rifle;
 import com.vuvk.swinger.utils.ImmutablePair;
 import com.vuvk.swinger.utils.Pair;
+import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -799,6 +801,7 @@ public final class Map {
         //Config.draw = false;
 
 //      SoundSystem.stopAll();
+        LightSource.deleteAll();
         Door.deleteAll();
         Mortal.deleteAll();
         Sprite.deleteAll();
@@ -955,20 +958,17 @@ public final class Map {
         loadBreakables(levelNum);
 
         System.out.println("\tEnemies...");
-        new Guard(new Vector3(15.5, 21.5, 0.0),
-                  90);
+        new Guard(new Vector3(15.5, 21.5, 0.0), 90);
 
-        new Guard(new Vector3(15.5, 19.5, 0.0),
-                  0);
+        new Guard(new Vector3(15.5, 19.5, 0.0));
 
-        new Guard(new Vector3(15.5, 20.5, 0.0),
-                  0);
+        new Guard(new Vector3(15.5, 20.5, 0.0));
 
-        new Guard(new Vector3(14.5, 20.5, 0.0),
-                  0);
+        new Guard(new Vector3(14.5, 20.5, 0.0));
 
-        new GuardRocketeer(new Vector3(12.5, 18.5, 0.0),
-                            0);
+        new GuardRocketeer(new Vector3(12.5, 18.5, 0.0));
+
+        new LightSource(Color.WHITE, 2);
 
 
         /*MUSIC = SoundSystem.loadSound(SoundBank.FILE_MUSIC1);

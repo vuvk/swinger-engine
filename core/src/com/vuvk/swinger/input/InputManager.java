@@ -26,7 +26,7 @@ import com.vuvk.swinger.graphic.gui.menu.Menu;
 import com.vuvk.swinger.math.Vector2;
 import com.vuvk.swinger.objects.mortals.Player;
 import com.vuvk.swinger.res.Map;
-import com.vuvk.swinger.utils.SavedGame;
+import com.vuvk.swinger.SavedGame;
 import com.vuvk.swinger.utils.Utils;
 import java.util.Scanner;
 import java.util.logging.Logger;
