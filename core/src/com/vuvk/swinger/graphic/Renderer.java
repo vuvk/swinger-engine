@@ -25,6 +25,7 @@ import com.vuvk.swinger.math.Segment;
 import com.vuvk.swinger.math.Vector2;
 import com.vuvk.swinger.math.Vector3;
 import com.vuvk.swinger.objects.Camera;
+import com.vuvk.swinger.objects.LightSource;
 import com.vuvk.swinger.objects.Sprite;
 import com.vuvk.swinger.objects.mortals.Player;
 import com.vuvk.swinger.res.Image;
@@ -33,6 +34,7 @@ import com.vuvk.swinger.res.MaterialBank;
 import com.vuvk.swinger.res.Texture;
 import com.vuvk.swinger.res.WallMaterial;
 import com.vuvk.swinger.utils.ArrayUtils;
+import com.vuvk.swinger.utils.ImmutablePair;
 import com.vuvk.swinger.utils.Utils;
 import java.nio.IntBuffer;
 import java.util.ArrayList;
@@ -397,7 +399,7 @@ public final class Renderer/* extends JPanel*/ {
         if (distance < Fog.START) {
             return pixel;
         // дистанция между началом и концом тумана
-        } else if (distance < Fog.END) {
+        } else /*if (distance < Fog.END)*/ {
             // яркость/сила пикселя обратная силе тумана
             double pixelBrightness = 1.0 - fogBrightness;
             if (pixelBrightness <= 0.0) {
@@ -424,7 +426,25 @@ public final class Renderer/* extends JPanel*/ {
             return pixel;
         }
         // очень далеко - просто цвет тумана
-        return Fog.COLOR;
+        //return Fog.COLOR;
+    }
+
+    /**
+     * Поправка по свету в зависимости от источников света
+     * @param point точка для проверки
+     * @return возвращаемая поправка. Значения <= 0.0
+     */
+    private double getLightBrightnessCorrection(Vector2 point) {
+        double correction = 0.0;
+
+        for (LightSource source : LightSource.LIB) {
+            final ImmutablePair<Boolean, Double> result = source.isPointInRadius(point);
+            if (result.getLeft()) {
+                correction -= result.getRight();
+            }
+        }
+
+        return correction;
     }
 
     /**
@@ -953,6 +973,12 @@ public final class Renderer/* extends JPanel*/ {
                         case EXPONENTIAL2 : fogBrightness = Fog.EXPONENTIAL2_TABLE[fY]; break;
                     }
 
+                    // коррекция яркости в зависимости от источников освещения
+                    if (Config.fog != Fog.NOTHING) {
+                        fogBrightness += getLightBrightnessCorrection(target.collisionPoint);
+                        fogBrightness = Utils.limit(fogBrightness, 0.0, 1.0);
+                    }
+
                     //int[] pixelsColumn = txr.getCol(texX);
                     for (int y = drawStart; y < drawEnd; ++y) {
                         //int arrayPos = y * WIDTH + x;
@@ -1136,6 +1162,12 @@ public final class Renderer/* extends JPanel*/ {
                             case LINEAR    : fogBrightness = Fog.LINEAR_TABLE[y];    break;
                             case EXPONENTIAL  : fogBrightness = Fog.EXPONENTIAL_TABLE[y];  break;
                             case EXPONENTIAL2 : fogBrightness = Fog.EXPONENTIAL2_TABLE[y]; break;
+                        }
+
+                        // коррекция яркости в зависимости от источников освещения
+                        if (Config.fog != Fog.NOTHING) {
+                            fogBrightness += getLightBrightnessCorrection(new Vector3(currentFloorX, currentFloorY));
+                            fogBrightness = Utils.limit(fogBrightness, 0.0, 1.0);
                         }
 
                         // floor
@@ -1446,13 +1478,20 @@ public final class Renderer/* extends JPanel*/ {
                 int fullSpriteHeight = (int)(HEIGHT * invTransformY);
                 int fY = HALF_HEIGHT + (fullSpriteHeight >> 1);
                 fY = Utils.limit(fY, 0, HEIGHT - 1);
-                double fogBrightness = 1.0;
+                double fogBrightness;
                 switch (Config.fog) {
+                    default:
                     case NOTHING   : fogBrightness = 0.0; break;
                     case OLDSCHOOL : fogBrightness = Fog.OLDSCHOOL_TABLE[fY]; break;
                     case LINEAR    : fogBrightness = Fog.LINEAR_TABLE[fY];    break;
                     case EXPONENTIAL  : fogBrightness = Fog.EXPONENTIAL_TABLE[fY];  break;
                     case EXPONENTIAL2 : fogBrightness = Fog.EXPONENTIAL2_TABLE[fY]; break;
+                }
+
+                // коррекция яркости в зависимости от источников освещения
+                if (Config.fog != Fog.NOTHING) {
+                    fogBrightness += getLightBrightnessCorrection(sprite.getPos());
+                    fogBrightness = Utils.limit(fogBrightness, 0.0, 1.0);
                 }
 
                 for (int x = drawStartX; x < drawEndX; x += xStep) {
