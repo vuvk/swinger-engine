@@ -54,6 +54,10 @@ public class GuardRocketeer extends ProjectileEnemy implements Serializable {
         SoundBank.FILE_DIE2
     };
 
+    public GuardRocketeer(final Vector3 pos) {
+        this(pos, 0.0);
+    }
+
     public GuardRocketeer(final Vector3 pos, double direction) {
         super(MaterialBank.GUARD_STAND,
               MaterialBank.GUARD_ATK,

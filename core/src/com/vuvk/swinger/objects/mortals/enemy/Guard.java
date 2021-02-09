@@ -53,6 +53,10 @@ public class Guard extends RayEnemy implements Serializable {
         SoundBank.FILE_DIE2
     };
 
+    public Guard(final Vector3 pos) {
+        this(pos, 0.0);
+    }
+
     public Guard(final Vector3 pos, double direction) {
         super(MaterialBank.GUARD_STAND,
               MaterialBank.GUARD_ATK,
