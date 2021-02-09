@@ -47,6 +47,7 @@ import com.vuvk.swinger.graphic.weapon_in_hand.RocketLauncherInHand;
 import com.vuvk.swinger.graphic.weapon_in_hand.ShotgunInHand;
 import com.vuvk.swinger.input.InputManager;
 import com.vuvk.swinger.math.Vector2;
+import com.vuvk.swinger.math.Vector3;
 import com.vuvk.swinger.objects.Camera;
 import com.vuvk.swinger.objects.Door;
 import com.vuvk.swinger.objects.LightSource;
@@ -90,7 +91,7 @@ public class Game extends ApplicationAdapter {
         renderWidth,
         renderHeight;
 
-    class KishPoint {
+    /*class KishPoint {
         Vector2 a;
         boolean onDown = false;
 
@@ -115,7 +116,9 @@ public class Game extends ApplicationAdapter {
             }
         }
     }
-    KishPoint[] kishPoints = new KishPoint[10];
+    KishPoint[] kishPoints = new KishPoint[10];*/
+
+    double angle = 0.0;
 
     @Override
     public void create () {
@@ -315,6 +318,22 @@ public class Game extends ApplicationAdapter {
                 Camera playerCamera = player.getCamera();
 
                 if (Map.active) {
+
+                    angle += Gdx.graphics.getDeltaTime();
+                    if (angle >= 360.0) {
+                        angle -= 360.0;
+                    }
+
+                    double x = 11.5 + 2.0 * Math.cos(angle),
+                           y =  4.5 + 2.0 * Math.sin(angle);
+
+                    Map.light1.setPos(new Vector3(x, y));
+
+
+                    x = 11.5 + Math.cos(-angle);
+                    y =  4.5 + Math.sin(-angle);
+
+                    Map.light2.setPos(new Vector3(x, y));
 
                     /*batch.begin();
                     if (lastFrame != null) {

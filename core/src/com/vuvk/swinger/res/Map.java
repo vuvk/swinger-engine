@@ -45,7 +45,6 @@ import com.vuvk.swinger.objects.weapon.Pistol;
 import com.vuvk.swinger.objects.weapon.Rifle;
 import com.vuvk.swinger.utils.ImmutablePair;
 import com.vuvk.swinger.utils.Pair;
-import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -316,6 +315,7 @@ public final class Map {
         {22.5, 21.5, 0.0,  9},
     };*/
     //public final static Model[][] MODELS = new Model[WIDTH][HEIGHT];
+    public static LightSource light1, light2;
 
     private static void loadTexturesAndMaterials(JsonValue jsonLevel) {
         Json json = new Json();
@@ -968,8 +968,6 @@ public final class Map {
 
         new GuardRocketeer(new Vector3(12.5, 18.5, 0.0));
 
-        new LightSource(Color.WHITE, 2);
-
 
         /*MUSIC = SoundSystem.loadSound(SoundBank.FILE_MUSIC1);
         MUSIC.setVolume(0.6f);
@@ -1004,6 +1002,9 @@ public final class Map {
         SEGMENTS[22][12] = new TexturedSegment(22,   13, 23, 12 , TextureBank.WALLS[1]);
         SEGMENTS[21][13] = new TexturedSegment(21,   14, 22, 13 , TextureBank.WALLS[1]);
         */
+
+        light1 = new LightSource();
+        light2 = new LightSource();
 
         SoundSystem.playMusic(SoundBank.FILE_MUSIC1);
 

@@ -113,7 +113,6 @@ public class SavedGame implements Serializable {
             objectOutputStream.close();
         } catch (IOException ex) {
            LOG.log(Level.SEVERE, null, ex);
-        } finally {
         }
 
         Map.active  = true;
