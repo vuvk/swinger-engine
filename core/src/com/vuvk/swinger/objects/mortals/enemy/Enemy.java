@@ -21,11 +21,13 @@ import com.vuvk.swinger.audio.SoundSystem;
 import com.vuvk.swinger.math.Ray;
 import com.vuvk.swinger.math.Vector2;
 import com.vuvk.swinger.math.Vector3;
+import com.vuvk.swinger.objects.LightSource;
 import com.vuvk.swinger.objects.Sprite;
 import com.vuvk.swinger.objects.mortals.Mortal;
 import com.vuvk.swinger.objects.mortals.Player;
 import com.vuvk.swinger.res.Map;
 import com.vuvk.swinger.res.Material;
+import java.awt.Color;
 import java.io.Serializable;
 import java.util.logging.Logger;
 /**
@@ -535,6 +537,8 @@ public abstract class Enemy extends Breakable implements Serializable {
                 } else if (state == EnemyState.ATTACK) {
                     // уже выстрелил
                     if (!sprite.isAnimate()) {
+                        new LightSource(Color.WHITE, 2.0, pos).destroy(0.15);
+
                         SoundSystem.playOnceRandom(getAttackSounds());
                         for (int i = 0; i < getBulletsPerShoot(); ++i) {
                             shoot();
