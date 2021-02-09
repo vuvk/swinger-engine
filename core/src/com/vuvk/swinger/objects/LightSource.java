@@ -13,6 +13,7 @@
 */
 package com.vuvk.swinger.objects;
 
+import com.vuvk.swinger.math.Vector3;
 import java.awt.Color;
 import java.io.Serializable;
 import java.util.List;
@@ -27,6 +28,7 @@ public class LightSource extends Object3D implements Serializable {
 
     private Color color;
     private double radius;
+    private double squareRadius; // for fast check point
 
     public LightSource() {
         this(Color.WHITE);
@@ -39,6 +41,7 @@ public class LightSource extends Object3D implements Serializable {
     public LightSource(Color color, double radius) {
         setColor(color);
         setRadius(radius);
+        squareRadius = radius * radius;
 
         LIB.add(this);
     }
@@ -61,6 +64,12 @@ public class LightSource extends Object3D implements Serializable {
 
     public double getRadius() {
         return radius;
+    }
+
+    public boolean isPointInRadius(Vector3 point) {
+        double x = point.x,
+               y = point.y;
+        return (x*x + y*y <= squareRadius);
     }
 
     public void setColor(Color color) {
