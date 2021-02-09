@@ -68,7 +68,7 @@ project(":distribution") {
         //api "org.ow2.asm:asm:9.0"
     }
 }
-
+/*
 project(":android") {
     apply plugin: "android"
 
@@ -101,7 +101,7 @@ project(":ios") {
         
     }
 }
-
+*/
 project(":core") {
     apply plugin: "java-library"
 
