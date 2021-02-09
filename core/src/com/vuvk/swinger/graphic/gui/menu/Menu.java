@@ -150,7 +150,7 @@ public class Menu {
                                          () -> {},
                                          () -> {
                                              int num = Config.fog.getNum();
-                                             if (num > 0) {
+                                             if (num > 1) {
                                                  --num;
                                              }
                                              Config.fog = Fog.getByNum(num);
