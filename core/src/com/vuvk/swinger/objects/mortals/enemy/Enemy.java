@@ -40,21 +40,9 @@ public abstract class Enemy extends Breakable implements Serializable {
 
     /** список всех вражин */
     //public final static List<Enemy> LIB = new ArrayList<>();
-    /** список вражин на удаление */
-    //private final static List<Enemy> FOR_DELETE_FROM_LIB = new ArrayList<>();
 
-    //private Texture[][] curAnim;
-    /*private Texture[][] idle;
-    private Texture[][] walk;
-    private Texture[][] pain;
-    private Texture[][] die;
-    private Texture     dead;*/
-//    private Material idle;
     private Material atk;
     private Material walk;
-//    private Material pain;
-//    private Material die;
-//    private Material dead;
 
     protected String[] alarmSounds;
     protected String[] attackSounds;
@@ -71,6 +59,9 @@ public abstract class Enemy extends Breakable implements Serializable {
 
     /* знает ли о существовании игрока */
     private boolean noticed = false;
+    /* создана вспышка от выстрела */
+    private boolean flashCreated = false;
+
 
     protected double viewDistance;
     protected double viewAngle;
@@ -81,15 +72,6 @@ public abstract class Enemy extends Breakable implements Serializable {
     protected double accuracy;
     protected int    bulletsPerShoot;
     protected double shootSpeed;
-
-    //private Vector2 pos;
-    //private double direction;
-
-    /*
-    public Enemy(Vector3 pos) {
-        this(pos, 0.0);
-    }
-    */
 
     protected Enemy(/*final Texture[][] idle,
                  final Texture[][] walk,
@@ -113,32 +95,7 @@ public abstract class Enemy extends Breakable implements Serializable {
         setAttackAnimation(atk);
         setWalkAnimation(walk);
     }
-    /*
-    @Override
-    public void finalize() {
-        super.finalize();
-        sprite.markForDelete();
-        //LIB.remove(this);
-    }
-    */
-    /*
-    public static void deleteAll() {
-        LIB.clear();
-    }
-    */
-    /*
-    @Override
-    public void setPos(final Vector3 pos) {
-        super.setPos(pos);
-        if (sprite != null) {
-            sprite.setPos(pos);
-        }
-    }
-
-    public void setIdleAnimation(final Material animation) {
-        idle = animation;
-    }
-    */
+    
     public void setWalkAnimation(final Material animation) {
         walk = animation;
     }
@@ -146,22 +103,10 @@ public abstract class Enemy extends Breakable implements Serializable {
     public void setAttackAnimation(final Material animation) {
         atk = animation;
     }
-    /*
-    public void setPainAnimation(final Material animation) {
-        pain = animation;
-    }
-
-    public void setDieAnimation(final Material animation) {
-        die = animation;
-    }
-
-    public void setDeadAnimation(final Material animation) {
-        dead = animation;
-    }
-    */
 
     @Override
     public void setState(final EnemyState state) {
+        flashCreated = false; // не было создано вспышки от выстрела
         /*prevState = this.state;
         this.state = state;
         //curFrame = 0;
@@ -256,12 +201,6 @@ public abstract class Enemy extends Breakable implements Serializable {
         this.bulletsPerShoot = bulletsPerShoot;
     }
 
-    /*
-    protected abstract FileHandle[] getAlarmSounds();
-    protected abstract FileHandle[] getAttackSounds();
-    protected abstract FileHandle[] getPainSounds();
-    protected abstract FileHandle[] getDieSounds();*/
-
     protected FileHandle[] getAlarmSounds() {
         FileHandle[] sounds = new FileHandle[alarmSounds.length];
         for (int i = 0; i < alarmSounds.length; ++i) {
@@ -277,18 +216,6 @@ public abstract class Enemy extends Breakable implements Serializable {
         }
         return sounds;
     }
-
-/*
-    protected abstract double getViewDistance();
-    protected abstract double getViewAngle();
-
-    protected abstract double getMinAttackDistance();
-    protected abstract double getMaxAttackDistance();
-    protected abstract double getShootDelay();
-    protected abstract double getDamage();
-    protected abstract double getAccuracy();
-    protected abstract int getBulletsPerShoot();
-*/
 
     protected double getViewDistance() {
         return viewDistance;
@@ -325,51 +252,8 @@ public abstract class Enemy extends Breakable implements Serializable {
 
     protected abstract void shoot();
 
-    /*
-    public Vector2 getPos() {
-        return sprite.getPos();
-    }
-    */
-
     /*public EnemyState getState() {
         return state;
-    }
-
-    public double getDirection() {
-        return sprite.getDirection();
-    }
-
-    public Vector2 getViewVector() {
-        return viewVector;
-    }
-
-    public void setDirection(double degree) {
-        double rad = Math.toRadians(degree);
-        double sin = Math.sin(rad);
-        double cos = Math.cos(rad);
-
-        viewVector.x = cos;
-        viewVector.y = sin;
-        //viewVector = viewVector.normalize();
-
-        sprite.setDirection(degree);
-    }
-
-    public void rotate(double degree) {
-        if (degree == 0.0) {
-            return;
-        }
-
-        double rad = Math.toRadians(degree);
-        double sin = Math.sin(rad);
-        double cos = Math.cos(rad);
-
-        double oldDirX = viewVector.x;
-        viewVector.x = viewVector.x * cos - viewVector.y * sin;
-        viewVector.y = oldDirX      * sin + viewVector.y * cos;
-        //viewVector = viewVector.normalize();
-
-        sprite.rotate(degree);
     }*/
 
     /**
@@ -535,10 +419,17 @@ public abstract class Enemy extends Breakable implements Serializable {
                     }
                 // стреляет
                 } else if (state == EnemyState.ATTACK) {
+                    if (sprite.isAnimate()) {
+                        // на последнем кадре
+                        if (sprite.getFrameNum() == sprite.getFramesCount() - 1) {
+                            // если ещё не было вспышки от выстрела
+                            if (!flashCreated) {
+                                new LightSource(Color.WHITE, 2.0, pos).destroy(0.15);
+                                flashCreated = true;
+                            }
+                        }
                     // уже выстрелил
-                    if (!sprite.isAnimate()) {
-                        new LightSource(Color.WHITE, 2.0, pos).destroy(0.15);
-
+                    } else {
                         SoundSystem.playOnceRandom(getAttackSounds());
                         for (int i = 0; i < getBulletsPerShoot(); ++i) {
                             shoot();
@@ -623,18 +514,4 @@ public abstract class Enemy extends Breakable implements Serializable {
             }
         }
     }
-
-    /*
-    public static void updateAll() {
-        if (FOR_DELETE_FROM_LIB.size() > 0) {
-            for (Iterator<Enemy> it = FOR_DELETE_FROM_LIB.iterator(); it.hasNext(); ) {
-                it.next().finalize();
-            }
-            FOR_DELETE_FROM_LIB.clear();
-        }
-
-        for (Enemy enemy : LIB) {
-            enemy.update();
-        }
-    }*/
 }
