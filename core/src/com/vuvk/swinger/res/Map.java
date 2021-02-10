@@ -45,6 +45,7 @@ import com.vuvk.swinger.objects.weapon.Pistol;
 import com.vuvk.swinger.objects.weapon.Rifle;
 import com.vuvk.swinger.utils.ImmutablePair;
 import com.vuvk.swinger.utils.Pair;
+import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -1005,6 +1006,15 @@ public final class Map {
 
         light1 = new LightSource();
         light2 = new LightSource();
+
+        // lighters
+        new LightSource(Color.WHITE, 1.5, new Vector3(10.5, 14.5, 0.0));
+        new LightSource(Color.WHITE, 1.5, new Vector3( 8.5, 17.5, 0.0));
+        new LightSource(Color.WHITE, 1.5, new Vector3( 6.5, 13.5, 0.0));
+        new LightSource(Color.WHITE, 1.5, new Vector3( 8.5, 13.5, 0.0));
+
+        // fire
+        new LightSource(Color.WHITE, 1.0, new Vector3(10.5,  4.5, 0.0));
 
         SoundSystem.playMusic(SoundBank.FILE_MUSIC1);
 
