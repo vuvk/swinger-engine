@@ -115,6 +115,19 @@ public class Material extends Object3D implements Serializable {
         return brightness;
     }
 */
+
+    public int getFrameNum() {
+        return frameNum;
+    }
+
+    public int getFramesCount() {
+        return frames.length;
+    }
+
+    public int getSideFramesCount() {
+        return getSideFrames().length;
+    }
+
     public Image[][] getFrames() {
         return frames;
     }
