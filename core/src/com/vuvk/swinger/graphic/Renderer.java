@@ -438,7 +438,7 @@ public final class Renderer/* extends JPanel*/ {
         double correction = 0.0;
 
         for (LightSource source : LightSource.LIB) {
-            final ImmutablePair<Boolean, Double> result = source.isPointInRadius(point);
+            final ImmutablePair<Boolean, Double> result = source.hasPoint(point);
             if (result.getLeft()) {
                 correction -= result.getRight();
             }

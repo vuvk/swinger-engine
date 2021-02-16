@@ -34,7 +34,7 @@ public class LightSource extends Object3D implements Serializable {
     private double brightness;
     private double radius;
     private double squareRadius; // for fast check point
-    protected final BoundingBox bb = new BoundingBox();
+    protected final BoundingBox bb;
 
     public LightSource() {
         this(Color.WHITE);
@@ -53,6 +53,8 @@ public class LightSource extends Object3D implements Serializable {
     }
 
     public LightSource(Color color, double radius, Vector3 pos, double brightness) {
+        bb = new BoundingBox(pos, radius);
+
         setColor(color);
         setRadius(radius);
         setPos(pos);
@@ -94,7 +96,11 @@ public class LightSource extends Object3D implements Serializable {
      * @param point Точка для проверки
      * @return возвращает пару - true/false и яркость, если true
      */
-    public final ImmutablePair<Boolean, Double> isPointInRadius(Vector2 point) {
+    public final ImmutablePair<Boolean, Double> hasPoint(Vector2 point) {
+        if (!bb.hasPoint(point)) {
+            return POINT_NOT_IN_RADIUS;
+        }
+
         double x = pos.x - point.x,
                y = pos.y - point.y;
         double squareLength = x*x + y*y;
@@ -123,13 +129,30 @@ public class LightSource extends Object3D implements Serializable {
         updateRadius();
     }
 
+    @Override
+    public void setPos(Vector3 pos) {
+        super.setPos(pos);
+        bb.setPos(pos);
+    }
+
     private void updateRadius() {
         squareRadius = radius * radius;
+        updateBb();
+    }
+
+    private void updateBb() {
+        Vector2 center = bb.getCenter();
+
+        bb.setLeft  (center.x - radius);
+        bb.setRight (center.x + radius);
+        bb.setTop   (center.y - radius);
+        bb.setBottom(center.y + radius);
     }
 
     @Override
     public void update() {
         super.update();
+        updateRadius();
     }
 
     public static LightSource[] getLib() {

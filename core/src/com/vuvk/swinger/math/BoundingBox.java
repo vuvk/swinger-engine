@@ -48,22 +48,6 @@ public class BoundingBox implements Serializable {
         this.center = new Vector2(left + (right - left) / 2, top + (bottom - top) / 2);
     }
 
-    public void setLeft(double left) {
-        this.left = left;
-    }
-
-    public void setRight(double right) {
-        this.right = right;
-    }
-
-    public void setTop(double top) {
-        this.top = top;
-    }
-
-    public void setBottom(double bottom) {
-        this.bottom = bottom;
-    }
-
     public double getLeft() {
         return left;
     }
@@ -80,6 +64,10 @@ public class BoundingBox implements Serializable {
         return bottom;
     }
 
+    public Vector2 getCenter() {
+        return center;
+    }
+    
     /**
      * Находится ли точка внутри существа
      * @param point точка для проверки
@@ -159,16 +147,20 @@ public class BoundingBox implements Serializable {
         return intersections;
     }
 
-    /**
-     * Получить новую коробку сдвинутую на вектор движения
-     * @param moveVector вектор движения
-     * @return Новая коробка после сдвига
-     */
-    public BoundingBox move(final Vector2 moveVector) {
-        return new BoundingBox(left   + moveVector.x,
-                               right  + moveVector.x,
-                               top    + moveVector.y,
-                               bottom + moveVector.y);
+    public void setLeft(double left) {
+        this.left = left;
+    }
+
+    public void setRight(double right) {
+        this.right = right;
+    }
+
+    public void setTop(double top) {
+        this.top = top;
+    }
+
+    public void setBottom(double bottom) {
+        this.bottom = bottom;
     }
 
     /**
@@ -185,6 +177,18 @@ public class BoundingBox implements Serializable {
         right  = center.x + width * 0.5;
         top    = center.y - height * 0.5;
         bottom = center.y + height * 0.5;
+    }
+
+    /**
+     * Получить новую коробку сдвинутую на вектор движения
+     * @param moveVector вектор движения
+     * @return Новая коробка после сдвига
+     */
+    public BoundingBox move(final Vector2 moveVector) {
+        return new BoundingBox(left   + moveVector.x,
+                               right  + moveVector.x,
+                               top    + moveVector.y,
+                               bottom + moveVector.y);
     }
 
     /**
