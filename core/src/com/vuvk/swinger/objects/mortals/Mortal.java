@@ -36,9 +36,11 @@ public abstract class Mortal extends Object3D implements Serializable {
     protected final double maxHealth;
     protected double radius;
     protected boolean live = false; // является ли объект живым - живой испускает кровь, неживой  пыль
-    protected final BoundingBox bb = new BoundingBox();
+    protected final BoundingBox bb;
 
     public Mortal(final Vector3 pos, double health, double radius) {
+        bb = new BoundingBox(pos, radius);
+
         setHealth(health);
         setRadius(radius);
         setPos(pos);
@@ -94,11 +96,7 @@ public abstract class Mortal extends Object3D implements Serializable {
 
     public void setPos(final Vector3 pos) {
         super.setPos(pos);
-
-        bb.setLeft  (pos.x - radius);
-        bb.setRight (pos.x + radius);
-        bb.setTop   (pos.y - radius);
-        bb.setBottom(pos.y + radius);
+        bb.setPos(pos);
     }
 
     private void setRadius(double radius) {

@@ -163,34 +163,6 @@ public final class Player extends Mortal implements Serializable {
         }
     }
 
-    /*
-    public Vector3 getPos() {
-        return pos;
-    }
-
-    public void setPos(final Vector3 pos) {
-        this.pos = pos;
-    }
-    */
-    /*
-    public void setDirection(Vector2 dir) {
-        this.direction = dir;
-    }
-    */
-
-/*
-    public Vector2 getView() {
-        return view;
-    }
-
-    public double getDirection() {
-        return direction;
-    }
-
-    public Vector2 getPlane() {
-        return plane;
-    }
-*/
     public void createWeaponsInHand() {
         weaponsInHand[0] = KnifeInHand.getInstance();
         /*weaponsInHand[1] = PistolInHand.getInstance();
@@ -229,52 +201,7 @@ public final class Player extends Mortal implements Serializable {
             }
         }
     }
-/*
-    private void setDirection(double degree) {
-        this.direction = degree;
-        while (direction < 0.0) {
-            direction += 360.0;
-        }
-        while (direction >= 360.0) {
-            direction -= 360.0;
-        }/*
 
-        double rad = Math.toRadians(degree);
-        double sin = Math.sin(rad);
-        double cos = Math.cos(rad);
-        view.set(cos, sin);
-
-        //both camera direction and camera plane must be rotated
-        double oldDirX = view.x;
-        view.x = view.x   * cos - view.y * sin;
-        view.y = oldDirX * sin + view.y * cos;
-
-        double oldPlaneX = plane.x;
-        plane.x = plane.x   * cos - plane.y * sin;
-        plane.y = oldPlaneX * sin + plane.y * cos;*/
-//    }
-
-    /*
-    public void setPlane(Vector2 plane) {
-        this.plane = plane;
-    }*/
-
-/*    public void rotate(double rad) {
-        double sin = Math.sin(rad);
-        double cos = Math.cos(rad);
-
-        //both camera direction and camera plane must be rotated
-        double oldDirX = view.x;
-        view.x = view.x  * cos - view.y * sin;
-        view.y = oldDirX * sin + view.y * cos;
-
-        double oldPlaneX = plane.x;
-        plane.x = plane.x   * cos - plane.y * sin;
-        plane.y = oldPlaneX * sin + plane.y * cos;
-
-        setDirection(direction + Math.toDegrees(rad));
-    }
- */
     @Override
     public void applyDamage(double damage) {
         double prevHealth = health;
@@ -511,20 +438,15 @@ public final class Player extends Mortal implements Serializable {
 
     public static Player getInstance() {
         if (instance == null) {
-            createInstance(new Vector3(20.5, 4.75, 0.0));
+            instance = new Player(new Vector3(20.5, 4.75, 0.0));
         }
         return instance;
     }
 
-    public static void createInstance(Vector3 pos) {
-        instance = new Player(pos);
-    }
-
     public static void setInstance(Player instance) {
-        if (instance != null) {
-            Player.instance = instance;
-            Player.instance.init();
-        }
+        deleteInstance();
+        Player.instance = instance;
+        Player.instance.init();
     }
 
     public static void deleteInstance() {

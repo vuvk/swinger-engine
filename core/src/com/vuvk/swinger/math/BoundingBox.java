@@ -22,10 +22,11 @@ import java.util.List;
  * @author Anton "Vuvk" Shcherbatykh
  */
 public class BoundingBox implements Serializable {
-    double left,
-           right,
-           top,
-           bottom;
+    private double left,
+                   right,
+                   top,
+                   bottom;
+    private Vector2 center;
 
     public BoundingBox() {
         this(0, 0, 0, 0);
@@ -43,6 +44,8 @@ public class BoundingBox implements Serializable {
         this.right  = right;
         this.top    = top;
         this.bottom = bottom;
+
+        this.center = new Vector2(left + (right - left) / 2, top + (bottom - top) / 2);
     }
 
     public void setLeft(double left) {
@@ -115,6 +118,24 @@ public class BoundingBox implements Serializable {
     }
 
     /**
+     * Проверка пересечения с отрезком
+     * @param segment Отрезок для проверки
+     * @return true, если пересекает
+     */
+    public boolean intersect(final Segment segment) {
+        return (
+            // пересекается с верхом?
+            (segment.intersect(new Segment(left,  top,    right, top))    != null) ||
+            // пересекается с низом?
+            (segment.intersect(new Segment(left,  bottom, right, bottom)) != null) ||
+            // пересекается с левым?
+            (segment.intersect(new Segment(left,  top,    left,  bottom)) != null) ||
+            // пересекается с правым?
+            (segment.intersect(new Segment(right, top,    right, bottom)) != null)
+        );
+    }
+
+    /**
      * Пересекается ли коробка с сегментом
      * @param segment Сегмент для проверки
      * @return В списке точки пересечения, если есть
@@ -139,25 +160,7 @@ public class BoundingBox implements Serializable {
     }
 
     /**
-     * Проверка пересечения с отрезком
-     * @param segment Отрезок для проверки
-     * @return true, если пересекает
-     */
-    public boolean intersect(final Segment segment) {
-        return (
-            // пересекается с верхом?
-            (segment.intersect(new Segment(left,  top,    right, top))    != null) ||
-            // пересекается с низом?
-            (segment.intersect(new Segment(left,  bottom, right, bottom)) != null) ||
-            // пересекается с левым?
-            (segment.intersect(new Segment(left,  top,    left,  bottom)) != null) ||
-            // пересекается с правым?
-            (segment.intersect(new Segment(right, top,    right, bottom)) != null)
-        );
-    }
-
-    /**
-     * Сдвинуть коробку на вектор движения
+     * Получить новую коробку сдвинутую на вектор движения
      * @param moveVector вектор движения
      * @return Новая коробка после сдвига
      */
@@ -166,5 +169,29 @@ public class BoundingBox implements Serializable {
                                right  + moveVector.x,
                                top    + moveVector.y,
                                bottom + moveVector.y);
+    }
+
+    /**
+     * Сдвинуть коробку на вектор движения
+     * @param moveVector вектор движения
+     */
+    public void setPos(final Vector2 pos) {
+        double width  = right - left;
+        double height = bottom - top;
+
+        center.set(pos);
+
+        left   = center.x - width * 0.5;
+        right  = center.x + width * 0.5;
+        top    = center.y - height * 0.5;
+        bottom = center.y + height * 0.5;
+    }
+
+    /**
+     * Сдвинуть коробку на вектор движения
+     * @param moveVector вектор движения
+     */
+    public void translate(final Vector2 moveVector) {
+        setPos(center.add(moveVector));
     }
 }
