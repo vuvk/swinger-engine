@@ -14,7 +14,6 @@
 package com.vuvk.swinger.objects.projectiles;
 
 import com.badlogic.gdx.Gdx;
-import java.util.List;
 import com.vuvk.swinger.math.BoundingBox;
 import com.vuvk.swinger.math.Segment;
 import com.vuvk.swinger.math.Vector2;
@@ -24,6 +23,7 @@ import com.vuvk.swinger.objects.mortals.Mortal;
 import com.vuvk.swinger.res.Map;
 import com.vuvk.swinger.res.Texture;
 import java.io.Serializable;
+import java.util.List;
 
 /**
  *
@@ -100,7 +100,7 @@ public abstract class Projectile extends Sprite implements Serializable {
 
             // если не столкнулся с сегментом
             Segment segment = Map.SEGMENTS[newPosX][newPosY];
-            if (segment == null || (segment != null && segment.intersect(bb).isEmpty())) {
+            if (segment == null || (segment != null && segment.getIntersections(bb).isEmpty())) {
                 // и не столкнулся с живым
                 targets = Mortal.whoIntersectBox(bb);
                 if (targets.isEmpty()) {

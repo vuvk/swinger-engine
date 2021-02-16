@@ -23,16 +23,16 @@ import java.util.List;
 public class Segment implements Serializable {
     protected Vector2 a;
     protected Vector2 b;
-    
+
     public Segment() {
         this(new Vector2(), new Vector2());
     }
-    
+
     public Segment(final Vector2 a, final Vector2 b) {
         this.a = a;
         this.b = b;
     }
-    
+
     public Segment(double x1, double y1, double x2, double y2) {
         this(new Vector2(x1, y1), new Vector2(x2, y2));
     }
@@ -52,7 +52,7 @@ public class Segment implements Serializable {
     public void setB(final Vector2 b) {
         this.b = b;
     }
-    
+
     /**
      * Проверка пересечения с другим отрезком
      * @param other Отрезок для проверки пересечения с ним
@@ -61,7 +61,7 @@ public class Segment implements Serializable {
     public Vector2 intersect(final Segment other) {
         return intersect(this, other);
     }
-    
+
     /**
      * Проверка пересечения двух отрезков
      * @param s1 Первый отрезок
@@ -69,18 +69,18 @@ public class Segment implements Serializable {
      * @return Вектор-точка пересечения или null, если пересечения нет
      */
     public static Vector2 intersect(final Segment s1, final Segment s2) {
-        return intersect(s1.a.x, s1.a.y, 
-                         s1.b.x, s1.b.y, 
-                         s2.a.x, s2.a.y, 
-                         s2.b.x, s2.b.y);        
+        return intersect(s1.a.x, s1.a.y,
+                         s1.b.x, s1.b.y,
+                         s2.a.x, s2.a.y,
+                         s2.b.x, s2.b.y);
     }
-    
+
     /**
      * Проверка пересечения двух отрезков
      * @return Вектор-точка пересечения или null, если пересечения нет
      */
-    public static Vector2 intersect(final double x1, final double y1, final double x2, final double y2, 
-                                    final double x3, final double y3, final double x4, final double y4) {   
+    public static Vector2 intersect(final double x1, final double y1, final double x2, final double y2,
+                                    final double x3, final double y3, final double x4, final double y4) {
         // предварительный расчет разницы
         final double x1_x3 = x1 - x3;
         final double y1_y3 = y1 - y3;
@@ -119,13 +119,22 @@ public class Segment implements Serializable {
         // не пересекаются
         return null;
     }
-    
+
+    /**
+     * Пересекается ли сегмент с коробкой
+     * @param bb Коробка для проверки
+     * @return true, если есть
+     */
+    public boolean intersect(final BoundingBox bb) {
+        return bb.intersect(this);
+    }
+
     /**
      * Пересекается ли сегмент с коробкой
      * @param bb Коробка для проверки
      * @return В списке точки пересечения, если есть
      */
-    public List<Vector2> intersect(final BoundingBox bb) {
-        return bb.intersect(this);
+    public List<Vector2> getIntersections(final BoundingBox bb) {
+        return bb.getIntersections(this);
     }
 }

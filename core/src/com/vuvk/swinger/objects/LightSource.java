@@ -13,6 +13,7 @@
 */
 package com.vuvk.swinger.objects;
 
+import com.vuvk.swinger.math.BoundingBox;
 import com.vuvk.swinger.math.Vector2;
 import com.vuvk.swinger.math.Vector3;
 import com.vuvk.swinger.utils.ImmutablePair;
@@ -33,6 +34,7 @@ public class LightSource extends Object3D implements Serializable {
     private double brightness;
     private double radius;
     private double squareRadius; // for fast check point
+    protected final BoundingBox bb = new BoundingBox();
 
     public LightSource() {
         this(Color.WHITE);
@@ -55,7 +57,7 @@ public class LightSource extends Object3D implements Serializable {
         setRadius(radius);
         setPos(pos);
         setBrightness(brightness);
-        squareRadius = radius * radius;
+        updateRadius();
 
         LIB.add(this);
     }
@@ -103,7 +105,7 @@ public class LightSource extends Object3D implements Serializable {
             // считаем расстояние до центра источника. Чем ближе к центру, тем ярче
             double distance = Math.sqrt(squareLength);
             double brightnessInPoint = 1.0 - distance / radius;
-            
+
             return new ImmutablePair<>(true, brightnessInPoint);
         }
     }
@@ -118,6 +120,11 @@ public class LightSource extends Object3D implements Serializable {
 
     public void setRadius(double radius) {
         this.radius = radius;
+        updateRadius();
+    }
+
+    private void updateRadius() {
+        squareRadius = radius * radius;
     }
 
     @Override

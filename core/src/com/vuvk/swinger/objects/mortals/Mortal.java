@@ -124,38 +124,6 @@ public abstract class Mortal extends Object3D implements Serializable {
     }
 
     /**
-     * Находится ли точка внутри существа
-     * @param point точка для проверки
-     * @return true, если точка внутри
-     */
-    public boolean hasPoint(final Vector2 point) {
-        return (
-            point.x >= bb.getLeft()  &&
-            point.x <= bb.getRight() &&
-            point.y >= bb.getTop()   &&
-            point.y <= bb.getBottom()
-        );
-    }
-
-    /**
-     * Проверка пересечения с отрезком
-     * @param segment Отрезок для проверки
-     * @return true, если пересекает
-     */
-    public boolean intersect(final Segment segment) {
-        return (
-            // пересекается с верхом?
-            (segment.intersect(new Segment(bb.getLeft(),  bb.getTop(),    bb.getRight(), bb.getTop()))    != null) ||
-            // пересекается с низом?
-            (segment.intersect(new Segment(bb.getLeft(),  bb.getBottom(), bb.getRight(), bb.getBottom())) != null) ||
-            // пересекается с левым?
-            (segment.intersect(new Segment(bb.getLeft(),  bb.getTop(),    bb.getLeft(),  bb.getBottom())) != null) ||
-            // пересекается с правым?
-            (segment.intersect(new Segment(bb.getRight(), bb.getTop(),    bb.getRight(), bb.getBottom())) != null)
-        );
-    }
-
-    /**
      * Проверка пересечения с квадратом
      * @param box Ограничивающая коробка для проверки
      * @return true, если пересекает
@@ -187,7 +155,7 @@ public abstract class Mortal extends Object3D implements Serializable {
     public static List<Mortal> whoInPos(final Vector2 pos) {
         ArrayList<Mortal> mortals = new ArrayList<>(Mortal.LIB.size());
         for (Mortal mortal : LIB) {
-            if (mortal.hasPoint(pos)) {
+            if (mortal.bb.hasPoint(pos)) {
                 mortals.add(mortal);
             }
         }
@@ -270,7 +238,7 @@ public abstract class Mortal extends Object3D implements Serializable {
     public static List<Mortal> whoIntersectSegment(final Segment segment) {
         ArrayList<Mortal> mortals = new ArrayList<>(Mortal.LIB.size());
         for (Mortal mortal : LIB) {
-            if (mortal.intersect(segment)) {
+            if (mortal.bb.intersect(segment)) {
                 mortals.add(mortal);
             }
         }

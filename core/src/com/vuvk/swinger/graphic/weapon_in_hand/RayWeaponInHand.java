@@ -57,7 +57,7 @@ public abstract class RayWeaponInHand extends WeaponInHand {
                 if (target.getHealth() > 0.0) {
                     target.applyDamage(getDamage());
 
-                    List<Vector2> intersections = ray.getSegment().intersect(target.getBB());
+                    List<Vector2> intersections = ray.getSegment().getIntersections(target.getBB());
                     // ищем ближайшую точку столкновения
                     collisionPoint = intersections.get(0);
                     double nearDist = collisionPoint.distance(pos);
