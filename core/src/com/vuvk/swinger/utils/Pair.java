@@ -1,5 +1,5 @@
 /**
-    Copyright (C) 2019-2020 Anton "Vuvk" Shcherbatykh <vuvk69@gmail.com>
+    Copyright (C) 2021 Anton "Vuvk" Shcherbatykh <vuvk69@gmail.com>
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
@@ -13,37 +13,11 @@
 */
 package com.vuvk.swinger.utils;
 
-import java.io.Serializable;
-
 /**
  *
- * @author Anton "Vuvk" Shcherbatykh
+ * @author vuvk
  */
-public class Pair<T,V> implements Serializable {
-    private T left;
-    private V right; 
-    
-    public Pair() {
-    }
-
-    public Pair(T left, V right) {
-        this.left = left;
-        this.right = right;
-    }
-
-    public T getLeft() {
-        return left;
-    }
-
-    public void setLeft(T left) {
-        this.left = left;
-    }
-
-    public V getRight() {
-        return right;
-    }
-
-    public void setRight(V right) {
-        this.right = right;
-    }    
+public interface Pair<T, V> {
+    public T getLeft();
+    public V getRight();
 }

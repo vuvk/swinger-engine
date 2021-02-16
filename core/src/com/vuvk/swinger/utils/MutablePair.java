@@ -19,20 +19,35 @@ import java.io.Serializable;
  *
  * @author Anton "Vuvk" Shcherbatykh
  */
-public class ImmutablePair<T,V> implements Pair, Serializable {
-    private final T left;
-    private final V right;
+public class MutablePair<T,V> implements Pair, Serializable {
+    private T left;
+    private V right;
 
-    public ImmutablePair(final T left, final V right) {
-        this.left  = left;
+    public MutablePair() {}
+
+    public MutablePair(T left, V right) {
+        this.left = left;
         this.right = right;
     }
 
-    public final T getLeft() {
+    public T getLeft() {
         return left;
     }
 
-    public final V getRight() {
+    public V getRight() {
         return right;
+    }
+
+    public void setLeft(T left) {
+        this.left = left;
+    }
+
+    public void setRight(V right) {
+        this.right = right;
+    }
+
+    public void set(T left, V right) {
+        setLeft(left);
+        setRight(right);
     }
 }

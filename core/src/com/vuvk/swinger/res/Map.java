@@ -44,7 +44,7 @@ import com.vuvk.swinger.objects.weapon.Minigun;
 import com.vuvk.swinger.objects.weapon.Pistol;
 import com.vuvk.swinger.objects.weapon.Rifle;
 import com.vuvk.swinger.utils.ImmutablePair;
-import com.vuvk.swinger.utils.Pair;
+import com.vuvk.swinger.utils.MutablePair;
 import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -516,10 +516,10 @@ public final class Map {
         loadTexturesAndMaterials(jsonLevel);
 
         ArrayList<JsonValue> medkitsArray = json.readValue(ArrayList.class, jsonLevel.get("config"));
-        Pair<Material, Double>[] presets = new Pair[medkitsArray.size()];
+        MutablePair<Material, Double>[] presets = new MutablePair[medkitsArray.size()];
         for (int i = 0; i < medkitsArray.size(); ++i) {
             JsonValue jsonValue = medkitsArray.get(i);
-            presets[i] = new Pair<>();
+            presets[i] = new MutablePair<>();
 
             int matNum = jsonValue.getInt("material");
             if (matNum >= 0) {

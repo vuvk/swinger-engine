@@ -34,7 +34,7 @@ import com.vuvk.swinger.res.MaterialBank;
 import com.vuvk.swinger.res.Texture;
 import com.vuvk.swinger.res.WallMaterial;
 import com.vuvk.swinger.utils.ArrayUtils;
-import com.vuvk.swinger.utils.ImmutablePair;
+import com.vuvk.swinger.utils.Pair;
 import com.vuvk.swinger.utils.Utils;
 import java.nio.IntBuffer;
 import java.util.ArrayList;
@@ -437,8 +437,8 @@ public final class Renderer/* extends JPanel*/ {
     private double getLightBrightnessCorrection(Vector2 point) {
         double correction = 0.0;
 
-        for (LightSource source : LightSource.LIB) {
-            final ImmutablePair<Boolean, Double> result = source.hasPoint(point);
+        for (Iterator<LightSource> it = LightSource.LIB.iterator(); it.hasNext(); ) {
+            final Pair<Boolean, Double> result = it.next().hasPoint(point);
             if (result.getLeft()) {
                 correction -= result.getRight();
             }

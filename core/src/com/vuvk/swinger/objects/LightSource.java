@@ -17,6 +17,7 @@ import com.vuvk.swinger.math.BoundingBox;
 import com.vuvk.swinger.math.Vector2;
 import com.vuvk.swinger.math.Vector3;
 import com.vuvk.swinger.utils.ImmutablePair;
+import com.vuvk.swinger.utils.Pair;
 import com.vuvk.swinger.utils.Utils;
 import java.awt.Color;
 import java.io.Serializable;
@@ -96,7 +97,7 @@ public class LightSource extends Object3D implements Serializable {
      * @param point Точка для проверки
      * @return возвращает пару - true/false и яркость, если true
      */
-    public final ImmutablePair<Boolean, Double> hasPoint(Vector2 point) {
+    public final Pair<Boolean, Double> hasPoint(Vector2 point) {
         if (!bb.hasPoint(point)) {
             return POINT_NOT_IN_RADIUS;
         }
