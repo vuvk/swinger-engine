@@ -434,7 +434,7 @@ public final class Renderer/* extends JPanel*/ {
      * @param point точка для проверки
      * @return возвращаемая поправка. Значения <= 0.0
      */
-    private double getLightBrightnessCorrection(Vector2 point) {
+    /*private double getLightBrightnessCorrection(Vector2 point) {
         double correction = 0.0;
 
         for (Iterator<LightSource> it = LightSource.LIB.iterator(); it.hasNext(); ) {
@@ -445,7 +445,7 @@ public final class Renderer/* extends JPanel*/ {
         }
 
         return correction;
-    }
+    }*/
 
     /**
      * Избавиться от острых краев, размазав граничные пиксели
@@ -974,10 +974,10 @@ public final class Renderer/* extends JPanel*/ {
                     }
 
                     // коррекция яркости в зависимости от источников освещения
-                    if (Config.fog != Fog.NOTHING) {
+                    /*if (Config.fog != Fog.NOTHING) {
                         fogBrightness += getLightBrightnessCorrection(target.collisionPoint);
                         fogBrightness = Utils.limit(fogBrightness, 0.0, 1.0);
-                    }
+                    }*/
 
                     //int[] pixelsColumn = txr.getCol(texX);
                     for (int y = drawStart; y < drawEnd; ++y) {
@@ -1165,10 +1165,10 @@ public final class Renderer/* extends JPanel*/ {
                         }
 
                         // коррекция яркости в зависимости от источников освещения
-                        if (Config.fog != Fog.NOTHING) {
+                        /*if (Config.fog != Fog.NOTHING) {
                             fogBrightness += getLightBrightnessCorrection(new Vector3(currentFloorX, currentFloorY));
                             fogBrightness = Utils.limit(fogBrightness, 0.0, 1.0);
-                        }
+                        }*/
 
                         // floor
                         //int arrayPos = (y - 1) * WIDTH + x;
@@ -1489,10 +1489,10 @@ public final class Renderer/* extends JPanel*/ {
                 }
 
                 // коррекция яркости в зависимости от источников освещения
-                if (Config.fog != Fog.NOTHING) {
+                /*if (Config.fog != Fog.NOTHING) {
                     fogBrightness += getLightBrightnessCorrection(sprite.getPos());
                     fogBrightness = Utils.limit(fogBrightness, 0.0, 1.0);
-                }
+                }*/
 
                 for (int x = drawStartX; x < drawEndX; x += xStep) {
                     int texX = (int)(((x - dSX) << Texture.WIDTH_POT) * invSpriteWidth);

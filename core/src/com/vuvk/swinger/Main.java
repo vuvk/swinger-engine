@@ -89,7 +89,7 @@ public class Main {
                     break;
             }
         }
-                        
+
         Fog.init();  
         /*
         EventQueue.invokeLater(new Runnable() {  
