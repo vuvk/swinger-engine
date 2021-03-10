@@ -26,8 +26,7 @@ public final class Texture extends Image implements Serializable {
     public final static int HEIGHT = 128;
     public final static int WIDTH_POT  = 7;
     public final static int HEIGHT_POT = 7;
-        
-    /*
+    
     public Texture(final BufferedImage image) {
         super(image, WIDTH, HEIGHT);
     }
@@ -35,7 +34,7 @@ public final class Texture extends Image implements Serializable {
     public Texture(final File file) {
         super(file, WIDTH, HEIGHT);
     }
-    */
+    
     public Texture(final String path) {
         super(path, WIDTH, HEIGHT);
     }
