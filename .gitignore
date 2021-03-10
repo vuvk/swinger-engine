@@ -129,3 +129,6 @@ Thumbs.db
 /distribution/build/
 /desktop/config.json
 /config.json
+
+/bin
+*.swp

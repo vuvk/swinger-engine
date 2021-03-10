@@ -13,17 +13,29 @@
 */
 package com.vuvk.swinger;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
+
+/*
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.JsonReader;
 import com.badlogic.gdx.utils.JsonValue;
 import com.badlogic.gdx.utils.JsonWriter;
+*/
+
 import com.vuvk.swinger.audio.SoundSystem;
 import com.vuvk.swinger.graphic.Fog;
-import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
@@ -64,14 +76,18 @@ public final class Config {
     private Config() {}
 
     public static void load() {
-        FileHandle config = Gdx.files.local("./config.json");
-        if (config.exists()) {
+        try {
+            File config = new File("./config.json");
+       
             //Json json = new Json();
-            JsonValue json = new JsonReader().parse(config);
-            if (json == null) {
-                return;
-            }
+            //JsonValue json = new JsonReader().parse(config);
+            JSONParser parser = new JSONParser();
+            JSONObject json = (JSONObject)parser.parse(new FileReader(config));
+            //if (json == null) {
+            //    return;
+            //}
 
+            /*
             float musicVolume = (json.has("music_volume")) ? json.getFloat("music_volume") : 1.0f;
             float soundVolume = (json.has("sound_volume")) ? json.getFloat("sound_volume") : 1.0f;
             SoundSystem.setMusicVolume(musicVolume);
@@ -91,15 +107,42 @@ public final class Config {
             TITLE  = (json.has("window_title"))   ? json.getString("window_title") : "swinger engine";
             fullscreen = (json.has("fullscreen")) ? json.getBoolean("fullscreen")  : false;
             vSync  = (json.has("vsync"))          ? json.getBoolean("vsync")       : true;
+            */
+            
+            
+            float musicVolume = (json.containsKey("music_volume")) ? (Float)json.get("music_volume") : 1.0f;
+            float soundVolume = (json.containsKey("sound_volume")) ? (Float)json.get("sound_volume") : 1.0f;
+            SoundSystem.setMusicVolume(musicVolume);
+            SoundSystem.setVolume(soundVolume);
+
+            interlacing  = (json.containsKey("interlacing"))  ? (Boolean)json.get("interlacing")  : false;
+            antialiasing = (json.containsKey("antialiasing")) ? (Boolean)json.get("antialiasing") : false;
+            quality      = (json.containsKey("quality"))      ? (Integer)json.get("quality")          : 0;
+            multithreading = (json.containsKey("multithreading")) ? (Boolean)json.get("multithreading") : true;
+            mouseLook    = (json.containsKey("mouselook"))    ? (Boolean)json.get("mouselook")    : false;
+            drawSky      = (json.containsKey("draw_sky"))     ? (Boolean)json.get("draw_sky")     : true;
+            if (json.containsKey("fog")) {
+                fog = Fog.getByNum((Integer)json.get("fog"));
+            }
+            WIDTH  = (json.containsKey("window_width"))   ? (Integer)json.get("window_width")  : 640;
+            HEIGHT = (json.containsKey("window_height"))  ? (Integer)json.get("window_height") : 480;
+            TITLE  = (json.containsKey("window_title"))   ? (String) json.get("window_title")  : "swinger engine";
+            fullscreen = (json.containsKey("fullscreen")) ? (Boolean)json.get("fullscreen")    : false;
+            vSync  = (json.containsKey("vsync"))          ? (Boolean)json.get("vsync")         : true;
+            
+        } catch (ParseException | IOException ex) {
+            LOG.log(Level.SEVERE, null, ex);
         }
+
     }
 
     public static void save() {
-        FileHandle config = Gdx.files.local("./config.json");
+        File config = new File("./config.json");
         if (config.exists()) {
             config.delete();
         }
 
+        /*
         Json json = new Json();
         JsonWriter writer = new JsonWriter(config.writer(false));
         json.setWriter(writer);
@@ -125,6 +168,29 @@ public final class Config {
             writer.close();
         } catch (IOException ex) {
             LOG.log(Level.SEVERE, null, ex);
+        }
+        */
+
+        JSONObject json = new JSONObject();
+        json.put("music_volume",   SoundSystem.getMusicVolume());
+        json.put("sound_volume",   SoundSystem.getVolume());
+        json.put("interlacing",    interlacing);
+        json.put("antialiasing",   antialiasing);
+        json.put("quality",        quality);
+        json.put("multithreading", multithreading);
+        json.put("mouselook",      mouseLook);
+        json.put("draw_sky",       drawSky);
+        json.put("fog",            fog.getNum());
+        json.put("window_width",   WIDTH);
+        json.put("window_height",  HEIGHT);
+        json.put("window_title",   TITLE);
+        json.put("fullscreen",     fullscreen);
+        json.put("vsync",          vSync);
+
+        try (FileWriter writer = new FileWriter(config)) {
+            writer.write(json.toJSONString());
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
