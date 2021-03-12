@@ -14,16 +14,15 @@
 package com.vuvk.swinger;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import com.google.gson.stream.JsonWriter;
 
 /*
 import com.badlogic.gdx.Gdx;
@@ -76,64 +75,35 @@ public final class Config {
     private Config() {}
 
     public static void load() {
-        try {
-            File config = new File("./config.json");
-       
-            //Json json = new Json();
-            //JsonValue json = new JsonReader().parse(config);
-            JSONParser parser = new JSONParser();
-            JSONObject json = (JSONObject)parser.parse(new FileReader(config));
-            //if (json == null) {
-            //    return;
-            //}
+        File config = new File("./config.json");
+        if (config.exists()) {
+            try {
+                JsonObject json = JsonParser.parseReader(new FileReader(config)).getAsJsonObject();
+                
+                float musicVolume = (json.has("music_volume")) ? json.get("music_volume").getAsFloat() : 1.0f;
+                float soundVolume = (json.has("sound_volume")) ? json.get("sound_volume").getAsFloat() : 1.0f;
+                SoundSystem.setMusicVolume(musicVolume);
+                SoundSystem.setVolume(soundVolume);
 
-            /*
-            float musicVolume = (json.has("music_volume")) ? json.getFloat("music_volume") : 1.0f;
-            float soundVolume = (json.has("sound_volume")) ? json.getFloat("sound_volume") : 1.0f;
-            SoundSystem.setMusicVolume(musicVolume);
-            SoundSystem.setVolume(soundVolume);
-
-            interlacing  = (json.has("interlacing"))  ? json.getBoolean("interlacing")  : false;
-            antialiasing = (json.has("antialiasing")) ? json.getBoolean("antialiasing") : false;
-            quality      = (json.has("quality"))      ? json.getInt("quality")          : 0;
-            multithreading = (json.has("multithreading")) ? json.getBoolean("multithreading") : true;
-            mouseLook    = (json.has("mouselook"))    ? json.getBoolean("mouselook")    : false;
-            drawSky      = (json.has("draw_sky"))     ? json.getBoolean("draw_sky")     : true;
-            if (json.has("fog")) {
-                fog = Fog.getByNum(json.getInt("fog"));
+                interlacing  = (json.has("interlacing"))  ? json.get("interlacing").getAsBoolean()  : false;
+                antialiasing = (json.has("antialiasing")) ? json.get("antialiasing").getAsBoolean() : false;
+                quality      = (json.has("quality"))      ? json.get("quality").getAsInt()          : 0;
+                multithreading = (json.has("multithreading")) ? json.get("multithreading").getAsBoolean() : true;
+                mouseLook    = (json.has("mouselook"))    ? json.get("mouselook").getAsBoolean()    : false;
+                drawSky      = (json.has("draw_sky"))     ? json.get("draw_sky").getAsBoolean()     : true;
+                if (json.has("fog")) {
+                    fog = Fog.getByNum(json.get("fog").getAsInt());
+                }
+                WIDTH  = (json.has("window_width"))   ? json.get("window_width").getAsInt()    : 640;
+                HEIGHT = (json.has("window_height"))  ? json.get("window_height").getAsInt()   : 480;
+                TITLE  = (json.has("window_title"))   ? json.get("window_title").getAsString() : "swinger engine";
+                fullscreen = (json.has("fullscreen")) ? json.get("fullscreen").getAsBoolean()  : false;
+                vSync  = (json.has("vsync"))          ? json.get("vsync").getAsBoolean()       : true;
+                
+            } catch (IOException ex) {
+                LOG.log(Level.SEVERE, null, ex);
             }
-            WIDTH  = (json.has("window_width"))   ? json.getInt("window_width")    : 640;
-            HEIGHT = (json.has("window_height"))  ? json.getInt("window_height")   : 480;
-            TITLE  = (json.has("window_title"))   ? json.getString("window_title") : "swinger engine";
-            fullscreen = (json.has("fullscreen")) ? json.getBoolean("fullscreen")  : false;
-            vSync  = (json.has("vsync"))          ? json.getBoolean("vsync")       : true;
-            */
-            
-            
-            float musicVolume = (json.containsKey("music_volume")) ? (Float)json.get("music_volume") : 1.0f;
-            float soundVolume = (json.containsKey("sound_volume")) ? (Float)json.get("sound_volume") : 1.0f;
-            SoundSystem.setMusicVolume(musicVolume);
-            SoundSystem.setVolume(soundVolume);
-
-            interlacing  = (json.containsKey("interlacing"))  ? (Boolean)json.get("interlacing")  : false;
-            antialiasing = (json.containsKey("antialiasing")) ? (Boolean)json.get("antialiasing") : false;
-            quality      = (json.containsKey("quality"))      ? (Integer)json.get("quality")          : 0;
-            multithreading = (json.containsKey("multithreading")) ? (Boolean)json.get("multithreading") : true;
-            mouseLook    = (json.containsKey("mouselook"))    ? (Boolean)json.get("mouselook")    : false;
-            drawSky      = (json.containsKey("draw_sky"))     ? (Boolean)json.get("draw_sky")     : true;
-            if (json.containsKey("fog")) {
-                fog = Fog.getByNum((Integer)json.get("fog"));
-            }
-            WIDTH  = (json.containsKey("window_width"))   ? (Integer)json.get("window_width")  : 640;
-            HEIGHT = (json.containsKey("window_height"))  ? (Integer)json.get("window_height") : 480;
-            TITLE  = (json.containsKey("window_title"))   ? (String) json.get("window_title")  : "swinger engine";
-            fullscreen = (json.containsKey("fullscreen")) ? (Boolean)json.get("fullscreen")    : false;
-            vSync  = (json.containsKey("vsync"))          ? (Boolean)json.get("vsync")         : true;
-            
-        } catch (ParseException | IOException ex) {
-            LOG.log(Level.SEVERE, null, ex);
         }
-
     }
 
     public static void save() {
@@ -142,53 +112,23 @@ public final class Config {
             config.delete();
         }
 
-        /*
-        Json json = new Json();
-        JsonWriter writer = new JsonWriter(config.writer(false));
-        json.setWriter(writer);
-
-        json.writeObjectStart();
-        json.writeValue("music_volume",   SoundSystem.getMusicVolume());
-        json.writeValue("sound_volume",   SoundSystem.getVolume());
-        json.writeValue("interlacing",    interlacing);
-        json.writeValue("antialiasing",   antialiasing);
-        json.writeValue("quality",        quality);
-        json.writeValue("multithreading", multithreading);
-        json.writeValue("mouselook",      mouseLook);
-        json.writeValue("draw_sky",       drawSky);
-        json.writeValue("fog",            fog.getNum());
-        json.writeValue("window_width",   WIDTH);
-        json.writeValue("window_height",  HEIGHT);
-        json.writeValue("window_title",   TITLE);
-        json.writeValue("fullscreen",     fullscreen);
-        json.writeValue("vsync",          vSync);
-        json.writeObjectEnd();
-
-        try {
-            writer.close();
-        } catch (IOException ex) {
-            LOG.log(Level.SEVERE, null, ex);
-        }
-        */
-
-        JSONObject json = new JSONObject();
-        json.put("music_volume",   SoundSystem.getMusicVolume());
-        json.put("sound_volume",   SoundSystem.getVolume());
-        json.put("interlacing",    interlacing);
-        json.put("antialiasing",   antialiasing);
-        json.put("quality",        quality);
-        json.put("multithreading", multithreading);
-        json.put("mouselook",      mouseLook);
-        json.put("draw_sky",       drawSky);
-        json.put("fog",            fog.getNum());
-        json.put("window_width",   WIDTH);
-        json.put("window_height",  HEIGHT);
-        json.put("window_title",   TITLE);
-        json.put("fullscreen",     fullscreen);
-        json.put("vsync",          vSync);
-
-        try (FileWriter writer = new FileWriter(config)) {
-            writer.write(json.toJSONString());
+        try (JsonWriter writer = new JsonWriter(new FileWriter(config))) {
+            writer.beginObject();
+            writer.name("music_volume").value(SoundSystem.getMusicVolume());
+            writer.name("sound_volume").value(SoundSystem.getVolume());
+            writer.name("interlacing").value(interlacing);
+            writer.name("antialiasing").value(antialiasing);
+            writer.name("quality").value(quality);
+            writer.name("multithreading").value(multithreading);
+            writer.name("mouselook").value(mouseLook);
+            writer.name("draw_sky").value(drawSky);
+            writer.name("fog").value(fog.getNum());
+            writer.name("window_width").value(WIDTH);
+            writer.name("window_height").value(HEIGHT);
+            writer.name("window_title").value(TITLE);
+            writer.name("fullscreen").value(fullscreen);
+            writer.name("vsync").value(vSync);
+            writer.endObject();
         } catch (IOException e) {
             e.printStackTrace();
         }
