@@ -13,11 +13,17 @@
 */
 package com.vuvk.swinger.res;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+/*
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.JsonReader;
 import com.badlogic.gdx.utils.JsonValue;
+*/
 import com.vuvk.swinger.audio.SoundBank;
 import com.vuvk.swinger.audio.SoundSystem;
 import com.vuvk.swinger.d3.Mesh;
@@ -45,11 +51,16 @@ import com.vuvk.swinger.objects.weapon.Pistol;
 import com.vuvk.swinger.objects.weapon.Rifle;
 import com.vuvk.swinger.utils.ImmutablePair;
 import com.vuvk.swinger.utils.MutablePair;
+
 import java.awt.Color;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.logging.Level;
 import java.util.logging.Logger;
+
 
 /**
  *
@@ -318,26 +329,26 @@ public final class Map {
     //public final static Model[][] MODELS = new Model[WIDTH][HEIGHT];
     public static LightSource light1, light2;
 
-    private static void loadTexturesAndMaterials(JsonValue jsonLevel) {
-        Json json = new Json();
-
+    private static void loadTexturesAndMaterials(JsonObject jsonLevel) {
         int texturesCount  = TextureBank.WALLS.size();
 
         /* грузим текстуры */
-        ArrayList<String> txrArray = json.readValue(ArrayList.class, jsonLevel.get("textures"));
-        txrArray.forEach(path -> TextureBank.WALLS.add(new Texture(path)));
+        JsonArray txrArray = jsonLevel.get("textures").getAsJsonArray();
+        txrArray.forEach(path -> TextureBank.WALLS.add(new Texture(path.getAsString())));
 
         /* Формируем материалы */
-        ArrayList<JsonValue> matArray = json.readValue(ArrayList.class, jsonLevel.get("materials"));
-        for (JsonValue mat : matArray) {
-            int[] frmNum = mat.get("textures").asIntArray();
-            Texture[] frames = new Texture[frmNum.length];
+        JsonArray matArray = jsonLevel.get("materials").getAsJsonArray();
+        for (JsonElement matElement : matArray) {
+            JsonObject mat = matElement.getAsJsonObject();
+            
+            JsonArray frmNums = mat.get("textures").getAsJsonArray();
+            Texture[] frames = new Texture[frmNums.size()];
             for (int j = 0; j < frames.length; ++j) {
-                frames[j] = TextureBank.WALLS.get(texturesCount + frmNum[j]);
+                frames[j] = TextureBank.WALLS.get(texturesCount + frmNums.get(j).getAsInt());
             }
 
-            double animSpeed = mat.getDouble("animation_speed");
-            boolean playOnce = mat.getBoolean("play_once");
+            double animSpeed = mat.get("animation_speed").getAsDouble();
+            boolean playOnce = mat.get("play_once").getAsBoolean();
 
             Material material = new Material(frames, animSpeed, playOnce);
 /*            JsonValue jsonBrigthness = mat.get("brigthness");
@@ -354,38 +365,46 @@ public final class Map {
 
         int materialsCount = MaterialBank.BANK.size();
 
-        Json json = new Json();
-        JsonValue jsonLevel = new JsonReader().parse(Gdx.files.internal("resources/maps/" + levelNum + "/sprites.json"));
-
+        JsonObject json = null;
+        try {
+            json = JsonParser.parseReader(
+                new FileReader("resources/maps/" + levelNum + "/sprites.json")
+            ).getAsJsonObject();
+        } catch (FileNotFoundException ex) {
+            LOG.log(Level.SEVERE, null, ex);
+        }
+        
         System.out.println("\t\tTextures and materials...");
-        loadTexturesAndMaterials(jsonLevel);
+        loadTexturesAndMaterials(json);
 
-        ArrayList<JsonValue> spritersArray = json.readValue(ArrayList.class, jsonLevel.get("config"));
-        List<Object>[] presets = new ArrayList[spritersArray.size()];
-        for (int i = 0; i < spritersArray.size(); ++i) {
-            JsonValue jsonValue = spritersArray.get(i);
+        JsonArray presetsArray = json.get("config").getAsJsonArray();
+        List<Object>[] presets = new ArrayList[presetsArray.size()];
+        for (int i = 0; i < presetsArray.size(); ++i) {
+            JsonObject jsonValue = presetsArray.get(i).getAsJsonObject();
             presets[i] = new ArrayList<>();
 
-            int materialNum = jsonValue.getInt("material");
+            int materialNum = jsonValue.get("material").getAsInt();
             presets[i].add(MaterialBank.BANK.get(materialsCount + materialNum));
 
-            boolean solid = jsonValue.getBoolean("solid");
+            boolean solid = jsonValue.get("solid").getAsBoolean();
             presets[i].add(solid);
 
             // по умолчанию масштабирования нет
             float[] scale = {1, 1};
-            JsonValue scaleValue = jsonValue.get("scale");
-            if (scaleValue.isValue()) {
-                scale = scaleValue.asFloatArray();
+            if (jsonValue.has("scale")) {
+                JsonArray scaleValue = jsonValue.get("scale").getAsJsonArray();
+                scale[0] = scaleValue.get(0).getAsFloat();
+                scale[1] = scaleValue.get(1).getAsFloat();
             }
             presets[i].add(scale[0]);
             presets[i].add(scale[1]);
         }
 
 
-        ArrayList<JsonValue> spritesArray = json.readValue(ArrayList.class, jsonLevel.get("map"));
-        for (JsonValue jsonValue : spritesArray) {
-            int num = jsonValue.getInt("sprite");
+        JsonArray spritesArray = json.get("map").getAsJsonArray();
+        for (int i = 0; i < spritesArray.size(); ++i) {
+            JsonObject jsonValue = spritesArray.get(i).getAsJsonObject();
+            int num = jsonValue.get("sprite").getAsInt();
             List<Object> preset = presets[num];
 
             Material mat  = (Material) preset.get(0);
@@ -394,9 +413,13 @@ public final class Map {
             float scaleY  = (Float)    preset.get(3);
             Vector2 scale = new Vector2(scaleX, scaleY);
 
-            float[] jsonPos = jsonValue.get("position").asFloatArray();
-            Vector3 pos = new Vector3(jsonPos[0], jsonPos[1], jsonPos[2]);
-
+            JsonArray jsonPos = jsonValue.get("position").getAsJsonArray();
+            Vector3 pos = new Vector3(
+                jsonPos.get(0).getAsFloat(),
+                jsonPos.get(0).getAsFloat(), 
+                jsonPos.get(0).getAsFloat()
+            );     
+            
             if (solid) {
                 Map.SOLIDS[(int)pos.x][(int)pos.y] = true;
             }
@@ -410,31 +433,42 @@ public final class Map {
 
         int materialsCount = MaterialBank.BANK.size();
 
-        Json json = new Json();
-        JsonValue jsonLevel = new JsonReader().parse(Gdx.files.internal("resources/maps/" + levelNum + "/weapons.json"));
+        JsonObject json = null;
+        try {
+            json = JsonParser.parseReader(
+                new FileReader("resources/maps/" + levelNum + "/weapons.json")
+            ).getAsJsonObject();
+        } catch (FileNotFoundException ex) {
+            LOG.log(Level.SEVERE, null, ex);
+        }
 
         System.out.println("\t\tTextures and materials...");
-        loadTexturesAndMaterials(jsonLevel);
+        loadTexturesAndMaterials(json);
 
-        ArrayList<JsonValue> weapArray = json.readValue(ArrayList.class, jsonLevel.get("config"));
+        JsonArray weapArray = json.get("config").getAsJsonArray();
         Material[] weaponsMat = new Material[weapArray.size()];
         int[] weaponsClip = new int[weaponsMat.length];
         for (int i = 0; i < weapArray.size(); ++i) {
-            JsonValue jsonWeapon = weapArray.get(i);
-            int matNum = jsonWeapon.getInt("material");
+            JsonObject jsonWeapon = weapArray.get(i).getAsJsonObject();
+            int matNum = jsonWeapon.get("material").getAsInt();
             if (matNum >= 0) {
                 weaponsMat[i] = MaterialBank.BANK.get(materialsCount + matNum);
             }
-            weaponsClip[i] = jsonWeapon.getInt("ammo_in_clip");
+            weaponsClip[i] = jsonWeapon.get("ammo_in_clip").getAsInt();
         }
 
         System.out.println("\t\tWeapons placing...");
-        ArrayList<JsonValue> weapMap = json.readValue(ArrayList.class, jsonLevel.get("map"));
-        for (JsonValue jsonWeapon : weapMap) {
-            int weaponNum = jsonWeapon.getInt("weapon");
+        JsonArray weapMap = json.get("map").getAsJsonArray();
+        for (int i = 0; i < weapMap.size(); ++i) {
+            JsonObject jsonWeapon = weapMap.get(i).getAsJsonObject();
+            int weaponNum = jsonWeapon.get("weapon").getAsInt();
 
-            float[] jsonPos = jsonWeapon.get("position").asFloatArray();
-            Vector3 pos = new Vector3(jsonPos[0], jsonPos[1], jsonPos[2]);
+            JsonArray jsonPos = jsonWeapon.get("position").getAsJsonArray();
+            Vector3 pos = new Vector3(
+                jsonPos.get(0).getAsFloat(),
+                jsonPos.get(0).getAsFloat(), 
+                jsonPos.get(0).getAsFloat()
+            );
 
             switch (weaponNum) {
                 case 1 :
@@ -458,24 +492,30 @@ public final class Map {
 
         int materialsCount = MaterialBank.BANK.size();
 
-        Json json = new Json();
-        JsonValue jsonLevel = new JsonReader().parse(Gdx.files.internal("resources/maps/" + levelNum + "/clips.json"));
+        JsonObject json = null;
+        try {
+            json = JsonParser.parseReader(
+                new FileReader("resources/maps/" + levelNum + "/clips.json")
+            ).getAsJsonObject();
+        } catch (FileNotFoundException ex) {
+            LOG.log(Level.SEVERE, null, ex);
+        }
 
         System.out.println("\t\tTextures and materials...");
-        loadTexturesAndMaterials(jsonLevel);
+        loadTexturesAndMaterials(json);
 
-        ArrayList<JsonValue> clipsArray = json.readValue(ArrayList.class, jsonLevel.get("config"));
+        JsonArray clipsArray = json.get("config").getAsJsonArray();
         Material[] clipsMat = new Material[clipsArray.size()];
         AmmoType[] clipsType = new AmmoType[clipsArray.size()];
         int[] clipsVol = new int[clipsArray.size()];
         for (int i = 0; i < clipsArray.size(); ++i) {
-            JsonValue jsonClip = clipsArray.get(i);
+            JsonObject jsonClip = clipsArray.get(i).getAsJsonObject();
 
-            int matNum = jsonClip.getInt("material");
+            int matNum = jsonClip.get("material").getAsInt();
             if (matNum >= 0) {
                 clipsMat[i] = MaterialBank.BANK.get(materialsCount + matNum);
             }
-            int type = jsonClip.getInt("type");
+            int type = jsonClip.get("type").getAsInt();
             switch (type) {
                 case 1:
                     clipsType[i] = AmmoType.PISTOL;
@@ -490,15 +530,20 @@ public final class Map {
                     clipsType[i] = AmmoType.NOTHING;
                     break;
             }
-            clipsVol[i] = jsonClip.getInt("volume");
+            clipsVol[i] = jsonClip.get("volume").getAsInt();
         }
 
-        ArrayList<JsonValue> clipsMap = json.readValue(ArrayList.class, jsonLevel.get("map"));
-        for (JsonValue jsonClip : clipsMap) {
-            int clipNum = jsonClip.getInt("clip");
+        JsonArray clipsMap = json.get("map").getAsJsonArray();
+        for (int i = 0; i < clipsMap.size(); ++i) {
+            JsonObject jsonClip = clipsMap.get(i).getAsJsonObject();
+            int clipNum = jsonClip.get("clip").getAsInt();
 
-            float[] jsonPos = jsonClip.get("position").asFloatArray();
-            Vector3 pos = new Vector3(jsonPos[0], jsonPos[1], jsonPos[2]);
+            JsonArray jsonPos = jsonClip.get("position").getAsJsonArray();
+            Vector3 pos = new Vector3(
+                jsonPos.get(0).getAsFloat(),
+                jsonPos.get(0).getAsFloat(), 
+                jsonPos.get(0).getAsFloat()
+            );
 
             new Clip(clipsMat[clipNum], pos, clipsType[clipNum], clipsVol[clipNum]);
         }
@@ -509,31 +554,42 @@ public final class Map {
 
         int materialsCount = MaterialBank.BANK.size();
 
-        Json json = new Json();
-        JsonValue jsonLevel = new JsonReader().parse(Gdx.files.internal("resources/maps/" + levelNum + "/medkits.json"));
+        JsonObject json = null;
+        try {
+            json = JsonParser.parseReader(
+                new FileReader("resources/maps/" + levelNum + "/medkits.json")
+            ).getAsJsonObject();
+        } catch (FileNotFoundException ex) {
+            LOG.log(Level.SEVERE, null, ex);
+        }
 
         System.out.println("\t\tTextures and materials...");
-        loadTexturesAndMaterials(jsonLevel);
+        loadTexturesAndMaterials(json);
 
-        ArrayList<JsonValue> medkitsArray = json.readValue(ArrayList.class, jsonLevel.get("config"));
+        JsonArray medkitsArray = json.get("config").getAsJsonArray();
         MutablePair<Material, Double>[] presets = new MutablePair[medkitsArray.size()];
         for (int i = 0; i < medkitsArray.size(); ++i) {
-            JsonValue jsonValue = medkitsArray.get(i);
+            JsonObject jsonValue = medkitsArray.get(i).getAsJsonObject();
             presets[i] = new MutablePair<>();
 
-            int matNum = jsonValue.getInt("material");
+            int matNum = jsonValue.get("material").getAsInt();
             if (matNum >= 0) {
                 presets[i].setLeft(MaterialBank.BANK.get(materialsCount + matNum));
             }
-            presets[i].setRight(jsonValue.getDouble("volume"));
+            presets[i].setRight(jsonValue.get("volume").getAsDouble());
         }
 
-        ArrayList<JsonValue> clipsMap = json.readValue(ArrayList.class, jsonLevel.get("map"));
-        for (JsonValue jsonValue : clipsMap) {
-            int num = jsonValue.getInt("medkit");
+        JsonArray medkitsMap = json.get("map").getAsJsonArray();
+        for (int i = 0; i < medkitsMap.size(); ++i) {
+            JsonObject jsonValue = medkitsMap.get(i).getAsJsonObject();
+            int num = jsonValue.get("medkit").getAsInt();
 
-            float[] jsonPos = jsonValue.get("position").asFloatArray();
-            Vector3 pos = new Vector3(jsonPos[0], jsonPos[1], jsonPos[2]);
+            JsonArray jsonPos = jsonValue.get("position").getAsJsonArray();
+            Vector3 pos = new Vector3(
+                jsonPos.get(0).getAsFloat(),
+                jsonPos.get(0).getAsFloat(), 
+                jsonPos.get(0).getAsFloat()
+            );
 
             new MedKit(presets[num].getLeft(), pos, presets[num].getRight());
         }
@@ -549,9 +605,9 @@ public final class Map {
 
         // грузим текстуры
         System.out.println("\t\tTextures and materials...");
-        loadTexturesAndMaterials(jsonLevel);
+        loadTexturesAndMaterials(json);
 
-        ArrayList<JsonValue> keysArray = json.readValue(ArrayList.class, jsonLevel.get("keys_config"));
+        JsonArray keysArray = json.readValue(ArrayList.class, jsonLevel.get("keys_config"));
         Material[] keysMat = new Material[keysArray.size()];
         for (int i = 0; i < keysArray.size(); ++i) {
             JsonValue jsonKey = keysArray.get(i);
@@ -562,7 +618,7 @@ public final class Map {
         }
 
         System.out.println("\t\tKeys placing...");
-        ArrayList<JsonValue> keysMap = json.readValue(ArrayList.class, jsonLevel.get("keys_map"));
+        JsonArray keysMap = json.readValue(ArrayList.class, jsonLevel.get("keys_map"));
         for (JsonValue jsonKey : keysMap) {
             int keyNum = jsonKey.getInt("key");
 
@@ -573,7 +629,7 @@ public final class Map {
         }
 
 
-        ArrayList<JsonValue> doorArray = json.readValue(ArrayList.class, jsonLevel.get("doors_config"));
+        JsonArray doorArray = json.readValue(ArrayList.class, jsonLevel.get("doors_config"));
         ImmutablePair<Material, Integer>[] doorsInfo = new ImmutablePair[doorArray.size()];
         for (int i = 0; i < doorArray.size(); ++i) {
             JsonValue jsonDoor = doorArray.get(i);
@@ -595,7 +651,7 @@ public final class Map {
                 DOORS[x][y] = -1;
             }
         }
-        ArrayList<JsonValue> doorsMap = json.readValue(ArrayList.class, jsonLevel.get("doors_map"));
+        JsonArray doorsMap = json.readValue(ArrayList.class, jsonLevel.get("doors_map"));
         for (JsonValue jsonDoor : doorsMap) {
             int doorNum = jsonDoor.getInt("door");
             int[] doorPos = jsonDoor.get("position").asIntArray();
@@ -649,12 +705,12 @@ public final class Map {
         JsonValue jsonLevel = new JsonReader().parse(Gdx.files.internal("resources/maps/" + levelNum + "/breakables.json"));
 
         System.out.println("\t\tTextures and materials...");
-        loadTexturesAndMaterials(jsonLevel);
+        loadTexturesAndMaterials(json);
 
         System.out.println("\t\tSounds...");
         ArrayList<String> sndArray = json.readValue(ArrayList.class, jsonLevel.get("sounds"));
 
-        ArrayList<JsonValue> breakablesArray = json.readValue(ArrayList.class, jsonLevel.get("config"));
+        JsonArray breakablesArray = json.get("config").getAsJsonArray();
         List<Object>[] presets = new ArrayList[breakablesArray.size()];
         for (int i = 0; i < breakablesArray.size(); ++i) {
             JsonValue jsonValue = breakablesArray.get(i);
@@ -688,8 +744,8 @@ public final class Map {
             presets[i].add(dieSoundsIdx);
         }
 
-        ArrayList<JsonValue> clipsMap = json.readValue(ArrayList.class, jsonLevel.get("map"));
-        for (JsonValue jsonValue : clipsMap) {
+        JsonArray breakablesMap = json.get("map").getAsJsonArray();
+        for (JsonValue jsonValue : breakablesMap) {
             int num = jsonValue.getInt("breakable");
             List<Object> preset = presets[num];
 
