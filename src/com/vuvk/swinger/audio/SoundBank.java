@@ -13,10 +13,8 @@
 */
 package com.vuvk.swinger.audio;
 
-//import com.vuvk.retard_sound_system.SoundBuffer;
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.files.FileHandle;
-import com.badlogic.gdx.utils.Array;
+import com.vuvk.retard_sound_system.Music;
+import com.vuvk.retard_sound_system.SoundBuffer;
 
 /**
  *
@@ -74,56 +72,56 @@ public final class SoundBank {
 
 
 
-    /* handles */
+    /* sounds */
     /* effects */
-    public final static FileHandle FILE_EXPLODE = Gdx.files.internal(PATH_EXPLODE);
+    public final static SoundBuffer EXPLODE = new SoundBuffer(PATH_EXPLODE);
 
     /* weapons */
-    public final static FileHandle FILE_KNIFE   = Gdx.files.internal(PATH_KNIFE  );
-    public final static FileHandle FILE_PISTOL  = Gdx.files.internal(PATH_PISTOL );
-    public final static FileHandle FILE_RIFLE   = Gdx.files.internal(PATH_RIFLE  );
-    public final static FileHandle FILE_MINIGUN = Gdx.files.internal(PATH_MINIGUN);
-    public final static FileHandle FILE_BAZOOKA = Gdx.files.internal(PATH_BAZOOKA);
+    public final static SoundBuffer KNIFE   = new SoundBuffer(PATH_KNIFE  );
+    public final static SoundBuffer PISTOL  = new SoundBuffer(PATH_PISTOL );
+    public final static SoundBuffer RIFLE   = new SoundBuffer(PATH_RIFLE  );
+    public final static SoundBuffer MINIGUN = new SoundBuffer(PATH_MINIGUN);
+    public final static SoundBuffer BAZOOKA = new SoundBuffer(PATH_BAZOOKA);
 
     /* enemies */
-    public final static FileHandle FILE_ALARM1 = Gdx.files.internal(PATH_ALARM1);
-    public final static FileHandle FILE_ALARM2 = Gdx.files.internal(PATH_ALARM2);
-    public final static FileHandle FILE_ALARM3 = Gdx.files.internal(PATH_ALARM3);
-    public final static FileHandle FILE_ALARM4 = Gdx.files.internal(PATH_ALARM4);
-    public final static FileHandle FILE_PAIN1  = Gdx.files.internal(PATH_PAIN1);
-    public final static FileHandle FILE_PAIN2  = Gdx.files.internal(PATH_PAIN2);
-    public final static FileHandle FILE_DIE1   = Gdx.files.internal(PATH_DIE1);
-    public final static FileHandle FILE_DIE2   = Gdx.files.internal(PATH_DIE2);
+    public final static SoundBuffer ALARM1 = new SoundBuffer(PATH_ALARM1);
+    public final static SoundBuffer ALARM2 = new SoundBuffer(PATH_ALARM2);
+    public final static SoundBuffer ALARM3 = new SoundBuffer(PATH_ALARM3);
+    public final static SoundBuffer ALARM4 = new SoundBuffer(PATH_ALARM4);
+    public final static SoundBuffer PAIN1  = new SoundBuffer(PATH_PAIN1);
+    public final static SoundBuffer PAIN2  = new SoundBuffer(PATH_PAIN2);
+    public final static SoundBuffer DIE1   = new SoundBuffer(PATH_DIE1);
+    public final static SoundBuffer DIE2   = new SoundBuffer(PATH_DIE2);
 
     /* events */
-    public final static FileHandle FILE_DOOR_OPEN  = Gdx.files.internal(PATH_DOOR_OPEN );
-    public final static FileHandle FILE_DOOR_CLOSE = Gdx.files.internal(PATH_DOOR_CLOSE);
+    public final static SoundBuffer DOOR_OPEN  = new SoundBuffer(PATH_DOOR_OPEN );
+    public final static SoundBuffer DOOR_CLOSE = new SoundBuffer(PATH_DOOR_CLOSE);
 
     /* items */
-    public final static FileHandle FILE_GET_WEAPON = Gdx.files.internal(PATH_GET_WEAPON);
-    public final static FileHandle FILE_GET_KEY    = Gdx.files.internal(PATH_GET_KEY);
-    public final static FileHandle FILE_GET_AMMO   = Gdx.files.internal(PATH_GET_AMMO);
-    public final static FileHandle FILE_GET_MEDKIT1 = Gdx.files.internal(PATH_GET_MEDKIT1);
-    public final static FileHandle FILE_GET_MEDKIT2 = Gdx.files.internal(PATH_GET_MEDKIT2);
+    public final static SoundBuffer GET_WEAPON = new SoundBuffer(PATH_GET_WEAPON);
+    public final static SoundBuffer GET_KEY    = new SoundBuffer(PATH_GET_KEY);
+    public final static SoundBuffer GET_AMMO   = new SoundBuffer(PATH_GET_AMMO);
+    public final static SoundBuffer GET_MEDKIT1 = new SoundBuffer(PATH_GET_MEDKIT1);
+    public final static SoundBuffer GET_MEDKIT2 = new SoundBuffer(PATH_GET_MEDKIT2);
 
     /* phrases */
-    public final static FileHandle FILE_NEED_KEY1 = Gdx.files.internal(PATH_NEED_KEY1);
-    public final static FileHandle FILE_NEED_KEY2 = Gdx.files.internal(PATH_NEED_KEY2);
+    public final static SoundBuffer NEED_KEY1 = new SoundBuffer(PATH_NEED_KEY1);
+    public final static SoundBuffer NEED_KEY2 = new SoundBuffer(PATH_NEED_KEY2);
 
     /* dies */
-    public final static FileHandle FILE_PLAYER_DIE = Gdx.files.internal(PATH_PLAYER_DIE);
+    public final static SoundBuffer PLAYER_DIE = new SoundBuffer(PATH_PLAYER_DIE);
 
     /* music */
-    public static final FileHandle FILE_MUSIC_TITLE = Gdx.files.internal(PATH_MUSIC_TITLE);
-    public static final FileHandle FILE_MUSIC1 = Gdx.files.internal(PATH_MUSIC1);
-
+    public static final Music MUSIC_TITLE = new Music(PATH_MUSIC_TITLE);
+    public static final Music MUSIC1      = new Music(PATH_MUSIC1);
+    
     /* menu */
-    public static final FileHandle FILE_MENU_SELECT = Gdx.files.internal(PATH_MENU_SELECT);
-    public static final FileHandle FILE_MENU_TOGGLE = Gdx.files.internal(PATH_MENU_TOGGLE);
+    public static final SoundBuffer MENU_SELECT = new SoundBuffer(PATH_MENU_SELECT);
+    public static final SoundBuffer MENU_TOGGLE = new SoundBuffer(PATH_MENU_TOGGLE);
 
 
     /* все звуки здесь? */
-    public final static Array<FileHandle> HANDLES = new Array<>(false, 10);
+    //public final static ArrayList<File> HANDLES = new ArrayList<>();
 
     private SoundBank() {}
 }

@@ -2,6 +2,7 @@
 <classpath>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="output" path="bin"/>
     
     <!--
 	<classpathentry kind="lib" path="libs/gdx-1.9.14-javadoc.jar"/>
@@ -41,8 +42,9 @@
 	<classpathentry kind="lib" path="libs/lib/mp3spi-1.9.5.4.jar"/>
 	<classpathentry kind="lib" path="libs/lib/tritonus-share-0.3.7-2.jar"/>
 	<classpathentry kind="lib" path="libs/lib/vorbisspi-1.0.3.3.jar"/>
-	<classpathentry kind="lib" path="libs/RetardSoundSystem-0.5.jar"/>
-	<classpathentry kind="output" path="bin"/>
+	<classpathentry kind="lib" path="libs/RetardSoundSystem-0.5.jar"
+            sourcepath="libs/sources/RetardSoundSystem-0.5-sources.jar">
+	</classpathentry>
 	<classpathentry kind="lib" path="libs/gson-2.8.6.jar"
 			sourcepath="libs/gson-2.8.6-sources.jar">
 		<attributes>

@@ -13,8 +13,8 @@
 */
 package com.vuvk.swinger.graphic.gui.menu;
 
+import com.vuvk.retard_sound_system.SoundSystem;
 import com.vuvk.swinger.audio.SoundBank;
-import com.vuvk.swinger.audio.SoundSystem;
 import com.vuvk.swinger.graphic.gui.text.Text;
 
 /**
@@ -40,7 +40,7 @@ public class ButtonMenu {
     }
 
     public void click() {
-        SoundSystem.playOnce(SoundBank.FILE_MENU_TOGGLE);
+        SoundSystem.playOnce(SoundBank.MENU_TOGGLE);
         click.run();
     }
 
