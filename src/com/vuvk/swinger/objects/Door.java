@@ -13,8 +13,8 @@
 */
 package com.vuvk.swinger.objects;
 
+import com.vuvk.swinger.Engine;
 //import com.vuvk.retard_sound_system.Sound;
-import com.badlogic.gdx.Gdx;
 import com.vuvk.swinger.audio.SoundBank;
 import com.vuvk.swinger.audio.SoundSystem;
 import com.vuvk.swinger.graphic.TexturedSegment;
@@ -22,6 +22,7 @@ import com.vuvk.swinger.math.Vector2;
 import com.vuvk.swinger.objects.mortals.Mortal;
 import com.vuvk.swinger.res.Map;
 import com.vuvk.swinger.res.Material;
+
 import java.io.Serializable;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -118,7 +119,7 @@ public class Door extends TexturedSegment implements Serializable {
 
     public void update() {
         if (isOpen()) {
-            final double deltaTime = Gdx.graphics.getDeltaTime();
+            final double deltaTime = Engine.getDeltaTime();
             final double moveSpeed = speed * deltaTime;
 
             // закрытое состояние?

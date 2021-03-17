@@ -13,18 +13,22 @@
 */
 package com.vuvk.swinger.res;
 
+import java.awt.Color;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-/*
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.Json;
-import com.badlogic.gdx.utils.JsonReader;
-import com.badlogic.gdx.utils.JsonValue;
-*/
 import com.vuvk.swinger.audio.SoundBank;
 import com.vuvk.swinger.audio.SoundSystem;
 import com.vuvk.swinger.d3.Mesh;
@@ -52,19 +56,6 @@ import com.vuvk.swinger.objects.weapon.Pistol;
 import com.vuvk.swinger.objects.weapon.Rifle;
 import com.vuvk.swinger.utils.ImmutablePair;
 import com.vuvk.swinger.utils.MutablePair;
-
-import java.awt.Color;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 
 /**

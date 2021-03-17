@@ -14,11 +14,6 @@
 package com.vuvk.swinger.res;
 
 import java.util.logging.Level;
-//import com.badlogic.gdx.Gdx;
-//import com.badlogic.gdx.files.FileHandle;
-//import com.badlogic.gdx.graphics.Pixmap;
-//import com.badlogic.gdx.graphics.Pixmap.Filter;
-//import com.badlogic.gdx.graphics.Pixmap.Format;
 import java.util.logging.Logger;
 
 import javax.imageio.ImageIO;

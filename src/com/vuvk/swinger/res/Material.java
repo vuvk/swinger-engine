@@ -13,8 +13,9 @@
 */
 package com.vuvk.swinger.res;
 
-import com.badlogic.gdx.Gdx;
+import com.vuvk.swinger.Engine;
 import com.vuvk.swinger.objects.Object3D;
+
 import java.io.Serializable;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -203,7 +204,7 @@ public class Material extends Object3D implements Serializable {
         if (animate) {
             if (animSpeed > 0.0 && frames.length > 1) {
                 if (delay < 1.0) {
-                    delay += animSpeed * Gdx.graphics.getDeltaTime();
+                    delay += animSpeed * Engine.getDeltaTime();
                 } else {
                     delay -= 1.0;
                     ++frameNum;

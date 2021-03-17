@@ -13,14 +13,17 @@
 */
 package com.vuvk.swinger.objects;
 
-import com.badlogic.gdx.Gdx;
 import java.io.Serializable;
+
+import com.vuvk.swinger.Engine;
 
 /**
  *
  * @author Anton "Vuvk" Shcherbatykh
  */
 public abstract class GameObject implements Serializable {
+
+    static final long serialVersionUID = 1L;
 
     private boolean deferredDelete = false; // отложенное удаление
     private double delayForDelete = 0;      // время до отложенного удаления
@@ -46,7 +49,7 @@ public abstract class GameObject implements Serializable {
     protected void updateDefferedDelete() {
         if (deferredDelete) {
             if (delayForDelete > 0.0) {
-                delayForDelete -= Gdx.graphics.getDeltaTime();
+                delayForDelete -= Engine.getDeltaTime();
             } else {
                 destroy();
             }
