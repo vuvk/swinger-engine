@@ -13,6 +13,7 @@
 */
 package com.vuvk.swinger.res;
 
+import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -53,10 +54,14 @@ import com.vuvk.swinger.utils.ImmutablePair;
 import com.vuvk.swinger.utils.MutablePair;
 
 import java.awt.Color;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -373,6 +378,8 @@ public final class Map {
         } catch (FileNotFoundException ex) {
             LOG.log(Level.SEVERE, null, ex);
         }
+
+        Gson gson = new Gson();
         
         System.out.println("\t\tTextures and materials...");
         loadTexturesAndMaterials(json);
@@ -413,12 +420,8 @@ public final class Map {
             float scaleY  = (Float)    preset.get(3);
             Vector2 scale = new Vector2(scaleX, scaleY);
 
-            JsonArray jsonPos = jsonValue.get("position").getAsJsonArray();
-            Vector3 pos = new Vector3(
-                jsonPos.get(0).getAsFloat(),
-                jsonPos.get(0).getAsFloat(), 
-                jsonPos.get(0).getAsFloat()
-            );     
+            float[] jsonPos = gson.fromJson(jsonValue.get("position").getAsJsonObject(), float[].class);
+            Vector3 pos = new Vector3(jsonPos);
             
             if (solid) {
                 Map.SOLIDS[(int)pos.x][(int)pos.y] = true;
@@ -442,6 +445,8 @@ public final class Map {
             LOG.log(Level.SEVERE, null, ex);
         }
 
+        Gson gson = new Gson();
+
         System.out.println("\t\tTextures and materials...");
         loadTexturesAndMaterials(json);
 
@@ -460,15 +465,11 @@ public final class Map {
         System.out.println("\t\tWeapons placing...");
         JsonArray weapMap = json.get("map").getAsJsonArray();
         for (int i = 0; i < weapMap.size(); ++i) {
-            JsonObject jsonWeapon = weapMap.get(i).getAsJsonObject();
-            int weaponNum = jsonWeapon.get("weapon").getAsInt();
+            JsonObject jsonValue = weapMap.get(i).getAsJsonObject();
+            int weaponNum = jsonValue.get("weapon").getAsInt();
 
-            JsonArray jsonPos = jsonWeapon.get("position").getAsJsonArray();
-            Vector3 pos = new Vector3(
-                jsonPos.get(0).getAsFloat(),
-                jsonPos.get(0).getAsFloat(), 
-                jsonPos.get(0).getAsFloat()
-            );
+            float[] jsonPos = gson.fromJson(jsonValue.get("position").getAsJsonObject(), float[].class);
+            Vector3 pos = new Vector3(jsonPos);
 
             switch (weaponNum) {
                 case 1 :
@@ -500,6 +501,8 @@ public final class Map {
         } catch (FileNotFoundException ex) {
             LOG.log(Level.SEVERE, null, ex);
         }
+
+        Gson gson = new Gson();
 
         System.out.println("\t\tTextures and materials...");
         loadTexturesAndMaterials(json);
@@ -535,15 +538,11 @@ public final class Map {
 
         JsonArray clipsMap = json.get("map").getAsJsonArray();
         for (int i = 0; i < clipsMap.size(); ++i) {
-            JsonObject jsonClip = clipsMap.get(i).getAsJsonObject();
-            int clipNum = jsonClip.get("clip").getAsInt();
+            JsonObject jsonValue = clipsMap.get(i).getAsJsonObject();
+            int clipNum = jsonValue.get("clip").getAsInt();
 
-            JsonArray jsonPos = jsonClip.get("position").getAsJsonArray();
-            Vector3 pos = new Vector3(
-                jsonPos.get(0).getAsFloat(),
-                jsonPos.get(0).getAsFloat(), 
-                jsonPos.get(0).getAsFloat()
-            );
+            float[] jsonPos = gson.fromJson(jsonValue.get("position").getAsJsonObject(), float[].class);
+            Vector3 pos = new Vector3(jsonPos);
 
             new Clip(clipsMat[clipNum], pos, clipsType[clipNum], clipsVol[clipNum]);
         }
@@ -562,6 +561,8 @@ public final class Map {
         } catch (FileNotFoundException ex) {
             LOG.log(Level.SEVERE, null, ex);
         }
+
+        Gson gson = new Gson();
 
         System.out.println("\t\tTextures and materials...");
         loadTexturesAndMaterials(json);
@@ -584,12 +585,8 @@ public final class Map {
             JsonObject jsonValue = medkitsMap.get(i).getAsJsonObject();
             int num = jsonValue.get("medkit").getAsInt();
 
-            JsonArray jsonPos = jsonValue.get("position").getAsJsonArray();
-            Vector3 pos = new Vector3(
-                jsonPos.get(0).getAsFloat(),
-                jsonPos.get(0).getAsFloat(), 
-                jsonPos.get(0).getAsFloat()
-            );
+            float[] jsonPos = gson.fromJson(jsonValue.get("position").getAsJsonObject(), float[].class);
+            Vector3 pos = new Vector3(jsonPos);
 
             new MedKit(presets[num].getLeft(), pos, presets[num].getRight());
         }
@@ -600,46 +597,54 @@ public final class Map {
 
         int materialsCount = MaterialBank.BANK.size();
 
-        Json json = new Json();
-        JsonValue jsonLevel = new JsonReader().parse(Gdx.files.internal("resources/maps/" + levelNum + "/keys_doors.json"));
+        JsonObject json = null;
+        try {
+            json = JsonParser.parseReader(
+                new FileReader("resources/maps/" + levelNum + "/keys_doors.json")
+            ).getAsJsonObject();
+        } catch (FileNotFoundException ex) {
+            LOG.log(Level.SEVERE, null, ex);
+        }
+
+        Gson gson = new Gson();
 
         // грузим текстуры
         System.out.println("\t\tTextures and materials...");
         loadTexturesAndMaterials(json);
 
-        JsonArray keysArray = json.readValue(ArrayList.class, jsonLevel.get("keys_config"));
+        JsonArray keysArray = json.get("keys_config").getAsJsonArray();
         Material[] keysMat = new Material[keysArray.size()];
         for (int i = 0; i < keysArray.size(); ++i) {
-            JsonValue jsonKey = keysArray.get(i);
-            int matNum = jsonKey.getInt("material");
+            JsonObject jsonKey = keysArray.get(i).getAsJsonObject();
+            int matNum = jsonKey.get("material").getAsInt();
             if (matNum >= 0) {
                 keysMat[i] = MaterialBank.BANK.get(materialsCount + matNum);
             }
         }
 
         System.out.println("\t\tKeys placing...");
-        JsonArray keysMap = json.readValue(ArrayList.class, jsonLevel.get("keys_map"));
-        for (JsonValue jsonKey : keysMap) {
-            int keyNum = jsonKey.getInt("key");
+        JsonArray keysMap = json.get("keys_map").getAsJsonArray();
+        for (int i = 0; i < keysMap.size(); ++i) {
+            JsonObject jsonValue = keysMap.get(i).getAsJsonObject();
+            int keyNum = jsonValue.get("key").getAsInt();
 
-            float[] jsonPos = jsonKey.get("position").asFloatArray();
-            Vector3 pos = new Vector3(jsonPos[0], jsonPos[1], jsonPos[2]);
+            float[] jsonPos = gson.fromJson(jsonValue.get("position").getAsJsonObject(), float[].class);
+            Vector3 pos = new Vector3(jsonPos);
 
             new Key(keysMat[keyNum], pos, keyNum);
         }
 
 
-        JsonArray doorArray = json.readValue(ArrayList.class, jsonLevel.get("doors_config"));
+        JsonArray doorArray = json.get("doors_config").getAsJsonArray();
         ImmutablePair<Material, Integer>[] doorsInfo = new ImmutablePair[doorArray.size()];
         for (int i = 0; i < doorArray.size(); ++i) {
-            JsonValue jsonDoor = doorArray.get(i);
-            int matNum = materialsCount + jsonDoor.get("material").asInt();
+            JsonObject jsonDoor = doorArray.get(i).getAsJsonObject();
+            int matNum = materialsCount + jsonDoor.get("material").getAsInt();
             Material mat = MaterialBank.BANK.get(matNum);
 
             int keyNum = -1;
-            JsonValue jsonKey = jsonDoor.get("key");
-            if (jsonKey != null) {
-                keyNum = jsonKey.asInt();
+            if (jsonDoor.has("key")) {
+                keyNum = jsonDoor.get("key").getAsInt();
             }
 
             doorsInfo[i] = new ImmutablePair<>(mat, keyNum);
@@ -651,12 +656,14 @@ public final class Map {
                 DOORS[x][y] = -1;
             }
         }
-        JsonArray doorsMap = json.readValue(ArrayList.class, jsonLevel.get("doors_map"));
-        for (JsonValue jsonDoor : doorsMap) {
-            int doorNum = jsonDoor.getInt("door");
-            int[] doorPos = jsonDoor.get("position").asIntArray();
-            int x = doorPos[0],
-                y = doorPos[1];
+
+        JsonArray doorsMap = json.get("map").getAsJsonArray();
+        for (int i = 0; i < doorsMap.size(); ++i) {
+            JsonObject jsonDoor = doorsMap.get(i).getAsJsonObject();
+            int doorNum = jsonDoor.get("door").getAsInt();
+            JsonArray doorPos = jsonDoor.get("position").getAsJsonArray();
+            int x = doorPos.get(0).getAsInt(),
+                y = doorPos.get(0).getAsInt();
 
             DOORS[x][y] = doorNum;
 
@@ -701,52 +708,61 @@ public final class Map {
 
         int materialsCount = MaterialBank.BANK.size();
 
-        Json json = new Json();
-        JsonValue jsonLevel = new JsonReader().parse(Gdx.files.internal("resources/maps/" + levelNum + "/breakables.json"));
+        JsonObject json = null;
+        try {
+            json = JsonParser.parseReader(
+                new FileReader("resources/maps/" + levelNum + "/breakables.json")
+            ).getAsJsonObject();
+        } catch (FileNotFoundException ex) {
+            LOG.log(Level.SEVERE, null, ex);
+        }
+
+        Gson gson = new Gson();
 
         System.out.println("\t\tTextures and materials...");
         loadTexturesAndMaterials(json);
 
         System.out.println("\t\tSounds...");
-        ArrayList<String> sndArray = json.readValue(ArrayList.class, jsonLevel.get("sounds"));
+        JsonArray sndArray = json.get("sounds").getAsJsonArray();
 
         JsonArray breakablesArray = json.get("config").getAsJsonArray();
         List<Object>[] presets = new ArrayList[breakablesArray.size()];
         for (int i = 0; i < breakablesArray.size(); ++i) {
-            JsonValue jsonValue = breakablesArray.get(i);
+            JsonObject jsonValue = breakablesArray.get(i).getAsJsonObject();
             presets[i] = new ArrayList<>();
 
-            int idleNum = jsonValue.getInt("idle");
+            int idleNum = jsonValue.get("idle").getAsInt();
             presets[i].add(MaterialBank.BANK.get(materialsCount + idleNum));
 
-            int painNum = jsonValue.getInt("pain");
+            int painNum = jsonValue.get("pain").getAsInt();
             presets[i].add(MaterialBank.BANK.get(materialsCount + painNum));
 
-            int dieNum = jsonValue.getInt("die");
+            int dieNum = jsonValue.get("die").getAsInt();
             presets[i].add(MaterialBank.BANK.get(materialsCount + dieNum));
 
-            int deadNum = jsonValue.getInt("dead");
+            int deadNum = jsonValue.get("dead").getAsInt();
             presets[i].add(MaterialBank.BANK.get(materialsCount + deadNum));
 
-            double health = jsonValue.getDouble("health");
+            double health = jsonValue.get("health").getAsDouble();
             presets[i].add(health);
 
-            boolean live = jsonValue.getBoolean("live");
+            boolean live = jsonValue.get("live").getAsBoolean();
             presets[i].add(live);
 
-            double radius = jsonValue.getFloat("radius");
+            double radius = jsonValue.get("radius").getAsDouble();
             presets[i].add(radius);
 
-            int[] painSoundsIdx = jsonValue.get("pain sounds").asIntArray();
+            int[] painSoundsIdx = gson.fromJson(jsonValue.get("pain sounds").getAsJsonObject(), int[].class);
             presets[i].add(painSoundsIdx);
 
-            int[] dieSoundsIdx = jsonValue.get("die sounds").asIntArray();
+            int[] dieSoundsIdx = gson.fromJson(jsonValue.get("die sounds").getAsJsonObject(), int[].class);
             presets[i].add(dieSoundsIdx);
         }
 
         JsonArray breakablesMap = json.get("map").getAsJsonArray();
-        for (JsonValue jsonValue : breakablesMap) {
-            int num = jsonValue.getInt("breakable");
+        for (int i = 0; i < breakablesMap.size(); ++i) {
+            JsonObject jsonValue = breakablesMap.get(i).getAsJsonObject();
+            int num = jsonValue.get("breakable").getAsInt();
             List<Object> preset = presets[num];
 
             Material idle = (Material) preset.get(0);
@@ -759,19 +775,19 @@ public final class Map {
             int[] painSoundsIdx = (int[]) preset.get(7);
             int[] dieSoundsIdx  = (int[]) preset.get(8);
 
-            double[] jsonPos = jsonValue.get("position").asDoubleArray();
-            Vector3 pos = new Vector3(jsonPos[0], jsonPos[1], jsonPos[2]);
+            float[] jsonPos = gson.fromJson(jsonValue.get("position").getAsJsonObject(), float[].class);
+            Vector3 pos = new Vector3(jsonPos);
 
-            double direction = jsonValue.get("direction").asFloat();
+            double direction = jsonValue.get("direction").getAsDouble();
 
             String[] painSounds = new String[painSoundsIdx.length];
-            for (int i = 0; i < painSounds.length; ++i) {
-                painSounds[i] = sndArray.get(painSoundsIdx[i]);
+            for (int p = 0; p < painSounds.length; ++p) {
+                painSounds[p] = sndArray.get(painSoundsIdx[p]).getAsString();
             }
 
             String[] dieSounds = new String[dieSoundsIdx.length];
-            for (int i = 0; i < dieSounds.length; ++i) {
-                dieSounds[i] = sndArray.get(dieSoundsIdx[i]);
+            for (int d = 0; d < dieSounds.length; ++d) {
+                dieSounds[d] = sndArray.get(dieSoundsIdx[d]).getAsString();
             }
 
             Breakable breakable = new Breakable(idle, pain, die, dead, pos, direction, health, radius);
@@ -881,201 +897,208 @@ public final class Map {
         //Interpreter.clearListing();
         //Interpreter.addListing(new File("resources/maps/loader.js"));
 
-        Json json = new Json();
-        JsonValue jsonlevel = new JsonReader().parse(Gdx.files.internal("resources/maps/" + levelNum + "/map.json"));
-
-        // получаем общие настройки
-        if (jsonlevel.has("name")) {
-            String name = jsonlevel.getString("name"); // пока бесполезно
-        }
-        if (jsonlevel.has("author")) {
-            String author = jsonlevel.getString("author"); // пока бесполезно
-        }
-
-        String fogColorString = (jsonlevel.has("fog_color")) ? jsonlevel.getString("fog_color") : "0xFF";
-        Fog.COLOR = Integer.parseUnsignedInt(fogColorString, 16);
-        Fog.START = (jsonlevel.has("fog_start")) ? jsonlevel.getDouble("fog_start") : 2.0;
-        Fog.END   = (jsonlevel.has("fog_end"))   ? jsonlevel.getDouble("fog_end")   : 8.0;
-        Fog.init();
-
-        /* убираем метку твердости */
-        for (int x = 0; x < WIDTH; ++x) {
-            for (int y = 0; y < HEIGHT; ++y) {
-                SOLIDS[x][y] = false;
-            }
-        }
-        /* грузим текстуры */
-        System.out.println("\tTextures and materials...");
-        loadTexturesAndMaterials(jsonlevel);
-
-        /* формируем материалы стен */
-        System.out.println("\tWalls materials...");
-        ArrayList<JsonValue> sidesArray = json.readValue(ArrayList.class, jsonlevel.get("wall_sides_materials"));
-        WallMaterialBank.BANK = new WallMaterial[sidesArray.size()];
-        for (int i = 0; i < sidesArray.size(); ++i) {
-            JsonValue mat = sidesArray.get(i);
-            int[] jsonSides = mat.get("materials").asIntArray();
-            Material[] sides = new Material[jsonSides.length];
-            for (int j = 0; j < sides.length; ++j) {
-                sides[j] = MaterialBank.BANK.get(jsonSides[j]);
-            }
-
-            WallMaterialBank.BANK[i] = new WallMaterial(sides);
-        }
-
-        /* грузим расположение стен */
-        System.out.println("\tWalls...");
-        Array<Array<Float>> wallsArray = json.readValue(Array.class, jsonlevel.get("walls"));
-        for (int level = 0; level < LEVELS_COUNT; ++level) {
-            Array<Float> map = wallsArray.get(level);
-            for (int i = 0; i < map.size; ++i) {
-                int x = i / HEIGHT;
-                int y = i % WIDTH;
-                int cell = map.get(i).intValue();
-                WALLS_MAP[level][x][y] = cell;
-
-                /* формируем карту материалов стен */
-                if (cell < 0) {
-                    WALLS_MATERIALS_MAP[level][x][y] = null;
-                } else {
-                    WALLS_MATERIALS_MAP[level][x][y] = WallMaterialBank.BANK[cell];
+        File config = new File("resources/maps/" + levelNum + "/map.json");
+        if (config.exists()) {
+            try {
+                JsonObject jsonlevel = JsonParser.parseReader(new FileReader(config)).getAsJsonObject();
+                // получаем общие настройки
+                if (jsonlevel.has("name")) {
+                    String name = jsonlevel.get("name").getAsString(); // пока бесполезно
                 }
-            }
-        }
-
-        /* грузим пол */
-        System.out.println("\tFloor...");
-        int[] floor = jsonlevel.get("floor").asIntArray();
-        for (int i = 0; i < floor.length; ++i) {
-            int x = i / HEIGHT;
-            int y = i % WIDTH;
-            FLOOR[x][y] = floor[i];
-        }
-
-        /* грузим потолок */
-        System.out.println("\tCeil...");
-        int[] ceil = jsonlevel.get("ceil").asIntArray();
-        for (int i = 0; i < ceil.length; ++i) {
-            int x = i / HEIGHT;
-            int y = i % WIDTH;
-            CEIL[x][y] = ceil[i];
-        }
-
-        for (Segment[] array : SEGMENTS) {
-            Arrays.fill(array, null);
-        }
-
-        for (int x = 0; x < WIDTH; ++x) {
-            for (int y = 0; y < HEIGHT; ++y) {
-                // расставляем твердые объекты там, где стены
-                if (WALLS_MAP[0][x][y] >= 0) {
-                    SOLIDS[x][y] = true;
+                if (jsonlevel.has("author")) {
+                    String author = jsonlevel.get("author").getAsString(); // пока бесполезно
                 }
+
+                Gson gson = new Gson();
+
+                String fogColorString = (jsonlevel.has("fog_color")) ? jsonlevel.get("fog_color").getAsString() : "0xFF";
+                Fog.COLOR = Integer.parseUnsignedInt(fogColorString, 16);
+                Fog.START = (jsonlevel.has("fog_start")) ? jsonlevel.get("fog_start").getAsDouble() : 2.0;
+                Fog.END   = (jsonlevel.has("fog_end"))   ? jsonlevel.get("fog_end").getAsDouble()   : 8.0;
+                Fog.init();
+
+                /* убираем метку твердости */
+                for (int x = 0; x < WIDTH; ++x) {
+                    for (int y = 0; y < HEIGHT; ++y) {
+                        SOLIDS[x][y] = false;
+                    }
+                }
+                /* грузим текстуры */
+                System.out.println("\tTextures and materials...");
+                loadTexturesAndMaterials(jsonlevel);
+
+                /* формируем материалы стен */
+                System.out.println("\tWalls materials...");
+                JsonArray sidesArray = jsonlevel.get("wall_sides_materials").getAsJsonArray();
+                WallMaterialBank.BANK = new WallMaterial[sidesArray.size()];
+                for (int i = 0; i < sidesArray.size(); ++i) {
+                    JsonObject mat = sidesArray.get(i).getAsJsonObject();
+                    int[] jsonSides = gson.fromJson(mat.get("materials").getAsJsonObject(), int[].class);
+                    Material[] sides = new Material[jsonSides.length];
+                    for (int j = 0; j < sides.length; ++j) {
+                        sides[j] = MaterialBank.BANK.get(jsonSides[j]);
+                    }
+
+                    WallMaterialBank.BANK[i] = new WallMaterial(sides);
+                }
+
+                /* грузим расположение стен */
+                System.out.println("\tWalls...");
+                int[][] wallsArray = gson.fromJson(jsonlevel.get("walls"), int[][].class);
+                for (int level = 0; level < LEVELS_COUNT; ++level) {
+                    int[] map = wallsArray[level];
+                    for (int i = 0; i < map.length; ++i) {
+                        int x = i / HEIGHT;
+                        int y = i % WIDTH;
+                        int cell = map[i];
+                        WALLS_MAP[level][x][y] = cell;
+
+                        /* формируем карту материалов стен */
+                        if (cell < 0) {
+                            WALLS_MATERIALS_MAP[level][x][y] = null;
+                        } else {
+                            WALLS_MATERIALS_MAP[level][x][y] = WallMaterialBank.BANK[cell];
+                        }
+                    }
+                }
+
+                /* грузим пол */
+                System.out.println("\tFloor...");
+                int[] floor = gson.fromJson(jsonlevel.get("floor"), int[].class);
+                for (int i = 0; i < floor.length; ++i) {
+                    int x = i / HEIGHT;
+                    int y = i % WIDTH;
+                    FLOOR[x][y] = floor[i];
+                }
+
+                /* грузим потолок */
+                System.out.println("\tCeil...");
+                int[] ceil = gson.fromJson(jsonlevel.get("ceil"), int[].class);
+                for (int i = 0; i < ceil.length; ++i) {
+                    int x = i / HEIGHT;
+                    int y = i % WIDTH;
+                    CEIL[x][y] = ceil[i];
+                }
+
+                for (Segment[] array : SEGMENTS) {
+                    Arrays.fill(array, null);
+                }
+
+                for (int x = 0; x < WIDTH; ++x) {
+                    for (int y = 0; y < HEIGHT; ++y) {
+                        // расставляем твердые объекты там, где стены
+                        if (WALLS_MAP[0][x][y] >= 0) {
+                            SOLIDS[x][y] = true;
+                        }
+                    }
+                }
+
+                /* грузим спрайты */
+                loadSprites(levelNum);
+                //Interpreter.addListing(new File("resources/maps/" + levelNum + "/sprites.js"));
+
+                /* грузим оружие */
+                loadWeapons(levelNum);
+                //Interpreter.addListing(new File("resources/maps/" + levelNum + "/weapons.js"));
+
+                /* грузим патроны */
+                loadClips(levelNum);
+                //Interpreter.addListing(new File("resources/maps/" + levelNum + "/clips.js"));
+
+                /* грузим аптечки */
+                loadMedkits(levelNum);
+
+                /* грузим ключи и двери */
+                loadKeysDoors(levelNum);
+                //Interpreter.addListing(new File("resources/maps/" + levelNum + "/keys_doors.js"));
+
+                /* грузим меши и модели */
+                //loadMeshesAndModels(levelNum);
+
+                //Interpreter.runListing();
+
+                System.out.println("\tWeapons in player's hand...");
+                //Sprite.loadAll();
+                /*
+                KnifeInHand.loadFrames();
+                PistolInHand.loadFrames();
+                ShotgunInHand.loadFrames();
+                RifleInHand.loadFrames();
+                MinigunInHand.loadFrames();
+                RocketLauncherInHand.loadFrames();
+                */
+                AmmoPack.reset();
+                //Player.getInstance().createWeaponsInHand();
+
+                /* грузим разрушаемое */
+                loadBreakables(levelNum);
+
+                System.out.println("\tEnemies...");
+                new Guard(new Vector3(15.5, 21.5, 0.0), 90);
+
+                new Guard(new Vector3(15.5, 19.5, 0.0));
+
+                new Guard(new Vector3(15.5, 20.5, 0.0));
+
+                new Guard(new Vector3(14.5, 20.5, 0.0));
+
+                new GuardRocketeer(new Vector3(12.5, 18.5, 0.0));
+
+
+                /*MUSIC = SoundSystem.loadSound(SoundBank.FILE_MUSIC1);
+                MUSIC.setVolume(0.6f);
+                MUSIC.setLooping(true);
+                MUSIC.play();*/
+
+                new Sprite(TextureBank.GUARD_STAND, 0, new Vector3(17.1, 14.3, 1.0)).rotate(180);
+
+                //new Music("resources/snd/music/music.mp3").play(true);
+
+
+                // кастомные сегменты
+                Texture kishka = new Texture("resources/pics/world/flat/zeltum33.jpg");
+                Material kishkaMat = new Material(kishka);
+
+                SEGMENTS[1][ 1] = new TexturedSegment(2, 1, 1, 2, kishkaMat);
+                SEGMENTS[1][ 2] = new TexturedSegment(1, 2, 2, 3, kishkaMat);
+                SEGMENTS[1][ 3] = new TexturedSegment(2, 3, 1, 4, kishkaMat);
+                SEGMENTS[1][ 4] = new TexturedSegment(1, 4, 2, 5, kishkaMat);
+                SEGMENTS[1][ 5] = new TexturedSegment(2, 5, 1, 6, kishkaMat);
+
+                Texture tree = new Texture("resources/pics/sprites/nature/tree0.png");
+                Material treeMat = new Material(tree);
+
+                SEGMENTS[7][ 3] = new TexturedSegment(7, 3, 7, 4, treeMat);
+                SEGMENTS[7][ 5] = new TexturedSegment(7.5, 5, 7.5, 6, treeMat);
+
+
+                /*
+                SEGMENTS[21][ 9] = new TexturedSegment(21,    9, 22, 9.5, TextureBank.WALLS[1]);
+                SEGMENTS[22][10] = new TexturedSegment(22.5, 10, 23, 11 , TextureBank.WALLS[1]);
+                SEGMENTS[22][12] = new TexturedSegment(22,   13, 23, 12 , TextureBank.WALLS[1]);
+                SEGMENTS[21][13] = new TexturedSegment(21,   14, 22, 13 , TextureBank.WALLS[1]);
+                */
+
+                light1 = new LightSource();
+                light2 = new LightSource();
+
+                // lighters
+                new LightSource(Color.WHITE, 1.5, new Vector3(10.5, 14.5, 0.0));
+                new LightSource(Color.WHITE, 1.5, new Vector3( 8.5, 17.5, 0.0));
+                new LightSource(Color.WHITE, 1.5, new Vector3( 6.5, 13.5, 0.0));
+                new LightSource(Color.WHITE, 1.5, new Vector3( 8.5, 13.5, 0.0));
+
+                // fire
+                new LightSource(Color.WHITE, 1.0, new Vector3(10.5,  4.5, 0.0));
+
+                SoundSystem.playMusic(SoundBank.FILE_MUSIC1);
+
+                active = true;
+                loaded = true;
+            } catch (IOException ex) {
+                LOG.log(Level.SEVERE, null, ex);
             }
         }
-
-        /* грузим спрайты */
-        loadSprites(levelNum);
-        //Interpreter.addListing(new File("resources/maps/" + levelNum + "/sprites.js"));
-
-        /* грузим оружие */
-        loadWeapons(levelNum);
-        //Interpreter.addListing(new File("resources/maps/" + levelNum + "/weapons.js"));
-
-        /* грузим патроны */
-        loadClips(levelNum);
-        //Interpreter.addListing(new File("resources/maps/" + levelNum + "/clips.js"));
-
-        /* грузим аптечки */
-        loadMedkits(levelNum);
-
-        /* грузим ключи и двери */
-        loadKeysDoors(levelNum);
-        //Interpreter.addListing(new File("resources/maps/" + levelNum + "/keys_doors.js"));
-
-        /* грузим меши и модели */
-        //loadMeshesAndModels(levelNum);
-
-        //Interpreter.runListing();
-
-        System.out.println("\tWeapons in player's hand...");
-        //Sprite.loadAll();
-        /*
-        KnifeInHand.loadFrames();
-        PistolInHand.loadFrames();
-        ShotgunInHand.loadFrames();
-        RifleInHand.loadFrames();
-        MinigunInHand.loadFrames();
-        RocketLauncherInHand.loadFrames();
-        */
-        AmmoPack.reset();
-        //Player.getInstance().createWeaponsInHand();
-
-        /* грузим разрушаемое */
-        loadBreakables(levelNum);
-
-        System.out.println("\tEnemies...");
-        new Guard(new Vector3(15.5, 21.5, 0.0), 90);
-
-        new Guard(new Vector3(15.5, 19.5, 0.0));
-
-        new Guard(new Vector3(15.5, 20.5, 0.0));
-
-        new Guard(new Vector3(14.5, 20.5, 0.0));
-
-        new GuardRocketeer(new Vector3(12.5, 18.5, 0.0));
-
-
-        /*MUSIC = SoundSystem.loadSound(SoundBank.FILE_MUSIC1);
-        MUSIC.setVolume(0.6f);
-        MUSIC.setLooping(true);
-        MUSIC.play();*/
-
-        new Sprite(TextureBank.GUARD_STAND, 0, new Vector3(17.1, 14.3, 1.0)).rotate(180);
-
-        //new Music("resources/snd/music/music.mp3").play(true);
-
-
-        // кастомные сегменты
-        Texture kishka = new Texture("resources/pics/world/flat/zeltum33.jpg");
-        Material kishkaMat = new Material(kishka);
-
-        SEGMENTS[1][ 1] = new TexturedSegment(2, 1, 1, 2, kishkaMat);
-        SEGMENTS[1][ 2] = new TexturedSegment(1, 2, 2, 3, kishkaMat);
-        SEGMENTS[1][ 3] = new TexturedSegment(2, 3, 1, 4, kishkaMat);
-        SEGMENTS[1][ 4] = new TexturedSegment(1, 4, 2, 5, kishkaMat);
-        SEGMENTS[1][ 5] = new TexturedSegment(2, 5, 1, 6, kishkaMat);
-
-        Texture tree = new Texture("resources/pics/sprites/nature/tree0.png");
-        Material treeMat = new Material(tree);
-
-        SEGMENTS[7][ 3] = new TexturedSegment(7, 3, 7, 4, treeMat);
-        SEGMENTS[7][ 5] = new TexturedSegment(7.5, 5, 7.5, 6, treeMat);
-
-
-        /*
-        SEGMENTS[21][ 9] = new TexturedSegment(21,    9, 22, 9.5, TextureBank.WALLS[1]);
-        SEGMENTS[22][10] = new TexturedSegment(22.5, 10, 23, 11 , TextureBank.WALLS[1]);
-        SEGMENTS[22][12] = new TexturedSegment(22,   13, 23, 12 , TextureBank.WALLS[1]);
-        SEGMENTS[21][13] = new TexturedSegment(21,   14, 22, 13 , TextureBank.WALLS[1]);
-        */
-
-        light1 = new LightSource();
-        light2 = new LightSource();
-
-        // lighters
-        new LightSource(Color.WHITE, 1.5, new Vector3(10.5, 14.5, 0.0));
-        new LightSource(Color.WHITE, 1.5, new Vector3( 8.5, 17.5, 0.0));
-        new LightSource(Color.WHITE, 1.5, new Vector3( 6.5, 13.5, 0.0));
-        new LightSource(Color.WHITE, 1.5, new Vector3( 8.5, 13.5, 0.0));
-
-        // fire
-        new LightSource(Color.WHITE, 1.0, new Vector3(10.5,  4.5, 0.0));
-
-        SoundSystem.playMusic(SoundBank.FILE_MUSIC1);
-
-        active = true;
-        loaded = true;
     }
 
     /*

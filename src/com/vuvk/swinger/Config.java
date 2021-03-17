@@ -24,15 +24,6 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.stream.JsonWriter;
 
-/*
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.files.FileHandle;
-import com.badlogic.gdx.utils.Json;
-import com.badlogic.gdx.utils.JsonReader;
-import com.badlogic.gdx.utils.JsonValue;
-import com.badlogic.gdx.utils.JsonWriter;
-*/
-
 import com.vuvk.swinger.audio.SoundSystem;
 import com.vuvk.swinger.graphic.Fog;
 
@@ -99,7 +90,7 @@ public final class Config {
                 TITLE  = (json.has("window_title"))   ? json.get("window_title").getAsString() : "swinger engine";
                 fullscreen = (json.has("fullscreen")) ? json.get("fullscreen").getAsBoolean()  : false;
                 vSync  = (json.has("vsync"))          ? json.get("vsync").getAsBoolean()       : true;
-                
+
             } catch (IOException ex) {
                 LOG.log(Level.SEVERE, null, ex);
             }
