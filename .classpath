@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="src" path="src"/>
+    
+    <!--
+	<classpathentry kind="lib" path="libs/gdx-1.9.14-javadoc.jar"/>
+	<classpathentry kind="lib" path="libs/gdx-1.9.14.jar"/>
+	<classpathentry kind="lib" path="libs/gdx-backend-lwjgl-1.9.14-javadoc.jar"/>
+	<classpathentry kind="lib" path="libs/gdx-backend-lwjgl-1.9.14.jar"/>
+	<classpathentry kind="lib" path="libs/gdx-backend-lwjgl3-1.9.14-javadoc.jar"/>
+	<classpathentry kind="lib" path="libs/gdx-backend-lwjgl3-1.9.14.jar"/>
+	<classpathentry kind="lib" path="libs/gdx-freetype-1.9.14-javadoc.jar"/>
+	<classpathentry kind="lib" path="libs/gdx-freetype-1.9.14.jar"/>
+	<classpathentry kind="lib" path="libs/gdx-freetype-platform-1.9.14-natives-desktop.jar"/>
+	<classpathentry kind="lib" path="libs/gdx-freetype-platform-1.9.14.jar"/>
+	<classpathentry kind="lib" path="libs/gdx-jnigen-loader-2.0.1-javadoc.jar"/>
+	<classpathentry kind="lib" path="libs/gdx-jnigen-loader-2.0.1.jar"/>
+	<classpathentry kind="lib" path="libs/gdx-openal-0.9.9-javadoc.jar"/>
+	<classpathentry kind="lib" path="libs/gdx-openal-0.9.9.jar"/>
+	<classpathentry kind="lib" path="libs/gdx-platform-1.9.14-natives-desktop.jar"/>
+	<classpathentry kind="lib" path="libs/gdx-platform-1.9.14.jar"/>
+	<classpathentry kind="lib" path="libs/jlayer-1.0.1-gdx.jar"/>
+	<classpathentry kind="lib" path="libs/lwjgl-2.9.3-javadoc.jar"/>
+	<classpathentry kind="lib" path="libs/lwjgl-2.9.3.jar"/>
+	<classpathentry kind="lib" path="libs/lwjgl-natives-linux-2.9.3.jar"/>
+	<classpathentry kind="lib" path="libs/lwjgl-natives-macosx-2.9.3.jar"/>
+	<classpathentry kind="lib" path="libs/lwjgl-natives-windows-2.9.3.jar"/>
+	<classpathentry kind="lib" path="libs/lwjgl-util-2.9.3.jar"/>
+
+	<classpathentry kind="lib" path="libs/jinput.jar"/>
+	<classpathentry kind="lib" path="libs/sources/gdx-1.9.13-sources.jar"/>
+	<classpathentry kind="lib" path="libs/sources/gdx-backend-lwjgl-1.9.13-sources.jar"/>
+	<classpathentry kind="lib" path="libs/sources/gdx-controllers-1.9.13-sources.jar"/>
+	<classpathentry kind="lib" path="libs/sources/gdx-controllers-desktop-1.9.13-sources.jar"/>
+	<classpathentry kind="lib" path="libs/sources/jlayer-1.0.1-gdx-sources.jar"/>
+    -->
+
+    <classpathentry kind="lib" path="libs/lib/jlayer-1.0.1.4.jar"/>    
+    <classpathentry kind="lib" path="libs/lib/jorbis-0.0.17.4.jar"/>
+	<classpathentry kind="lib" path="libs/lib/mp3spi-1.9.5.4.jar"/>
+	<classpathentry kind="lib" path="libs/lib/tritonus-share-0.3.7-2.jar"/>
+	<classpathentry kind="lib" path="libs/lib/vorbisspi-1.0.3.3.jar"/>
+	<classpathentry kind="lib" path="libs/RetardSoundSystem-0.5.jar"/>
+	<classpathentry kind="output" path="bin"/>
+	<classpathentry kind="lib" path="libs/gson-2.8.6.jar"
+			sourcepath="libs/gson-2.8.6-sources.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="jar:platform:/resource/swinger-engine/libs/gson-2.8.6-javadoc.jar!/"/>
+		</attributes>
+	</classpathentry>
+</classpath>

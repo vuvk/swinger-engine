@@ -15,8 +15,6 @@ package com.vuvk.swinger.objects.mortals.enemy;
 
 //import com.vuvk.retard_sound_system.Sound;
 //import com.vuvk.retard_sound_system.SoundSystem;
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.files.FileHandle;
 import com.vuvk.swinger.audio.SoundSystem;
 import com.vuvk.swinger.math.Vector2;
 import com.vuvk.swinger.math.Vector3;
