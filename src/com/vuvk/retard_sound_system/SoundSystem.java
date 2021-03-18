@@ -55,8 +55,8 @@ public final class SoundSystem {
 
     private static boolean started = false;
 
-    private static SourceDataLine MONO_LINE   = null;
-    private static SourceDataLine STEREO_LINE = null;
+    private static SourceDataLine monoLine   = null;
+    private static SourceDataLine stereoLine = null;
 
     final static List<Music> MUSICS = new CopyOnWriteArrayList<>();
 
@@ -64,36 +64,41 @@ public final class SoundSystem {
     private static final SoundList STEREO_SOUNDS = new SoundList();
 
     private final static int CACHE_SIZE = 2048;
-    private static SoundCache MONO_CACHE;
-    private static SoundCache STEREO_CACHE;
+    private static SoundCache monoCache;
+    private static SoundCache stereoCache;
+
+    // volumes
+    private static float musicVolume  = 1.0f;
+    private static float soundsVolume = 1.0f;
+
 
     private SoundSystem() {}
 
     private static void init() {
         try {
-            MONO_LINE = AudioSystem.getSourceDataLine(getAudioMonoFormat());
-            MONO_LINE.open();
-            MONO_LINE.start();
+            monoLine = AudioSystem.getSourceDataLine(getAudioMonoFormat());
+            monoLine.open();
+            monoLine.start();
 
             // for init line
-            MONO_LINE.write(new byte[2], 0, 2);
-            MONO_LINE.drain();
+            monoLine.write(new byte[2], 0, 2);
+            monoLine.drain();
 
-            MONO_CACHE = new SoundCache(CACHE_SIZE, MONO_LINE);
+            monoCache = new SoundCache(CACHE_SIZE, monoLine);
         } catch (LineUnavailableException ex) {
             LOG.log(Level.SEVERE, null, ex);
         }
 
         try {
-            STEREO_LINE = AudioSystem.getSourceDataLine(getAudioStereoFormat());
-            STEREO_LINE.open();
-            STEREO_LINE.start();
+            stereoLine = AudioSystem.getSourceDataLine(getAudioStereoFormat());
+            stereoLine.open();
+            stereoLine.start();
 
             // for init line
-            STEREO_LINE.write(new byte[4], 0, 4);
-            STEREO_LINE.drain();
+            stereoLine.write(new byte[4], 0, 4);
+            stereoLine.drain();
 
-            STEREO_CACHE = new SoundCache(CACHE_SIZE << 1, STEREO_LINE);
+            stereoCache = new SoundCache(CACHE_SIZE << 1, stereoLine);
         } catch (LineUnavailableException ex) {
             LOG.log(Level.SEVERE, null, ex);
         }
@@ -222,7 +227,7 @@ public final class SoundSystem {
                 break;
             }
 
-            volume = sound.getVolume();
+            volume = sound.getVolume() * soundsVolume;
             cntReaded = sound.read(buffer);
 
             if (cntReaded > 0) {
@@ -303,7 +308,7 @@ public final class SoundSystem {
                 break;
             }
 
-            volume = sound.getVolume();
+            volume = sound.getVolume() * soundsVolume;
             cntReaded = sound.read(buffer);
 
             if (cntReaded > 0) {
@@ -348,21 +353,21 @@ public final class SoundSystem {
     }
 
     private static void updateMonoLine() {
-        if (MONO_LINE != null) {
+        if (monoLine != null) {
             if (CACHED) {
-                updateLine(MONO_SOUNDS, MONO_LINE, MONO_CACHE);
+                updateLine(MONO_SOUNDS, monoLine, monoCache);
             } else {
-                updateLine(MONO_SOUNDS, MONO_LINE);
+                updateLine(MONO_SOUNDS, monoLine);
             }
         }
     }
 
     private static void updateStereoLine() {
-        if (STEREO_LINE != null) {
+        if (stereoLine != null) {
             if (CACHED) {
-                updateLine(STEREO_SOUNDS, STEREO_LINE, STEREO_CACHE);
+                updateLine(STEREO_SOUNDS, stereoLine, stereoCache);
             } else {
-                updateLine(STEREO_SOUNDS, STEREO_LINE);
+                updateLine(STEREO_SOUNDS, stereoLine);
             }
         }
     }
@@ -420,14 +425,14 @@ public final class SoundSystem {
 
         stopAll();
 
-        MONO_CACHE = null;
-        STEREO_CACHE = null;
+        monoCache = null;
+        stereoCache = null;
 
-        MONO_LINE.close();
-        STEREO_LINE.close();
+        monoLine.close();
+        stereoLine.close();
 
-        MONO_LINE = null;
-        STEREO_LINE = null;
+        monoLine = null;
+        stereoLine = null;
     }
 
     /**
@@ -447,7 +452,6 @@ public final class SoundSystem {
         return (MONO_SOUNDS.contains(sound) || STEREO_SOUNDS.contains(sound));
     }
 
-
     /**
      * play sound with or without checking if it play already (if it play, sound not start play)
      * @param sound
@@ -464,7 +468,6 @@ public final class SoundSystem {
             sound.play();
         }
     }
-
 
     public static void stopAll() {
         for (Music music : MUSICS) {
@@ -509,4 +512,20 @@ public final class SoundSystem {
             sounds[variant].play();
         }
     }
+
+	public static void setMusicVolume(float musicVolume) {
+        SoundSystem.musicVolume = musicVolume;
+	}
+
+	public static void setSoundsVolume(float soundsVolume) {
+        SoundSystem.soundsVolume = soundsVolume;
+	}
+
+	public static float getMusicVolume() {
+        return musicVolume;
+	}
+
+	public static float getSoundsVolume() {
+        return soundsVolume;
+	}
 }

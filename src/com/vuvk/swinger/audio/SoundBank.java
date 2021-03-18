@@ -72,52 +72,52 @@ public final class SoundBank {
 
 
 
-    /* sounds */
+    /* soundbuffers */
     /* effects */
-    public final static SoundBuffer EXPLODE = new SoundBuffer(PATH_EXPLODE);
+    public final static SoundBuffer SOUND_BUFFER_EXPLODE = new SoundBuffer(PATH_EXPLODE);
 
     /* weapons */
-    public final static SoundBuffer KNIFE   = new SoundBuffer(PATH_KNIFE  );
-    public final static SoundBuffer PISTOL  = new SoundBuffer(PATH_PISTOL );
-    public final static SoundBuffer RIFLE   = new SoundBuffer(PATH_RIFLE  );
-    public final static SoundBuffer MINIGUN = new SoundBuffer(PATH_MINIGUN);
-    public final static SoundBuffer BAZOOKA = new SoundBuffer(PATH_BAZOOKA);
+    public final static SoundBuffer SOUND_BUFFER_KNIFE   = new SoundBuffer(PATH_KNIFE  );
+    public final static SoundBuffer SOUND_BUFFER_PISTOL  = new SoundBuffer(PATH_PISTOL );
+    public final static SoundBuffer SOUND_BUFFER_RIFLE   = new SoundBuffer(PATH_RIFLE  );
+    public final static SoundBuffer SOUND_BUFFER_MINIGUN = new SoundBuffer(PATH_MINIGUN);
+    public final static SoundBuffer SOUND_BUFFER_BAZOOKA = new SoundBuffer(PATH_BAZOOKA);
 
     /* enemies */
-    public final static SoundBuffer ALARM1 = new SoundBuffer(PATH_ALARM1);
-    public final static SoundBuffer ALARM2 = new SoundBuffer(PATH_ALARM2);
-    public final static SoundBuffer ALARM3 = new SoundBuffer(PATH_ALARM3);
-    public final static SoundBuffer ALARM4 = new SoundBuffer(PATH_ALARM4);
-    public final static SoundBuffer PAIN1  = new SoundBuffer(PATH_PAIN1);
-    public final static SoundBuffer PAIN2  = new SoundBuffer(PATH_PAIN2);
-    public final static SoundBuffer DIE1   = new SoundBuffer(PATH_DIE1);
-    public final static SoundBuffer DIE2   = new SoundBuffer(PATH_DIE2);
+    public final static SoundBuffer SOUND_BUFFER_ALARM1 = new SoundBuffer(PATH_ALARM1);
+    public final static SoundBuffer SOUND_BUFFER_ALARM2 = new SoundBuffer(PATH_ALARM2);
+    public final static SoundBuffer SOUND_BUFFER_ALARM3 = new SoundBuffer(PATH_ALARM3);
+    public final static SoundBuffer SOUND_BUFFER_ALARM4 = new SoundBuffer(PATH_ALARM4);
+    public final static SoundBuffer SOUND_BUFFER_PAIN1  = new SoundBuffer(PATH_PAIN1);
+    public final static SoundBuffer SOUND_BUFFER_PAIN2  = new SoundBuffer(PATH_PAIN2);
+    public final static SoundBuffer SOUND_BUFFER_DIE1   = new SoundBuffer(PATH_DIE1);
+    public final static SoundBuffer SOUND_BUFFER_DIE2   = new SoundBuffer(PATH_DIE2);
 
     /* events */
-    public final static SoundBuffer DOOR_OPEN  = new SoundBuffer(PATH_DOOR_OPEN );
-    public final static SoundBuffer DOOR_CLOSE = new SoundBuffer(PATH_DOOR_CLOSE);
+    public final static SoundBuffer SOUND_BUFFER_DOOR_OPEN  = new SoundBuffer(PATH_DOOR_OPEN );
+    public final static SoundBuffer SOUND_BUFFER_DOOR_CLOSE = new SoundBuffer(PATH_DOOR_CLOSE);
 
     /* items */
-    public final static SoundBuffer GET_WEAPON = new SoundBuffer(PATH_GET_WEAPON);
-    public final static SoundBuffer GET_KEY    = new SoundBuffer(PATH_GET_KEY);
-    public final static SoundBuffer GET_AMMO   = new SoundBuffer(PATH_GET_AMMO);
-    public final static SoundBuffer GET_MEDKIT1 = new SoundBuffer(PATH_GET_MEDKIT1);
-    public final static SoundBuffer GET_MEDKIT2 = new SoundBuffer(PATH_GET_MEDKIT2);
+    public final static SoundBuffer SOUND_BUFFER_GET_WEAPON = new SoundBuffer(PATH_GET_WEAPON);
+    public final static SoundBuffer SOUND_BUFFER_GET_KEY    = new SoundBuffer(PATH_GET_KEY);
+    public final static SoundBuffer SOUND_BUFFER_GET_AMMO   = new SoundBuffer(PATH_GET_AMMO);
+    public final static SoundBuffer SOUND_BUFFER_GET_MEDKIT1 = new SoundBuffer(PATH_GET_MEDKIT1);
+    public final static SoundBuffer SOUND_BUFFER_GET_MEDKIT2 = new SoundBuffer(PATH_GET_MEDKIT2);
 
     /* phrases */
-    public final static SoundBuffer NEED_KEY1 = new SoundBuffer(PATH_NEED_KEY1);
-    public final static SoundBuffer NEED_KEY2 = new SoundBuffer(PATH_NEED_KEY2);
+    public final static SoundBuffer SOUND_BUFFER_NEED_KEY1 = new SoundBuffer(PATH_NEED_KEY1);
+    public final static SoundBuffer SOUND_BUFFER_NEED_KEY2 = new SoundBuffer(PATH_NEED_KEY2);
 
     /* dies */
-    public final static SoundBuffer PLAYER_DIE = new SoundBuffer(PATH_PLAYER_DIE);
+    public final static SoundBuffer SOUND_BUFFER_PLAYER_DIE = new SoundBuffer(PATH_PLAYER_DIE);
 
     /* music */
     public static final Music MUSIC_TITLE = new Music(PATH_MUSIC_TITLE);
     public static final Music MUSIC1      = new Music(PATH_MUSIC1);
     
     /* menu */
-    public static final SoundBuffer MENU_SELECT = new SoundBuffer(PATH_MENU_SELECT);
-    public static final SoundBuffer MENU_TOGGLE = new SoundBuffer(PATH_MENU_TOGGLE);
+    public static final SoundBuffer SOUND_BUFFER_MENU_SELECT = new SoundBuffer(PATH_MENU_SELECT);
+    public static final SoundBuffer SOUND_BUFFER_MENU_TOGGLE = new SoundBuffer(PATH_MENU_TOGGLE);
 
 
     /* все звуки здесь? */

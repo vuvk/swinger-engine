@@ -8,4 +8,10 @@
 	</classpathentry>
 	<classpathentry kind="lib" path="libs"/>
 	<classpathentry kind="output" path="bin"/>
+	<classpathentry kind="lib" path="libs/gson-2.8.6.jar"
+			sourcepath="libs/gson-2.8.6-sources.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="jar:platform:/resource/swinger-engine/libs/gson-2.8.6-javadoc.jar!/"/>
+		</attributes>
+	</classpathentry>
 </classpath>

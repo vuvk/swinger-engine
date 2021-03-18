@@ -13,10 +13,9 @@
 */
 package com.vuvk.swinger.graphic.gui.menu;
 
+import com.vuvk.retard_sound_system.SoundSystem;
 import com.vuvk.swinger.Config;
-import com.vuvk.swinger.Game;
 import com.vuvk.swinger.audio.SoundBank;
-import com.vuvk.swinger.audio.SoundSystem;
 import com.vuvk.swinger.graphic.Fog;
 import com.vuvk.swinger.graphic.Renderer;
 import com.vuvk.swinger.graphic.gui.text.FontBank;
@@ -24,6 +23,7 @@ import com.vuvk.swinger.graphic.gui.text.Text;
 import com.vuvk.swinger.math.Vector2;
 import com.vuvk.swinger.res.Map;
 import com.vuvk.swinger.SavedGame;
+
 import java.io.File;
 import java.util.Date;
 
@@ -37,13 +37,13 @@ public class Menu {
     private static boolean active = false;
     /* для меню сохранения/загрузки. Если true, то загружать при выборе, если false, то сохранять */
     private static boolean loadSubMenu = true;
-    public static SubMenu CURRENT;
-    private final static SubMenu MAIN_MENU = new SubMenu(),
-                                 IN_GAME = new SubMenu(),
+    public static SubMenu currentMenu;
+    private final static SubMenu MAIN_MENU          = new SubMenu(),
+                                 IN_GAME            = new SubMenu(),
                                  CLOSE_GAME_CONFIRM = new SubMenu(),
-                                 LOAD_SAVE_GAME = new SubMenu(),
-                                 OPTIONS = new SubMenu(),
-                                 EXIT_MAIN_CONFIRM = new SubMenu();
+                                 LOAD_SAVE_GAME     = new SubMenu(),
+                                 OPTIONS            = new SubMenu(),
+                                 EXIT_MAIN_CONFIRM  = new SubMenu();
 
     private Menu() {}
 
@@ -136,13 +136,13 @@ public class Menu {
                                                   new Vector2(Renderer.HALF_WIDTH - 50, Renderer.HALF_HEIGHT - 48)),
                                          () -> {},
                                          () -> {
-                                             float volume = SoundSystem.getVolume() - 0.05f;
-                                             SoundSystem.setVolume(volume);
+                                             float volume = SoundSystem.getSoundsVolume() - 0.05f;
+                                             SoundSystem.setSoundsVolume(volume);
                                              updateOptionsSubMenu();
                                          },
                                          () -> {
-                                             float volume = SoundSystem.getVolume() + 0.05f;
-                                             SoundSystem.setVolume(volume);
+                                             float volume = SoundSystem.getSoundsVolume() + 0.05f;
+                                             SoundSystem.setSoundsVolume(volume);
                                              updateOptionsSubMenu();
                                          }));
         OPTIONS.addButton(new ButtonMenu(new Text(FontBank.FONT_MENU, "FOG      OLDSCHOOL",
@@ -197,14 +197,14 @@ public class Menu {
         OPTIONS.addButton(new ButtonMenu(new Text(FontBank.FONT_MENU, "VSYNC          ON",
                                                   new Vector2(Renderer.HALF_WIDTH - 50, Renderer.HALF_HEIGHT + 96)),
                                          () -> {
-                                             Game.setVSync(!Config.vSync);
+                                             //Game.setVSync(!Config.vSync);
                                              updateOptionsSubMenu();
                                          } ));
         if (!Config.buildForMobiles) {
             OPTIONS.addButton(new ButtonMenu(new Text(FontBank.FONT_MENU, "FULLSCREEN     ON",
                                                   new Vector2(Renderer.HALF_WIDTH - 50, Renderer.HALF_HEIGHT + 120)),
                                              () -> {
-                                                 Game.setFullscreenMode(!Config.fullscreen);
+                                                // Game.setFullscreenMode(!Config.fullscreen);
                                                  updateOptionsSubMenu();
                                              } ));
         }
@@ -218,7 +218,7 @@ public class Menu {
                                                             new Vector2(Renderer.HALF_WIDTH - 50, Renderer.HALF_HEIGHT)),
                                                    () -> {
                                                        Map.reset();
-                                                       SoundSystem.playMusic(SoundBank.FILE_MUSIC_TITLE);
+                                                       SoundBank.MUSIC_TITLE.play(true);
                                                        changeSubMenu(MAIN_MENU);
                                                    }));
 
@@ -233,14 +233,14 @@ public class Menu {
                                                         Config.QUIT = true;
                                                     }));
 
-        CURRENT = MAIN_MENU;
+        currentMenu = MAIN_MENU;
 
         deactivate();
     }
 
     private static void changeSubMenu(SubMenu menu) {
         deactivate();
-        CURRENT = menu;
+        currentMenu = menu;
         activate();
     }
 
@@ -271,7 +271,7 @@ public class Menu {
         btn.getText().setMessage("MUSIC    " + (int) (SoundSystem.getMusicVolume() * 100) + "%");
         //volume
         btn = OPTIONS.getButton(2);
-        btn.getText().setMessage("VOLUME   " + (int) (SoundSystem.getVolume() * 100) + "%");
+        btn.getText().setMessage("VOLUME   " + (int) (SoundSystem.getSoundsVolume() * 100) + "%");
         // fog
         btn = OPTIONS.getButton(3);
         btn.getText().setMessage("FOG      " + Config.fog.name());
@@ -323,7 +323,7 @@ public class Menu {
     public static void activate() {
         CURSOR.setVisible(true);
         active = true;
-        CURRENT.activate();
+        currentMenu.activate();
 
         if (Map.isLoaded()) {
             Map.active = false;

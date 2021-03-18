@@ -79,7 +79,7 @@ public final class Music extends SoundBasis {
                             byte high = buffer[i + 1];
 
                             int value = (short)(((high & 0xFF) << 8) | (low & 0xFF));
-                            value *= getVolume();                                
+                            value *= getVolume() * SoundSystem.getMusicVolume();                                
 
                             buffer[i]     = (byte) value;
                             buffer[i + 1] = (byte) (value >> 8);
