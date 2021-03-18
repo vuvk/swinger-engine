@@ -13,13 +13,13 @@
 */
 package com.vuvk.swinger.graphic.gui.text;
 
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Batch;
-import com.badlogic.gdx.utils.Array;
-import com.vuvk.swinger.Config;
-import com.vuvk.swinger.math.Vector2;
-import java.util.logging.Level;
+import java.awt.Graphics;
+import java.awt.image.BufferedImage;
+import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.logging.Logger;
+
+import com.vuvk.swinger.math.Vector2;
 
 /**
  *
@@ -27,7 +27,7 @@ import java.util.logging.Logger;
  */
 public class Text {
     
-    private final static Array<Text> TEXTS = new Array<>(false, 50);
+    private final static List<Text> TEXTS = new CopyOnWriteArrayList<>();
     transient private static final Logger LOG = Logger.getLogger(Text.class.getName());    
     
     private Vector2 location;
@@ -49,16 +49,6 @@ public class Text {
         setLocation(location);
         
         TEXTS.add(this);
-    }
-    
-    @Override
-    public void finalize() {
-        TEXTS.removeValue(this, true);
-        try {
-            super.finalize();
-        } catch (Throwable ex) {
-            LOG.log(Level.SEVERE, null, ex);
-        }
     }
 
     public Vector2 getLocation() {
@@ -93,7 +83,7 @@ public class Text {
         this.visible = visible;
     }
     
-    public void draw(Batch batch) {            
+    public void draw(Graphics g) {            
         if (message == null       || 
             message.length() == 0 || 
             font == null          || 
@@ -102,30 +92,30 @@ public class Text {
             return;
         }
          
-        float x = (float) location.x,
-              y = Config.HEIGHT - (float) location.y;
+        int x = (int) location.x,
+            y = (int) location.y;
         
         for (int i = 0; i < message.length(); ++i) {
             int ascii = message.charAt(i);
             Symbol symbol = font.getSymbol(ascii);
             if (symbol != null) {
-                Texture img = symbol.getTexture();
+                BufferedImage img = symbol.getImage();
                 if (img != null) {
-                    batch.draw(img, x, y);
+                    g.drawImage(img, x, y, null);
                     x += img.getWidth();
                 }
             }
         }
     }
     
-    public static void drawAll(Batch batch) {
+    public static void drawAll(Graphics g) {
         for (Text text : TEXTS) {
-            text.draw(batch);
+            text.draw(g);
         }
     }
     
     public static void remove(Text text) {
-        TEXTS.removeValue(text, true);
+        TEXTS.remove(text);
     }
     
     public static void clearAll() {

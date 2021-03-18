@@ -13,18 +13,26 @@
 */
 package com.vuvk.swinger.graphic.gui.text;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Pixmap;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import javax.imageio.ImageIO;
+
+import com.vuvk.swinger.res.Image;
 
 /**
  *
  * @author Anton "Vuvk" Shcherbatykh
  */
 public final class FontBank {
-    private final static String FONT_FILE_OUTLINE = "resources/pics/gui/fonts/outline_24x32.png";
-    private final static String FONT_FILE_BUBBLA  = "resources/pics/gui/fonts/anuvverbubbla_8x8.png";
-    private final static String FONT_FILE_MIDDLE  = "resources/pics/gui/fonts/kromagrad_16x16.png";
-    private final static String FONT_FILE_MENU    = "resources/pics/gui/fonts/kromasky_16x16.png";
+    private static final Logger LOG = Logger.getLogger(FontBank.class.getName());    
+    
+    private final static String PATH_FONT_OUTLINE = "resources/pics/gui/fonts/outline_24x32.png";
+    private final static String PATH_FONT_BUBBLA  = "resources/pics/gui/fonts/anuvverbubbla_8x8.png";
+    private final static String PATH_FONT_MIDDLE  = "resources/pics/gui/fonts/kromagrad_16x16.png";
+    private final static String PATH_FONT_MENU    = "resources/pics/gui/fonts/kromasky_16x16.png";
 
     public final static Font FONT_OUTLINE = new Font();
     public final static Font FONT_BUBBLA  = new Font();
@@ -34,40 +42,36 @@ public final class FontBank {
     private FontBank() {}
 
     public static void load() {
-        Pixmap fontOutlineImg = new Pixmap(Gdx.files.internal(FONT_FILE_OUTLINE));
-        for (int x = 0; x * 24 < fontOutlineImg.getWidth(); ++x) {
-            Pixmap symbolImg = new Pixmap(24, 32, Pixmap.Format.RGBA8888);
-            symbolImg.drawPixmap(fontOutlineImg, x * 24, 0, 24, 32, 0, 0, 24, 32);
-            FONT_OUTLINE.setSymbol(x + 32, new Symbol(symbolImg));
-            symbolImg.dispose();
-        }
-        fontOutlineImg.dispose();
+        try {
+            BufferedImage fontOutlineImg = ImageIO.read(new File(PATH_FONT_OUTLINE));
+            for (int x = 0; x * 24 < fontOutlineImg.getWidth(); ++x) {
+                BufferedImage symbolImg = new BufferedImage(24, 32, BufferedImage.TYPE_INT_ARGB);
+                symbolImg.getGraphics().drawImage(fontOutlineImg, x * 24, 0, 24, 32, 0, 0, 24, 32, null);
+                FONT_OUTLINE.setSymbol(x + 32, new Symbol(symbolImg));
+            }
 
-        Pixmap fontBubblaImg = new Pixmap(Gdx.files.internal(FONT_FILE_BUBBLA));
-        for (int x = 0; x * 8 < fontBubblaImg.getWidth(); ++x) {
-            Pixmap symbolImg = new Pixmap(8, 8, Pixmap.Format.RGBA8888);
-            symbolImg.drawPixmap(fontBubblaImg, x * 8, 0, 8, 8, 0, 0, 8, 8);
-            FONT_BUBBLA.setSymbol(x + 32, new Symbol(symbolImg));
-            symbolImg.dispose();
-        }
-        fontBubblaImg.dispose();
+            BufferedImage fontBubblaImg = ImageIO.read(new File(PATH_FONT_BUBBLA));
+            for (int x = 0; x * 8 < fontBubblaImg.getWidth(); ++x) {
+                BufferedImage symbolImg = new BufferedImage(8, 8, BufferedImage.TYPE_INT_ARGB);
+                symbolImg.getGraphics().drawImage(fontBubblaImg, x * 8, 0, 8, 8, 0, 0, 8, 8, null);
+                FONT_BUBBLA.setSymbol(x + 32, new Symbol(symbolImg));
+            }
 
-        Pixmap fontMiddleImg = new Pixmap(Gdx.files.internal(FONT_FILE_MIDDLE));
-        for (int x = 0; x * 16 < fontMiddleImg.getWidth(); ++x) {
-            Pixmap symbolImg = new Pixmap(16, 16, Pixmap.Format.RGBA8888);
-            symbolImg.drawPixmap(fontMiddleImg, x * 16, 0, 16, 16, 0, 0, 16, 16);
-            FONT_MIDDLE.setSymbol(x + 32, new Symbol(symbolImg));
-            symbolImg.dispose();
-        }
-        fontMiddleImg.dispose();
+            BufferedImage fontMiddleImg = ImageIO.read(new File(PATH_FONT_MIDDLE));
+            for (int x = 0; x * 16 < fontMiddleImg.getWidth(); ++x) {
+                BufferedImage symbolImg = new BufferedImage(16, 16, BufferedImage.TYPE_INT_ARGB);
+                symbolImg.getGraphics().drawImage(fontMiddleImg, x * 16, 0, 16, 16, 0, 0, 16, 16, null);
+                FONT_MIDDLE.setSymbol(x + 32, new Symbol(symbolImg));
+            }
 
-        Pixmap fontMenuImg = new Pixmap(Gdx.files.internal(FONT_FILE_MENU));
-        for (int x = 0; x * 16 < fontMenuImg.getWidth(); ++x) {
-            Pixmap symbolImg = new Pixmap(16, 16, Pixmap.Format.RGBA8888);
-            symbolImg.drawPixmap(fontMiddleImg, x * 16, 0, 16, 16, 0, 0, 16, 16);
-            FONT_MENU.setSymbol(x + 32, new Symbol(symbolImg));
-            symbolImg.dispose();
+            BufferedImage fontMenuImg = ImageIO.read(new File(PATH_FONT_MENU));
+            for (int x = 0; x * 16 < fontMenuImg.getWidth(); ++x) {
+                BufferedImage symbolImg = new BufferedImage(16, 16, BufferedImage.TYPE_INT_ARGB);
+                symbolImg.getGraphics().drawImage(fontMiddleImg, x * 16, 0, 16, 16, 0, 0, 16, 16, null);
+                FONT_MENU.setSymbol(x + 32, new Symbol(symbolImg));
+            }
+        } catch (Exception ex) {
+            LOG.log(Level.SEVERE, null, ex);
         }
-        fontMenuImg.dispose();
     }
 }

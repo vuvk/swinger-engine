@@ -1,5 +1,5 @@
 /**
-    Copyright (C) 2019-2020 Anton "Vuvk" Shcherbatykh <vuvk69@gmail.com>
+    Copyright (C) 2019-2021 Anton "Vuvk" Shcherbatykh <vuvk69@gmail.com>
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
@@ -13,9 +13,7 @@
 */
 package com.vuvk.swinger.graphic.gui.text;
 
-import com.badlogic.gdx.graphics.Pixmap;
-import com.badlogic.gdx.graphics.Texture;
-import java.util.logging.Level;
+import java.awt.image.BufferedImage;
 import java.util.logging.Logger;
 
 /**
@@ -25,31 +23,26 @@ import java.util.logging.Logger;
 public class Symbol {
     transient private static final Logger LOG = Logger.getLogger(Symbol.class.getName());
 
-    private Texture texture;
+    private BufferedImage image;
 
-    public Symbol(Pixmap pixmap) {
-        setTexture(new Texture(pixmap));
+    /**
+     *
+     */
+    public Symbol(BufferedImage image) {
+        setImage(image);
     }
 
-    public Symbol(Texture texture) {
-        setTexture(texture);
+    /**
+     * @return the image
+     */
+    public BufferedImage getImage() {
+        return image;
     }
 
-    public Texture getTexture() {
-        return texture;
-    }
-
-    public void setTexture(Texture texture) {
-        this.texture = texture;
-    }
-
-    @Override
-    public void finalize() {
-        texture.dispose();
-        try {
-            super.finalize();
-        } catch (Throwable ex) {
-            LOG.log(Level.SEVERE, null, ex);
-        }
+    /**
+     * @param image the image to set
+     */
+    public void setImage(BufferedImage image) {
+        this.image = image;
     }
 }

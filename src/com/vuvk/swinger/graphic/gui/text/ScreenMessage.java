@@ -13,8 +13,9 @@
 */
 package com.vuvk.swinger.graphic.gui.text;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.g2d.Batch;
+import java.awt.Graphics;
+
+import com.vuvk.swinger.Engine;
 import com.vuvk.swinger.math.Vector2;
 
 /**
@@ -37,11 +38,11 @@ public class ScreenMessage extends Text {
     }
 
     @Override
-    public void draw(Batch batch) {
-        super.draw(batch);
+    public void draw(Graphics g) {
+        super.draw(g);
 
         if (timeForDraw <= MAX_TIME_FOR_DRAW) {
-            timeForDraw += Gdx.graphics.getDeltaTime();
+            timeForDraw += Engine.getDeltaTime();
         } else {
             if (message.length() > 0) {
                 message = "";
