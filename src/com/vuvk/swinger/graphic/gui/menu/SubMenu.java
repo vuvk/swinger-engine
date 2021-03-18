@@ -13,11 +13,12 @@
 */
 package com.vuvk.swinger.graphic.gui.menu;
 
-import com.vuvk.swinger.audio.SoundBank;
-import com.vuvk.swinger.audio.SoundSystem;
-import com.vuvk.swinger.math.Vector2;
 import java.util.ArrayList;
 import java.util.List;
+
+import com.vuvk.retard_sound_system.Sound;
+import com.vuvk.swinger.audio.SoundBank;
+import com.vuvk.swinger.math.Vector2;
 
 /**
  *
@@ -26,6 +27,7 @@ import java.util.List;
 public class SubMenu {
     private final List<ButtonMenu> buttons = new ArrayList<>();
     private int pos = 0;
+    private Sound soundMenuSelect = new Sound(SoundBank.SOUND_BUFFER_MENU_SELECT);
 
     public void activate() {
         setVisible(true);
@@ -44,7 +46,7 @@ public class SubMenu {
             pos = getButtonsCount() - 1;
         }
 
-        SoundSystem.playOnce(SoundBank.FILE_MENU_SELECT);
+        soundMenuSelect.play();
         updateCursorLocation();
     }
 
@@ -55,7 +57,7 @@ public class SubMenu {
             pos = 0;
         }
 
-        SoundSystem.playOnce(SoundBank.FILE_MENU_SELECT);
+        soundMenuSelect.play();
         updateCursorLocation();
     }
 

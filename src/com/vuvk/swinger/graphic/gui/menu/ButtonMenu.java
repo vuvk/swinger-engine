@@ -24,7 +24,6 @@ import com.vuvk.swinger.graphic.gui.text.Text;
 public class ButtonMenu {
     private Text text;
     private final Runnable click, left, right;
-    private Sound soundMenuSelect = new Sound(SoundBank.SOUND_BUFFER_MENU_SELECT);
     private Sound soundMenuToggle = new Sound(SoundBank.SOUND_BUFFER_MENU_TOGGLE);
 
     public ButtonMenu(Text text, Runnable click) {
@@ -42,7 +41,7 @@ public class ButtonMenu {
     }
 
     public void click() {
-        soundMenuSelect.play();
+        soundMenuToggle.play();
         click.run();
     }
 
