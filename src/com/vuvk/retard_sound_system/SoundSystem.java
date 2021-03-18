@@ -1,5 +1,5 @@
 /**
-    Copyright 2019 Anton "Vuvk" Shcherbatykh
+    Copyright 2019-2021 Anton "Vuvk" Shcherbatykh
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
@@ -21,11 +21,12 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
@@ -57,7 +58,7 @@ public final class SoundSystem {
     private static SourceDataLine MONO_LINE   = null;
     private static SourceDataLine STEREO_LINE = null;
 
-    final static List<Music> MUSICS = new ArrayList<>();
+    final static List<Music> MUSICS = new CopyOnWriteArrayList<>();
 
     private static final SoundList MONO_SOUNDS   = new SoundList();
     private static final SoundList STEREO_SOUNDS = new SoundList();
@@ -164,6 +165,37 @@ public final class SoundSystem {
         }
 
         return null;
+    }
+
+    /**
+     * add sound to queue
+     * @param sound
+     */
+    static void addSound(Sound sound) {
+        switch (sound.getChannels()) {
+            case 1 :
+                MONO_SOUNDS.add(sound);
+                break;
+            case 2 :
+                STEREO_SOUNDS.add(sound);
+                break;
+        }
+    }
+
+    /**
+     * remove sound from queue
+     * */
+    static void removeSound(Sound sound) {
+        if (sound != null/* && isPlaying(sound)*/) {
+            switch (sound.getChannels()) {
+                case 1 :
+                    MONO_SOUNDS.remove(sound);
+                    break;
+                case 2 :
+                    STEREO_SOUNDS.remove(sound);
+                    break;
+            }
+        }
     }
 
     /**
@@ -415,39 +447,24 @@ public final class SoundSystem {
         return (MONO_SOUNDS.contains(sound) || STEREO_SOUNDS.contains(sound));
     }
 
+
     /**
-     *
+     * play sound with or without checking if it play already (if it play, sound not start play)
      * @param sound
+     * @param checkPlayng
      */
-    public static void playSound(Sound sound) {
-        if (sound != null) {
-            /*if (isPlaying(sound)) {
-                return;
-            }*/
-
-            switch (sound.getChannels()) {
-                case 1 :
-                    MONO_SOUNDS.add(sound);
-                    break;
-                case 2 :
-                    STEREO_SOUNDS.add(sound);
-                    break;
+    public static void playSound(Sound sound, boolean checkPlaying) {
+        if (isStarted() && sound != null) {
+            if (checkPlaying) {
+                if (sound.isPlaying()) {
+                    return;
+                }
             }
+
+            sound.play();
         }
     }
 
-    public static void stopSound(Sound sound) {
-        if (sound != null/* && isPlaying(sound)*/) {
-            switch (sound.getChannels()) {
-                case 1 :
-                    MONO_SOUNDS.remove(sound);
-                    break;
-                case 2 :
-                    STEREO_SOUNDS.remove(sound);
-                    break;
-            }
-        }
-    }
 
     public static void stopAll() {
         for (Music music : MUSICS) {
@@ -464,17 +481,17 @@ public final class SoundSystem {
      * Play random sound
      * @param sounds Набор звуков
      */
-    public static void playRandom(Sound ... sounds) {
-        playRandom(false, sounds);
+    public static void playRandom(Sound[] sounds) {
+        playRandom(sounds, false);
     }
 
     /**
      * Проиграть случайный звук из массива
      * Play random sound
-     * @param checkPlaying Проверка играется ли какой-то звук из массива, если да, то не играть
      * @param sounds Набор звуков
+     * @param checkPlaying Проверка играется ли какой-то звук из массива, если да, то не играть
      */
-    public static void playRandom(boolean checkPlaying, Sound ... sounds) {
+    public static void playRandom(Sound[] sounds, boolean checkPlaying) {
         if (sounds == null || sounds.length == 0) {
             return;
         }

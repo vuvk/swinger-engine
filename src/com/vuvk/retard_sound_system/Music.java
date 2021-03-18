@@ -56,7 +56,7 @@ public final class Music extends SoundBasis {
     }
     
     @Override
-    public Music play(final boolean looping) {        
+    public Music play(boolean looping) {        
         super.play(looping);
         
         new Thread(new Runnable() {

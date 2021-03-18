@@ -80,11 +80,14 @@ abstract class SoundBasis implements AutoCloseable {
         return this;
     }
 
+    /**
+     * play without looping
+     * */
     public SoundBasis play() {
         return play(false);
     }
 
-    public SoundBasis play(final boolean looping) {
+    public SoundBasis play(boolean looping) {
         if (inputAudioStreamPosition > 0) {
             stop();
             rewind();

@@ -66,17 +66,21 @@ public final class Sound extends SoundBasis {
         super.prepareStream(buffer.getAudioInputStream());
     }    
 
+    /**
+     * @param looping
+     * @return
+     */
     @Override
     public Sound play(boolean looping) {
         super.play(looping);            
-        SoundSystem.playSound(this);           
+        SoundSystem.addSound(this);           
         return this;
     }
-	
+    
     @Override
     public Sound stop() {
         super.stop();
-        SoundSystem.stopSound(this);
+        SoundSystem.removeSound(this);
         return this;
     }
 }
