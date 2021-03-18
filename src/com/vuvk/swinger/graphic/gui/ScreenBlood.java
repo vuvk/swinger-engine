@@ -13,29 +13,28 @@
 */
 package com.vuvk.swinger.graphic.gui;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Pixmap;
+import java.awt.Color;
+import java.awt.image.BufferedImage;
+import java.util.Random;
+
+import com.vuvk.swinger.Engine;
 import com.vuvk.swinger.graphic.Renderer;
 import com.vuvk.swinger.math.Vector2;
-import java.util.Random;
 
 /**
  *
  * @author Anton "Vuvk" Shcherbatykh
  */
 public class ScreenBlood {
-    public static ScreenBlood[] DROPS;
+    public static ScreenBlood[] drops;
 
     private final Vector2 pos;
     private double speed;
 
-    public static final Pixmap DROP = new Pixmap(4, 4, Pixmap.Format.RGBA8888);
+    public static final BufferedImage DROP = new BufferedImage(4, 4, BufferedImage.TYPE_INT_ARGB);
     static {
-        for (int x = 0; x < DROP.getWidth(); ++x) {
-            for (int y = 0; y < DROP.getHeight(); ++y) {
-                DROP.drawPixel(x, y, 0xff0000ff);
-            }
-        }
+        DROP.getGraphics().setColor(Color.RED);
+        DROP.getGraphics().fillRect(0, 0, 4, 4);
     }
 
     public ScreenBlood(Vector2 pos) {
@@ -57,7 +56,7 @@ public class ScreenBlood {
 
     public void update() {
         if (pos.y < Renderer.HEIGHT) {
-            pos.y += speed * Gdx.graphics.getDeltaTime();
+            pos.y += speed * Engine.getDeltaTime();
         }
     }
 }
