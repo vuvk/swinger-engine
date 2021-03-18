@@ -13,12 +13,13 @@
 */
 package com.vuvk.swinger.objects.projectiles;
 
-import com.badlogic.gdx.Gdx;
+import com.vuvk.swinger.Engine;
 import com.vuvk.swinger.math.Vector3;
 import com.vuvk.swinger.objects.LightSource;
 import com.vuvk.swinger.objects.effect.Explode;
 import com.vuvk.swinger.objects.effect.Smoke;
 import com.vuvk.swinger.res.TextureBank;
+
 import java.io.Serializable;
 
 /**
@@ -55,7 +56,7 @@ public class Rocket extends Projectile  implements Serializable{
         super.update();
 
         if (timeToSmoke < 0.25) {
-            timeToSmoke += Gdx.graphics.getDeltaTime();
+            timeToSmoke += Engine.getDeltaTime();
         } else {
             timeToSmoke -= 0.25;
             new Smoke(getPos());

@@ -13,7 +13,7 @@
 */
 package com.vuvk.swinger.objects.projectiles;
 
-import com.badlogic.gdx.Gdx;
+import com.vuvk.swinger.Engine;
 import com.vuvk.swinger.math.BoundingBox;
 import com.vuvk.swinger.math.Segment;
 import com.vuvk.swinger.math.Vector2;
@@ -22,6 +22,7 @@ import com.vuvk.swinger.objects.Sprite;
 import com.vuvk.swinger.objects.mortals.Mortal;
 import com.vuvk.swinger.res.Map;
 import com.vuvk.swinger.res.Texture;
+
 import java.io.Serializable;
 import java.util.List;
 
@@ -86,7 +87,7 @@ public abstract class Projectile extends Sprite implements Serializable {
     public void update() {
         super.update();
 
-        Vector2 moveVector = viewVector.mul(moveSpeed * Gdx.graphics.getDeltaTime());
+        Vector2 moveVector = viewVector.mul(moveSpeed * Engine.getDeltaTime());
         Vector3 newPos = getPos().add(moveVector);
         int newPosX = (int)newPos.x;
         int newPosY = (int)newPos.y;
