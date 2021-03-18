@@ -1,5 +1,5 @@
 /**
-    Copyright (C) 2019-2020 Anton "Vuvk" Shcherbatykh <vuvk69@gmail.com>
+    Copyright (C) 2019-2021 Anton "Vuvk" Shcherbatykh <vuvk69@gmail.com>
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
@@ -13,9 +13,8 @@
 */
 package com.vuvk.swinger.objects.effect;
 
-//import com.vuvk.retard_sound_system.Sound;
+import com.vuvk.retard_sound_system.Sound;
 import com.vuvk.swinger.audio.SoundBank;
-import com.vuvk.swinger.audio.SoundSystem;
 import com.vuvk.swinger.math.Vector3;
 import com.vuvk.swinger.res.TextureBank;
 import java.io.Serializable;
@@ -30,6 +29,6 @@ public class Explode extends Effect implements Serializable {
     public Explode(Vector3 pos) {
         super(TextureBank.EXPLODE, ANIM_SPEED, true, pos);
 //        setBrightness(Fog.END);
-        SoundSystem.playOnce(SoundBank.FILE_EXPLODE);
+        new Sound(SoundBank.SOUND_BUFFER_EXPLODE).play();
     }
 }

@@ -13,14 +13,15 @@
 */
 package com.vuvk.swinger.objects.items;
 
+import com.vuvk.retard_sound_system.Sound;
 import com.vuvk.swinger.audio.SoundBank;
-import com.vuvk.swinger.audio.SoundSystem;
 import com.vuvk.swinger.graphic.weapon_in_hand.AmmoPack;
 import com.vuvk.swinger.math.Vector3;
 import com.vuvk.swinger.objects.Sprite;
 import com.vuvk.swinger.objects.mortals.Player;
 import com.vuvk.swinger.objects.weapon.AmmoType;
 import com.vuvk.swinger.res.Material;
+
 import java.io.Serializable;
 
 /**
@@ -53,7 +54,7 @@ public class Clip extends Sprite implements Serializable {
                 }
                 AmmoPack.PACK.put(ammoType, curAmmo);
 
-                SoundSystem.playOnce(SoundBank.FILE_GET_AMMO);
+                new Sound(SoundBank.SOUND_BUFFER_EXPLODE).play();
 
                 destroy();
             }

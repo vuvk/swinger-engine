@@ -13,9 +13,8 @@
 */
 package com.vuvk.swinger.objects.items;
 
-//import com.vuvk.retard_sound_system.Sound;
+import com.vuvk.retard_sound_system.Sound;
 import com.vuvk.swinger.audio.SoundBank;
-import com.vuvk.swinger.audio.SoundSystem;
 import com.vuvk.swinger.math.Vector3;
 import com.vuvk.swinger.objects.Sprite;
 import com.vuvk.swinger.objects.mortals.Player;
@@ -49,7 +48,7 @@ public class Key extends Sprite implements Serializable {
         Player player = Player.getInstance();
 
         if (player.getPos().distance(getPos()) < 0.5) {
-            SoundSystem.playOnce(SoundBank.FILE_GET_KEY);
+            new Sound(SoundBank.SOUND_BUFFER_GET_KEY).play();
             player.addKey(this);
 
             destroy();

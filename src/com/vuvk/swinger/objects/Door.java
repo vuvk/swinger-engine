@@ -1,5 +1,5 @@
 /**
-    Copyright (C) 2019-2020 Anton "Vuvk" Shcherbatykh <vuvk69@gmail.com>
+    Copyright (C) 2019-2021 Anton "Vuvk" Shcherbatykh <vuvk69@gmail.com>
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
@@ -13,6 +13,7 @@
 */
 package com.vuvk.swinger.objects;
 
+import com.vuvk.retard_sound_system.Sound;
 import com.vuvk.swinger.Engine;
 import com.vuvk.swinger.audio.SoundBank;
 import com.vuvk.swinger.graphic.TexturedSegment;
@@ -20,6 +21,7 @@ import com.vuvk.swinger.math.Vector2;
 import com.vuvk.swinger.objects.mortals.Mortal;
 import com.vuvk.swinger.res.Map;
 import com.vuvk.swinger.res.Material;
+
 import java.io.Serializable;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -29,8 +31,8 @@ import java.util.concurrent.CopyOnWriteArrayList;
  * @author Anton "Vuvk" Shcherbatykh
  */
 public class Door extends TexturedSegment implements Serializable {
-//    private final Sound openSound  = new Sound(SoundBank.SOUND_BUFFER_DOOR_OPEN );
-//    private final Sound closeSound = new Sound(SoundBank.SOUND_BUFFER_DOOR_CLOSE);
+    private final Sound openSound  = new Sound(SoundBank.SOUND_BUFFER_DOOR_OPEN );
+    private final Sound closeSound = new Sound(SoundBank.SOUND_BUFFER_DOOR_CLOSE);
 
     //private int side;
     /** открытая позиция */
@@ -102,7 +104,7 @@ public class Door extends TexturedSegment implements Serializable {
 
     public void open() {
         open = true;
-        SoundSystem.playOnce(SoundBank.FILE_DOOR_OPEN);
+        openSound.play();
     }
 
     @Override
@@ -163,7 +165,7 @@ public class Door extends TexturedSegment implements Serializable {
                             open   = false;
                             delay  = 0.0;
 
-                            SoundSystem.playOnce(SoundBank.FILE_DOOR_CLOSE);
+                            closeSound.play();
                         }
                     }
                 }

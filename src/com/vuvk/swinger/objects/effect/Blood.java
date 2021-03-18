@@ -1,5 +1,5 @@
 /**
-    Copyright (C) 2019-2020 Anton "Vuvk" Shcherbatykh <vuvk69@gmail.com>
+    Copyright (C) 2019-2021 Anton "Vuvk" Shcherbatykh <vuvk69@gmail.com>
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
@@ -13,10 +13,11 @@
 */
 package com.vuvk.swinger.objects.effect;
 
-import com.badlogic.gdx.Gdx;
+import com.vuvk.swinger.Engine;
 import com.vuvk.swinger.math.Vector2;
 import com.vuvk.swinger.math.Vector3;
 import com.vuvk.swinger.res.TextureBank;
+
 import java.io.Serializable;
 
 /**
@@ -37,7 +38,7 @@ public class Blood extends Effect implements Serializable {
     @Override
     public void update() {
         super.update();
-        double deltaTime = Gdx.graphics.getDeltaTime();
+        double deltaTime = Engine.getDeltaTime();
         
         Vector3 pos = getPos();
         setPos(pos.add(direction.mul(deltaTime * 0.5)));

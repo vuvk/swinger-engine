@@ -13,14 +13,15 @@
 */
 package com.vuvk.swinger.objects.items;
 
-import com.badlogic.gdx.files.FileHandle;
+import java.io.Serializable;
+
+import com.vuvk.retard_sound_system.Sound;
+import com.vuvk.retard_sound_system.SoundSystem;
 import com.vuvk.swinger.audio.SoundBank;
-import com.vuvk.swinger.audio.SoundSystem;
 import com.vuvk.swinger.math.Vector3;
 import com.vuvk.swinger.objects.Sprite;
 import com.vuvk.swinger.objects.mortals.Player;
 import com.vuvk.swinger.res.Material;
-import java.io.Serializable;
 
 /**
  * Валяющиеся аптечки
@@ -49,7 +50,10 @@ public class MedKit extends Sprite implements Serializable {
                 }
 
                 player.setHealth(hp);
-                SoundSystem.playOnceRandom(new FileHandle[] { SoundBank.FILE_GET_MEDKIT1, SoundBank.FILE_GET_MEDKIT2 });
+                SoundSystem.playRandom(new Sound[] { 
+                    new Sound(SoundBank.SOUND_BUFFER_GET_MEDKIT1),
+                    new Sound(SoundBank.SOUND_BUFFER_GET_MEDKIT2) 
+                });
 
                 destroy();
             }
