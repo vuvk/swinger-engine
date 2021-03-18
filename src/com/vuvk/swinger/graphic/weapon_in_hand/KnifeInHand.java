@@ -13,9 +13,10 @@
 */
 package com.vuvk.swinger.graphic.weapon_in_hand;
 
-import com.vuvk.swinger.objects.weapon.AmmoType;
+import com.vuvk.retard_sound_system.Sound;
 import com.vuvk.swinger.audio.SoundBank;
 import com.vuvk.swinger.graphic.Renderer;
+import com.vuvk.swinger.objects.weapon.AmmoType;
 import com.vuvk.swinger.res.Image;
 
 /**
@@ -49,7 +50,7 @@ public class KnifeInHand extends RayWeaponInHand {
         setFrameForShoot(FRAME_FOR_SHOOT);
         setAccuracy(ACCURACY);
         setBulletPerShoot(BULLETS_PER_SHOOT);
-        setSoundShoot(SoundBank.FILE_KNIFE);
+        setSoundShoot(new Sound(SoundBank.SOUND_BUFFER_KNIFE));
         setAmmoType(AMMO_TYPE);
     }
     

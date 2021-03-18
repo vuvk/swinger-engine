@@ -13,9 +13,10 @@
 */
 package com.vuvk.swinger.graphic.weapon_in_hand;
 
-import com.vuvk.swinger.objects.weapon.AmmoType;
+import com.vuvk.retard_sound_system.Sound;
 import com.vuvk.swinger.audio.SoundBank;
 import com.vuvk.swinger.graphic.Renderer;
+import com.vuvk.swinger.objects.weapon.AmmoType;
 import com.vuvk.swinger.res.Image;
 
 /**
@@ -50,7 +51,7 @@ public class PistolInHand extends RayWeaponInHand {
         setShootDelay(SHOOT_DELAY);
         setAccuracy(ACCURACY);
         setBulletPerShoot(BULLETS_PER_SHOOT);
-        setSoundShoot(SoundBank.FILE_PISTOL);
+        setSoundShoot(new Sound(SoundBank.SOUND_BUFFER_PISTOL));
         setAmmoType(AMMO_TYPE);
     }
     

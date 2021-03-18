@@ -13,16 +13,16 @@
 */
 package com.vuvk.swinger.graphic.weapon_in_hand;
 
-//import com.vuvk.retard_sound_system.Sound;
-//import com.vuvk.retard_sound_system.SoundBuffer;
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.files.FileHandle;
-import com.vuvk.swinger.audio.SoundSystem;
+import com.vuvk.retard_sound_system.Sound;
+import com.vuvk.retard_sound_system.SoundBuffer;
+import com.vuvk.retard_sound_system.Sound;
+import com.vuvk.swinger.Engine;
 import com.vuvk.swinger.graphic.Renderer;
 import com.vuvk.swinger.math.Vector2;
 import com.vuvk.swinger.objects.mortals.Player;
 import com.vuvk.swinger.objects.weapon.AmmoType;
 import com.vuvk.swinger.res.Image;
+
 import java.io.Serializable;
 import java.util.logging.Logger;
 
@@ -58,7 +58,7 @@ public abstract class WeaponInHand implements Serializable {
     private double shootDelay = 0;
     private double _shootDelay = 0;
 
-    transient private FileHandle soundShoot;
+    transient private Sound soundShoot;
 
     private AmmoType ammoType;
 
@@ -142,8 +142,8 @@ public abstract class WeaponInHand implements Serializable {
         this.canShoot = !animate;
     }
 
-    protected void setSoundShoot(FileHandle path) {
-        soundShoot = path;
+    protected void setSoundShoot(Sound sound) {
+        soundShoot = sound;
     }
 
     protected void setAmmoType(AmmoType ammoType) {
@@ -151,7 +151,7 @@ public abstract class WeaponInHand implements Serializable {
     }
 
     protected void playSoundShoot() {
-        SoundSystem.playOnce(soundShoot);
+        soundShoot.play();
     }
 
     public void pullUp() {
@@ -165,7 +165,7 @@ public abstract class WeaponInHand implements Serializable {
 
     public void update() {
         Player player = Player.getInstance();
-        double deltaTime = Gdx.graphics.getDeltaTime();
+        double deltaTime = Engine.getDeltaTime();
 
         // если игрок движется, то двигать ствол по восьмерке
         if (player.isMove()) {
