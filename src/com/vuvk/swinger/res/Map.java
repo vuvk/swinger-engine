@@ -29,8 +29,8 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.vuvk.retard_sound_system.SoundSystem;
 import com.vuvk.swinger.audio.SoundBank;
-import com.vuvk.swinger.audio.SoundSystem;
 import com.vuvk.swinger.d3.Mesh;
 import com.vuvk.swinger.d3.Model;
 import com.vuvk.swinger.graphic.Fog;
@@ -1082,7 +1082,7 @@ public final class Map {
                 // fire
                 new LightSource(Color.WHITE, 1.0, new Vector3(10.5,  4.5, 0.0));
 
-                SoundSystem.playMusic(SoundBank.FILE_MUSIC1);
+                SoundBank.MUSIC1.play(true);
 
                 active = true;
                 loaded = true;

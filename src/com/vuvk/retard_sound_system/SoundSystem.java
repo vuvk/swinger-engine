@@ -469,12 +469,13 @@ public final class SoundSystem {
         }
     }
 
-    public static void stopAll() {
-        for (Music music : MUSICS) {
-            music.stop();
-        }
+    public static void stopMusic() {
+        MUSICS.forEach(Music::stop);
         MUSICS.clear();
+    }
 
+    public static void stopAll() {
+        stopMusic();
         MONO_SOUNDS.clear();
         STEREO_SOUNDS.clear();
     }

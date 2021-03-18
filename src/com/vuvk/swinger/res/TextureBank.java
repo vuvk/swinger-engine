@@ -13,8 +13,13 @@
 */
 package com.vuvk.swinger.res;
 
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
+
+import javax.imageio.ImageIO;
 
 /**
  *
@@ -45,7 +50,7 @@ public final class TextureBank {
     public final static Texture[] PUFF = new Texture[4];
     public final static Texture[] SMOKE = new Texture[16];
 
-    public static com.badlogic.gdx.graphics.Texture MAIN_MENU;
+    public static BufferedImage MAIN_MENU;
 
     public static void load() {
         SKY = new Texture(PICS_FOLDER + "sky.png");
@@ -230,7 +235,11 @@ public final class TextureBank {
         DOORS[2] = new Texture(PICS_FOLDER + "door_iron_upper.png");
         */
 
-        MAIN_MENU = new com.badlogic.gdx.graphics.Texture(PICS_FOLDER + "gui/main_menu.png");
+        try {
+            MAIN_MENU = ImageIO.read(new File(PICS_FOLDER + "gui/main_menu.png"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public static Texture[] getWalls() {

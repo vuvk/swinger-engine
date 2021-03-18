@@ -13,16 +13,17 @@
 */
 package com.vuvk.swinger.objects.weapon;
 
+import java.io.Serializable;
+
+import com.vuvk.retard_sound_system.Sound;
 //import com.vuvk.retard_sound_system.Sound;
 import com.vuvk.swinger.audio.SoundBank;
-import com.vuvk.swinger.audio.SoundSystem;
 import com.vuvk.swinger.graphic.weapon_in_hand.AmmoPack;
 import com.vuvk.swinger.graphic.weapon_in_hand.WeaponInHand;
 import com.vuvk.swinger.math.Vector3;
 import com.vuvk.swinger.objects.Sprite;
 import com.vuvk.swinger.objects.mortals.Player;
 import com.vuvk.swinger.res.Material;
-import java.io.Serializable;
 
 /**
  *
@@ -80,7 +81,7 @@ public abstract class Weapon extends Sprite implements Serializable {
         Player player = Player.getInstance();
 
         if (player.getPos().distance(getPos()) < 0.5) {
-            SoundSystem.playOnce(SoundBank.FILE_GET_WEAPON);
+            new Sound(SoundBank.SOUND_BUFFER_GET_WEAPON).play();
             player.addWeaponInHand(this);
 
             // добавить игроку патронов того же типа, что и оружие

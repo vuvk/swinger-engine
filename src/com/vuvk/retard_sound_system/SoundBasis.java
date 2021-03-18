@@ -136,6 +136,15 @@ abstract class SoundBasis implements AutoCloseable {
         audioFormat = null;
     }
 
+    @Override
+    protected void finalize() throws Throwable {
+        try {
+            close();
+        } finally {
+            super.finalize();
+        }
+    }
+
     protected SoundBasis setPlaying(boolean playing) {
         this.playing = playing;
         return this;
