@@ -13,14 +13,15 @@
 */
 package com.vuvk.swinger.objects.mortals.enemy;
 
-//import com.vuvk.retard_sound_system.Sound;
-//import com.vuvk.retard_sound_system.SoundSystem;
-import com.vuvk.swinger.audio.SoundSystem;
+import com.vuvk.retard_sound_system.Sound;
+import com.vuvk.retard_sound_system.SoundSystem;
+import com.vuvk.swinger.Engine;
 import com.vuvk.swinger.math.Vector2;
 import com.vuvk.swinger.math.Vector3;
 import com.vuvk.swinger.objects.Sprite;
 import com.vuvk.swinger.objects.mortals.Mortal;
 import com.vuvk.swinger.res.Material;
+
 import java.io.Serializable;
 /**
  *
@@ -32,8 +33,8 @@ public class Breakable extends Mortal implements Serializable {
     protected Material die;
     protected Material dead;
 
-    protected String[] painSounds;
-    protected String[] dieSounds;
+    protected Sound[] painSounds;
+    protected Sound[] dieSounds;
 
     protected Vector2 viewVector = new Vector2(1, 0);
     protected Sprite sprite;
@@ -109,55 +110,50 @@ public class Breakable extends Mortal implements Serializable {
                 break;
 
             case PAIN:
-                SoundSystem.playOnceRandom(getPainSounds());
+                SoundSystem.playRandom(getPainSounds());
                 sprite.setFrames(pain.getFrames()[(int)(Math.random() * 2)][0]);
                 sprite.playOnce();
                 break;
 
             case DIE:
-                SoundSystem.playOnceRandom(getDieSounds());
+                SoundSystem.playRandom(getDieSounds());
                 sprite.duplicate(die);
                 sprite.playOnce();
+                break;
+
+            default:
                 break;
         }
     }
 
-    public void setPainSounds(String[] painSounds) {
+    public void setPainSounds(Sound[] painSounds) {
         this.painSounds = painSounds;
     }
 
-    public void setPainSounds(FileHandle[] painSounds) {
-        this.painSounds = new String[painSounds.length];
+    public void setPainSounds(String[] painSounds) {
+        this.painSounds = new Sound[painSounds.length];
         for (int i = 0; i < painSounds.length; ++i) {
-            this.painSounds[i] = painSounds[i].file().getPath();
+            this.painSounds[i] = new Sound(painSounds[i], true);
         }
     }
 
-    public void setDieSounds(String[] dieSounds) {
+    public void setDieSounds(Sound[] dieSounds) {
         this.dieSounds = dieSounds;
     }
 
-    public void setDieSounds(FileHandle[] dieSounds) {
-        this.dieSounds = new String[dieSounds.length];
+    public void setDieSounds(String[] dieSounds) {
+        this.dieSounds = new Sound[dieSounds.length];
         for (int i = 0; i < dieSounds.length; ++i) {
-            this.dieSounds[i] = dieSounds[i].file().getPath();
+            this.dieSounds[i] = new Sound(dieSounds[i], true);
         }
     }
 
-    protected FileHandle[] getPainSounds() {
-        FileHandle[] sounds = new FileHandle[painSounds.length];
-        for (int i = 0; i < painSounds.length; ++i) {
-            sounds[i] = Gdx.files.internal(painSounds[i]);
-        }
-        return sounds;
+    protected Sound[] getPainSounds() {
+        return painSounds;
     }
 
-    protected FileHandle[] getDieSounds() {
-        FileHandle[] sounds = new FileHandle[dieSounds.length];
-        for (int i = 0; i < dieSounds.length; ++i) {
-            sounds[i] = Gdx.files.internal(dieSounds[i]);
-        }
-        return sounds;
+    protected Sound[] getDieSounds() {
+        return dieSounds;
     }
 
     public EnemyState getState() {
@@ -240,7 +236,7 @@ public class Breakable extends Mortal implements Serializable {
         }
 
         // обновляем состояние
-        stateDelay += Gdx.graphics.getDeltaTime();
+        stateDelay += Engine.getDeltaTime();
 
         if (state == EnemyState.PAIN) {
             if (stateDelay >= 0.25) {
