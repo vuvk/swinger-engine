@@ -24,6 +24,7 @@ import java.io.InputStream;
 import java.net.URL;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioInputStream;
 
@@ -31,7 +32,7 @@ import javax.sound.sampled.AudioInputStream;
  *
  * @author vuvk
  */
-abstract class SoundBasis implements AutoCloseable {
+abstract class SoundBasis {
     private static final Logger LOG = Logger.getLogger(SoundBasis.class.getName());
 
     protected URL  inputURL = null;
@@ -125,14 +126,13 @@ abstract class SoundBasis implements AutoCloseable {
         return this;
     }
 
-    @Override
     public void close() {
         stop();
         closeStream();
-
+        
         inputFile = null;
         inputURL  = null;
-        channels = 0;
+        channels  = 0;
         audioFormat = null;
     }
 

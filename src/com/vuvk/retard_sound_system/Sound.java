@@ -61,10 +61,6 @@ public final class Sound extends SoundBasis {
             prepareStream(url);
         }  
     }
-    
-    private void prepareStream(SoundBuffer buffer) {
-        super.prepareStream(buffer.getAudioInputStream());
-    }    
 
     /**
      * @param looping
@@ -83,4 +79,8 @@ public final class Sound extends SoundBasis {
         SoundSystem.removeSound(this);
         return this;
     }
+   
+    private void prepareStream(SoundBuffer buffer) {
+        super.prepareStream(buffer.getAudioInputStream());
+    }    
 }
