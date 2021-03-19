@@ -13,8 +13,7 @@
 */
 package com.vuvk.swinger.objects.mortals.enemy;
 
-//import com.vuvk.retard_sound_system.Sound;
-import com.badlogic.gdx.files.FileHandle;
+import com.vuvk.retard_sound_system.Sound;
 import com.vuvk.swinger.audio.SoundBank;
 import com.vuvk.swinger.math.Vector3;
 import com.vuvk.swinger.res.MaterialBank;
@@ -37,20 +36,20 @@ public class Guard extends RayEnemy implements Serializable {
 
     private final static double HEALTH = 100.0;
     private final static double RADIUS = 0.3;
-    transient private final static FileHandle[] ATK_SOUNDS = { SoundBank.FILE_PISTOL };
-    transient private final static FileHandle[] ALARM_SOUNDS = {
-        SoundBank.FILE_ALARM1,
-        SoundBank.FILE_ALARM2,
-        SoundBank.FILE_ALARM3,
-        SoundBank.FILE_ALARM4
+    transient private final static Sound[] ATK_SOUNDS = { new Sound(SoundBank.SOUND_BUFFER_PISTOL) };
+    transient private final static Sound[] ALARM_SOUNDS = {
+        new Sound(SoundBank.SOUND_BUFFER_ALARM1),
+        new Sound(SoundBank.SOUND_BUFFER_ALARM2),
+        new Sound(SoundBank.SOUND_BUFFER_ALARM3),
+        new Sound(SoundBank.SOUND_BUFFER_ALARM4)
     };
-    transient private final static FileHandle[] PAIN_SOUNDS = {
-        SoundBank.FILE_PAIN1,
-        SoundBank.FILE_PAIN2
+    transient private final static Sound[] PAIN_SOUNDS = {
+        new Sound(SoundBank.SOUND_BUFFER_PAIN1),
+        new Sound(SoundBank.SOUND_BUFFER_PAIN2)
     };
-    transient private final static FileHandle[] DIE_SOUNDS  = {
-        SoundBank.FILE_DIE1,
-        SoundBank.FILE_DIE2
+    transient private final static Sound[] DIE_SOUNDS  = {
+        new Sound(SoundBank.SOUND_BUFFER_DIE1),
+        new Sound(SoundBank.SOUND_BUFFER_DIE2)
     };
 
     public Guard(final Vector3 pos) {
