@@ -13,13 +13,11 @@
 */
 package com.vuvk.swinger.objects.mortals;
 
-//import com.vuvk.retard_sound_system.Sound;
-//import com.vuvk.retard_sound_system.SoundSystem;
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.audio.Music;
+import com.vuvk.retard_sound_system.Sound;
+import com.vuvk.retard_sound_system.SoundSystem;
 import com.vuvk.swinger.Config;
+import com.vuvk.swinger.Engine;
 import com.vuvk.swinger.audio.SoundBank;
-import com.vuvk.swinger.audio.SoundSystem;
 import com.vuvk.swinger.graphic.gui.ScreenBlood;
 import com.vuvk.swinger.graphic.weapon_in_hand.AmmoPack;
 import com.vuvk.swinger.graphic.weapon_in_hand.KnifeInHand;
@@ -34,6 +32,7 @@ import com.vuvk.swinger.objects.items.Key;
 import com.vuvk.swinger.objects.weapon.AmmoType;
 import com.vuvk.swinger.objects.weapon.Weapon;
 import com.vuvk.swinger.res.Map;
+
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
@@ -70,16 +69,12 @@ public final class Player extends Mortal implements Serializable {
     public  final static double MOVE_SPEED = 5.0;
     public  final static double KEY_ROT_SPEED  = 3.0;
     public  final static double MOUSE_ROT_SPEED  = 15.0;
-    transient private final static Music[] SOUNDS_NEAD_KEY = {
-        SoundSystem.loadSound(SoundBank.FILE_NEED_KEY1),
-        SoundSystem.loadSound(SoundBank.FILE_NEED_KEY2)
+    transient private final static Sound[] soundsNeadKey = {
+        new Sound(SoundBank.SOUND_BUFFER_NEED_KEY1),
+        new Sound(SoundBank.SOUND_BUFFER_NEED_KEY2)
     };
 
-    transient private Music[] soundsNeadKey;
-
-    private void init() {
-        soundsNeadKey = SOUNDS_NEAD_KEY;
-    }
+    transient private final Sound soundDie = new Sound(SoundBank.SOUND_BUFFER_PLAYER_DIE);
 
     public boolean isRot() {
         return (rotL || rotR);
@@ -210,10 +205,10 @@ public final class Player extends Mortal implements Serializable {
 
         // только что был жив и умер
         if (prevHealth > 0.0 && health <= 0.0) {
-            SoundSystem.playOnce(SoundBank.FILE_PLAYER_DIE);
+            soundDie.play();
 
-            for (int i = 0; i < ScreenBlood.DROPS.length; ++i) {
-                ScreenBlood.DROPS[i] = new ScreenBlood(new Vector2(i, 0));
+            for (int i = 0; i < ScreenBlood.drops.length; ++i) {
+                ScreenBlood.drops[i] = new ScreenBlood(new Vector2(i, 0));
             }
 
             //Map.active = false;
@@ -250,7 +245,7 @@ public final class Player extends Mortal implements Serializable {
                             door.open();
                         } else {
                             // сказать фразу, если ещё не говорит
-                            SoundSystem.playRandom(true, soundsNeadKey);
+                            SoundSystem.playRandom(soundsNeadKey, true);
                         }
                     }
                 }
@@ -286,7 +281,7 @@ public final class Player extends Mortal implements Serializable {
             return;
         }
 
-        final double deltaTime = Gdx.graphics.getDeltaTime();
+        final double deltaTime = Engine.getDeltaTime();
 
         // обновляем оружие в руках
         if (getWeaponInHand() != null) {
@@ -446,7 +441,6 @@ public final class Player extends Mortal implements Serializable {
     public static void setInstance(Player instance) {
         deleteInstance();
         Player.instance = instance;
-        Player.instance.init();
     }
 
     public static void deleteInstance() {
@@ -463,6 +457,5 @@ public final class Player extends Mortal implements Serializable {
         createWeaponsInHand();
         camera.setPos(pos);
         camera.rotate(Math.toRadians(-90));
-        init();
     }
 }
