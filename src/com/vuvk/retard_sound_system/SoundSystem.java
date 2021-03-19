@@ -372,6 +372,22 @@ public final class SoundSystem {
         }
     }
 
+	public static void setMusicVolume(float musicVolume) {
+        SoundSystem.musicVolume = musicVolume;
+	}
+
+	public static void setSoundsVolume(float soundsVolume) {
+        SoundSystem.soundsVolume = soundsVolume;
+	}
+
+	public static float getMusicVolume() {
+        return musicVolume;
+	}
+
+	public static float getSoundsVolume() {
+        return soundsVolume;
+	}
+
     /**
      * Start Sound System
      */
@@ -513,20 +529,4 @@ public final class SoundSystem {
             sounds[variant].play();
         }
     }
-
-	public static void setMusicVolume(float musicVolume) {
-        SoundSystem.musicVolume = musicVolume;
-	}
-
-	public static void setSoundsVolume(float soundsVolume) {
-        SoundSystem.soundsVolume = soundsVolume;
-	}
-
-	public static float getMusicVolume() {
-        return musicVolume;
-	}
-
-	public static float getSoundsVolume() {
-        return soundsVolume;
-	}
 }

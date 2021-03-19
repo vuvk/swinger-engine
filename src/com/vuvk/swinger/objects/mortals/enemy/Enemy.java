@@ -13,11 +13,9 @@
 */
 package com.vuvk.swinger.objects.mortals.enemy;
 
-//import com.vuvk.retard_sound_system.Sound;
-//import com.vuvk.retard_sound_system.SoundSystem;
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.files.FileHandle;
-import com.vuvk.swinger.audio.SoundSystem;
+import com.vuvk.retard_sound_system.Sound;
+import com.vuvk.retard_sound_system.SoundSystem;
+import com.vuvk.swinger.Engine;
 import com.vuvk.swinger.math.Ray;
 import com.vuvk.swinger.math.Vector2;
 import com.vuvk.swinger.math.Vector3;
@@ -27,6 +25,7 @@ import com.vuvk.swinger.objects.mortals.Mortal;
 import com.vuvk.swinger.objects.mortals.Player;
 import com.vuvk.swinger.res.Map;
 import com.vuvk.swinger.res.Material;
+
 import java.awt.Color;
 import java.io.Serializable;
 import java.util.logging.Logger;
@@ -44,8 +43,8 @@ public abstract class Enemy extends Breakable implements Serializable {
     private Material atk;
     private Material walk;
 
-    protected String[] alarmSounds;
-    protected String[] attackSounds;
+    protected Sound[] alarmSounds;
+    protected Sound[] attackSounds;
 
 //    private Vector2 viewVector = new Vector2(1, 0);
 //    private Sprite sprite;
@@ -144,28 +143,31 @@ public abstract class Enemy extends Breakable implements Serializable {
                 sprite.duplicate(die);
                 sprite.playOnce();
                 break;  */
+
+            default:
+                break;
         }
     }
 
-    protected void setAlarmSounds(String[] painSounds) {
+    protected void setAlarmSounds(Sound[] alarmSounds) {
         this.alarmSounds = alarmSounds;
     }
 
-    protected void setAlarmSounds(FileHandle[] alarmSounds) {
-        this.alarmSounds = new String[alarmSounds.length];
+    protected void setAlarmSounds(String[] alarmSounds) {
+        this.alarmSounds = new Sound[alarmSounds.length];
         for (int i = 0; i < alarmSounds.length; ++i) {
-            this.alarmSounds[i] = alarmSounds[i].file().getPath();
+            this.alarmSounds[i] = new Sound(alarmSounds[i], true);
         }
     }
 
-    protected void setAttackSounds(String[] attackSounds) {
+    protected void setAttackSounds(Sound[] attackSounds) {
         this.attackSounds = attackSounds;
     }
 
-    protected void setAttackSounds(FileHandle[] attackSounds) {
-        this.attackSounds = new String[attackSounds.length];
+    protected void setAttackSounds(String[] attackSounds) {
+        this.attackSounds = new Sound[attackSounds.length];
         for (int i = 0; i < attackSounds.length; ++i) {
-            this.attackSounds[i] = attackSounds[i].file().getPath();
+            this.attackSounds[i] = new Sound(attackSounds[i], true);
         }
     }
 
@@ -201,20 +203,12 @@ public abstract class Enemy extends Breakable implements Serializable {
         this.bulletsPerShoot = bulletsPerShoot;
     }
 
-    protected FileHandle[] getAlarmSounds() {
-        FileHandle[] sounds = new FileHandle[alarmSounds.length];
-        for (int i = 0; i < alarmSounds.length; ++i) {
-            sounds[i] = Gdx.files.internal(alarmSounds[i]);
-        }
-        return sounds;
+    protected Sound[] getAlarmSounds() {
+        return alarmSounds;
     }
 
-    protected FileHandle[] getAttackSounds() {
-        FileHandle[] sounds = new FileHandle[attackSounds.length];
-        for (int i = 0; i < attackSounds.length; ++i) {
-            sounds[i] = Gdx.files.internal(attackSounds[i]);
-        }
-        return sounds;
+    protected Sound[] getAttackSounds() {
+        return attackSounds;
     }
 
     protected double getViewDistance() {
@@ -327,7 +321,7 @@ public abstract class Enemy extends Breakable implements Serializable {
 
     private void notice() {
         noticed = true;
-        SoundSystem.playOnceRandom(getAlarmSounds());
+        SoundSystem.playRandom(getAlarmSounds());
 
         Vector3 plPos = Player.getInstance().getPos();
         double angleToPlayer = Math.toDegrees(Math.atan2(plPos.y - pos.y, plPos.x - pos.x));
@@ -382,7 +376,7 @@ public abstract class Enemy extends Breakable implements Serializable {
         boolean playerInLine = isPlayerInLine();
 
         // обновляем состояние
-        stateDelay += Gdx.graphics.getDeltaTime();
+        stateDelay += Engine.getDeltaTime();
 
         // если ещё не видел, то проверить не заметил ли
         if (!noticed) {
@@ -410,7 +404,7 @@ public abstract class Enemy extends Breakable implements Serializable {
 
                         // пришло время стрелять? Стрельни
                         if (shootDelay < getShootSpeed()) {
-                            shootDelay += Gdx.graphics.getDeltaTime();
+                            shootDelay += Engine.getDeltaTime();
                         } else {
                             shootDelay = 0.0;
                             prevStateDelay = stateDelay;
@@ -430,7 +424,7 @@ public abstract class Enemy extends Breakable implements Serializable {
                         }
                     // уже выстрелил
                     } else {
-                        SoundSystem.playOnceRandom(getAttackSounds());
+                        SoundSystem.playRandom(getAttackSounds());
                         for (int i = 0; i < getBulletsPerShoot(); ++i) {
                             shoot();
                         }
@@ -466,7 +460,7 @@ public abstract class Enemy extends Breakable implements Serializable {
         }*/
 
         if (state == EnemyState.WALK) {
-            double moveSpeed = Gdx.graphics.getDeltaTime();
+            double moveSpeed = Engine.getDeltaTime();
             if (moveSpeed > radius) {
                 moveSpeed = radius;
             }
