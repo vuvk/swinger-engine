@@ -13,11 +13,6 @@
 */
 package com.vuvk.swinger.graphic;
 
-import com.badlogic.gdx.graphics.Pixmap;
-import com.badlogic.gdx.graphics.Pixmap.Filter;
-import com.badlogic.gdx.graphics.Pixmap.Format;
-import com.badlogic.gdx.graphics.Texture.TextureFilter;
-import com.badlogic.gdx.utils.Array;
 import com.vuvk.swinger.Config;
 import com.vuvk.swinger.d3.Model;
 import com.vuvk.swinger.graphic.weapon_in_hand.WeaponInHand;
@@ -36,6 +31,11 @@ import com.vuvk.swinger.res.WallMaterial;
 import com.vuvk.swinger.utils.ArrayUtils;
 import com.vuvk.swinger.utils.Pair;
 import com.vuvk.swinger.utils.Utils;
+
+import java.awt.image.BufferedImage;
+import java.awt.image.DataBuffer;
+import java.awt.image.DataBufferInt;
+import java.awt.image.WritableRaster;
 import java.nio.IntBuffer;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -71,14 +71,12 @@ public final class Renderer/* extends JPanel*/ {
     private /*final*/ static double RAY_STEP/* = 1.0 / WIDTH*/;
     //private/* final*/ static double ANG_STEP/* = Player.FOV / WIDTH*/;
 
-    //private final /*static*/ BufferedImage SCREEN/* = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_ARGB)*/;
-    private static com.badlogic.gdx.graphics.Texture SCREEN;
+    private /*final*/ static BufferedImage SCREEN/* = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_ARGB)*/;
     //private/* final*/ static BufferedImage SCREEN_SMALL;
-    private final /*static*/ IntBuffer SCREEN_BUFFER/* = new int[WIDTH * HEIGHT]*/;
+    private /*final*/ static DataBufferInt SCREEN_BUFFER/* = new int[WIDTH * HEIGHT]*/;
     //private final /*static*/ IntBuffer TEMP_BUFFER/* = new int[WIDTH * HEIGHT]*/;
-    //private final WritableRaster SCREEN_RASTER;
+    //private /*final*/ WritableRaster SCREEN_RASTER;
     //private Pixmap TEMP_RASTER;
-    private Pixmap SCREEN_RASTER;
     //private final DataBuffer SCREEN_BUFFER;
     private final /*static*/ double[][] ZBUFFER/* = new double[WIDTH]*/;
 
@@ -329,10 +327,10 @@ public final class Renderer/* extends JPanel*/ {
      */
     private void drawPixel(int x, int y, int pixel/*, double brightness*/) {
         int arrayPos = y * WIDTH + x;
-        int oldPixel = SCREEN_BUFFER.get(arrayPos);
+        int oldPixel = SCREEN_BUFFER.getElem(arrayPos);
         int newPixel = makeAdditive(oldPixel, pixel/*makeColorDarker(pixel, brightness)*/);
         if (oldPixel != newPixel) {
-            SCREEN_BUFFER.put(arrayPos, newPixel);
+            SCREEN_BUFFER.setElem(arrayPos, newPixel);
         }
     }
 
@@ -458,13 +456,13 @@ public final class Renderer/* extends JPanel*/ {
                 continue;
             }*/
 
-            int pixel = SCREEN_BUFFER.get(i);
-            int next  = SCREEN_BUFFER.get(i + 1);
+            int pixel = SCREEN_BUFFER.getElem(i);
+            int next  = SCREEN_BUFFER.getElem(i + 1);
             if (pixel != next) {
                 int r = (((pixel >> 24) & 0xFF) + ((next >> 24) & 0xFF)) >> 1,
                     g = (((pixel >> 16) & 0xFF) + ((next >> 16) & 0xFF)) >> 1,
                     b = (((pixel >>  8) & 0xFF) + ((next >>  8) & 0xFF)) >> 1;
-                SCREEN_BUFFER.put(i, 0xFF |
+                SCREEN_BUFFER.setElem(i, 0xFF |
                                      (r << 24)  |
                                      (g << 16)  |
                                      (b <<  8));
@@ -524,9 +522,9 @@ public final class Renderer/* extends JPanel*/ {
 
         //double ang = -Player.FOV_2;
         //int step = 1 << Config.quality;
-        final Array<RenderTarget>[] renderTargets = new Array[Map.LEVELS_COUNT];
+        final ArrayList<RenderTarget>[] renderTargets = new ArrayList[Map.LEVELS_COUNT];
         for (int level = 0; level < Map.LEVELS_COUNT; ++level) {
-            renderTargets[level] = new Array<>(false, 50);
+            renderTargets[level] = new ArrayList<>(50);
         }
         /*
         RenderTargetList[] renderTargets = new RenderTargetList[Map.LEVELS_COUNT];
@@ -594,7 +592,7 @@ public final class Renderer/* extends JPanel*/ {
             //drawDoor = false;
             //boolean doorWall = false;
 
-            for (Array<RenderTarget> list : renderTargets) {
+            for (ArrayList<RenderTarget> list : renderTargets) {
                 list.clear();
             }/*
             for (RenderTargetList list : renderTargets) {
@@ -845,7 +843,7 @@ public final class Renderer/* extends JPanel*/ {
             // максимальная длина на предыдущем этаже
             double prevMaxWallDist = 0.0;
             for (int level = 0; level < Map.LEVELS_COUNT; ++level) {
-                Array<RenderTarget> renderLevelTargets = renderTargets[level];
+                ArrayList<RenderTarget> renderLevelTargets = renderTargets[level];
                 //RenderTargetList renderLevelTargets = renderTargets[level];
                 for (Iterator<RenderTarget> it = renderLevelTargets.iterator(); it.hasNext(); ) {
                     RenderTarget target = it.next();
@@ -1027,7 +1025,7 @@ public final class Renderer/* extends JPanel*/ {
                         //TEMP_BUFFER_RASTER.setPixel(x, y, new int[]{color});
 
                         //drawPixel(x, y, color);
-                        SCREEN_BUFFER.put(y * WIDTH + x, color);
+                        SCREEN_BUFFER.setElem(y * WIDTH + x, color);
                         //TEMP_BUFFER.setElem(arrayPos, color);
                         //putPixel(x, y, color);
                         //ZBUFFER[arrayPos] = wallDist;
@@ -1186,7 +1184,7 @@ public final class Renderer/* extends JPanel*/ {
                                 if (Config.fog != Fog.NOTHING) {
                                     color = applyFog(color, currentDist, fogBrightness);
                                 }
-                                SCREEN_BUFFER.put((y - 1) * WIDTH + x, color);
+                                SCREEN_BUFFER.setElem((y - 1) * WIDTH + x, color);
                                 //TEMP_BUFFER.setElem(arrayPos, color);
                                 //putPixel(x, y - 1, Texture.FLOOR[Map.FLOOR[floorX][floorY]].getPixel(floorTexX, floorTexY));
                                 //ZBUFFER[arrayPos] = currentDist;
@@ -1211,7 +1209,7 @@ public final class Renderer/* extends JPanel*/ {
                                     if (Config.fog != Fog.NOTHING) {
                                         color = applyFog(color, currentDist, fogBrightness);
                                     }
-                                    SCREEN_BUFFER.put((HEIGHT - y) * WIDTH + x, color);
+                                    SCREEN_BUFFER.setElem((HEIGHT - y) * WIDTH + x, color);
                                     //TEMP_BUFFER.setElem(arrayPos, color);
                                     //putPixel(x, HEIGHT - y, Texture.CEIL[Map.CEIL[floorX][floorY]].getPixel(floorTexX, floorTexY));
                                     //ZBUFFER[arrayPos] = currentDist;
@@ -1260,7 +1258,7 @@ public final class Renderer/* extends JPanel*/ {
                         //int arrayPos = y * WIDTH + x;
                         //if (ZBUFFER[arrayPos] == Double.MAX_VALUE) {
                         if (ZBUFFER[x][y] == Double.MAX_VALUE) {
-                            SCREEN_BUFFER.put(y * WIDTH + x, pixels[y]);
+                            SCREEN_BUFFER.setElem(y * WIDTH + x, pixels[y]);
                             //TEMP_BUFFER.setElem(arrayPos, pixels[y]);
                             ++pixelsInColumn;
                         }
@@ -1270,7 +1268,7 @@ public final class Renderer/* extends JPanel*/ {
                         //int arrayPos = y * WIDTH + x;
                         //if (ZBUFFER[arrayPos] == Double.MAX_VALUE) {
                         if (ZBUFFER[x][y] == Double.MAX_VALUE) {
-                            SCREEN_BUFFER.put(y * WIDTH + x, 0xFF000000);
+                            SCREEN_BUFFER.setElem(y * WIDTH + x, 0xFF000000);
                             //TEMP_BUFFER.setElem(arrayPos, 0xFF000000);
                             ++pixelsInColumn;
                         }
@@ -1680,7 +1678,7 @@ public final class Renderer/* extends JPanel*/ {
 
                         int color = image.getPixel(x, y);
                         if (((color/* >> 24*/) & 0xFF) != 0) {
-                            SCREEN_BUFFER.put(col + x, color);
+                            SCREEN_BUFFER.setElem(col + x, color);
                         }
                     }
                 }
@@ -1701,7 +1699,7 @@ public final class Renderer/* extends JPanel*/ {
                     Thread.yield();
                 }*/
             } else {
-                antialiasing(WIDTH, SCREEN_BUFFER.limit() - 1);
+                antialiasing(WIDTH, SCREEN_BUFFER.getSize() - 1);
             }
         }
 
@@ -1725,9 +1723,9 @@ public final class Renderer/* extends JPanel*/ {
         /*if (canRender)*/ {
             //SCREEN.draw(SCREEN_RASTER, 0, 0);
             /*for (int i = 0; i < TEMP_BUFFER.limit(); ++i) {
-                SCREEN_BUFFER.put(i, TEMP_BUFFER.get(i));
+                SCREEN_BUFFER.setElem(i, TEMP_BUFFER.get(i));
             }*/
-            //SCREEN_BUFFER.put(TEMP_BUFFER);
+            //SCREEN_BUFFER.setElem(TEMP_BUFFER);
             //alreadyRendered = true;
         }
         //IntBuffer buffer = SCREEN_RASTER.getPixels().asIntBuffer();
@@ -1754,7 +1752,7 @@ public final class Renderer/* extends JPanel*/ {
         //alreadyRendered = true;
     }
 
-    public com.badlogic.gdx.graphics.Texture getFrame() {
+    public BufferedImage getFrame() {
         /*while (!alreadyRendered) {
             Thread.yield();
         }*/
@@ -1763,7 +1761,7 @@ public final class Renderer/* extends JPanel*/ {
         //}
 
         /*canRender = *///alreadyRendered = false;
-        SCREEN.draw(SCREEN_RASTER, 0, 0);
+        //SCREEN.draw(SCREEN_RASTER, 0, 0);
         //canRender = true;
 
         return SCREEN;
@@ -1844,11 +1842,8 @@ public final class Renderer/* extends JPanel*/ {
         init();
         //ANG_STEP = Player.FOV / WIDTH;
 
-        //SCREEN = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_ARGB);
+        SCREEN = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_ARGB);
         //SCREEN_RASTER = SCREEN.getRaster();
-        SCREEN_RASTER = new Pixmap(WIDTH, HEIGHT, Format.RGBA8888);
-        SCREEN_RASTER.setFilter(Filter.NearestNeighbour);
-        SCREEN_RASTER.setBlending(Pixmap.Blending.None);
 
         /*TEMP_RASTER = new Pixmap(WIDTH, HEIGHT, Format.RGBA8888);
         TEMP_RASTER.setFilter(Filter.BiLinear);
@@ -1857,11 +1852,9 @@ public final class Renderer/* extends JPanel*/ {
         //SCREEN_RASTER = pxmap.getPixels().asIntBuffer();
         //SCREEN_SMALL = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_ARGB);
         //SCREEN_BUFFER = new int[WIDTH * HEIGHT];
-        SCREEN_BUFFER = SCREEN_RASTER.getPixels().asIntBuffer();
         //TEMP_BUFFER = TEMP_RASTER.getPixels().asIntBuffer();
-        SCREEN = new com.badlogic.gdx.graphics.Texture(SCREEN_RASTER);
-        SCREEN.setFilter(TextureFilter.Nearest, TextureFilter.Nearest);
-        //SCREEN_BUFFER = SCREEN.getRaster().getDataBuffer();
+        SCREEN_BUFFER = (DataBufferInt)(SCREEN.getRaster().getDataBuffer());
+
         ZBUFFER = new double[WIDTH][HEIGHT];
 
         // инициализируем задачи для потоков
@@ -1886,7 +1879,7 @@ public final class Renderer/* extends JPanel*/ {
             RENDER_TASKS[i] = newRenderTask("render_task " + i, fromX, toX);
         }
 
-        int lengthStep = SCREEN_BUFFER.limit() / Config.THREADS_COUNT;
+        int lengthStep = SCREEN_BUFFER.getSize() / Config.THREADS_COUNT;
         if (lengthStep % 2 != 0) {
             --lengthStep;
         }
@@ -1899,7 +1892,7 @@ public final class Renderer/* extends JPanel*/ {
             if (toX >= SCREEN_BUFFER.limit() - 1) {
                 toX = SCREEN_BUFFER.limit() - 1;
             }*/
-            int toX = (i == Config.THREADS_COUNT - 1) ? SCREEN_BUFFER.limit() - 1 : fromX + lengthStep;
+            int toX = (i == Config.THREADS_COUNT - 1) ? SCREEN_BUFFER.getSize() - 1 : fromX + lengthStep;
 
             ANTIALIASING_TASKS[i] = newAntialiasingTask("antialiasing_task " + i, fromX, toX);
         }
