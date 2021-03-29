@@ -14,8 +14,6 @@
 package com.vuvk.swinger.res;
 
 import com.vuvk.swinger.graphic.Side;
-import com.vuvk.swinger.res.Material;
-import com.vuvk.swinger.res.Image;
 import com.vuvk.swinger.utils.ArrayUtils;
 import java.io.Serializable;
 

@@ -13,7 +13,6 @@
 */
 package com.vuvk.swinger;
 
-import com.vuvk.retard_sound_system.SoundSystem;
 import com.vuvk.swinger.audio.SoundBank;
 import com.vuvk.swinger.d3.Mesh;
 import com.vuvk.swinger.d3.Model;

@@ -19,7 +19,7 @@ import java.io.Serializable;
  *
  * @author Anton "Vuvk" Shcherbatykh
  */
-public class ImmutablePair<T,V> implements Pair, Serializable {
+public class ImmutablePair<T,V> implements Pair<T,V>, Serializable {
     private final T left;
     private final V right;
 

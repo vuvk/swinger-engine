@@ -19,7 +19,7 @@ import java.io.Serializable;
  *
  * @author Anton "Vuvk" Shcherbatykh
  */
-public class MutablePair<T,V> implements Pair, Serializable {
+public class MutablePair<T,V> implements Pair<T,V>, Serializable {
     private T left;
     private V right;
 
