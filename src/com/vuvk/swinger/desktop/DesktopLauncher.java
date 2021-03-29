@@ -13,33 +13,12 @@
 */
 package com.vuvk.swinger.desktop;
 
-import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
-import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 import com.vuvk.swinger.Config;
 import com.vuvk.swinger.Game;
 
 public class DesktopLauncher {
     public static void main (String ... args) {
-        LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
-
-        config.allowSoftwareMode = false;
-        config.useHDPI = false;
-        config.useGL30 = false;
-        config.foregroundFPS = config.backgroundFPS = 2000;
-        config.resizable = false;
-        /*config.vSyncEnabled = Config.vSync;
-        config.width  = Config.WIDTH;
-        config.height = Config.HEIGHT;
-        config.title  = Config.TITLE;*/
-
-        LwjglApplication app = new LwjglApplication(new Game(), config);
-
-        Config.load();
-        Config.init();
-
-        Game.setVSync(Config.vSync);
-        Game.setFullscreenMode(Config.fullscreen);
-
-        app.getGraphics().setTitle(Config.TITLE);
+        Game game = new Game();
+        game.render();
     }
 }

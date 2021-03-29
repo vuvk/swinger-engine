@@ -19,23 +19,23 @@ package com.vuvk.swinger;
  *
  * @author Anton "Vuvk" Shcherbatykh
  */
-public class Engine {
+public final class Engine {
     /** time of current frame */
-    private long time = System.currentTimeMillis();
+    private static long time = System.currentTimeMillis();
     /** time of previous frame */
-    private long oldTime = time;
+    private static long oldTime = time;
     /** */
     private static double deltaTime = 0;
     /** */
     private static int fps = 0;
-    private int fpsCounter = 0;
-    private double fpsTimer = 0;
+    private static int fpsCounter = 0;
+    private static double fpsTimer = 0;
 
-    public void update() {
+    public static void update() {
         // timing for input and FPS counter
         oldTime = time;
         time = System.currentTimeMillis();
-        deltaTime = (time - oldTime) / 1000.0; //frameTime is the time this frame has taken, in seconds
+        deltaTime = (time - oldTime) * 0.001; //frameTime is the time this frame has taken, in seconds
 
         // calc FPS
         ++fpsCounter;

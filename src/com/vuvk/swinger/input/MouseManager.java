@@ -32,6 +32,7 @@ import com.vuvk.swinger.math.Vector2;
  */
 public class MouseManager implements MouseListener, MouseWheelListener, MouseMotionListener {
     private static final Logger LOG = Logger.getLogger(MouseManager.class.getName());
+    private static MouseManager instance = null;       
 
     private static Robot robot;
     private static Vector2 prevLoc  = new Vector2();
@@ -40,16 +41,21 @@ public class MouseManager implements MouseListener, MouseWheelListener, MouseMot
                          scrollAmountY = 0;
     private static boolean leftClick  = false;
     private static boolean rightClick = false;
+    
 
-    /**
-     * @param rightClick
-     */
     private MouseManager() {
         try {
             robot = new Robot();
         } catch (AWTException ex) {
             LOG.log(Level.SEVERE, null, ex);
         }
+    }
+
+    public static MouseManager getInstance() {
+        if (instance == null) {
+            instance = new MouseManager();
+        }
+        return instance;
     }
 
     @Override

@@ -13,26 +13,22 @@
 */
 package com.vuvk.swinger;
 
-import com.badlogic.gdx.ApplicationAdapter;
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Pixmap;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.math.Rectangle;
-import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.utils.viewport.FitViewport;
-import com.badlogic.gdx.utils.viewport.ScreenViewport;
-import com.badlogic.gdx.utils.viewport.Viewport;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Frame;
+import java.awt.Graphics;
+import java.awt.Window;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.awt.image.BufferedImage;
+import java.util.Locale;
+
+import com.vuvk.retard_sound_system.SoundSystem;
 import com.vuvk.swinger.audio.SoundBank;
-import com.vuvk.swinger.audio.SoundSystem;
 import com.vuvk.swinger.d3.Model;
 import com.vuvk.swinger.graphic.Fog;
 import com.vuvk.swinger.graphic.Renderer;
 import com.vuvk.swinger.graphic.Sky;
-import com.vuvk.swinger.graphic.gui.GuiBank;
 import com.vuvk.swinger.graphic.gui.ScreenBlood;
 import com.vuvk.swinger.graphic.gui.menu.Menu;
 import com.vuvk.swinger.graphic.gui.text.FontBank;
@@ -45,7 +41,8 @@ import com.vuvk.swinger.graphic.weapon_in_hand.PistolInHand;
 import com.vuvk.swinger.graphic.weapon_in_hand.RifleInHand;
 import com.vuvk.swinger.graphic.weapon_in_hand.RocketLauncherInHand;
 import com.vuvk.swinger.graphic.weapon_in_hand.ShotgunInHand;
-import com.vuvk.swinger.input.InputManager;
+import com.vuvk.swinger.input.KeyboardManager;
+import com.vuvk.swinger.input.MouseManager;
 import com.vuvk.swinger.math.Vector2;
 import com.vuvk.swinger.math.Vector3;
 import com.vuvk.swinger.objects.Camera;
@@ -58,23 +55,19 @@ import com.vuvk.swinger.objects.weapon.AmmoType;
 import com.vuvk.swinger.res.Map;
 import com.vuvk.swinger.res.Material;
 import com.vuvk.swinger.res.TextureBank;
-import java.util.Locale;
 
 /**
  *
  * @author Anton "Vuvk" Shcherbatykh
  */
-public class Game extends ApplicationAdapter {
-    private SpriteBatch batch;
+public class Game extends Frame {
+    private boolean initialized = false;
+    private Graphics batch;
     private Renderer renderer;
-    private Texture consoleBackground;
-    private BitmapFont font;
-    private OrthographicCamera cam;
-    private Rectangle viewport;
-    private Stage stage;
-    private Viewport camViewport;
+    private BufferedImage consoleBackground;
     private Vector2 windowCenter = new Vector2();
-    private InputManager inputManager;
+    private MouseManager mouseManager;
+    private KeyboardManager keyboardManager;
 
     private double timeForFPS;
     private String processors = "available render threads - " + Config.THREADS_COUNT;
@@ -84,7 +77,7 @@ public class Game extends ApplicationAdapter {
     private Text playerAmmoText;
     public static ScreenMessage screenMsg;
 
-    private Texture lastFrame;
+    private BufferedImage lastFrame;
 
     int renderX,
         renderY,
@@ -120,19 +113,44 @@ public class Game extends ApplicationAdapter {
 
     double angle = 0.0;
 
-    @Override
-    public void create () {
+    public Game() {
+        super();
+
+        addKeyListener(KeyboardManager.getInstance());
+        addMouseListener(MouseManager.getInstance());
+        addMouseMotionListener(MouseManager.getInstance());
+        addMouseWheelListener(MouseManager.getInstance());
+
+        addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                Config.QUIT = true;
+            }
+        });
+                
+        setTitle(Config.TITLE);
+        setBackground(Color.BLACK);
+        setForeground(Color.BLACK);
+        setMinimumSize(new Dimension(Config.WIDTH, Config.HEIGHT));
+        setVisible(true);
+        setLocationRelativeTo(null);
+        
+        create();
+        
+        initialized = true;
+    }
+
+    private void create() {
         Config.load();
         Config.init();
 
-        ScreenBlood.DROPS = new ScreenBlood[Config.WIDTH];
+        ScreenBlood.drops = new ScreenBlood[Config.WIDTH];
 
         Fog.init();
         Renderer.init();
-        GuiBank.init();
         Menu.init();
         TextureBank.load();
-        SoundSystem.load();
+        SoundSystem.start();
         FontBank.load();
 
         KnifeInHand.loadFrames();
@@ -142,9 +160,7 @@ public class Game extends ApplicationAdapter {
         MinigunInHand.loadFrames();
         RocketLauncherInHand.loadFrames();
 
-        font  = new BitmapFont();
-        batch = new SpriteBatch();
-        consoleBackground = new Texture(Config.WIDTH, 40, Pixmap.Format.RGB888);
+        consoleBackground = new BufferedImage(Config.WIDTH, 40, BufferedImage.TYPE_INT_ARGB);
         lastFrame      = TextureBank.MAIN_MENU;
         fpsText        = new Text(FontBank.FONT_BUBBLA, "", new Vector2(10, 15));
         playerPosText  = new Text(FontBank.FONT_BUBBLA, "", new Vector2(10, 25));
@@ -153,43 +169,11 @@ public class Game extends ApplicationAdapter {
         screenMsg      = new ScreenMessage(FontBank.FONT_BUBBLA, new Vector2(10, 45));
         //new Text(FontBank.FONT_OUTLINE, "demo", new Vector2(250, 150));
 
-        cam = new OrthographicCamera(Config.WIDTH, Config.HEIGHT);
-        cam.setToOrtho(false);
         renderer = Renderer.getInstance();
-
-        camViewport = new FitViewport(Config.WIDTH, Config.HEIGHT, cam);
-        //camViewport.apply();
-
-        stage = new Stage();
-        stage.setViewport(new ScreenViewport());
-        //stage.getViewport().apply();
-        //stage.addListener(new InputManager());
-        /*Actor actor = new Image();
-        actor.setPosition(0, 0);
-        actor.setBounds(0, 0, Config.WIDTH, Config.HEIGHT);
-        actor.setColor(Color.BLACK);
-        actor.addListener(new InputManager());
-        stage.addActor(actor);*/
-        if (Config.buildForMobiles) {
-            stage.addActor(GuiBank.MOBILE_BUTTON_UP);
-            stage.addActor(GuiBank.MOBILE_BUTTON_DOWN);
-            stage.addActor(GuiBank.MOBILE_BUTTON_LEFT);
-            stage.addActor(GuiBank.MOBILE_BUTTON_RIGHT);
-            stage.addActor(GuiBank.MOBILE_BUTTON_USE);
-            stage.addActor(GuiBank.MOBILE_BUTTON_SHOOT);
-            stage.addActor(GuiBank.MOBILE_BUTTON_NEXT_WEAPON);
-            stage.addActor(GuiBank.MOBILE_BUTTON_PREV_WEAPON);
-        }
+        batch = getGraphics();
 
         //
         //inputManager = new InputManager();
-        if (Config.buildForMobiles) {
-            Gdx.input.setInputProcessor(stage);
-        } else {
-            Gdx.input.setInputProcessor(new InputManager());
-        }
-
-        Gdx.gl.glClearColor(0, 0, 0, 1);
 //        Renderer.getInstance().start();
 
         /*for (int i = 1; i < 6; ++i) {
@@ -213,16 +197,15 @@ public class Game extends ApplicationAdapter {
         Config.draw = true;
         Menu.activate();
 
-        SoundSystem.playMusic(SoundBank.FILE_MUSIC_TITLE);
+        SoundBank.MUSIC_TITLE.play(true);
     }
 
-    @Override
     public void render () {
+        if (!initialized) {
+            return;
+        }
         // clear previous frame
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         //Graphics graphics = Gdx.graphics;
-
-        cam.update();
 
         /*for (int i = 1; i < 6; ++i) {
             kishPoints[i - 1].update();
@@ -294,11 +277,12 @@ public class Game extends ApplicationAdapter {
         b.x += 7.5;
         a.y += 5.5;
         b.y += 5.5;    */
+        Engine.update();
 
-        timeForFPS += Gdx.graphics.getDeltaTime();
+        timeForFPS += Engine.getDeltaTime();
         if (timeForFPS > 0.5) {
             timeForFPS -= 0.5;
-            fpsText.setMessage("FPS: " + Gdx.graphics.getFramesPerSecond());
+            fpsText.setMessage("FPS: " + Engine.getFps());
         }
 
         if (Config.draw) {
@@ -309,9 +293,6 @@ public class Game extends ApplicationAdapter {
                 playerAmmoText.setVisible(false);
             }
 
-            camViewport.apply();
-            batch.setProjectionMatrix(cam.combined);
-
             if (Map.isLoaded()) {
                 Renderer renderer = Renderer.getInstance();
                 Player player = Player.getInstance();
@@ -319,7 +300,7 @@ public class Game extends ApplicationAdapter {
 
                 if (Map.active) {
 
-                    angle += Gdx.graphics.getDeltaTime();
+                    angle += Engine.getDeltaTime();
                     if (angle >= 360.0) {
                         angle -= 360.0;
                     }
@@ -350,7 +331,7 @@ public class Game extends ApplicationAdapter {
                         Model.updateAll();
 
                         for (Model mdl : Model.LIB) {
-                            mdl.rotateX(Gdx.graphics.getDeltaTime());
+                            mdl.rotateX(Engine.getDeltaTime());
                         }
 
                         Sky.getInstance().update();
@@ -368,11 +349,6 @@ public class Game extends ApplicationAdapter {
                         //batch.begin();
                         //batch.draw(renderer.getFrame(), 0, 0, Config.WIDTH + 1, Config.HEIGHT + 1);
                         //Renderer.canRender = true;
-
-                        /*
-                        font.draw(batch, processors, 10, 450);
-                        font.draw(batch, fpsString,  10, 470);
-                        */
 
                         // GUI
                         if (!Config.STEP_BY_STEP_RENDERING) {
@@ -409,7 +385,7 @@ public class Game extends ApplicationAdapter {
 
                         // вращение мышкой и фиксация курсора в центре окна
                         if (Config.mouseLook) {
-                            double deltaX = InputManager.getDeltaX();
+                            double deltaX = MouseManager.getDeltaX();
                             if (deltaX != 0.0) {
                                 double mouseSpeed = deltaX / Config.WIDTH;
                                 playerCamera.rotate(Math.toRadians(mouseSpeed * Player.MOUSE_ROT_SPEED ));
@@ -426,7 +402,7 @@ public class Game extends ApplicationAdapter {
                                 player.setRotR(false);
                             }*/
 
-                            InputManager.setLocation(windowCenter);
+                            MouseManager.setLocation(windowCenter);
                         }
 
                         //batch.end();
@@ -438,43 +414,70 @@ public class Game extends ApplicationAdapter {
                     }
                     // игрок умер
                     else {
-                        for (int i = 0; i < ScreenBlood.DROPS.length; ++i) {
-                            ScreenBlood.DROPS[i].update();
-                            Vector2 pos = ScreenBlood.DROPS[i].getPos();
-                            lastFrame.draw(ScreenBlood.DROP, (int)pos.x, (int)pos.y);
+                        for (int i = 0; i < ScreenBlood.drops.length; ++i) {
+                            ScreenBlood.drops[i].update();
+                            Vector2 pos = ScreenBlood.drops[i].getPos();
+                            lastFrame.getGraphics().drawImage(ScreenBlood.DROP, (int)pos.x, (int)pos.y, null);
                         }
                     }
                 }
             }
 
-            batch.begin();
             if (lastFrame != null) {
-                batch.draw(lastFrame, 0, 0, Config.WIDTH + 1, Config.HEIGHT + 1);
+                batch.drawImage(lastFrame, 0, 0, Config.WIDTH, Config.HEIGHT, null);
             }
 
             Text.drawAll(batch);
 
             if (!Menu.isActive() && Config.console) {
-                batch.draw(consoleBackground, 0, 0);
-                font.draw(batch, Config.consoleCommand, 10, 25);
+                batch.drawImage(consoleBackground, 0, 0, null);
+                batch.setColor(Color.WHITE);
+                batch.drawString(Config.consoleCommand, 10, 25);
             }
-
-            batch.end();
-
-            stage.getViewport().apply();
-            stage.draw();
-            stage.act();
         }
-        InputManager.reset();
+        MouseManager.reset();
 
         if (Config.QUIT) {
             Config.save();
-            Gdx.app.exit();
+            dispose();
+        } else {
+            repaint();
         }
     }
 
     @Override
-    public void resize (int width, int height) {
+    public void dispose () {
+        Map.reset();
+        SoundSystem.stop();
+        super.dispose();
+        initialized = false;
+    }
+
+    public static void setFullscreenMode(boolean fullscreen) {
+        if (!Config.buildForMobiles) {
+            Config.fullscreen = fullscreen;
+            if (fullscreen) {
+                //Gdx.graphics.setFullscreenMode(Gdx.graphics.getDisplayMode());
+            } else {
+                //Gdx.graphics.setWindowedMode(Config.WIDTH, Config.HEIGHT);
+            }
+        }
+    }
+
+    public static void setVSync(boolean vSync) {
+        Config.vSync = vSync;
+        //Gdx.graphics.setVSync(vSync);
+    }
+
+    @Override
+    public void paint(Graphics g) {
+        render();
+    }
+
+    @Override
+    public void reshape(int x, int y, int width, int height) {
+        super.reshape(x, y, width, height);
+        /*
         windowCenter.set(width >> 1, height >> 1);
 
         camViewport.update(width, height, true);
@@ -490,30 +493,6 @@ public class Game extends ApplicationAdapter {
 
         GuiBank.MOBILE_BUTTON_PREV_WEAPON.setX(width  - btnSize * 1.5f);
         GuiBank.MOBILE_BUTTON_PREV_WEAPON.setY(height - btnSize * 2.5f);
-    }
-
-    @Override
-    public void dispose () {
-        Map.reset();
-        GuiBank.deinit();
-        SoundSystem.unload();
-        batch.dispose();
-        font.dispose();
-    }
-
-    public static void setFullscreenMode(boolean fullscreen) {
-        if (!Config.buildForMobiles) {
-            Config.fullscreen = fullscreen;
-            if (fullscreen) {
-                Gdx.graphics.setFullscreenMode(Gdx.graphics.getDisplayMode());
-            } else {
-                Gdx.graphics.setWindowedMode(Config.WIDTH, Config.HEIGHT);
-            }
-        }
-    }
-
-    public static void setVSync(boolean vSync) {
-        Config.vSync = vSync;
-        Gdx.graphics.setVSync(vSync);
+        */
     }
 }
