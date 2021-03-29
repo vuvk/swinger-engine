@@ -13,10 +13,6 @@
 */
 package com.vuvk.swinger.input;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
-import com.badlogic.gdx.Input.Buttons;
-import com.badlogic.gdx.InputAdapter;
 import com.vuvk.swinger.Config;
 import com.vuvk.swinger.Game;
 import static com.vuvk.swinger.Game.screenMsg;
@@ -28,6 +24,9 @@ import com.vuvk.swinger.objects.mortals.Player;
 import com.vuvk.swinger.res.Map;
 import com.vuvk.swinger.SavedGame;
 import com.vuvk.swinger.utils.Utils;
+
+import java.awt.Robot;
+import java.awt.event.MouseAdapter;
 import java.util.Scanner;
 import java.util.logging.Logger;
 
@@ -35,9 +34,10 @@ import java.util.logging.Logger;
  *
  * @author Anton "Vuvk" Shcherbatykh
  */
-public final class InputManager extends InputAdapter {
+public final class InputManager extends MouseAdapter {
     private static final Logger LOG = Logger.getLogger(InputManager.class.getName());
 
+    private static Robot robot;
     private static Vector2 prevLoc  = new Vector2();
     private static Vector2 location = new Vector2();
     private static float scrollAmountX = 0,

@@ -22,7 +22,7 @@ import com.vuvk.swinger.graphic.gui.ScreenBlood;
 import com.vuvk.swinger.graphic.weapon_in_hand.AmmoPack;
 import com.vuvk.swinger.graphic.weapon_in_hand.KnifeInHand;
 import com.vuvk.swinger.graphic.weapon_in_hand.WeaponInHand;
-import com.vuvk.swinger.input.InputManager;
+import com.vuvk.swinger.input.MouseManager;
 import com.vuvk.swinger.math.Segment;
 import com.vuvk.swinger.math.Vector2;
 import com.vuvk.swinger.math.Vector3;
@@ -407,14 +407,14 @@ public final class Player extends Mortal implements Serializable {
         }
 
         if (!Config.buildForMobiles) {
-            shooting = InputManager.isLeftClick();
+            shooting = MouseManager.isLeftClick();
         }
 
-        if (InputManager.isScrollDown()) {
+        if (MouseManager.isScrollDown()) {
             prevWeapon();
         }
 
-        if (InputManager.isScrollUp()) {
+        if (MouseManager.isScrollUp()) {
             nextWeapon();
         }
 
