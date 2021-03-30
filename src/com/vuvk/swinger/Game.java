@@ -13,17 +13,12 @@
 */
 package com.vuvk.swinger;
 
-import java.awt.AWTEvent;
 import java.awt.Canvas;
 import java.awt.Color;
 import java.awt.Frame;
 import java.awt.Graphics;
-import java.awt.Toolkit;
-import java.awt.event.AWTEventListener;
-import java.awt.event.FocusEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.awt.event.WindowFocusListener;
 import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
 import java.util.Locale;
@@ -177,6 +172,9 @@ public class Game extends Frame {
         Config.init();
 
         ScreenBlood.drops = new ScreenBlood[Config.WIDTH];
+        for (int i = 0; i < ScreenBlood.drops.length; ++i) {
+            ScreenBlood.drops[i] = new ScreenBlood(new Vector2(i, 0));
+        }
 
         Fog.init();
         Renderer.init();
@@ -209,9 +207,9 @@ public class Game extends Frame {
         canvas.createBufferStrategy(2);
         backBuffer = canvas.getBufferStrategy();
         surface = new BufferedImage(Config.WIDTH, Config.HEIGHT, BufferedImage.TYPE_INT_ARGB);
+        //surface.getGraphics().setColor(Color.BLACK);
+        //surface.getGraphics().fillRect(0, 0, surface.getWidth(), surface.getHeight());
         //batch = surface.getGraphics();
-
-        new Text(FontBank.FONT_MIDDLE, "HEY BLYAD", new Vector2(250, 150));
 
         //
         //inputManager = new InputManager();

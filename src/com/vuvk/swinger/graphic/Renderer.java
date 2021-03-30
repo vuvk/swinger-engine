@@ -20,7 +20,6 @@ import com.vuvk.swinger.math.Segment;
 import com.vuvk.swinger.math.Vector2;
 import com.vuvk.swinger.math.Vector3;
 import com.vuvk.swinger.objects.Camera;
-import com.vuvk.swinger.objects.LightSource;
 import com.vuvk.swinger.objects.Sprite;
 import com.vuvk.swinger.objects.mortals.Player;
 import com.vuvk.swinger.res.Image;
@@ -29,14 +28,11 @@ import com.vuvk.swinger.res.MaterialBank;
 import com.vuvk.swinger.res.Texture;
 import com.vuvk.swinger.res.WallMaterial;
 import com.vuvk.swinger.utils.ArrayUtils;
-import com.vuvk.swinger.utils.Pair;
 import com.vuvk.swinger.utils.Utils;
 
+import java.awt.Color;
 import java.awt.image.BufferedImage;
-import java.awt.image.DataBuffer;
-import java.awt.image.DataBufferInt;
 import java.awt.image.WritableRaster;
-import java.nio.IntBuffer;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
@@ -73,9 +69,9 @@ public final class Renderer/* extends JPanel*/ {
 
     private /*final*/ static BufferedImage SCREEN/* = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_ARGB)*/;
     //private/* final*/ static BufferedImage SCREEN_SMALL;
-    private /*final*/ static DataBufferInt SCREEN_BUFFER/* = new int[WIDTH * HEIGHT]*/;
+    private /*final*/ static int[] SCREEN_BUFFER;/* = new int[WIDTH * HEIGHT]*/;
     //private final /*static*/ IntBuffer TEMP_BUFFER/* = new int[WIDTH * HEIGHT]*/;
-    //private /*final*/ WritableRaster SCREEN_RASTER;
+    private /*final*/ WritableRaster SCREEN_RASTER;
     //private Pixmap TEMP_RASTER;
     //private final DataBuffer SCREEN_BUFFER;
     private final /*static*/ double[][] ZBUFFER/* = new double[WIDTH]*/;
@@ -258,15 +254,15 @@ public final class Renderer/* extends JPanel*/ {
      */
     private int makeColorDarker(int color, double brightness) {
         if (brightness < 1.0) {
-            int a = (color/* >> 24*/) & 0xFF;
+            int a = (color >> 24) & 0xFF;
             if (a > 0 && a < 255) {
                 a += brightness;
             }
-            int r = (int)(((color >> 24) & 0xFF) * brightness);
-            int g = (int)(((color >> 16) & 0xFF) * brightness);
-            int b = (int)(((color >>  8) & 0xFF) * brightness);
+            int r = (int)(((color >> 16) & 0xFF) * brightness);
+            int g = (int)(((color >>  8) & 0xFF) * brightness);
+            int b = (int)(((color >>  0) & 0xFF) * brightness);
 
-            return (a/* << 24*/) | (r << 24) | (g << 16) | (b << 8);
+            return (a << 24) | (r << 16) | (g <<  8) | (b << 0);
             //return (color & 0xFF000000) | (r << 16) | (g << 8) | b;
             //return (0xFF000000) | (r << 16) | (g << 8) | b;
         }
@@ -286,7 +282,7 @@ public final class Renderer/* extends JPanel*/ {
      */
     private int makeAdditive(int pixel, int additive) {
         /* альфа полупрозрачного пикселя */
-        int aA = (additive/* >> 24*/) & 0xFF;
+        int aA = (additive >> 24) & 0xFF;
         //int aP = (pixel >> 24) & 0xFF;
 
         /* добавляемый пиксель вообще не виден */
@@ -302,19 +298,19 @@ public final class Renderer/* extends JPanel*/ {
             double pBrightness = 1.0 - aBrightness;
 
             /* раскладываем */
-            int rA = (int)(((additive >> 24) & 0xFF) * aBrightness);
-            int gA = (int)(((additive >> 16) & 0xFF) * aBrightness);
-            int bA = (int)(((additive >>  8) & 0xFF) * aBrightness);
+            int rA = (int)(((additive >> 16) & 0xFF) * aBrightness);
+            int gA = (int)(((additive >>  8) & 0xFF) * aBrightness);
+            int bA = (int)(((additive >>  0) & 0xFF) * aBrightness);
 
-            int rP = (int)(((pixel >> 24) & 0xFF) * pBrightness);
-            int gP = (int)(((pixel >> 16) & 0xFF) * pBrightness);
-            int bP = (int)(((pixel >>  8) & 0xFF) * pBrightness);
+            int rP = (int)(((pixel >> 16) & 0xFF) * pBrightness);
+            int gP = (int)(((pixel >>  8) & 0xFF) * pBrightness);
+            int bP = (int)(((pixel >>  0) & 0xFF) * pBrightness);
 
             /* получаем результат */
-            return 0xFF |
-                   ((rA + rP) << 24) |
-                   ((gA + gP) << 16) |
-                   ((bA + bP) <<  8);
+            return 0xFF000000 |
+                   ((rA + rP) << 16) |
+                   ((gA + gP) <<  8) |
+                   ((bA + bP) <<  0);
         }
     }
 
@@ -327,10 +323,10 @@ public final class Renderer/* extends JPanel*/ {
      */
     private void drawPixel(int x, int y, int pixel/*, double brightness*/) {
         int arrayPos = y * WIDTH + x;
-        int oldPixel = SCREEN_BUFFER.getElem(arrayPos);
+        int oldPixel = SCREEN_BUFFER[arrayPos];
         int newPixel = makeAdditive(oldPixel, pixel/*makeColorDarker(pixel, brightness)*/);
         if (oldPixel != newPixel) {
-            SCREEN_BUFFER.setElem(arrayPos, newPixel);
+            SCREEN_BUFFER[arrayPos] = newPixel;
         }
     }
 
@@ -408,17 +404,17 @@ public final class Renderer/* extends JPanel*/ {
                 int gF = (int)(Fog.GREEN * fogBrightness);
                 int bF = (int)(Fog.BLUE  * fogBrightness);
 
-                int rP = (int)(((pixel >> 24) & 0xFF) * pixelBrightness);
-                int gP = (int)(((pixel >> 16) & 0xFF) * pixelBrightness);
-                int bP = (int)(((pixel >>  8) & 0xFF) * pixelBrightness);
-                int aP = (int)(((pixel      ) & 0xFF)/* * pixelBrightness*/);
+                int rP = (int)(((pixel >> 16) & 0xFF) * pixelBrightness);
+                int gP = (int)(((pixel >>  8) & 0xFF) * pixelBrightness);
+                int bP = (int)(((pixel >>  0) & 0xFF) * pixelBrightness);
+                int aP = (int)(((pixel >> 24) & 0xFF)/* * pixelBrightness*/);
 
                 // складываем компоненты цветов
                 // берем альфу пикселя, потому что он может быть полупрозрачным
-                pixel = aP |
-                        ((rF + rP) << 24) |
-                        ((gF + gP) << 16) |
-                        ((bF + bP) <<  8);
+                pixel = (aP << 24) |
+                        ((rF + rP) << 16) |
+                        ((gF + gP) <<  8) |
+                        ((bF + bP) <<  0);
             }
 
             return pixel;
@@ -456,16 +452,16 @@ public final class Renderer/* extends JPanel*/ {
                 continue;
             }*/
 
-            int pixel = SCREEN_BUFFER.getElem(i);
-            int next  = SCREEN_BUFFER.getElem(i + 1);
+            int pixel = SCREEN_BUFFER[i];
+            int next  = SCREEN_BUFFER[i + 1];
             if (pixel != next) {
-                int r = (((pixel >> 24) & 0xFF) + ((next >> 24) & 0xFF)) >> 1,
-                    g = (((pixel >> 16) & 0xFF) + ((next >> 16) & 0xFF)) >> 1,
-                    b = (((pixel >>  8) & 0xFF) + ((next >>  8) & 0xFF)) >> 1;
-                SCREEN_BUFFER.setElem(i, 0xFF |
-                                     (r << 24)  |
-                                     (g << 16)  |
-                                     (b <<  8));
+                int r = (((pixel >> 16) & 0xFF) + ((next >> 16) & 0xFF)) >> 1,
+                    g = (((pixel >>  8) & 0xFF) + ((next >>  8) & 0xFF)) >> 1,
+                    b = (((pixel >>  0) & 0xFF) + ((next >>  0) & 0xFF)) >> 1;
+                SCREEN_BUFFER[i] = 0xFF000000 |
+                                   (r << 16)  |
+                                   (g <<  8)  |
+                                   (b <<  0);
                 //++i;
             }
         }
@@ -1007,7 +1003,7 @@ public final class Renderer/* extends JPanel*/ {
                             continue;
                         }*/
                         int color = pixelsColumn[texY];
-                        int a = (color/* >> 24*/) & 0xFF;
+                        int a = (color >> 24) & 0xFF;
                         if (a <= MAX_ADDITIVE_TRANSPARENT) {
                             continue;
                         }
@@ -1025,7 +1021,7 @@ public final class Renderer/* extends JPanel*/ {
                         //TEMP_BUFFER_RASTER.setPixel(x, y, new int[]{color});
 
                         //drawPixel(x, y, color);
-                        SCREEN_BUFFER.setElem(y * WIDTH + x, color);
+                        SCREEN_BUFFER[y * WIDTH + x] = color;
                         //TEMP_BUFFER.setElem(arrayPos, color);
                         //putPixel(x, y, color);
                         //ZBUFFER[arrayPos] = wallDist;
@@ -1184,7 +1180,7 @@ public final class Renderer/* extends JPanel*/ {
                                 if (Config.fog != Fog.NOTHING) {
                                     color = applyFog(color, currentDist, fogBrightness);
                                 }
-                                SCREEN_BUFFER.setElem((y - 1) * WIDTH + x, color);
+                                SCREEN_BUFFER[(y - 1) * WIDTH + x] = color;
                                 //TEMP_BUFFER.setElem(arrayPos, color);
                                 //putPixel(x, y - 1, Texture.FLOOR[Map.FLOOR[floorX][floorY]].getPixel(floorTexX, floorTexY));
                                 //ZBUFFER[arrayPos] = currentDist;
@@ -1205,11 +1201,11 @@ public final class Renderer/* extends JPanel*/ {
                                 //color = ceilTex.pixels[(floorTexY << Texture.WIDTH_POT) + floorTexX];
                                 //color = ceilPixels[pixelPos];
                                 //color = ceilPixels[floorTexX][floorTexY];
-                                if (((color/* >> 24*/) & 0xFF) != 0) {
+                                if (((color >> 24) & 0xFF) != 0) {
                                     if (Config.fog != Fog.NOTHING) {
                                         color = applyFog(color, currentDist, fogBrightness);
                                     }
-                                    SCREEN_BUFFER.setElem((HEIGHT - y) * WIDTH + x, color);
+                                    SCREEN_BUFFER[(HEIGHT - y) * WIDTH + x] = color;
                                     //TEMP_BUFFER.setElem(arrayPos, color);
                                     //putPixel(x, HEIGHT - y, Texture.CEIL[Map.CEIL[floorX][floorY]].getPixel(floorTexX, floorTexY));
                                     //ZBUFFER[arrayPos] = currentDist;
@@ -1258,7 +1254,7 @@ public final class Renderer/* extends JPanel*/ {
                         //int arrayPos = y * WIDTH + x;
                         //if (ZBUFFER[arrayPos] == Double.MAX_VALUE) {
                         if (ZBUFFER[x][y] == Double.MAX_VALUE) {
-                            SCREEN_BUFFER.setElem(y * WIDTH + x, pixels[y]);
+                            SCREEN_BUFFER[y * WIDTH + x] = pixels[y];
                             //TEMP_BUFFER.setElem(arrayPos, pixels[y]);
                             ++pixelsInColumn;
                         }
@@ -1268,7 +1264,7 @@ public final class Renderer/* extends JPanel*/ {
                         //int arrayPos = y * WIDTH + x;
                         //if (ZBUFFER[arrayPos] == Double.MAX_VALUE) {
                         if (ZBUFFER[x][y] == Double.MAX_VALUE) {
-                            SCREEN_BUFFER.setElem(y * WIDTH + x, 0xFF000000);
+                            SCREEN_BUFFER[y * WIDTH + x] = 0xFF000000;
                             //TEMP_BUFFER.setElem(arrayPos, 0xFF000000);
                             ++pixelsInColumn;
                         }
@@ -1516,7 +1512,7 @@ public final class Renderer/* extends JPanel*/ {
                         }
 
                         int color = txr.getPixel(texX, texY);
-                        int a = (color/* >> 24*/) & 0xFF;
+                        int a = (color >> 24) & 0xFF;
 
                         if (a < MIN_VISIBLE_TRANSPARENT) {
                             continue;
@@ -1677,8 +1673,8 @@ public final class Renderer/* extends JPanel*/ {
                         }
 
                         int color = image.getPixel(x, y);
-                        if (((color/* >> 24*/) & 0xFF) != 0) {
-                            SCREEN_BUFFER.setElem(col + x, color);
+                        if (((color >> 24) & 0xFF) != 0) {
+                            SCREEN_BUFFER[col + x] = color;
                         }
                     }
                 }
@@ -1699,7 +1695,7 @@ public final class Renderer/* extends JPanel*/ {
                     Thread.yield();
                 }*/
             } else {
-                antialiasing(WIDTH, SCREEN_BUFFER.getSize() - 1);
+                antialiasing(WIDTH, SCREEN_BUFFER.length - 1);
             }
         }
 
@@ -1708,7 +1704,7 @@ public final class Renderer/* extends JPanel*/ {
         //raster.setDataElements(0, 0, WIDTH, HEIGHT, SCREEN_BUFFER);
         //raster.setPixels(0, 0, WIDTH >> 2, HEIGHT >> 2, SCREEN_BUFFER);
 
-        //SCREEN_RASTER.setDataElements(0, 0, WIDTH, HEIGHT, SCREEN_BUFFER);
+        SCREEN_RASTER.setDataElements(0, 0, WIDTH, HEIGHT, SCREEN_BUFFER);
 
         //g.drawImage(SCREEN_SMALL, 0, 0, Window.WIDTH, Window.HEIGHT, null);
 
@@ -1843,7 +1839,11 @@ public final class Renderer/* extends JPanel*/ {
         //ANG_STEP = Player.FOV / WIDTH;
 
         SCREEN = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_ARGB);
-        //SCREEN_RASTER = SCREEN.getRaster();
+        SCREEN.getGraphics().setColor(Color.BLACK);
+
+        SCREEN.getGraphics().fillRect(0, 0, WIDTH, HEIGHT);
+
+        SCREEN_RASTER = SCREEN.getRaster();
 
         /*TEMP_RASTER = new Pixmap(WIDTH, HEIGHT, Format.RGBA8888);
         TEMP_RASTER.setFilter(Filter.BiLinear);
@@ -1853,7 +1853,7 @@ public final class Renderer/* extends JPanel*/ {
         //SCREEN_SMALL = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_ARGB);
         //SCREEN_BUFFER = new int[WIDTH * HEIGHT];
         //TEMP_BUFFER = TEMP_RASTER.getPixels().asIntBuffer();
-        SCREEN_BUFFER = (DataBufferInt)(SCREEN.getRaster().getDataBuffer());
+        SCREEN_BUFFER = new int[WIDTH * HEIGHT];
 
         ZBUFFER = new double[WIDTH][HEIGHT];
 
@@ -1879,7 +1879,7 @@ public final class Renderer/* extends JPanel*/ {
             RENDER_TASKS[i] = newRenderTask("render_task " + i, fromX, toX);
         }
 
-        int lengthStep = SCREEN_BUFFER.getSize() / Config.THREADS_COUNT;
+        int lengthStep = SCREEN_BUFFER.length / Config.THREADS_COUNT;
         if (lengthStep % 2 != 0) {
             --lengthStep;
         }
@@ -1892,7 +1892,7 @@ public final class Renderer/* extends JPanel*/ {
             if (toX >= SCREEN_BUFFER.limit() - 1) {
                 toX = SCREEN_BUFFER.limit() - 1;
             }*/
-            int toX = (i == Config.THREADS_COUNT - 1) ? SCREEN_BUFFER.getSize() - 1 : fromX + lengthStep;
+            int toX = (i == Config.THREADS_COUNT - 1) ? SCREEN_BUFFER.length - 1 : fromX + lengthStep;
 
             ANTIALIASING_TASKS[i] = newAntialiasingTask("antialiasing_task " + i, fromX, toX);
         }

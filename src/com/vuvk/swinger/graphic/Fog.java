@@ -74,9 +74,9 @@ public enum Fog {
     public static double[] EXPONENTIAL2_TABLE;
 
     public static void init() {
-        RED   = (COLOR >> 24) & 0xFF;
-        GREEN = (COLOR >> 16) & 0xFF;
-        BLUE  = (COLOR >>  8) & 0xFF;
+        RED   = (COLOR >> 16) & 0xFF;
+        GREEN = (COLOR >>  8) & 0xFF;
+        BLUE  = (COLOR >>  0) & 0xFF;
 
         double factor = 1.0 / (END - START);
 

@@ -411,6 +411,7 @@ public final class SoundSystem {
                             } catch (InterruptedException ignored) {}
                         }
                     }
+                    stop();
                 }
             }, "RSS Update Mono Line Thread").start();
 
@@ -428,6 +429,7 @@ public final class SoundSystem {
                             } catch (InterruptedException ignored) {}
                         }
                     }
+                    stop();
                 }
             }, "RSS Update Stereo Line Thread").start();
         }
@@ -444,8 +446,12 @@ public final class SoundSystem {
         monoCache = null;
         stereoCache = null;
 
-        monoLine.close();
-        stereoLine.close();
+        if (monoLine != null) {
+            monoLine.close();
+        }
+        if (stereoLine != null) {
+            stereoLine.close();
+        }
 
         monoLine = null;
         stereoLine = null;
@@ -486,7 +492,10 @@ public final class SoundSystem {
     }
 
     public static void stopMusic() {
-        MUSICS.forEach(Music::stop);
+        //MUSICS.forEach(Music::stop);
+        for (Music mus : MUSICS) {
+            mus.stop();
+        }
         MUSICS.clear();
     }
 

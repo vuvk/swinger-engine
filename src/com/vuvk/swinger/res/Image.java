@@ -13,26 +13,22 @@
 */
 package com.vuvk.swinger.res;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import javax.imageio.ImageIO;
-
 import com.vuvk.swinger.math.BoundingBox;
 import com.vuvk.swinger.math.Vector2;
-
 import java.awt.image.BufferedImage;
-import java.awt.image.DataBufferInt;
 import java.io.File;
 import java.io.Serializable;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.imageio.ImageIO;
 
 /**
  *
  * @author Anton "Vuvk" Shcherbatykh
  */
-public/* abstract*/ class Image implements Serializable {  
-    transient private static final Logger LOG = Logger.getLogger(Image.class.getName());    
-    
+public/* abstract*/ class Image implements Serializable {
+    transient private static final Logger LOG = Logger.getLogger(Image.class.getName());
+
     protected int[][] pixels;
     protected int width;
     protected int height;
@@ -40,39 +36,39 @@ public/* abstract*/ class Image implements Serializable {
     private boolean alphaChannel;
     protected final BoundingBox volume = new BoundingBox(0, 1, 0, 1);
     //protected final String path;
-    
+
     public Image(final BufferedImage image) {
         this(image, -1, -1);
     }
-    
+
     public Image(final File file) {
         this(file, -1, -1);
     }
-    
+
     public Image(final String path) {
         this(path, -1, -1);
     }
-    
+
     public Image(final BufferedImage image, int newWidth, int newHeight) {
         load(image, newWidth, newHeight);
     }
-    
+
     public Image(final File file, int newWidth, int newHeight) {
         load(file, newWidth, newHeight);
     }
-    
+
     public Image(final String path, int newWidth, int newHeight) {
         /*this.path = path;
-        
+
         FileHandle file = Gdx.files.internal(path);
         if (file != null && file.exists()) {
             load(Gdx.files.internal(path), newWidth, newHeight);
         }*/
         load(path, newWidth, newHeight);
     }
-    
-    
-    private void load(final BufferedImage image, int newWidth, int newHeight) {        
+
+
+    private void load(final BufferedImage image, int newWidth, int newHeight) {
         /*Pixmap image = new Pixmap(file);
         image.setFilter(Filter.NearestNeighbour);
         image.setBlending(Pixmap.Blending.None);
@@ -80,7 +76,7 @@ public/* abstract*/ class Image implements Serializable {
         //imageForLoad.setFilter(Filter.NearestNeighbour);
         //imageForLoad.drawPixmap(image, 0, 0, image.getWidth(), image.getHeight(), 0, 0, image.getWidth(), image.getHeight());
         //imageForLoad.setFilter(Filter.NearestNeighbour);
-            
+
         Pixmap imageForLoad;
         if (newWidth > 0 && newHeight > 0) {
             imageForLoad = new Pixmap(newWidth, newHeight, Format.RGBA8888);
@@ -91,7 +87,7 @@ public/* abstract*/ class Image implements Serializable {
         } else {
             imageForLoad = image;
         }
-        
+
         //imageForLoad.setFilter(Pixmap.Filter.NearestNeighbour);
         */
 
@@ -106,23 +102,23 @@ public/* abstract*/ class Image implements Serializable {
         width  = imageForLoad.getWidth();
         height = imageForLoad.getHeight();
         pixels = new int[width][height];
-                
+
         //IntBuffer buffer = imageForLoad.getPixels().asIntBuffer();
-        int[] buffer = ((DataBufferInt)imageForLoad.getRaster().getDataBuffer()).getData();
+        //int[] buffer = ((DataBufferInt)imageForLoad.getRaster().getDataBuffer()).getData();
 
         // заполняем массив пикселей
         for (int x = 0; x < width; ++x) {
             for (int y = 0; y < height; ++y) {
-                //pixels[x][y] = imageForLoad.getPixel(x, y);
-                pixels[x][y] = buffer[x + y * width];
+                pixels[x][y] = imageForLoad.getRGB(x, y);
+                //pixels[x][y] = buffer[x + y * width];
 
                 // заодно узнаем есть ли прозрачные пиксели
-                if (((pixels[x][y]) & 0xFF) == 0) {
+                if (((pixels[x][y]) & 0xFF000000) == 0) {
                     alphaChannel = true;
                 }
             }
-        }        
-        
+        }
+
         if (alphaChannel) {
             // ищем полезный объем
             int x, y;
@@ -134,7 +130,7 @@ public/* abstract*/ class Image implements Serializable {
             left = 0;
             for (x = 0; x < width && !founded; ++x) {
                 for (y = 0; y < height; ++y) {
-                    if (((pixels[x][y]) & 0xFF) != 0) {
+                    if (((pixels[x][y]) & 0xFF000000) != 0) {
                         left = x;
                         founded = true;
                         break;
@@ -147,7 +143,7 @@ public/* abstract*/ class Image implements Serializable {
             right = width - 1;
             for (x = width - 1; x >= 0 && !founded; --x) {
                 for (y = 0; y < height; ++y) {
-                    if (((pixels[x][y]) & 0xFF) != 0) {
+                    if (((pixels[x][y]) & 0xFF000000) != 0) {
                         right = x;
                         founded = true;
                         break;
@@ -160,7 +156,7 @@ public/* abstract*/ class Image implements Serializable {
             top = 0;
             for (y = 0; y < height && !founded; ++y) {
                 for (x = 0; x < width; ++x) {
-                    if (((pixels[x][y]) & 0xFF) != 0) {
+                    if (((pixels[x][y]) & 0xFF000000) != 0) {
                         top = y;
                         founded = true;
                         break;
@@ -173,7 +169,7 @@ public/* abstract*/ class Image implements Serializable {
             bottom = height - 1;
             for (y = height - 1; y >= 0  && !founded; --y) {
                 for (x = 0; x < width; ++x) {
-                    if (((pixels[x][y]) & 0xFF) != 0) {
+                    if (((pixels[x][y]) & 0xFF000000) != 0) {
                         bottom = y;
                         founded = true;
                         break;
@@ -187,14 +183,14 @@ public/* abstract*/ class Image implements Serializable {
             volume.setTop   ((float)top    / (height - 1));
             volume.setBottom((float)bottom / (height - 1));
         }
-        
+
         //imageForLoad.dispose();
     }
 
     public void setCenter(Vector2 center) {
         this.center.set(center);
-    }       
-    
+    }
+
     private void load(final File file, int newWidth, int newHeight) {
         try {
             BufferedImage img = ImageIO.read(file);
@@ -203,23 +199,23 @@ public/* abstract*/ class Image implements Serializable {
             LOG.log(Level.SEVERE, null, ex);
         }
     }
-      
+
     private void load(final String path, int newWidth, int newHeight) {
         load(new File(path), newWidth, newHeight);
     }
-    
+
     private void load(final BufferedImage image) {
         load(image, -1, -1);
     }
-    
+
     private void load(final File file) {
         load(file, -1, -1);
     }
-    
+
     private void load(final String path) {
         load(new File(path));
     }
-    
+
     public int getWidth() {
         return width;
     }
@@ -227,11 +223,11 @@ public/* abstract*/ class Image implements Serializable {
     public int getHeight() {
         return height;
     }
-    
+
     public int[][] getPixels() {
         return pixels;
     }
-    
+
     public int getPixel(int x, int y) {
         //if (pixels != null) {
             return pixels[x][y];
@@ -239,24 +235,24 @@ public/* abstract*/ class Image implements Serializable {
             return 0;
         }*/
     }
-    
-    public int[] getColumn(int x) {        
+
+    public int[] getColumn(int x) {
         return pixels[x];
     }
-    
+
     public BoundingBox getVolume() {
         return volume;
-    }    
+    }
 
     public Vector2 getCenter() {
         return center;
     }
-    
+
     public boolean hasAlphaChannel() {
         return alphaChannel;
-    } 
-    
-    /* 
+    }
+
+    /*
     public final String getPath() {
         return path;
     }

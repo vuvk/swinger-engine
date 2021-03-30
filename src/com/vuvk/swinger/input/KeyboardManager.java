@@ -304,10 +304,10 @@ public final class KeyboardManager extends KeyAdapter {
                                     }
 
                                     // все компоненты введены - установить цвет тумана
-                                    Fog.COLOR = 0xFF |
-                                                ((red) << 24) |
-                                                ((green) << 16) |
-                                                ((blue) <<  8);
+                                    Fog.COLOR = 0xFF000000 |
+                                                (red   << 16) |
+                                                (green <<  8) |
+                                                (blue  <<  0);
 
                                     Fog.init();
                                     break;

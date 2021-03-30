@@ -108,6 +108,16 @@ public final class Music extends SoundBasis {
         
         return this;
     }
+
+    @Override
+    public Music stop() {
+        super.stop();
+        if (line != null) {
+            line.close();
+            line = null;
+        } 
+        return this;
+    }
     
     private void prepareLine() { 
         if (inputAudioStream != null) {
