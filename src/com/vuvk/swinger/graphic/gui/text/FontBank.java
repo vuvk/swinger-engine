@@ -45,29 +45,25 @@ public final class FontBank {
         try {
             BufferedImage fontOutlineImg = ImageIO.read(new File(PATH_FONT_OUTLINE));
             for (int x = 0; x * 24 < fontOutlineImg.getWidth(); ++x) {
-                BufferedImage symbolImg = new BufferedImage(24, 32, BufferedImage.TYPE_INT_ARGB);
-                symbolImg.getGraphics().drawImage(fontOutlineImg, x * 24, 0, 24, 32, 0, 0, 24, 32, null);
+                BufferedImage symbolImg = fontOutlineImg.getSubimage(x * 24, 0, 24, 32);
                 FONT_OUTLINE.setSymbol(x + 32, new Symbol(symbolImg));
             }
 
             BufferedImage fontBubblaImg = ImageIO.read(new File(PATH_FONT_BUBBLA));
             for (int x = 0; x * 8 < fontBubblaImg.getWidth(); ++x) {
-                BufferedImage symbolImg = new BufferedImage(8, 8, BufferedImage.TYPE_INT_ARGB);
-                symbolImg.getGraphics().drawImage(fontBubblaImg, x * 8, 0, 8, 8, 0, 0, 8, 8, null);
+                BufferedImage symbolImg = fontBubblaImg.getSubimage(x * 8, 0, 8, 8);
                 FONT_BUBBLA.setSymbol(x + 32, new Symbol(symbolImg));
             }
 
             BufferedImage fontMiddleImg = ImageIO.read(new File(PATH_FONT_MIDDLE));
             for (int x = 0; x * 16 < fontMiddleImg.getWidth(); ++x) {
-                BufferedImage symbolImg = new BufferedImage(16, 16, BufferedImage.TYPE_INT_ARGB);
-                symbolImg.getGraphics().drawImage(fontMiddleImg, x * 16, 0, 16, 16, 0, 0, 16, 16, null);
+                BufferedImage symbolImg = fontMiddleImg.getSubimage(x * 16, 0, 16, 16);
                 FONT_MIDDLE.setSymbol(x + 32, new Symbol(symbolImg));
             }
 
             BufferedImage fontMenuImg = ImageIO.read(new File(PATH_FONT_MENU));
             for (int x = 0; x * 16 < fontMenuImg.getWidth(); ++x) {
-                BufferedImage symbolImg = new BufferedImage(16, 16, BufferedImage.TYPE_INT_ARGB);
-                symbolImg.getGraphics().drawImage(fontMiddleImg, x * 16, 0, 16, 16, 0, 0, 16, 16, null);
+                BufferedImage symbolImg = fontMenuImg.getSubimage(x * 16, 0, 16, 16);
                 FONT_MENU.setSymbol(x + 32, new Symbol(symbolImg));
             }
         } catch (Exception ex) {
