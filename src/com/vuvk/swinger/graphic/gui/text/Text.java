@@ -17,7 +17,6 @@ import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.logging.Logger;
 
 import com.vuvk.swinger.math.Vector2;
 
@@ -28,7 +27,6 @@ import com.vuvk.swinger.math.Vector2;
 public class Text {
     
     private final static List<Text> TEXTS = new CopyOnWriteArrayList<>();
-    transient private static final Logger LOG = Logger.getLogger(Text.class.getName());    
     
     private Vector2 location;
     private Font font;

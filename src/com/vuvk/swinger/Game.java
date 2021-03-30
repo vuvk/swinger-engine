@@ -13,13 +13,14 @@
 */
 package com.vuvk.swinger;
 
+import java.awt.Canvas;
 import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.Frame;
 import java.awt.Graphics;
-import java.awt.Window;
+import java.awt.Graphics2D;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
 import java.util.Locale;
 
@@ -61,16 +62,18 @@ import com.vuvk.swinger.res.TextureBank;
  * @author Anton "Vuvk" Shcherbatykh
  */
 public class Game extends Frame {
+
     private boolean initialized = false;
+    private Canvas canvas;
     private Graphics batch;
+    private BufferStrategy backBuffer;
+    private BufferedImage surface;
     private Renderer renderer;
     private BufferedImage consoleBackground;
     private Vector2 windowCenter = new Vector2();
-    private MouseManager mouseManager;
-    private KeyboardManager keyboardManager;
 
     private double timeForFPS;
-    private String processors = "available render threads - " + Config.THREADS_COUNT;
+    //private String processors = "available render threads - " + Config.THREADS_COUNT;
     private Text fpsText;
     private Text playerPosText;
     private Text playerHpText;
@@ -116,10 +119,10 @@ public class Game extends Frame {
     public Game() {
         super();
 
-        addKeyListener(KeyboardManager.getInstance());
         addMouseListener(MouseManager.getInstance());
         addMouseMotionListener(MouseManager.getInstance());
         addMouseWheelListener(MouseManager.getInstance());
+        addKeyListener(KeyboardManager.getInstance());
 
         addWindowListener(new WindowAdapter() {
             @Override
@@ -127,16 +130,21 @@ public class Game extends Frame {
                 Config.QUIT = true;
             }
         });
-                
+
+        canvas = new Canvas();
+        canvas.setIgnoreRepaint(true);
+        canvas.setSize(Config.WIDTH, Config.HEIGHT);
+        add(canvas);
+        pack();
+
         setTitle(Config.TITLE);
         setBackground(Color.BLACK);
-        setForeground(Color.BLACK);
-        setMinimumSize(new Dimension(Config.WIDTH, Config.HEIGHT));
+        setIgnoreRepaint(true);
         setVisible(true);
         setLocationRelativeTo(null);
-        
+
         create();
-        
+
         initialized = true;
     }
 
@@ -161,6 +169,10 @@ public class Game extends Frame {
         RocketLauncherInHand.loadFrames();
 
         consoleBackground = new BufferedImage(Config.WIDTH, 40, BufferedImage.TYPE_INT_ARGB);
+        Graphics cG = consoleBackground.getGraphics();
+        cG.setColor(Color.DARK_GRAY);
+        cG.fillRect(0, 0, consoleBackground.getWidth(), consoleBackground.getHeight());
+
         lastFrame      = TextureBank.MAIN_MENU;
         fpsText        = new Text(FontBank.FONT_BUBBLA, "", new Vector2(10, 15));
         playerPosText  = new Text(FontBank.FONT_BUBBLA, "", new Vector2(10, 25));
@@ -170,7 +182,12 @@ public class Game extends Frame {
         //new Text(FontBank.FONT_OUTLINE, "demo", new Vector2(250, 150));
 
         renderer = Renderer.getInstance();
-        batch = getGraphics();
+        canvas.createBufferStrategy(2);
+        backBuffer = canvas.getBufferStrategy();
+        surface = new BufferedImage(Config.WIDTH, Config.HEIGHT, BufferedImage.TYPE_INT_ARGB);
+        //batch = surface.getGraphics();
+
+        new Text(FontBank.FONT_MIDDLE, "HEY BLYAD", new Vector2(250, 150));
 
         //
         //inputManager = new InputManager();
@@ -200,12 +217,23 @@ public class Game extends Frame {
         SoundBank.MUSIC_TITLE.play(true);
     }
 
-    public void render () {
+    @Override
+    public void dispose() {
+        SoundSystem.stop();
+        Map.reset();
+        super.dispose();
+        initialized = false;
+        Config.save();
+    }
+
+    private void update() {
         if (!initialized) {
             return;
         }
+
         // clear previous frame
         //Graphics graphics = Gdx.graphics;
+        batch = surface.createGraphics();
 
         /*for (int i = 1; i < 6; ++i) {
             kishPoints[i - 1].update();
@@ -294,7 +322,6 @@ public class Game extends Frame {
             }
 
             if (Map.isLoaded()) {
-                Renderer renderer = Renderer.getInstance();
                 Player player = Player.getInstance();
                 Camera playerCamera = player.getCamera();
 
@@ -358,9 +385,13 @@ public class Game extends Frame {
                             playerHpText.setLocation(new Vector2(16, Config.HEIGHT - 16));
                             playerHpText.setMessage(String.format(Locale.ENGLISH, "HP %.0f", player.getHealth()));
 
-                            String ammoText = "";
+                            String ammoText;
                             AmmoType ammoType = player.getWeaponInHand().getAmmoType();
                             switch (ammoType) {
+                                default:
+                                case NOTHING:
+                                    ammoText = "";
+                                    break;
                                 case PISTOL:
                                 case SHOTGUN:
                                 case ROCKET:
@@ -430,27 +461,38 @@ public class Game extends Frame {
             Text.drawAll(batch);
 
             if (!Menu.isActive() && Config.console) {
-                batch.drawImage(consoleBackground, 0, 0, null);
-                batch.setColor(Color.WHITE);
-                batch.drawString(Config.consoleCommand, 10, 25);
+                int consoleY = Config.HEIGHT - consoleBackground.getHeight();
+                batch.drawImage(consoleBackground, 0, consoleY, null);
+                batch.setColor(Color.RED);
+                batch.drawString(Config.consoleCommand, 10, consoleY + 15);
             }
         }
         MouseManager.reset();
 
-        if (Config.QUIT) {
-            Config.save();
-            dispose();
-        } else {
-            repaint();
+        Graphics g = backBuffer.getDrawGraphics();
+        g.drawImage(surface, 0, 0, canvas.getWidth(), canvas.getHeight(), null);
+        if (!backBuffer.contentsLost()) {
+            backBuffer.show();
         }
-    }
 
+        g.dispose();
+        batch.dispose();
+    }
+/*
     @Override
-    public void dispose () {
-        Map.reset();
-        SoundSystem.stop();
-        super.dispose();
-        initialized = false;
+    public void reshape(int x, int y, int width, int height) {
+        super.reshape(x, y, width, height);
+        setFocusable(true);
+    }
+*/
+    public void gameLoop() {
+        new Thread(() -> {
+            while (!Config.QUIT) {
+                update();
+                Thread.yield();
+            }
+            dispose();
+        }).start();
     }
 
     public static void setFullscreenMode(boolean fullscreen) {
@@ -467,32 +509,5 @@ public class Game extends Frame {
     public static void setVSync(boolean vSync) {
         Config.vSync = vSync;
         //Gdx.graphics.setVSync(vSync);
-    }
-
-    @Override
-    public void paint(Graphics g) {
-        render();
-    }
-
-    @Override
-    public void reshape(int x, int y, int width, int height) {
-        super.reshape(x, y, width, height);
-        /*
-        windowCenter.set(width >> 1, height >> 1);
-
-        camViewport.update(width, height, true);
-        stage.getViewport().update(width, height, true);
-
-        // смещаем кнопки управления
-        int btnSize = Math.min(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()) >> 3;
-        GuiBank.MOBILE_BUTTON_USE  .setX(width - btnSize * 1.5f);
-        GuiBank.MOBILE_BUTTON_SHOOT.setX(width - btnSize * 3.0f);
-
-        GuiBank.MOBILE_BUTTON_NEXT_WEAPON.setX(width  - btnSize * 1.5f);
-        GuiBank.MOBILE_BUTTON_NEXT_WEAPON.setY(height - btnSize * 1.5f);
-
-        GuiBank.MOBILE_BUTTON_PREV_WEAPON.setX(width  - btnSize * 1.5f);
-        GuiBank.MOBILE_BUTTON_PREV_WEAPON.setY(height - btnSize * 2.5f);
-        */
     }
 }
