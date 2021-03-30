@@ -411,7 +411,7 @@ public final class Map {
             float scaleY  = (Float)    preset.get(3);
             Vector2 scale = new Vector2(scaleX, scaleY);
 
-            float[] jsonPos = gson.fromJson(jsonValue.get("position").getAsJsonObject(), float[].class);
+            float[] jsonPos = gson.fromJson(jsonValue.get("position"), float[].class);
             Vector3 pos = new Vector3(jsonPos);
             
             if (solid) {
@@ -459,7 +459,7 @@ public final class Map {
             JsonObject jsonValue = weapMap.get(i).getAsJsonObject();
             int weaponNum = jsonValue.get("weapon").getAsInt();
 
-            float[] jsonPos = gson.fromJson(jsonValue.get("position").getAsJsonObject(), float[].class);
+            float[] jsonPos = gson.fromJson(jsonValue.get("position"), float[].class);
             Vector3 pos = new Vector3(jsonPos);
 
             switch (weaponNum) {
@@ -532,7 +532,7 @@ public final class Map {
             JsonObject jsonValue = clipsMap.get(i).getAsJsonObject();
             int clipNum = jsonValue.get("clip").getAsInt();
 
-            float[] jsonPos = gson.fromJson(jsonValue.get("position").getAsJsonObject(), float[].class);
+            float[] jsonPos = gson.fromJson(jsonValue.get("position"), float[].class);
             Vector3 pos = new Vector3(jsonPos);
 
             new Clip(clipsMat[clipNum], pos, clipsType[clipNum], clipsVol[clipNum]);
@@ -576,7 +576,7 @@ public final class Map {
             JsonObject jsonValue = medkitsMap.get(i).getAsJsonObject();
             int num = jsonValue.get("medkit").getAsInt();
 
-            float[] jsonPos = gson.fromJson(jsonValue.get("position").getAsJsonObject(), float[].class);
+            float[] jsonPos = gson.fromJson(jsonValue.get("position"), float[].class);
             Vector3 pos = new Vector3(jsonPos);
 
             new MedKit(presets[num].getLeft(), pos, presets[num].getRight());
@@ -619,7 +619,7 @@ public final class Map {
             JsonObject jsonValue = keysMap.get(i).getAsJsonObject();
             int keyNum = jsonValue.get("key").getAsInt();
 
-            float[] jsonPos = gson.fromJson(jsonValue.get("position").getAsJsonObject(), float[].class);
+            float[] jsonPos = gson.fromJson(jsonValue.get("position"), float[].class);
             Vector3 pos = new Vector3(jsonPos);
 
             new Key(keysMat[keyNum], pos, keyNum);
@@ -648,7 +648,7 @@ public final class Map {
             }
         }
 
-        JsonArray doorsMap = json.get("map").getAsJsonArray();
+        JsonArray doorsMap = json.get("doors_map").getAsJsonArray();
         for (int i = 0; i < doorsMap.size(); ++i) {
             JsonObject jsonDoor = doorsMap.get(i).getAsJsonObject();
             int doorNum = jsonDoor.get("door").getAsInt();
@@ -743,10 +743,10 @@ public final class Map {
             double radius = jsonValue.get("radius").getAsDouble();
             presets[i].add(radius);
 
-            int[] painSoundsIdx = gson.fromJson(jsonValue.get("pain sounds").getAsJsonObject(), int[].class);
+            int[] painSoundsIdx = gson.fromJson(jsonValue.get("pain sounds"), int[].class);
             presets[i].add(painSoundsIdx);
 
-            int[] dieSoundsIdx = gson.fromJson(jsonValue.get("die sounds").getAsJsonObject(), int[].class);
+            int[] dieSoundsIdx = gson.fromJson(jsonValue.get("die sounds"), int[].class);
             presets[i].add(dieSoundsIdx);
         }
 
@@ -766,7 +766,7 @@ public final class Map {
             int[] painSoundsIdx = (int[]) preset.get(7);
             int[] dieSoundsIdx  = (int[]) preset.get(8);
 
-            float[] jsonPos = gson.fromJson(jsonValue.get("position").getAsJsonObject(), float[].class);
+            float[] jsonPos = gson.fromJson(jsonValue.get("position"), float[].class);
             Vector3 pos = new Vector3(jsonPos);
 
             double direction = jsonValue.get("direction").getAsDouble();
@@ -924,7 +924,7 @@ public final class Map {
                 WallMaterialBank.BANK = new WallMaterial[sidesArray.size()];
                 for (int i = 0; i < sidesArray.size(); ++i) {
                     JsonObject mat = sidesArray.get(i).getAsJsonObject();
-                    int[] jsonSides = gson.fromJson(mat.get("materials").getAsJsonObject(), int[].class);
+                    int[] jsonSides = gson.fromJson(mat.get("materials"), int[].class);
                     Material[] sides = new Material[jsonSides.length];
                     for (int j = 0; j < sides.length; ++j) {
                         sides[j] = MaterialBank.BANK.get(jsonSides[j]);
