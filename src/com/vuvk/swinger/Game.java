@@ -13,13 +13,17 @@
 */
 package com.vuvk.swinger;
 
+import java.awt.AWTEvent;
 import java.awt.Canvas;
 import java.awt.Color;
 import java.awt.Frame;
 import java.awt.Graphics;
-import java.awt.Graphics2D;
+import java.awt.Toolkit;
+import java.awt.event.AWTEventListener;
+import java.awt.event.FocusEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.awt.event.WindowFocusListener;
 import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
 import java.util.Locale;
@@ -123,29 +127,49 @@ public class Game extends Frame {
         addMouseMotionListener(MouseManager.getInstance());
         addMouseWheelListener(MouseManager.getInstance());
         addKeyListener(KeyboardManager.getInstance());
-
         addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
                 Config.QUIT = true;
+            }
+
+            @Override
+            public void windowLostFocus(WindowEvent e) {
+                toFront();
+            }
+
+            @Override
+            public void windowDeactivated(WindowEvent e) {
+                toFront();
             }
         });
 
         canvas = new Canvas();
         canvas.setIgnoreRepaint(true);
         canvas.setSize(Config.WIDTH, Config.HEIGHT);
+        canvas.setFocusable(false);
         add(canvas);
         pack();
 
         setTitle(Config.TITLE);
         setBackground(Color.BLACK);
         setIgnoreRepaint(true);
-        setVisible(true);
+        setAutoRequestFocus(true);
+        //setFocusTraversalKeysEnabled(true);
+        setAlwaysOnTop(true);
         setLocationRelativeTo(null);
-
+/*
+        Toolkit.getDefaultToolkit().addAWTEventListener(new AWTEventListener() {
+            public void eventDispatched(AWTEvent e) {
+                System.err.println(e);
+            }
+        }, FocusEvent.FOCUS_EVENT_MASK | WindowEvent.WINDOW_FOCUS_EVENT_MASK | WindowEvent.WINDOW_EVENT_MASK);
+*/
         create();
 
         initialized = true;
+        setVisible(true);
+        toFront();
     }
 
     private void create() {
