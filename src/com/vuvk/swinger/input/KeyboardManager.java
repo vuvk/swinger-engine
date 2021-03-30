@@ -102,6 +102,8 @@ public final class KeyboardManager extends KeyAdapter {
                     break;
             }
         }
+
+        System.out.println("oress");
     }
 
     @Override
@@ -233,6 +235,10 @@ public final class KeyboardManager extends KeyAdapter {
 
                         if (scanCommand.hasNext()) {
                             switch (scanCommand.next()) {
+                                case "quit" :
+                                    Config.QUIT = true;
+                                    break;
+                                        
                                 case "interlacing" :
                                     Config.interlacing = (scanCommand.hasNextInt() && scanCommand.nextInt() == 1);
                                     Config.init();
