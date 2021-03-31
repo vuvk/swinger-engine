@@ -94,7 +94,7 @@ public/* abstract*/ class Image implements Serializable {
         BufferedImage imageForLoad;
         if (newWidth > 0 && newHeight > 0) {
             imageForLoad = new BufferedImage(newWidth, newHeight, BufferedImage.TYPE_INT_ARGB);
-            imageForLoad.getGraphics().drawImage(image, newWidth, newHeight, null);
+            imageForLoad.getGraphics().drawImage(image, 0, 0, imageForLoad.getWidth(), imageForLoad.getHeight(), null);
         } else {
             imageForLoad = image;
         }

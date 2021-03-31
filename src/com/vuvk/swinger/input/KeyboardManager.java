@@ -102,8 +102,6 @@ public final class KeyboardManager extends KeyAdapter {
                     break;
             }
         }
-
-        System.out.println("oress");
     }
 
     @Override
