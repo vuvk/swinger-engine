@@ -3,8 +3,8 @@
     "name": "E1M1",
     "author": "Vuvk",
 
-    //"fog_color": "C0C0C0FF", /* gray */
-    "fog_color": "000000FF",
+    "fog_color": "FFC0C0C0", /* gray */
+    //"fog_color": "000000FF",
     "fog_start": 1.0,
     "fog_end": 4.0,
 

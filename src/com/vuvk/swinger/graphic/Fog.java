@@ -54,7 +54,7 @@ public enum Fog {
         }
     }
 
-    public static int COLOR = 0xFF;
+    public static int COLOR = 0xFF000000;
     public static int RED;
     public static int GREEN;
     public static int BLUE;

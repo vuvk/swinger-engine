@@ -404,10 +404,10 @@ public final class Renderer/* extends JPanel*/ {
                 int gF = (int)(Fog.GREEN * fogBrightness);
                 int bF = (int)(Fog.BLUE  * fogBrightness);
 
+                int aP = (int)(((pixel >> 24) & 0xFF)/* * pixelBrightness*/);
                 int rP = (int)(((pixel >> 16) & 0xFF) * pixelBrightness);
                 int gP = (int)(((pixel >>  8) & 0xFF) * pixelBrightness);
                 int bP = (int)(((pixel >>  0) & 0xFF) * pixelBrightness);
-                int aP = (int)(((pixel >> 24) & 0xFF)/* * pixelBrightness*/);
 
                 // складываем компоненты цветов
                 // берем альфу пикселя, потому что он может быть полупрозрачным
