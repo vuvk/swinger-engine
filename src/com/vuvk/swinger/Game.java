@@ -17,6 +17,9 @@ import java.awt.Canvas;
 import java.awt.Color;
 import java.awt.Frame;
 import java.awt.Graphics;
+import java.awt.Point;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.image.BufferStrategy;
@@ -136,6 +139,17 @@ public class Game extends Frame {
             @Override
             public void windowDeactivated(WindowEvent e) {
                 toFront();
+            }
+        });
+        addComponentListener(new ComponentAdapter() {
+            @Override
+            public void componentMoved(ComponentEvent e) {
+                Point location = getLocationOnScreen();
+                if (isVisible()) {
+                    int centerX = location.x + (getWidth() >> 1);
+                    int centerY = location.y + (getHeight() >> 1); 
+                    windowCenter.set(centerX, centerY);
+                }
             }
         });
 
