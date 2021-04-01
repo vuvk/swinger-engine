@@ -65,6 +65,7 @@ public class MouseManager implements MouseListener, MouseWheelListener, MouseMot
 
     @Override
     public void mouseMoved(final MouseEvent e) {
+        prevLoc.set(location);
         Point locOnScreen = e.getLocationOnScreen();
         location.set(locOnScreen.x, locOnScreen.y);
     }
@@ -95,7 +96,7 @@ public class MouseManager implements MouseListener, MouseWheelListener, MouseMot
 
     @Override
     public void mouseWheelMoved(MouseWheelEvent e) {
-        if (e.getScrollType() == MouseWheelEvent.WHEEL_UNIT_SCROLL) {
+        /*if (e.getScrollType() == MouseWheelEvent.WHEEL_UNIT_SCROLL)*/ {
             scrollAmountY = e.getScrollAmount();    
         }
     }
@@ -110,11 +111,11 @@ public class MouseManager implements MouseListener, MouseWheelListener, MouseMot
     public void mouseExited(MouseEvent e) {}
 
     public static double getDeltaX() {
-        return location.x - prevLoc.x;
+        return prevLoc.x - location.x;
     }
 
     public static double getDeltaY() {
-        return location.y - prevLoc.y;
+        return prevLoc.y - location.y;
     }
 
     public static Vector2 getDelta() {

@@ -121,9 +121,6 @@ public class Game extends Frame {
     public Game() {
         super();
 
-        addMouseListener(MouseManager.getInstance());
-        addMouseMotionListener(MouseManager.getInstance());
-        addMouseWheelListener(MouseManager.getInstance());
         addKeyListener(KeyboardManager.getInstance());
         addWindowListener(new WindowAdapter() {
             @Override
@@ -157,6 +154,9 @@ public class Game extends Frame {
         canvas.setIgnoreRepaint(true);
         canvas.setSize(Config.WIDTH, Config.HEIGHT);
         canvas.setFocusable(false);
+        canvas.addMouseListener(MouseManager.getInstance());
+        canvas.addMouseMotionListener(MouseManager.getInstance());
+        canvas.addMouseWheelListener(MouseManager.getInstance());
         add(canvas);
         pack();
 
