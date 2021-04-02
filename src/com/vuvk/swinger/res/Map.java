@@ -654,7 +654,7 @@ public final class Map {
             int doorNum = jsonDoor.get("door").getAsInt();
             JsonArray doorPos = jsonDoor.get("position").getAsJsonArray();
             int x = doorPos.get(0).getAsInt(),
-                y = doorPos.get(0).getAsInt();
+                y = doorPos.get(1).getAsInt();
 
             DOORS[x][y] = doorNum;
 
@@ -875,6 +875,8 @@ public final class Map {
         Mesh.deleteAll();
         Model.deleteAll();
         Player.deleteInstance();
+
+        System.gc();
     }
 
     public static void load(int levelNum) {

@@ -545,6 +545,8 @@ public final class SoundSystem {
         }
         //STEREO_SOUNDS.forEach(Sound::stop);
         STEREO_SOUNDS.clear();
+
+        System.gc();
     }
 
     /**
