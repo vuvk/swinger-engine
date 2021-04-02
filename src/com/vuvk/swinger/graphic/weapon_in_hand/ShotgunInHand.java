@@ -14,7 +14,6 @@
 package com.vuvk.swinger.graphic.weapon_in_hand;
 
 import com.vuvk.swinger.objects.weapon.AmmoType;
-import com.vuvk.swinger.audio.SoundBank;
 import com.vuvk.swinger.graphic.Renderer;
 import com.vuvk.swinger.res.Image;
 

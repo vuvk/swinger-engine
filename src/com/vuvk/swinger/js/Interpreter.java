@@ -16,10 +16,12 @@ package com.vuvk.swinger.js;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
@@ -66,8 +68,8 @@ public class Interpreter {
         if (SCRIPT_ACCUM.length() > 0) {            
             String scriptString = SCRIPT_ACCUM.toString();
                         
-            try {
-                new FileOutputStream(new File("script.js")).write(scriptString.getBytes());
+            try (OutputStream stream = new FileOutputStream(new File("script.js"))) {
+                stream.write(scriptString.getBytes());
             } catch (IOException ex) {
                 LOG.log(Level.SEVERE, null, ex);
             }

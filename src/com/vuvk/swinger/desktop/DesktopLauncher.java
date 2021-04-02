@@ -13,7 +13,6 @@
 */
 package com.vuvk.swinger.desktop;
 
-import com.vuvk.swinger.Config;
 import com.vuvk.swinger.Game;
 
 public class DesktopLauncher {

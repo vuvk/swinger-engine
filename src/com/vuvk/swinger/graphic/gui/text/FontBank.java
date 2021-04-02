@@ -20,8 +20,6 @@ import java.util.logging.Logger;
 
 import javax.imageio.ImageIO;
 
-import com.vuvk.swinger.res.Image;
-
 /**
  *
  * @author Anton "Vuvk" Shcherbatykh

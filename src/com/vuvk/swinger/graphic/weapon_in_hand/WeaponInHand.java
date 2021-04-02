@@ -14,8 +14,6 @@
 package com.vuvk.swinger.graphic.weapon_in_hand;
 
 import com.vuvk.retard_sound_system.Sound;
-import com.vuvk.retard_sound_system.SoundBuffer;
-import com.vuvk.retard_sound_system.Sound;
 import com.vuvk.swinger.Engine;
 import com.vuvk.swinger.graphic.Renderer;
 import com.vuvk.swinger.math.Vector2;

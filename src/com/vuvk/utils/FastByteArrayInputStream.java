@@ -63,7 +63,7 @@ public final class FastByteArrayInputStream extends InputStream {
             return 0;
         }
         
-        Utils.arrayFastCopy(this.buffer, pos, buffer, offset, length);
+        ArrayUtils.copy(this.buffer, pos, buffer, offset, length);
         pos += length;
         return length;
     }
