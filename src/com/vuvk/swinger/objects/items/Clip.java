@@ -54,7 +54,7 @@ public class Clip extends Sprite implements Serializable {
                 }
                 AmmoPack.PACK.put(ammoType, curAmmo);
 
-                new Sound(SoundBank.SOUND_BUFFER_EXPLODE).play();
+                new Sound(SoundBank.SOUND_BUFFER_GET_AMMO).play();
 
                 destroy();
             }

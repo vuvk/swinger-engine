@@ -41,16 +41,13 @@ public final class SoundBuffer {
     private byte[] buffer;
     
     public SoundBuffer(String path) {
-        try {
-            load(new BufferedInputStream(new FileInputStream(new File(path))));
-        } catch (FileNotFoundException ex) {
-            LOG.log(Level.SEVERE, null, ex);
-        }
+        this(new File(path));
     }
     
     public SoundBuffer(URL url) {
         try {
             load(new BufferedInputStream(url.openStream()));
+            SoundSystem.SOUND_BUFFERS.add(this);
         } catch (IOException ex) {
             LOG.log(Level.SEVERE, null, ex);
         }
@@ -59,6 +56,7 @@ public final class SoundBuffer {
     public SoundBuffer(File file) {
         try {
             load(new BufferedInputStream(new FileInputStream(file)));
+            SoundSystem.SOUND_BUFFERS.add(this);
         } catch (FileNotFoundException ex) {
             LOG.log(Level.SEVERE, null, ex);
         }
@@ -66,12 +64,12 @@ public final class SoundBuffer {
     
     public SoundBuffer(InputStream inputStream) {   
         load(inputStream);
+        SoundSystem.SOUND_BUFFERS.add(this);
     }
     
     private void load(InputStream inputStream) {
-        AudioInputStream stream = SoundSystem.getEncodedAudioInputStream(inputStream);
-        if (stream != null) {
-            try {
+        try (AudioInputStream stream = SoundSystem.getEncodedAudioInputStream(inputStream)) {
+            if (stream != null) {
                 format = stream.getFormat();
                 
                 List<Byte> buf = new ArrayList<>(inputStream.available());
@@ -90,10 +88,10 @@ public final class SoundBuffer {
                     buffer[n] = buf.get(n);
                 }
                 buf.clear();
-            } catch (IOException ex) {
-                LOG.log(Level.SEVERE, null, ex);
-            }
-        } 
+            } 
+        } catch (IOException ex) {
+            LOG.log(Level.SEVERE, null, ex);
+        }
     }
     
     public AudioInputStream getAudioInputStream() {
@@ -102,5 +100,12 @@ public final class SoundBuffer {
         }
         
         return new AudioInputStream(new FastByteArrayInputStream(buffer), format, buffer.length);
+    }
+
+    public void close() {
+        synchronized (SoundSystem.SOUND_BUFFERS) {
+            SoundSystem.SOUND_BUFFERS.remove(this);
+        }
+        buffer = null; 
     }
 }

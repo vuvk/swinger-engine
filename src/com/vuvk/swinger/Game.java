@@ -15,6 +15,7 @@ package com.vuvk.swinger;
 
 import java.awt.Canvas;
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Frame;
 import java.awt.Graphics;
 import java.awt.Point;
@@ -141,8 +142,8 @@ public class Game extends Frame {
         addComponentListener(new ComponentAdapter() {
             @Override
             public void componentMoved(ComponentEvent e) {
-                Point location = getLocationOnScreen();
                 if (isVisible()) {
+                    Point location = getLocationOnScreen();
                     int centerX = location.x + (getWidth() >> 1);
                     int centerY = location.y + (getHeight() >> 1); 
                     windowCenter.set(centerX, centerY);
@@ -166,6 +167,7 @@ public class Game extends Frame {
         setAutoRequestFocus(true);
         //setFocusTraversalKeysEnabled(true);
         setAlwaysOnTop(true);
+        setMinimumSize(new Dimension(Config.WIDTH, Config.HEIGHT));
         setLocationRelativeTo(null);
 /*
         Toolkit.getDefaultToolkit().addAWTEventListener(new AWTEventListener() {
@@ -174,11 +176,11 @@ public class Game extends Frame {
             }
         }, FocusEvent.FOCUS_EVENT_MASK | WindowEvent.WINDOW_FOCUS_EVENT_MASK | WindowEvent.WINDOW_EVENT_MASK);
 */
+
         create();
 
         initialized = true;
         setVisible(true);
-        toFront();
     }
 
     private void create() {
@@ -223,7 +225,7 @@ public class Game extends Frame {
         surface = new BufferedImage(Config.WIDTH, Config.HEIGHT, BufferedImage.TYPE_INT_ARGB);
         //surface.getGraphics().setColor(Color.BLACK);
         //surface.getGraphics().fillRect(0, 0, surface.getWidth(), surface.getHeight());
-        //batch = surface.getGraphics();
+        batch = surface.getGraphics();
 
         //
         //inputManager = new InputManager();
@@ -255,9 +257,10 @@ public class Game extends Frame {
 
     @Override
     public void dispose() {
-        SoundSystem.stop();
-        Map.reset();
         super.dispose();
+        Map.reset();
+        SoundSystem.stop();
+        SoundSystem.deleteSoundBuffers();
         initialized = false;
         Config.save();
     }
@@ -269,7 +272,7 @@ public class Game extends Frame {
 
         // clear previous frame
         //Graphics graphics = Gdx.graphics;
-        batch = surface.createGraphics();
+        //batch = surface.createGraphics();
 
         /*for (int i = 1; i < 6; ++i) {
             kishPoints[i - 1].update();
@@ -505,14 +508,15 @@ public class Game extends Frame {
         }
         MouseManager.reset();
 
-        Graphics g = backBuffer.getDrawGraphics();
+        //Graphics g = backBuffer.getDrawGraphics();
+        Graphics g = canvas.getGraphics();
         g.drawImage(surface, 0, 0, canvas.getWidth(), canvas.getHeight(), null);
-        if (!backBuffer.contentsLost()) {
+        /*if (!backBuffer.contentsLost()) {
             backBuffer.show();
-        }
+        }*/
 
-        g.dispose();
-        batch.dispose();
+        //g.dispose();
+        //batch.dispose();
     }
 /*
     @Override
@@ -528,7 +532,7 @@ public class Game extends Frame {
                 Thread.yield();
             }
             dispose();
-        }).start();
+        }, "GameLoop Thread").start();
     }
 
     public static void setFullscreenMode(boolean fullscreen) {

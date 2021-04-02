@@ -61,6 +61,10 @@ abstract class SoundBasis {
         return audioFormat;
     }
 
+    public AudioInputStream getInputAudioStream() {
+        return inputAudioStream;
+    }
+
     public int getChannels() {
         return channels;
     }

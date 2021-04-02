@@ -864,7 +864,7 @@ public final class Map {
         loaded = false;
         //Config.draw = false;
 
-//      SoundSystem.stopAll();
+        SoundSystem.stopAll();
         LightSource.deleteAll();
         Door.deleteAll();
         Mortal.deleteAll();
@@ -875,8 +875,6 @@ public final class Map {
         Mesh.deleteAll();
         Model.deleteAll();
         Player.deleteInstance();
-
-        SoundSystem.stopMusic();
     }
 
     public static void load(int levelNum) {
@@ -1090,6 +1088,8 @@ public final class Map {
                 LOG.log(Level.SEVERE, null, ex);
             }
         }
+
+        System.gc();
     }
 
     /*

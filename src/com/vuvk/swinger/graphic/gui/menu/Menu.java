@@ -22,6 +22,7 @@ import com.vuvk.swinger.graphic.gui.text.FontBank;
 import com.vuvk.swinger.graphic.gui.text.Text;
 import com.vuvk.swinger.math.Vector2;
 import com.vuvk.swinger.res.Map;
+import com.vuvk.swinger.utils.Utils;
 import com.vuvk.swinger.SavedGame;
 
 import java.io.File;
@@ -124,11 +125,13 @@ public class Menu {
                                          () -> {},
                                          () -> {
                                              float volume = SoundSystem.getMusicVolume() - 0.05f;
+                                             volume = Utils.limit(volume, 0f, 1f);
                                              SoundSystem.setMusicVolume(volume);
                                              updateOptionsSubMenu();
                                          },
                                          () -> {
                                              float volume = SoundSystem.getMusicVolume() + 0.05f;
+                                             volume = Utils.limit(volume, 0f, 1f);
                                              SoundSystem.setMusicVolume(volume);
                                              updateOptionsSubMenu();
                                          }));
@@ -137,11 +140,13 @@ public class Menu {
                                          () -> {},
                                          () -> {
                                              float volume = SoundSystem.getSoundsVolume() - 0.05f;
+                                             volume = Utils.limit(volume, 0f, 1f);
                                              SoundSystem.setSoundsVolume(volume);
                                              updateOptionsSubMenu();
                                          },
                                          () -> {
                                              float volume = SoundSystem.getSoundsVolume() + 0.05f;
+                                             volume = Utils.limit(volume, 0f, 1f);
                                              SoundSystem.setSoundsVolume(volume);
                                              updateOptionsSubMenu();
                                          }));
@@ -218,8 +223,8 @@ public class Menu {
                                                             new Vector2(Renderer.HALF_WIDTH - 50, Renderer.HALF_HEIGHT)),
                                                    () -> {
                                                        Map.reset();
-                                                       SoundBank.MUSIC_TITLE.play(true);
                                                        changeSubMenu(MAIN_MENU);
+                                                       SoundBank.MUSIC_TITLE.play(true);
                                                    }));
 
         // меню подтверждения выхода из игры

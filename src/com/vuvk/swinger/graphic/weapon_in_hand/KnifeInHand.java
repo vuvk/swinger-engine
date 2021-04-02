@@ -50,7 +50,7 @@ public class KnifeInHand extends RayWeaponInHand {
         setFrameForShoot(FRAME_FOR_SHOOT);
         setAccuracy(ACCURACY);
         setBulletPerShoot(BULLETS_PER_SHOOT);
-        setSoundShoot(new Sound(SoundBank.SOUND_BUFFER_KNIFE));
+        setSoundShoot(SoundBank.SOUND_BUFFER_KNIFE);
         setAmmoType(AMMO_TYPE);
     }
     

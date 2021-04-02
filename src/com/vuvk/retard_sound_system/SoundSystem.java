@@ -49,21 +49,24 @@ public final class SoundSystem {
     final static boolean BIG_ENDIAN = false;
     final static int MAX_WRITE_LINE_TRIES = 100;
     /** use this if you want read sounds to cache before write it to line */
-    final static boolean CACHED = true;
+    final static boolean CACHED = false;
     /** use this to increase speed but reduce quality  */
-    final static boolean FAST_MODE = false;
+    final static boolean FAST_MODE = true;
 
     private static boolean started = false;
 
     private static SourceDataLine monoLine   = null;
     private static SourceDataLine stereoLine = null;
 
+    final static List<SoundBuffer> SOUND_BUFFERS = new CopyOnWriteArrayList<>();
     final static List<Music> MUSICS = new CopyOnWriteArrayList<>();
 
     private static final SoundList MONO_SOUNDS   = new SoundList();
     private static final SoundList STEREO_SOUNDS = new SoundList();
+    //private static final List<Sound> MONO_SOUNDS   = new CopyOnWriteArrayList<>();//SoundList();
+    //private static final List<Sound> STEREO_SOUNDS = new CopyOnWriteArrayList<>();//SoundList();
 
-    private final static int CACHE_SIZE = 2048;
+    private final static int CACHE_SIZE = 65536;
     private static SoundCache monoCache;
     private static SoundCache stereoCache;
 
@@ -208,25 +211,35 @@ public final class SoundSystem {
      * @param sounds list of sounds in system (mono or stereo)
      * @param line line for write (mono or stereo)
      */
-    private static void updateLine(final SoundList sounds, final SourceDataLine line) {
-        final int channels = line.getFormat().getChannels();
-        final int bufferSize = channels * (SAMPLE_SIZE_IN_BITS >> 3);
+    private static void updateLine(SoundList sounds, SourceDataLine line) {
+        if (sounds.size == 0) {
+            return;
+        }
 
-        final double[] mixer   = new double[bufferSize >> 1];
-        final int   [] counter = new int   [bufferSize];
-        final byte  [] result  = new byte  [bufferSize];
-        final byte  [] buffer  = new byte  [bufferSize];
+        int channels = line.getFormat().getChannels();
+        int bufferSize = channels * (SAMPLE_SIZE_IN_BITS >> 3);
+        /*int bufferSize = 0;
+        for (Sound sound : sounds) {
+            bufferSize += sound.getInputAudioStream().getFrameLength();
+        }
+        bufferSize /= sounds.size();
+*/
+        double[] mixer   = new double[bufferSize >> 1];
+        int   [] counter = new int   [bufferSize];
+        byte  [] result  = new byte  [bufferSize];
+        byte  [] buffer  = new byte  [bufferSize];
+        
         double volume;
         int cntReaded = 0;
         int soundsCount = 0;
 
-        final Sound[] data = sounds.getSounds();
+        Sound[] data = sounds.getSounds();
         for (int s = 0; s < data.length; ++s) {
-            final Sound sound = data[s];
+            Sound sound = data[s];
             if (sound == null) {
                 break;
             }
-
+            
             volume = sound.getVolume() * soundsVolume;
             cntReaded = sound.read(buffer);
 
@@ -290,20 +303,25 @@ public final class SoundSystem {
      * @param sounds list of sounds in system (mono or stereo)
      * @param line line for write (mono or stereo)
      */
-    private static void updateLine(final SoundList sounds, final SourceDataLine line, final SoundCache cache) {
-        final int channels = line.getFormat().getChannels();
-        final int bufferSize = channels * (SAMPLE_SIZE_IN_BITS >> 3);
+    private static void updateLine(SoundList sounds, SourceDataLine line, SoundCache cache) {
+        if (sounds.size == 0) {
+            return;
+        }
 
-        final double[] mixer   = new double[bufferSize >> 1];
-        final int   [] counter = new int   [bufferSize];
-        final byte  [] buffer  = new byte  [bufferSize];
+        int channels = line.getFormat().getChannels();
+        int bufferSize = channels * (SAMPLE_SIZE_IN_BITS >> 3);
+
+        double[] mixer   = new double[bufferSize >> 1];
+        int   [] counter = new int   [bufferSize];
+        byte  [] buffer  = new byte  [bufferSize];
         double volume;
         int cntReaded = 0;
         int soundsCount = 0;
 
-        final Sound[] data = sounds.getSounds();
+        
+        Sound[] data = sounds.getSounds();
         for (int s = 0; s < data.length; ++s) {
-            final Sound sound = data[s];
+            Sound sound = data[s];
             if (sound == null) {
                 break;
             }
@@ -443,6 +461,17 @@ public final class SoundSystem {
 
         stopAll();
 
+        for (Music mus : MUSICS) {
+            mus.close();
+        }
+        MUSICS.clear();
+
+        if (monoCache != null) {
+            monoCache.close();
+        }
+        if (stereoCache != null) {
+            stereoCache.close();
+        }
         monoCache = null;
         stereoCache = null;
 
@@ -452,7 +481,6 @@ public final class SoundSystem {
         if (stereoLine != null) {
             stereoLine.close();
         }
-
         monoLine = null;
         stereoLine = null;
     }
@@ -461,7 +489,7 @@ public final class SoundSystem {
      * sound system was started?
      * @return true if sound system was started
      */
-    public static final boolean isStarted() {
+    public static boolean isStarted() {
         return started;
     }
 
@@ -492,17 +520,42 @@ public final class SoundSystem {
     }
 
     public static void stopMusic() {
-        //MUSICS.forEach(Music::stop);
-        for (Music mus : MUSICS) {
+        for(Music mus : MUSICS) {
             mus.stop();
         }
-        MUSICS.clear();
     }
 
     public static void stopAll() {
         stopMusic();
+        
+        for (int i = 0; i < MONO_SOUNDS.size; ++i) {
+            Sound snd = MONO_SOUNDS.get(i);
+            if (snd != null) {
+                snd.stop();
+            }
+        }
+        //MONO_SOUNDS.forEach(Sound::stop);
         MONO_SOUNDS.clear();
+        
+        for (int i = 0; i < STEREO_SOUNDS.size; ++i) {
+            Sound snd = STEREO_SOUNDS.get(i);
+            if (snd != null) {
+                snd.stop();
+            }
+        }
+        //STEREO_SOUNDS.forEach(Sound::stop);
         STEREO_SOUNDS.clear();
+    }
+
+    /**
+     * Удалить все звуковые буфферы безвозвратно.
+     * Delete all Sound Buffers forever.
+     * */
+    public static void deleteSoundBuffers() {
+        synchronized (SoundSystem.SOUND_BUFFERS) {
+            SOUND_BUFFERS.forEach(SoundBuffer::close);
+            SOUND_BUFFERS.clear();
+        }
     }
 
     /**

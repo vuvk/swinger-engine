@@ -480,20 +480,20 @@ public final class Renderer/* extends JPanel*/ {
 
         /*Player player = Player.getInstance();
 
-        final Vector3 pos    = player.getPos();
-        final Vector2 dir    = player.getCamera().getView();
-        final Vector2 plane  = player.getCamera().getPlane();*/
-        final Vector3 pos    = activeCamera.getPos();
-        final Vector2 dir    = activeCamera.getView();
-        final Vector2 plane  = activeCamera.getPlane();
-        final Vector2 ray    = new Vector2();
-        final Vector2 invRay = new Vector2();
+        Vector3 pos    = player.getPos();
+        Vector2 dir    = player.getCamera().getView();
+        Vector2 plane  = player.getCamera().getPlane();*/
+        Vector3 pos    = activeCamera.getPos();
+        Vector2 dir    = activeCamera.getView();
+        Vector2 plane  = activeCamera.getPlane();
+        Vector2 ray    = new Vector2();
+        Vector2 invRay = new Vector2();
 
         // length of ray from current position to next x or y-side
-        final Vector2 sideDist = new Vector2();
+        Vector2 sideDist = new Vector2();
 
         // length of ray from one x or y-side to next x or y-side
-        final Vector2 deltaDist = new Vector2();
+        Vector2 deltaDist = new Vector2();
         double wallDist = 0.0;
 
         // what direction to step in x or y-direction (either +1 or -1)
@@ -518,7 +518,7 @@ public final class Renderer/* extends JPanel*/ {
 
         //double ang = -Player.FOV_2;
         //int step = 1 << Config.quality;
-        final ArrayList<RenderTarget>[] renderTargets = new ArrayList[Map.LEVELS_COUNT];
+        ArrayList<RenderTarget>[] renderTargets = new ArrayList[Map.LEVELS_COUNT];
         for (int level = 0; level < Map.LEVELS_COUNT; ++level) {
             renderTargets[level] = new ArrayList<>(50);
         }
@@ -554,7 +554,7 @@ public final class Renderer/* extends JPanel*/ {
             mapY = (int)pos.y;
 
             // calculate ray position and direction
-            final double cameraX = (x << 1) * RAY_STEP - 1; // x-coordinate in camera space
+            double cameraX = (x << 1) * RAY_STEP - 1; // x-coordinate in camera space
 
             ray.set(dir.x + plane.x * cameraX,
                     dir.y + plane.y * cameraX);
@@ -1292,7 +1292,7 @@ public final class Renderer/* extends JPanel*/ {
         activeCamera.duplicate(nextActiveCamera);
 
         //Graphics g = SCREEN.getGraphics();
-        //final WritableRaster raster = SCREEN.getRaster();
+        //WritableRaster raster = SCREEN.getRaster();
         //DataBuffer buf = raster.getDataBuffer();
         //WritableRaster rasterSmall = SCREEN_SMALL.getRaster();
         for (boolean[] array : Map.VISIBLE_CELLS) {
@@ -1300,14 +1300,14 @@ public final class Renderer/* extends JPanel*/ {
         }
         /*
         Player player = Player.getInstance();
-        final Vector3 pos = player.getPos();
-        final Vector2 dir = player.getCamera().getView();
-        final Vector2 plane = player.getCamera().getPlane();
+        Vector3 pos = player.getPos();
+        Vector2 dir = player.getCamera().getView();
+        Vector2 plane = player.getCamera().getPlane();
         //Vector2 ray = new Vector2();
         */
-        final Vector3 pos   = activeCamera.getPos();
-        final Vector2 dir   = activeCamera.getView();
-        final Vector2 plane = activeCamera.getPlane();
+        Vector3 pos   = activeCamera.getPos();
+        Vector2 dir   = activeCamera.getView();
+        Vector2 plane = activeCamera.getPlane();
 
         // calc distance to player
         //Sprite.updateAll();
@@ -1792,7 +1792,7 @@ public final class Renderer/* extends JPanel*/ {
                     } catch (InterruptedException ignored) {}
 
 
-                    final Renderer renderer = Renderer.getInstance();
+                    Renderer renderer = Renderer.getInstance();
                     while (started) {
                         renderer.render();
                     }
@@ -1816,7 +1816,7 @@ public final class Renderer/* extends JPanel*/ {
         nextActiveCamera.duplicate(camera);
     }
 
-    public final Camera getActiveCamera() {
+    public Camera getActiveCamera() {
         return activeCamera;
     }
 

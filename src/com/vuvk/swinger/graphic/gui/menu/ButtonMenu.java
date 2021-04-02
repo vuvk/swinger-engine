@@ -14,6 +14,7 @@
 package com.vuvk.swinger.graphic.gui.menu;
 
 import com.vuvk.retard_sound_system.Sound;
+import com.vuvk.retard_sound_system.SoundSystem;
 import com.vuvk.swinger.audio.SoundBank;
 import com.vuvk.swinger.graphic.gui.text.Text;
 
@@ -24,7 +25,6 @@ import com.vuvk.swinger.graphic.gui.text.Text;
 public class ButtonMenu {
     private Text text;
     private final Runnable click, left, right;
-    private Sound soundMenuToggle = new Sound(SoundBank.SOUND_BUFFER_MENU_TOGGLE);
 
     public ButtonMenu(Text text, Runnable click) {
         this.text = text;
@@ -41,19 +41,19 @@ public class ButtonMenu {
     }
 
     public void click() {
-        soundMenuToggle.play();
+        new Sound(SoundBank.SOUND_BUFFER_MENU_TOGGLE).play();
         click.run();
     }
 
     public void left() {
-        soundMenuToggle.play();
+        new Sound(SoundBank.SOUND_BUFFER_MENU_TOGGLE).play();
         if (left != null) {
             left.run();
         }
     }
 
     public void right() {
-        soundMenuToggle.play();
+        new Sound(SoundBank.SOUND_BUFFER_MENU_TOGGLE).play();
         if (right != null) {
             right.run();
         }

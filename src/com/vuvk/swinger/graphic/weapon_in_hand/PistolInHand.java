@@ -51,7 +51,7 @@ public class PistolInHand extends RayWeaponInHand {
         setShootDelay(SHOOT_DELAY);
         setAccuracy(ACCURACY);
         setBulletPerShoot(BULLETS_PER_SHOOT);
-        setSoundShoot(new Sound(SoundBank.SOUND_BUFFER_PISTOL));
+        setSoundShoot(SoundBank.SOUND_BUFFER_PISTOL);
         setAmmoType(AMMO_TYPE);
     }
     

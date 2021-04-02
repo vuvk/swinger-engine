@@ -27,7 +27,6 @@ import com.vuvk.swinger.math.Vector2;
 public class SubMenu {
     private final List<ButtonMenu> buttons = new ArrayList<>();
     private int pos = 0;
-    private Sound soundMenuSelect = new Sound(SoundBank.SOUND_BUFFER_MENU_SELECT);
 
     public void activate() {
         setVisible(true);
@@ -46,7 +45,7 @@ public class SubMenu {
             pos = getButtonsCount() - 1;
         }
 
-        soundMenuSelect.play();
+        new Sound(SoundBank.SOUND_BUFFER_MENU_SELECT).play();
         updateCursorLocation();
     }
 
@@ -57,7 +56,7 @@ public class SubMenu {
             pos = 0;
         }
 
-        soundMenuSelect.play();
+        new Sound(SoundBank.SOUND_BUFFER_MENU_SELECT).play();
         updateCursorLocation();
     }
 

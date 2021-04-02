@@ -49,8 +49,8 @@ public final class Config {
     public final static boolean STEP_BY_STEP_RENDERING = false;
     public final static int STEP_BY_STEP_DELAY = 10;
 
-    public /*final*/ static int WIDTH  = 640;
-    public /*final*/ static int HEIGHT = 480;
+    public /*final*/ static int WIDTH  = 64;
+    public /*final*/ static int HEIGHT = 48;
     public static float ASPECT_RATIO;
     public static int HALF_WIDTH;
     public static int HALF_HEIGHT;

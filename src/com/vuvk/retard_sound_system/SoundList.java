@@ -15,17 +15,22 @@
 */
 package com.vuvk.retard_sound_system;
 
-import java.util.Arrays;
 import java.util.Collection;
+
+import com.vuvk.utils.ArrayUtils;
 
 /**
  * class for queue of sounds
  * @author vuvk
  */
 class SoundList {
-    final static int MAX_SOUNDS = 8;        
+    final static int MAX_SOUNDS = 16;        
     final Sound[] sounds = new Sound[MAX_SOUNDS];
     int size = 0;
+
+    SoundList() {
+        ArrayUtils.fill(sounds, null);
+    }
 
     void add(Sound sound) {
         if (sound == null) {
@@ -103,12 +108,20 @@ class SoundList {
         }
     }
 
+    Sound get(int num) {
+        if (num >= 0 && num < size) {
+            return sounds[num];
+        } else {
+            return null;
+        }
+    }
+
     int getSize() {
         return size;
     }
 
     void clear() {
-        Arrays.fill(sounds, null);
+        ArrayUtils.fill(sounds, null);
         size = 0;
     }
 

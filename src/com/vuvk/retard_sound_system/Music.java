@@ -32,7 +32,7 @@ import javax.sound.sampled.SourceDataLine;
  */
 public final class Music extends SoundBasis {
     private static final Logger LOG = Logger.getLogger(Music.class.getName());    
-    private static final int BUFFER_SIZE = 10240;
+    private static final int BUFFER_SIZE = 65536;
     
     private SourceDataLine line;
     
@@ -71,7 +71,7 @@ public final class Music extends SoundBasis {
                     long prev = System.nanoTime(); 
                     
                     int cnt = 0;                   
-                    
+                   
                     if ((cnt = read(buffer)) != -1) {
                         // apply volume
                         for (int i = 0; i < buffer.length; i += 2) {                                
@@ -112,10 +112,12 @@ public final class Music extends SoundBasis {
     @Override
     public Music stop() {
         super.stop();
+        /*
         if (line != null) {
             line.close();
             line = null;
         } 
+        */
         return this;
     }
     

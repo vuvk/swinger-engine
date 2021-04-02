@@ -52,7 +52,7 @@ public class MinigunInHand  extends RayWeaponInHand {
         setShootDelay(SHOOT_DELAY);
         setAccuracy(ACCURACY);
         setBulletPerShoot(BULLETS_PER_SHOOT);
-        setSoundShoot(new Sound(SoundBank.SOUND_BUFFER_MINIGUN));
+        setSoundShoot(SoundBank.SOUND_BUFFER_MINIGUN);
         setAmmoType(AMMO_TYPE);
     }
     
