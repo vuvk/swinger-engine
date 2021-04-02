@@ -33,8 +33,9 @@ public class ScreenBlood {
 
     public static final BufferedImage DROP = new BufferedImage(4, 4, BufferedImage.TYPE_INT_ARGB);
     static {
-        DROP.getGraphics().setColor(Color.RED);
-        DROP.getGraphics().fillRect(0, 0, 4, 4);
+        for (int i = 0; i < 16; ++i) {
+            DROP.setRGB(i % 4, i / 4, 0xFFFF0000);
+        }
     }
 
     public ScreenBlood(Vector2 pos) {

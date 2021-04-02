@@ -14,7 +14,6 @@
 package com.vuvk.swinger;
 
 //import com.vuvk.retard_sound_system.SoundSystem;
-import com.vuvk.swinger.res.Map;
 //import java.awt.EventQueue;
 //import java.awt.event.WindowEvent;
 import com.vuvk.swinger.graphic.Fog;

@@ -112,13 +112,21 @@ public final class Music extends SoundBasis {
     @Override
     public Music stop() {
         super.stop();
-        /*
-        if (line != null) {
-            line.close();
-            line = null;
-        } 
-        */
         return this;
+    }
+
+    @Override
+    public void close() {
+        super.close();
+        synchronized (line) {
+            if (line != null) {
+                if (line.isRunning()) {
+                    line.stop();
+                }
+                line.close();
+                line = null;
+            } 
+        }
     }
     
     private void prepareLine() { 

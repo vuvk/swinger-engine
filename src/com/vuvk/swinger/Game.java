@@ -23,7 +23,7 @@ import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.awt.image.BufferStrategy;
+//import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
 import java.util.Locale;
 
@@ -69,7 +69,7 @@ public class Game extends Frame {
     private boolean initialized = false;
     private Canvas canvas;
     private Graphics batch;
-    private BufferStrategy backBuffer;
+    //private BufferStrategy backBuffer;
     private BufferedImage surface;
     private Renderer renderer;
     private BufferedImage consoleBackground;
@@ -220,8 +220,8 @@ public class Game extends Frame {
         //new Text(FontBank.FONT_OUTLINE, "demo", new Vector2(250, 150));
 
         renderer = Renderer.getInstance();
-        canvas.createBufferStrategy(2);
-        backBuffer = canvas.getBufferStrategy();
+        //canvas.createBufferStrategy(2);
+        //backBuffer = canvas.getBufferStrategy();
         surface = new BufferedImage(Config.WIDTH, Config.HEIGHT, BufferedImage.TYPE_INT_ARGB);
         //surface.getGraphics().setColor(Color.BLACK);
         //surface.getGraphics().fillRect(0, 0, surface.getWidth(), surface.getHeight());
@@ -257,12 +257,15 @@ public class Game extends Frame {
 
     @Override
     public void dispose() {
-        super.dispose();
         Map.reset();
         SoundSystem.stop();
-        SoundSystem.deleteSoundBuffers();
         initialized = false;
         Config.save();
+
+        batch.dispose();
+
+        super.dispose();
+        //System.exit(0);
     }
 
     private void update() {

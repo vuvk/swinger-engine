@@ -429,7 +429,6 @@ public final class SoundSystem {
                             } catch (InterruptedException ignored) {}
                         }
                     }
-                    stop();
                 }
             }, "RSS Update Mono Line Thread").start();
 
@@ -447,7 +446,6 @@ public final class SoundSystem {
                             } catch (InterruptedException ignored) {}
                         }
                     }
-                    stop();
                 }
             }, "RSS Update Stereo Line Thread").start();
         }
@@ -461,10 +459,12 @@ public final class SoundSystem {
 
         stopAll();
 
-        for (Music mus : MUSICS) {
-            mus.close();
+        synchronized (MUSICS) {
+            for (Music mus : MUSICS) {
+                mus.close();
+            }
+            MUSICS.clear();
         }
-        MUSICS.clear();
 
         if (monoCache != null) {
             monoCache.close();
@@ -483,6 +483,8 @@ public final class SoundSystem {
         }
         monoLine = null;
         stereoLine = null;
+
+        deleteSoundBuffers();
     }
 
     /**
@@ -553,7 +555,7 @@ public final class SoundSystem {
      * Удалить все звуковые буфферы безвозвратно.
      * Delete all Sound Buffers forever.
      * */
-    public static void deleteSoundBuffers() {
+    static void deleteSoundBuffers() {
         synchronized (SoundSystem.SOUND_BUFFERS) {
             SOUND_BUFFERS.forEach(SoundBuffer::close);
             SOUND_BUFFERS.clear();

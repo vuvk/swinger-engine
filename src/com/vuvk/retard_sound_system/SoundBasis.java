@@ -193,15 +193,21 @@ abstract class SoundBasis {
     }
 
     protected void prepareStream(AudioInputStream stream) {
-        inputAudioStream = stream;
-        markStream();
-        audioFormat = inputAudioStream.getFormat();
-        channels = audioFormat.getChannels();
-        inputAudioStreamPosition = 0;
+        closeStream();
+        if (stream != null) {
+            inputAudioStream = stream;
+            markStream();
+            audioFormat = inputAudioStream.getFormat();
+            channels = audioFormat.getChannels();
+            inputAudioStreamPosition = 0;
+        }
     }
 
     protected void prepareStream(InputStream stream) {
-        prepareStream(SoundSystem.getEncodedAudioInputStream(stream));
+        closeStream();
+        if (stream != null) {
+            prepareStream(SoundSystem.getEncodedAudioInputStream(stream));
+        }
     }
 
     protected void prepareStream(File file) {

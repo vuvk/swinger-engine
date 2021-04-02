@@ -14,7 +14,6 @@
 package com.vuvk.swinger.graphic.gui.menu;
 
 import com.vuvk.retard_sound_system.Sound;
-import com.vuvk.retard_sound_system.SoundSystem;
 import com.vuvk.swinger.audio.SoundBank;
 import com.vuvk.swinger.graphic.gui.text.Text;
 
