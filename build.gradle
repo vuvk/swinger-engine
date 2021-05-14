@@ -11,7 +11,7 @@ buildscript {
     }
     dependencies {
         classpath 'org.wisepersist:gwt-gradle-plugin:1.1.11'
-        classpath 'com.android.tools.build:gradle:4.1.2'
+        classpath 'com.android.tools.build:gradle:4.2.1'
         classpath 'com.mobidevelop.robovm:robovm-gradle-plugin:2.3.12'
         
         // https://mvnrepository.com/artifact/com.eclipsesource.j2v8/j2v8
