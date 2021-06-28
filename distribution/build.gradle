@@ -7,7 +7,7 @@ plugins {
 
 dependencies {
     compile project(':desktop')
-    compileOnly 'org.ow2.asm:asm:9.1'
+    compileOnly 'org.ow2.asm:asm:9.2'
 }
 
 application {

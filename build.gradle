@@ -18,7 +18,7 @@ buildscript {
         //classpath 'com.eclipsesource.j2v8:j2v8:5.0.103'
         
         //classpath 'org.beryx:badass-jlink-plugin:2.23.1'
-        classpath 'org.ow2.asm:asm:9.1'
+        classpath 'org.ow2.asm:asm:9.2'
     }
 }
 
