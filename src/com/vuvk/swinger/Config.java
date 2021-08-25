@@ -13,18 +13,17 @@
 */
 package com.vuvk.swinger;
 
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import com.google.gson.stream.JsonWriter;
+import com.vuvk.retard_sound_system.SoundSystem;
+import com.vuvk.swinger.graphic.Fog;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
-import com.google.gson.stream.JsonWriter;
-import com.vuvk.retard_sound_system.SoundSystem;
-import com.vuvk.swinger.graphic.Fog;
 
 /**
  *
@@ -49,8 +48,8 @@ public final class Config {
     public final static boolean STEP_BY_STEP_RENDERING = false;
     public final static int STEP_BY_STEP_DELAY = 10;
 
-    public /*final*/ static int WIDTH  = 64;
-    public /*final*/ static int HEIGHT = 48;
+    public /*final*/ static int WIDTH  = 640;
+    public /*final*/ static int HEIGHT = 480;
     public static float ASPECT_RATIO;
     public static int HALF_WIDTH;
     public static int HALF_HEIGHT;
@@ -69,7 +68,7 @@ public final class Config {
         if (config.exists()) {
             try {
                 JsonObject json = JsonParser.parseReader(new FileReader(config)).getAsJsonObject();
-                
+
                 float musicVolume = (json.has("music_volume"))  ? json.get("music_volume").getAsFloat()  : 1.0f;
                 float soundVolume = (json.has("sounds_volume")) ? json.get("sounds_volume").getAsFloat() : 1.0f;
                 SoundSystem.setMusicVolume(musicVolume);

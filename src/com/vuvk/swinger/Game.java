@@ -13,20 +13,6 @@
 */
 package com.vuvk.swinger;
 
-import java.awt.Canvas;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Frame;
-import java.awt.Graphics;
-import java.awt.Point;
-import java.awt.event.ComponentAdapter;
-import java.awt.event.ComponentEvent;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
-//import java.awt.image.BufferStrategy;
-import java.awt.image.BufferedImage;
-import java.util.Locale;
-
 import com.vuvk.retard_sound_system.SoundSystem;
 import com.vuvk.swinger.audio.SoundBank;
 import com.vuvk.swinger.d3.Model;
@@ -59,6 +45,18 @@ import com.vuvk.swinger.objects.weapon.AmmoType;
 import com.vuvk.swinger.res.Map;
 import com.vuvk.swinger.res.Material;
 import com.vuvk.swinger.res.TextureBank;
+import java.awt.Canvas;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Frame;
+import java.awt.Graphics;
+import java.awt.Point;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.awt.image.BufferedImage;
+import java.util.Locale;
 
 /**
  *
@@ -128,7 +126,7 @@ public class Game extends Frame {
             public void windowClosing(WindowEvent e) {
                 Config.QUIT = true;
             }
-
+/*
             @Override
             public void windowLostFocus(WindowEvent e) {
                 toFront();
@@ -137,7 +135,7 @@ public class Game extends Frame {
             @Override
             public void windowDeactivated(WindowEvent e) {
                 toFront();
-            }
+            }*/
         });
         addComponentListener(new ComponentAdapter() {
             @Override
@@ -145,7 +143,7 @@ public class Game extends Frame {
                 if (isVisible()) {
                     Point location = getLocationOnScreen();
                     int centerX = location.x + (getWidth() >> 1);
-                    int centerY = location.y + (getHeight() >> 1); 
+                    int centerY = location.y + (getHeight() >> 1);
                     windowCenter.set(centerX, centerY);
                 }
             }
@@ -165,8 +163,8 @@ public class Game extends Frame {
         setBackground(Color.BLACK);
         setIgnoreRepaint(true);
         setAutoRequestFocus(true);
-        //setFocusTraversalKeysEnabled(true);
-        setAlwaysOnTop(true);
+//      setFocusTraversalKeysEnabled(true);
+//      setAlwaysOnTop(true);
         setMinimumSize(new Dimension(Config.WIDTH, Config.HEIGHT));
         setLocationRelativeTo(null);
 /*
