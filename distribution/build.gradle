@@ -2,7 +2,7 @@
 
 plugins {
 //    id "org.beryx.jlink" version "2.23.1"
-    id "org.beryx.runtime" version "1.12.1"
+    id "org.beryx.runtime" version "1.12.5"
 }
 
 dependencies {
