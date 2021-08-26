@@ -254,13 +254,14 @@ public class Game extends Frame {
     @Override
     public void dispose() {
         Map.reset();
-        AudioSystem.deinit();
         initialized = false;
         Config.save();
 
         batch.dispose();
         super.dispose();
         
+        AudioSystem.deinit();
+
         System.exit(0);
     }
 

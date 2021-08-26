@@ -35,7 +35,8 @@ public abstract class Mortal extends Object3D implements Serializable {
     protected double health;
     protected final double maxHealth;
     protected double radius;
-    protected boolean live = false; // является ли объект живым - живой испускает кровь, неживой  пыль
+    /** является ли объект живым - живой испускает кровь, неживой  пыль */
+    protected boolean live = false;
     protected final BoundingBox bb;
 
     public Mortal(final Vector3 pos, double health, double radius) {

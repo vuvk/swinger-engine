@@ -35,6 +35,7 @@ public class LightSource extends Object3D implements Serializable {
     private double brightness;
     private double radius;
     private double squareRadius; // for fast check point
+    private double invRadius;    // for fast div
     protected final BoundingBox bb;
 
     public LightSource() {
@@ -111,7 +112,7 @@ public class LightSource extends Object3D implements Serializable {
         } else {
             // считаем расстояние до центра источника. Чем ближе к центру, тем ярче
             double distance = Math.sqrt(squareLength);
-            double brightnessInPoint = 1.0 - distance / radius;
+            double brightnessInPoint = 1.0 - distance * invRadius;
 
             return new ImmutablePair<>(true, brightnessInPoint);
         }
@@ -138,6 +139,7 @@ public class LightSource extends Object3D implements Serializable {
 
     private void updateRadius() {
         squareRadius = radius * radius;
+        invRadius = 1.0 / radius;
         updateBb();
     }
 

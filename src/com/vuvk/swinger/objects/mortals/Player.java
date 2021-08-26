@@ -68,12 +68,8 @@ public final class Player extends Mortal implements Serializable {
     public  final static double MOVE_SPEED = 5.0;
     public  final static double KEY_ROT_SPEED  = 3.0;
     public  final static double MOUSE_ROT_SPEED  = 15.0;
-    transient private Sound[] soundsNeadKey = {
-        AudioSystem.newSound(SoundBank.SOUND_BUFFER_NEED_KEY1),
-        AudioSystem.newSound(SoundBank.SOUND_BUFFER_NEED_KEY2)
-    };
-
-    transient private Sound soundDie = AudioSystem.newSound(SoundBank.SOUND_BUFFER_PLAYER_DIE);
+    transient private Sound[] soundsNeadKey;
+    transient private Sound soundDie;
 
     public void finalize() throws Throwable {
         for (Sound snd : soundsNeadKey) {
@@ -459,6 +455,12 @@ public final class Player extends Mortal implements Serializable {
 
     private Player(Vector3 pos) {
         super(pos, HEALTH, RADIUS);
+        soundDie = AudioSystem.newSound(SoundBank.SOUND_BUFFER_PLAYER_DIE);
+        soundsNeadKey = new Sound[] {
+            AudioSystem.newSound(SoundBank.SOUND_BUFFER_NEED_KEY1),
+            AudioSystem.newSound(SoundBank.SOUND_BUFFER_NEED_KEY2)
+        };
+        
         setLive(true);
 
         createWeaponsInHand();

@@ -1,7 +1,6 @@
 package com.vuvk.audiosystem;
 
 import com.jogamp.openal.AL;
-import com.jogamp.openal.ALException;
 import com.jogamp.openal.ALFactory;
 import com.jogamp.openal.util.ALut;
 import java.io.File;
@@ -72,7 +71,7 @@ public final class AudioSystem {
                 }
 
                 try {
-                    Thread.sleep(200);
+                    Thread.sleep(1000);
                 } catch (InterruptedException ex) {
                     LOGGER.log(Level.SEVERE, null, ex);
                 }
@@ -198,7 +197,7 @@ public final class AudioSystem {
         int errorCode = al.alGetError();
         if (errorCode != AL.AL_NO_ERROR) {
             System.err.println("AL Error - " + Integer.toHexString(errorCode));
-            throw new ALException("OpenAL error raised...");
+//            throw new ALException("OpenAL error raised...");
         }
         return errorCode;
     }
