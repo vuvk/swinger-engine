@@ -13,15 +13,14 @@
 */
 package com.vuvk.swinger.objects.mortals.enemy;
 
-import com.vuvk.retard_sound_system.Sound;
-import com.vuvk.retard_sound_system.SoundSystem;
+import com.vuvk.audiosystem.AudioSystem;
+import com.vuvk.audiosystem.Sound;
 import com.vuvk.swinger.Engine;
 import com.vuvk.swinger.math.Vector2;
 import com.vuvk.swinger.math.Vector3;
 import com.vuvk.swinger.objects.Sprite;
 import com.vuvk.swinger.objects.mortals.Mortal;
 import com.vuvk.swinger.res.Material;
-
 import java.io.Serializable;
 /**
  *
@@ -65,8 +64,11 @@ public class Breakable extends Mortal implements Serializable {
     }
 
     @Override
-    public void finalize() {
+    public void finalize() throws Throwable {
+        for (Sound snd : painSounds) { snd.dispose(); }
+        for (Sound snd : dieSounds ) { snd.dispose(); }
         destroy();
+        super.finalize();
     }
 
     /*
@@ -110,13 +112,13 @@ public class Breakable extends Mortal implements Serializable {
                 break;
 
             case PAIN:
-                SoundSystem.playRandom(getPainSounds());
+                AudioSystem.playRandom(getPainSounds());
                 sprite.setFrames(pain.getFrames()[(int)(Math.random() * 2)][0]);
                 sprite.playOnce();
                 break;
 
             case DIE:
-                SoundSystem.playRandom(getDieSounds());
+                AudioSystem.playRandom(getDieSounds());
                 sprite.duplicate(die);
                 sprite.playOnce();
                 break;
@@ -129,25 +131,25 @@ public class Breakable extends Mortal implements Serializable {
     public void setPainSounds(Sound[] painSounds) {
         this.painSounds = painSounds;
     }
-
+/*
     public void setPainSounds(String[] painSounds) {
         this.painSounds = new Sound[painSounds.length];
         for (int i = 0; i < painSounds.length; ++i) {
             this.painSounds[i] = new Sound(painSounds[i], true);
         }
     }
-
+*/
     public void setDieSounds(Sound[] dieSounds) {
         this.dieSounds = dieSounds;
     }
-
+/*
     public void setDieSounds(String[] dieSounds) {
         this.dieSounds = new Sound[dieSounds.length];
         for (int i = 0; i < dieSounds.length; ++i) {
             this.dieSounds[i] = new Sound(dieSounds[i], true);
         }
     }
-
+*/
     protected Sound[] getPainSounds() {
         return painSounds;
     }

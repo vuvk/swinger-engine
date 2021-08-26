@@ -13,7 +13,6 @@
 */
 package com.vuvk.swinger.graphic.weapon_in_hand;
 
-import com.vuvk.retard_sound_system.Sound;
 import com.vuvk.swinger.audio.SoundBank;
 import com.vuvk.swinger.graphic.Renderer;
 import com.vuvk.swinger.objects.weapon.AmmoType;
@@ -26,12 +25,12 @@ import com.vuvk.swinger.res.Image;
 public class KnifeInHand extends RayWeaponInHand {
     private final static int FRAMES_COUNT = 7;
     private final static Image[] FRAMES = new Image[FRAMES_COUNT];
-    private final static String[] FILES = { 
-        "resources/pics/weapons/knife0.png", 
-        "resources/pics/weapons/knife1.png", 
+    private final static String[] FILES = {
+        "resources/pics/weapons/knife0.png",
+        "resources/pics/weapons/knife1.png",
         "resources/pics/weapons/knife2.png",
         "resources/pics/weapons/knife3.png"
-    };    
+    };
     private static KnifeInHand instance = null;
     private final static double ACCURACY = 0.0;
     private final static int BULLETS_PER_SHOOT = 1;
@@ -53,17 +52,17 @@ public class KnifeInHand extends RayWeaponInHand {
         setSoundShoot(SoundBank.SOUND_BUFFER_KNIFE);
         setAmmoType(AMMO_TYPE);
     }
-    
+
     private KnifeInHand() {
         super();
         init();
     }
-    
+
     public static void loadFrames() {
         int rW = Renderer.WIDTH;
         int rH = Renderer.HEIGHT;
 
-        int min = Math.min(rW, rH);        
+        int min = Math.min(rW, rH);
         int size = min >> 1;
 
         for (int i = 0; i < FILES.length; ++i) {
@@ -72,13 +71,13 @@ public class KnifeInHand extends RayWeaponInHand {
         for (int i = 4; i < 7; ++i) {
             FRAMES[i] = FRAMES[7 - i];
         }
-    }    
-    
+    }
+
     public static KnifeInHand getInstance() {
         if (instance == null) {
             instance = new KnifeInHand();
         }
-        
+
         return instance;
     }
 }

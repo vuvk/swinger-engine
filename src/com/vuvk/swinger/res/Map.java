@@ -13,23 +13,14 @@
 */
 package com.vuvk.swinger.res;
 
-import java.awt.Color;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import com.vuvk.retard_sound_system.SoundSystem;
+import com.vuvk.audiosystem.AudioSystem;
+import com.vuvk.audiosystem.Sound;
+import com.vuvk.audiosystem.SoundBuffer;
 import com.vuvk.swinger.audio.SoundBank;
 import com.vuvk.swinger.d3.Mesh;
 import com.vuvk.swinger.d3.Model;
@@ -56,6 +47,17 @@ import com.vuvk.swinger.objects.weapon.Pistol;
 import com.vuvk.swinger.objects.weapon.Rifle;
 import com.vuvk.swinger.utils.ImmutablePair;
 import com.vuvk.swinger.utils.MutablePair;
+import java.awt.Color;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 
 /**
@@ -325,6 +327,8 @@ public final class Map {
     //public final static Model[][] MODELS = new Model[WIDTH][HEIGHT];
     public static LightSource light1, light2;
 
+    private static List<SoundBuffer> mapSoundBuffers = new CopyOnWriteArrayList<>();
+
     private static void loadTexturesAndMaterials(JsonObject jsonLevel) {
         int texturesCount  = TextureBank.WALLS.size();
 
@@ -336,7 +340,7 @@ public final class Map {
         JsonArray matArray = jsonLevel.get("materials").getAsJsonArray();
         for (JsonElement matElement : matArray) {
             JsonObject mat = matElement.getAsJsonObject();
-            
+
             JsonArray frmNums = mat.get("textures").getAsJsonArray();
             Texture[] frames = new Texture[frmNums.size()];
             for (int j = 0; j < frames.length; ++j) {
@@ -371,7 +375,7 @@ public final class Map {
         }
 
         Gson gson = new Gson();
-        
+
         System.out.println("\t\tTextures and materials...");
         loadTexturesAndMaterials(json);
 
@@ -413,7 +417,7 @@ public final class Map {
 
             float[] jsonPos = gson.fromJson(jsonValue.get("position"), float[].class);
             Vector3 pos = new Vector3(jsonPos);
-            
+
             if (solid) {
                 Map.SOLIDS[(int)pos.x][(int)pos.y] = true;
             }
@@ -715,6 +719,13 @@ public final class Map {
 
         System.out.println("\t\tSounds...");
         JsonArray sndArray = json.get("sounds").getAsJsonArray();
+        // создаем и запоминаем локальные буферы
+        SoundBuffer[] soundBuffers = new SoundBuffer[sndArray.size()];
+        for (int s = 0; s < soundBuffers.length; ++s) {
+            String path = sndArray.get(s).getAsString();
+            soundBuffers[s] = AudioSystem.newSoundBuffer(path);
+        }
+        mapSoundBuffers.addAll(Arrays.asList(soundBuffers));
 
         JsonArray breakablesArray = json.get("config").getAsJsonArray();
         List<Object>[] presets = new ArrayList[breakablesArray.size()];
@@ -743,11 +754,23 @@ public final class Map {
             double radius = jsonValue.get("radius").getAsDouble();
             presets[i].add(radius);
 
+            // сформируем массив буфферов звуков боли для конкретного типа Breakable
             int[] painSoundsIdx = gson.fromJson(jsonValue.get("pain sounds"), int[].class);
-            presets[i].add(painSoundsIdx);
+            SoundBuffer[] painSoundBuffers = new SoundBuffer[painSoundsIdx.length];
+            for (int p = 0; p < painSoundsIdx.length; ++p) {
+                int idx = painSoundsIdx[p];
+                painSoundBuffers[p] = soundBuffers[idx];
+            }
+            presets[i].add(painSoundBuffers);
 
+            // сформируем массив буфферов звуков смерти для конкретного типа Breakable
             int[] dieSoundsIdx = gson.fromJson(jsonValue.get("die sounds"), int[].class);
-            presets[i].add(dieSoundsIdx);
+            SoundBuffer[] dieSoundBuffers = new SoundBuffer[dieSoundsIdx.length];
+            for (int p = 0; p < dieSoundsIdx.length; ++p) {
+                int idx = dieSoundsIdx[p];
+                dieSoundBuffers[p] = soundBuffers[idx];
+            }
+            presets[i].add(dieSoundBuffers);
         }
 
         JsonArray breakablesMap = json.get("map").getAsJsonArray();
@@ -763,23 +786,23 @@ public final class Map {
             double health = (Double)   preset.get(4);
             boolean live  = (Boolean)  preset.get(5);
             double radius = (Double)   preset.get(6);
-            int[] painSoundsIdx = (int[]) preset.get(7);
-            int[] dieSoundsIdx  = (int[]) preset.get(8);
+            SoundBuffer[] painSoundBuffers = (SoundBuffer[]) preset.get(7);
+            SoundBuffer[] dieSoundBuffers  = (SoundBuffer[]) preset.get(8);
+
+            Sound[] painSounds = new Sound[painSoundBuffers.length];
+            for (int p = 0; p < painSounds.length; ++p) {
+                painSounds[p] = AudioSystem.newSound(painSoundBuffers[p]);
+            }
+
+            Sound[] dieSounds = new Sound[dieSoundBuffers.length];
+            for (int p = 0; p < dieSounds.length; ++p) {
+                dieSounds[p] = AudioSystem.newSound(dieSoundBuffers[p]);
+            }
 
             float[] jsonPos = gson.fromJson(jsonValue.get("position"), float[].class);
             Vector3 pos = new Vector3(jsonPos);
 
             double direction = jsonValue.get("direction").getAsDouble();
-
-            String[] painSounds = new String[painSoundsIdx.length];
-            for (int p = 0; p < painSounds.length; ++p) {
-                painSounds[p] = sndArray.get(painSoundsIdx[p]).getAsString();
-            }
-
-            String[] dieSounds = new String[dieSoundsIdx.length];
-            for (int d = 0; d < dieSounds.length; ++d) {
-                dieSounds[d] = sndArray.get(dieSoundsIdx[d]).getAsString();
-            }
 
             Breakable breakable = new Breakable(idle, pain, die, dead, pos, direction, health, radius);
             breakable.setLive(live);
@@ -864,7 +887,13 @@ public final class Map {
         loaded = false;
         //Config.draw = false;
 
-        SoundSystem.stopAll();
+        AudioSystem.disposeAllMusics();
+        AudioSystem.disposeAllSoundSources();
+        for (SoundBuffer buffer : mapSoundBuffers) {
+            buffer.dispose();
+        }
+        mapSoundBuffers.clear();
+
         LightSource.deleteAll();
         Door.deleteAll();
         Mortal.deleteAll();
@@ -1082,7 +1111,7 @@ public final class Map {
                 // fire
                 new LightSource(Color.WHITE, 1.0, new Vector3(10.5,  4.5, 0.0));
 
-                SoundBank.MUSIC1.play(true);
+                SoundBank.MUSIC1.setLooping(true).play();
 
                 active = true;
                 loaded = true;

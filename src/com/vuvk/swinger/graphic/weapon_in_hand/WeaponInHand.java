@@ -13,17 +13,16 @@
 */
 package com.vuvk.swinger.graphic.weapon_in_hand;
 
-import java.io.Serializable;
-import java.util.logging.Logger;
-
-import com.vuvk.retard_sound_system.Sound;
-import com.vuvk.retard_sound_system.SoundBuffer;
+import com.vuvk.audiosystem.AudioSystem;
+import com.vuvk.audiosystem.SoundBuffer;
 import com.vuvk.swinger.Engine;
 import com.vuvk.swinger.graphic.Renderer;
 import com.vuvk.swinger.math.Vector2;
 import com.vuvk.swinger.objects.mortals.Player;
 import com.vuvk.swinger.objects.weapon.AmmoType;
 import com.vuvk.swinger.res.Image;
+import java.io.Serializable;
+import java.util.logging.Logger;
 
 /**
  *
@@ -150,7 +149,7 @@ public abstract class WeaponInHand implements Serializable {
     }
 
     protected void playSoundShoot() {
-        new Sound(soundShoot).play();
+        AudioSystem.newSound(soundShoot).playOnce();
     }
 
     public void pullUp() {

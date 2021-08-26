@@ -13,7 +13,7 @@
 */
 package com.vuvk.swinger.objects.effect;
 
-import com.vuvk.retard_sound_system.Sound;
+import com.vuvk.audiosystem.AudioSystem;
 import com.vuvk.swinger.audio.SoundBank;
 import com.vuvk.swinger.math.Vector3;
 import com.vuvk.swinger.res.TextureBank;
@@ -29,6 +29,6 @@ public class Explode extends Effect implements Serializable {
     public Explode(Vector3 pos) {
         super(TextureBank.EXPLODE, ANIM_SPEED, true, pos);
 //        setBrightness(Fog.END);
-        new Sound(SoundBank.SOUND_BUFFER_EXPLODE).play();
+        AudioSystem.newSound(SoundBank.SOUND_BUFFER_EXPLODE).playOnce();
     }
 }

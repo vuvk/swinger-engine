@@ -1,5 +1,5 @@
 /**
-    Copyright (C) 2019-2020 Anton "Vuvk" Shcherbatykh <vuvk69@gmail.com>
+    Copyright (C) 2019-2021 Anton "Vuvk" Shcherbatykh <vuvk69@gmail.com>
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
@@ -13,7 +13,7 @@
 */
 package com.vuvk.swinger.graphic.gui.menu;
 
-import com.vuvk.retard_sound_system.Sound;
+import com.vuvk.audiosystem.AudioSystem;
 import com.vuvk.swinger.audio.SoundBank;
 import com.vuvk.swinger.graphic.gui.text.Text;
 
@@ -40,19 +40,19 @@ public class ButtonMenu {
     }
 
     public void click() {
-        new Sound(SoundBank.SOUND_BUFFER_MENU_TOGGLE).play();
+        AudioSystem.newSound(SoundBank.SOUND_BUFFER_MENU_TOGGLE).playOnce();
         click.run();
     }
 
     public void left() {
-        new Sound(SoundBank.SOUND_BUFFER_MENU_TOGGLE).play();
+        AudioSystem.newSound(SoundBank.SOUND_BUFFER_MENU_TOGGLE).playOnce();
         if (left != null) {
             left.run();
         }
     }
 
     public void right() {
-        new Sound(SoundBank.SOUND_BUFFER_MENU_TOGGLE).play();
+        AudioSystem.newSound(SoundBank.SOUND_BUFFER_MENU_TOGGLE).playOnce();
         if (right != null) {
             right.run();
         }

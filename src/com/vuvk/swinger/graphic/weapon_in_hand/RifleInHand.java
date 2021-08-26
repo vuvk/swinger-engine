@@ -13,7 +13,6 @@
 */
 package com.vuvk.swinger.graphic.weapon_in_hand;
 
-import com.vuvk.retard_sound_system.Sound;
 import com.vuvk.swinger.audio.SoundBank;
 import com.vuvk.swinger.graphic.Renderer;
 import com.vuvk.swinger.math.Vector2;
@@ -27,8 +26,8 @@ import com.vuvk.swinger.res.Image;
 public class RifleInHand extends RayWeaponInHand {
     private final static int FRAMES_COUNT = 3;
     private final static Image[] FRAMES = new Image[FRAMES_COUNT];
-    private final static String[] FILES = { 
-        "resources/pics/weapons/mp40_0.png", 
+    private final static String[] FILES = {
+        "resources/pics/weapons/mp40_0.png",
         "resources/pics/weapons/mp40_1.png",
         "resources/pics/weapons/mp40_2.png"
     };
@@ -55,17 +54,17 @@ public class RifleInHand extends RayWeaponInHand {
         setSoundShoot(SoundBank.SOUND_BUFFER_RIFLE);
         setAmmoType(AMMO_TYPE);
     }
-    
+
     private RifleInHand() {
         super();
         init();
     }
-    
+
     public static void loadFrames() {
         int rW = Renderer.WIDTH;
         int rH = Renderer.HEIGHT;
 
-        int min = Math.min(rW, rH);        
+        int min = Math.min(rW, rH);
         int size = min >> 1;
 
         for (int i = 0; i < FILES.length; ++i) {
@@ -74,11 +73,11 @@ public class RifleInHand extends RayWeaponInHand {
         }
         //FRAMES[4] = FRAMES[1];
     }
-    
+
     public static RifleInHand getInstance() {
         if (instance == null) {
             instance = new RifleInHand();
-        }        
+        }
         return instance;
-    }    
+    }
 }

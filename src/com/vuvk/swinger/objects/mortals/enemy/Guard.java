@@ -13,7 +13,8 @@
 */
 package com.vuvk.swinger.objects.mortals.enemy;
 
-import com.vuvk.retard_sound_system.Sound;
+import com.vuvk.audiosystem.AudioSystem;
+import com.vuvk.audiosystem.Sound;
 import com.vuvk.swinger.audio.SoundBank;
 import com.vuvk.swinger.math.Vector3;
 import com.vuvk.swinger.res.MaterialBank;
@@ -36,20 +37,20 @@ public class Guard extends RayEnemy implements Serializable {
 
     private final static double HEALTH = 100.0;
     private final static double RADIUS = 0.3;
-    transient private final static Sound[] ATK_SOUNDS = { new Sound(SoundBank.SOUND_BUFFER_PISTOL) };
+    transient private final static Sound[] ATK_SOUNDS = { AudioSystem.newSound(SoundBank.SOUND_BUFFER_PISTOL) };
     transient private final static Sound[] ALARM_SOUNDS = {
-        new Sound(SoundBank.SOUND_BUFFER_ALARM1),
-        new Sound(SoundBank.SOUND_BUFFER_ALARM2),
-        new Sound(SoundBank.SOUND_BUFFER_ALARM3),
-        new Sound(SoundBank.SOUND_BUFFER_ALARM4)
+        AudioSystem.newSound(SoundBank.SOUND_BUFFER_ALARM1),
+        AudioSystem.newSound(SoundBank.SOUND_BUFFER_ALARM2),
+        AudioSystem.newSound(SoundBank.SOUND_BUFFER_ALARM3),
+        AudioSystem.newSound(SoundBank.SOUND_BUFFER_ALARM4)
     };
     transient private final static Sound[] PAIN_SOUNDS = {
-        new Sound(SoundBank.SOUND_BUFFER_PAIN1),
-        new Sound(SoundBank.SOUND_BUFFER_PAIN2)
+        AudioSystem.newSound(SoundBank.SOUND_BUFFER_PAIN1),
+        AudioSystem.newSound(SoundBank.SOUND_BUFFER_PAIN2)
     };
     transient private final static Sound[] DIE_SOUNDS  = {
-        new Sound(SoundBank.SOUND_BUFFER_DIE1),
-        new Sound(SoundBank.SOUND_BUFFER_DIE2)
+        AudioSystem.newSound(SoundBank.SOUND_BUFFER_DIE1),
+        AudioSystem.newSound(SoundBank.SOUND_BUFFER_DIE2)
     };
 
     public Guard(final Vector3 pos) {
@@ -81,5 +82,15 @@ public class Guard extends RayEnemy implements Serializable {
         setDamage(DAMAGE);
 
         setLive(true);
+    }
+
+    @Override
+    public void finalize() throws Throwable {
+        for (Sound snd : ATK_SOUNDS  ) { snd.dispose(); }
+        for (Sound snd : ALARM_SOUNDS) { snd.dispose(); }
+        for (Sound snd : PAIN_SOUNDS ) { snd.dispose(); }
+        for (Sound snd : DIE_SOUNDS  ) { snd.dispose(); }
+
+        super.finalize();
     }
 }

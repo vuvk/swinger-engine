@@ -1,5 +1,5 @@
 /**
-    Copyright (C) 2019-2020 Anton "Vuvk" Shcherbatykh <vuvk69@gmail.com>
+    Copyright (C) 2019-2021 Anton "Vuvk" Shcherbatykh <vuvk69@gmail.com>
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
@@ -13,15 +13,14 @@
 */
 package com.vuvk.swinger.objects.items;
 
-import java.io.Serializable;
-
-import com.vuvk.retard_sound_system.Sound;
-import com.vuvk.retard_sound_system.SoundSystem;
+import com.vuvk.audiosystem.AudioSystem;
+import com.vuvk.audiosystem.Sound;
 import com.vuvk.swinger.audio.SoundBank;
 import com.vuvk.swinger.math.Vector3;
 import com.vuvk.swinger.objects.Sprite;
 import com.vuvk.swinger.objects.mortals.Player;
 import com.vuvk.swinger.res.Material;
+import java.io.Serializable;
 
 /**
  * Валяющиеся аптечки
@@ -50,9 +49,9 @@ public class MedKit extends Sprite implements Serializable {
                 }
 
                 player.setHealth(hp);
-                SoundSystem.playRandom(new Sound[] { 
-                    new Sound(SoundBank.SOUND_BUFFER_GET_MEDKIT1),
-                    new Sound(SoundBank.SOUND_BUFFER_GET_MEDKIT2) 
+                AudioSystem.playRandomOnce(new Sound[] {
+                    AudioSystem.newSound(SoundBank.SOUND_BUFFER_GET_MEDKIT1),
+                    AudioSystem.newSound(SoundBank.SOUND_BUFFER_GET_MEDKIT2)
                 });
 
                 destroy();

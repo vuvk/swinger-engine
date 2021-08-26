@@ -13,8 +13,8 @@
 */
 package com.vuvk.swinger.objects.mortals.enemy;
 
-import com.vuvk.retard_sound_system.Sound;
-import com.vuvk.retard_sound_system.SoundSystem;
+import com.vuvk.audiosystem.AudioSystem;
+import com.vuvk.audiosystem.Sound;
 import com.vuvk.swinger.Engine;
 import com.vuvk.swinger.math.Ray;
 import com.vuvk.swinger.math.Vector2;
@@ -25,7 +25,6 @@ import com.vuvk.swinger.objects.mortals.Mortal;
 import com.vuvk.swinger.objects.mortals.Player;
 import com.vuvk.swinger.res.Map;
 import com.vuvk.swinger.res.Material;
-
 import java.awt.Color;
 import java.io.Serializable;
 import java.util.logging.Logger;
@@ -94,7 +93,18 @@ public abstract class Enemy extends Breakable implements Serializable {
         setAttackAnimation(atk);
         setWalkAnimation(walk);
     }
-    
+
+    @Override
+    public void finalize() throws Throwable {
+        for (Sound snd : alarmSounds) {
+            snd.dispose();
+        }
+        for (Sound snd : attackSounds) {
+            snd.dispose();
+        }
+        super.finalize();
+    }
+
     public void setWalkAnimation(final Material animation) {
         walk = animation;
     }
@@ -152,25 +162,25 @@ public abstract class Enemy extends Breakable implements Serializable {
     protected void setAlarmSounds(Sound[] alarmSounds) {
         this.alarmSounds = alarmSounds;
     }
-
+/*
     protected void setAlarmSounds(String[] alarmSounds) {
         this.alarmSounds = new Sound[alarmSounds.length];
         for (int i = 0; i < alarmSounds.length; ++i) {
             this.alarmSounds[i] = new Sound(alarmSounds[i], true);
         }
     }
-
+*/
     protected void setAttackSounds(Sound[] attackSounds) {
         this.attackSounds = attackSounds;
     }
-
+/*
     protected void setAttackSounds(String[] attackSounds) {
         this.attackSounds = new Sound[attackSounds.length];
         for (int i = 0; i < attackSounds.length; ++i) {
             this.attackSounds[i] = new Sound(attackSounds[i], true);
         }
     }
-
+*/
     protected void setViewDistance(double viewDistance) {
         this.viewDistance = viewDistance;
     }
@@ -321,7 +331,7 @@ public abstract class Enemy extends Breakable implements Serializable {
 
     private void notice() {
         noticed = true;
-        SoundSystem.playRandom(getAlarmSounds());
+        AudioSystem.playRandom(getAlarmSounds());
 
         Vector3 plPos = Player.getInstance().getPos();
         double angleToPlayer = Math.toDegrees(Math.atan2(plPos.y - pos.y, plPos.x - pos.x));
@@ -424,7 +434,7 @@ public abstract class Enemy extends Breakable implements Serializable {
                         }
                     // уже выстрелил
                     } else {
-                        SoundSystem.playRandom(getAttackSounds());
+                        AudioSystem.playRandom(getAttackSounds());
                         for (int i = 0; i < getBulletsPerShoot(); ++i) {
                             shoot();
                         }

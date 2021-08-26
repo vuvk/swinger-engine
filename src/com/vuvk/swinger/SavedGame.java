@@ -223,7 +223,7 @@ public class SavedGame implements Serializable {
             LOG.log(Level.SEVERE, null, ex);
         }
 
-        SoundBank.MUSIC1.play(true);
+        SoundBank.MUSIC1.setLooping(true).play();
         Map.setLoaded(true);
     }
 }

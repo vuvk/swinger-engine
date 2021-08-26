@@ -13,7 +13,8 @@
 */
 package com.vuvk.swinger.objects;
 
-import com.vuvk.retard_sound_system.Sound;
+import com.vuvk.audiosystem.AudioSystem;
+import com.vuvk.audiosystem.Sound;
 import com.vuvk.swinger.Engine;
 import com.vuvk.swinger.audio.SoundBank;
 import com.vuvk.swinger.graphic.TexturedSegment;
@@ -21,7 +22,6 @@ import com.vuvk.swinger.math.Vector2;
 import com.vuvk.swinger.objects.mortals.Mortal;
 import com.vuvk.swinger.res.Map;
 import com.vuvk.swinger.res.Material;
-
 import java.io.Serializable;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -31,8 +31,8 @@ import java.util.concurrent.CopyOnWriteArrayList;
  * @author Anton "Vuvk" Shcherbatykh
  */
 public class Door extends TexturedSegment implements Serializable {
-    private final Sound openSound  = new Sound(SoundBank.SOUND_BUFFER_DOOR_OPEN );
-    private final Sound closeSound = new Sound(SoundBank.SOUND_BUFFER_DOOR_CLOSE);
+    private final Sound openSound  = AudioSystem.newSound(SoundBank.SOUND_BUFFER_DOOR_OPEN );
+    private final Sound closeSound = AudioSystem.newSound(SoundBank.SOUND_BUFFER_DOOR_CLOSE);
 
     //private int side;
     /** открытая позиция */
@@ -82,6 +82,14 @@ public class Door extends TexturedSegment implements Serializable {
         LIB.add(this);
     }
 
+    @Override
+    public void finalize() throws Throwable {
+        openSound.dispose();
+        closeSound.dispose();
+        LIB.remove(this);
+        super.finalize();
+    }
+
     public double getSpeed() {
         return speed;
     }
@@ -105,11 +113,6 @@ public class Door extends TexturedSegment implements Serializable {
     public void open() {
         open = true;
         openSound.play();
-    }
-
-    @Override
-    public void finalize() {
-        LIB.remove(this);
     }
 
     public static void deleteAll() {

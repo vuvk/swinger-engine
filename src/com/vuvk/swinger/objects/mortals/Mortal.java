@@ -50,8 +50,9 @@ public abstract class Mortal extends Object3D implements Serializable {
     }
 
     @Override
-    public void finalize() {
+    public void finalize() throws Throwable {
         destroy();
+        super.finalize();
     }
 
     /**

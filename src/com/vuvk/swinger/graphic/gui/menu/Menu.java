@@ -13,8 +13,8 @@
 */
 package com.vuvk.swinger.graphic.gui.menu;
 
-import com.vuvk.retard_sound_system.SoundSystem;
 import com.vuvk.swinger.Config;
+import com.vuvk.swinger.SavedGame;
 import com.vuvk.swinger.audio.SoundBank;
 import com.vuvk.swinger.graphic.Fog;
 import com.vuvk.swinger.graphic.Renderer;
@@ -22,9 +22,6 @@ import com.vuvk.swinger.graphic.gui.text.FontBank;
 import com.vuvk.swinger.graphic.gui.text.Text;
 import com.vuvk.swinger.math.Vector2;
 import com.vuvk.swinger.res.Map;
-import com.vuvk.swinger.utils.Utils;
-import com.vuvk.swinger.SavedGame;
-
 import java.io.File;
 import java.util.Date;
 
@@ -124,30 +121,30 @@ public class Menu {
                                                   new Vector2(Renderer.HALF_WIDTH - 50, Renderer.HALF_HEIGHT - 72)),
                                          () -> {},
                                          () -> {
-                                             float volume = SoundSystem.getMusicVolume() - 0.05f;
+                                             /*float volume = SoundSystem.getMusicVolume() - 0.05f;
                                              volume = Utils.limit(volume, 0f, 1f);
-                                             SoundSystem.setMusicVolume(volume);
+                                             SoundSystem.setMusicVolume(volume);*/
                                              updateOptionsSubMenu();
                                          },
                                          () -> {
-                                             float volume = SoundSystem.getMusicVolume() + 0.05f;
+                                             /*float volume = SoundSystem.getMusicVolume() + 0.05f;
                                              volume = Utils.limit(volume, 0f, 1f);
-                                             SoundSystem.setMusicVolume(volume);
+                                             SoundSystem.setMusicVolume(volume);*/
                                              updateOptionsSubMenu();
                                          }));
         OPTIONS.addButton(new ButtonMenu(new Text(FontBank.FONT_MENU, "VOLUME   100%",
                                                   new Vector2(Renderer.HALF_WIDTH - 50, Renderer.HALF_HEIGHT - 48)),
                                          () -> {},
                                          () -> {
-                                             float volume = SoundSystem.getSoundsVolume() - 0.05f;
+                                             /*float volume = SoundSystem.getSoundsVolume() - 0.05f;
                                              volume = Utils.limit(volume, 0f, 1f);
-                                             SoundSystem.setSoundsVolume(volume);
+                                             SoundSystem.setSoundsVolume(volume);*/
                                              updateOptionsSubMenu();
                                          },
                                          () -> {
-                                             float volume = SoundSystem.getSoundsVolume() + 0.05f;
+                                             /*float volume = SoundSystem.getSoundsVolume() + 0.05f;
                                              volume = Utils.limit(volume, 0f, 1f);
-                                             SoundSystem.setSoundsVolume(volume);
+                                             SoundSystem.setSoundsVolume(volume);*/
                                              updateOptionsSubMenu();
                                          }));
         OPTIONS.addButton(new ButtonMenu(new Text(FontBank.FONT_MENU, "FOG      OLDSCHOOL",
@@ -224,7 +221,7 @@ public class Menu {
                                                    () -> {
                                                        Map.reset();
                                                        changeSubMenu(MAIN_MENU);
-                                                       SoundBank.MUSIC_TITLE.play(true);
+                                                       SoundBank.MUSIC_TITLE.setLooping(true).play();
                                                    }));
 
         // меню подтверждения выхода из игры
@@ -273,10 +270,10 @@ public class Menu {
         ButtonMenu btn;
         //music
         btn = OPTIONS.getButton(1);
-        btn.getText().setMessage("MUSIC    " + (int) (SoundSystem.getMusicVolume() * 100) + "%");
+        //btn.getText().setMessage("MUSIC    " + (int) (SoundSystem.getMusicVolume() * 100) + "%");
         //volume
         btn = OPTIONS.getButton(2);
-        btn.getText().setMessage("VOLUME   " + (int) (SoundSystem.getSoundsVolume() * 100) + "%");
+        //btn.getText().setMessage("VOLUME   " + (int) (SoundSystem.getSoundsVolume() * 100) + "%");
         // fog
         btn = OPTIONS.getButton(3);
         btn.getText().setMessage("FOG      " + Config.fog.name());

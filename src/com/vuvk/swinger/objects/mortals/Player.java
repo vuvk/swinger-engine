@@ -13,8 +13,8 @@
 */
 package com.vuvk.swinger.objects.mortals;
 
-import com.vuvk.retard_sound_system.Sound;
-import com.vuvk.retard_sound_system.SoundSystem;
+import com.vuvk.audiosystem.AudioSystem;
+import com.vuvk.audiosystem.Sound;
 import com.vuvk.swinger.Config;
 import com.vuvk.swinger.Engine;
 import com.vuvk.swinger.audio.SoundBank;
@@ -32,7 +32,6 @@ import com.vuvk.swinger.objects.items.Key;
 import com.vuvk.swinger.objects.weapon.AmmoType;
 import com.vuvk.swinger.objects.weapon.Weapon;
 import com.vuvk.swinger.res.Map;
-
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
@@ -70,11 +69,19 @@ public final class Player extends Mortal implements Serializable {
     public  final static double KEY_ROT_SPEED  = 3.0;
     public  final static double MOUSE_ROT_SPEED  = 15.0;
     transient private final static Sound[] soundsNeadKey = {
-        new Sound(SoundBank.SOUND_BUFFER_NEED_KEY1),
-        new Sound(SoundBank.SOUND_BUFFER_NEED_KEY2)
+        AudioSystem.newSound(SoundBank.SOUND_BUFFER_NEED_KEY1),
+        AudioSystem.newSound(SoundBank.SOUND_BUFFER_NEED_KEY2)
     };
 
-    transient private final Sound soundDie = new Sound(SoundBank.SOUND_BUFFER_PLAYER_DIE);
+    transient private final Sound soundDie = AudioSystem.newSound(SoundBank.SOUND_BUFFER_PLAYER_DIE);
+
+    public void finalize() throws Throwable {
+        for (Sound snd : soundsNeadKey) {
+            snd.dispose();
+        }
+        soundDie.dispose();
+        super.finalize();
+    }
 
     public boolean isRot() {
         return (rotL || rotR);
@@ -245,7 +252,7 @@ public final class Player extends Mortal implements Serializable {
                             door.open();
                         } else {
                             // сказать фразу, если ещё не говорит
-                            SoundSystem.playRandom(soundsNeadKey, true);
+                            AudioSystem.playRandom(soundsNeadKey);
                         }
                     }
                 }

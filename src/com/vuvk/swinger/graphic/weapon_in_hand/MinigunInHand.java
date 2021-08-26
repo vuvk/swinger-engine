@@ -13,7 +13,6 @@
 */
 package com.vuvk.swinger.graphic.weapon_in_hand;
 
-import com.vuvk.retard_sound_system.Sound;
 import com.vuvk.swinger.audio.SoundBank;
 import com.vuvk.swinger.graphic.Renderer;
 import com.vuvk.swinger.objects.weapon.AmmoType;
@@ -26,10 +25,10 @@ import com.vuvk.swinger.res.Image;
 public class MinigunInHand  extends RayWeaponInHand {
     private final static int FRAMES_COUNT = 4;
     private final static Image[] FRAMES = new Image[FRAMES_COUNT];
-    private final static String[] FILES = { 
-        "resources/pics/weapons/minigun_hand0.png", 
-        "resources/pics/weapons/minigun_hand1.png", 
-        "resources/pics/weapons/minigun_hand2.png", 
+    private final static String[] FILES = {
+        "resources/pics/weapons/minigun_hand0.png",
+        "resources/pics/weapons/minigun_hand1.png",
+        "resources/pics/weapons/minigun_hand2.png",
         "resources/pics/weapons/minigun_hand3.png"
     };
     private static MinigunInHand instance = null;
@@ -55,17 +54,17 @@ public class MinigunInHand  extends RayWeaponInHand {
         setSoundShoot(SoundBank.SOUND_BUFFER_MINIGUN);
         setAmmoType(AMMO_TYPE);
     }
-    
+
     private MinigunInHand() {
         super();
         init();
     }
-    
+
     public static void loadFrames() {
         int rW = Renderer.WIDTH;
         int rH = Renderer.HEIGHT;
 
-        int min = Math.min(rW, rH);        
+        int min = Math.min(rW, rH);
         int size = min >> 1;
 
         for (int i = 0; i < FILES.length; ++i) {
@@ -73,11 +72,11 @@ public class MinigunInHand  extends RayWeaponInHand {
         }
         //FRAMES[4] = FRAMES[1];
     }
-    
+
     public static MinigunInHand getInstance() {
         if (instance == null) {
             instance = new MinigunInHand();
-        }        
+        }
         return instance;
-    }    
+    }
 }

@@ -13,9 +13,7 @@
 */
 package com.vuvk.swinger;
 
-import com.vuvk.retard_sound_system.SoundSystem;
-import com.vuvk.swinger.audio.SoundBank;
-import com.vuvk.swinger.d3.Model;
+import com.vuvk.audiosystem.AudioSystem;
 import com.vuvk.swinger.graphic.Fog;
 import com.vuvk.swinger.graphic.Renderer;
 import com.vuvk.swinger.graphic.Sky;
@@ -194,7 +192,7 @@ public class Game extends Frame {
         Renderer.init();
         Menu.init();
         TextureBank.load();
-        SoundSystem.start();
+        AudioSystem.init();
         FontBank.load();
 
         KnifeInHand.loadFrames();
@@ -250,13 +248,13 @@ public class Game extends Frame {
         Config.draw = true;
         Menu.activate();
 
-        SoundBank.MUSIC_TITLE.play(true);
+        //SoundBank.MUSIC_TITLE.setLooping(true).play();
     }
 
     @Override
     public void dispose() {
         Map.reset();
-        SoundSystem.stop();
+        AudioSystem.deinit();
         initialized = false;
         Config.save();
 
@@ -395,12 +393,12 @@ public class Game extends Frame {
                         Sprite.updateAll();
                         Door.updateAll();
                         Mortal.updateAll();
+/*
                         Model.updateAll();
-
                         for (Model mdl : Model.LIB) {
                             mdl.rotateX(Engine.getDeltaTime());
                         }
-
+*/
                         Sky.getInstance().update();
 
                         renderer.setActiveCamera(playerCamera);
