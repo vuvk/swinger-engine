@@ -90,9 +90,16 @@ public class Music extends AudioSource {
         super.dispose();
 
         url = null;
-        AudioSystem.al.alDeleteBuffers(NUM_BUFFERS, buffers, 0);
-        AudioSystem.checkError();
-        Arrays.fill(buffers, 0);
+        if (AudioSystem.isInited()) {
+            for (int i = 0; i < buffers.length; ++i) {
+                if (buffers[i] != 0) {
+                    AudioSystem.al.alGetError();
+                    AudioSystem.al.alDeleteBuffers(1, buffers, i);
+                    AudioSystem.checkError();
+                }
+            }
+            Arrays.fill(buffers, 0);
+        }
 
         opened = false;
     }

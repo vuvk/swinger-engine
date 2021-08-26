@@ -31,8 +31,8 @@ import java.util.concurrent.CopyOnWriteArrayList;
  * @author Anton "Vuvk" Shcherbatykh
  */
 public class Door extends TexturedSegment implements Serializable {
-    private final Sound openSound  = AudioSystem.newSound(SoundBank.SOUND_BUFFER_DOOR_OPEN );
-    private final Sound closeSound = AudioSystem.newSound(SoundBank.SOUND_BUFFER_DOOR_CLOSE);
+    private Sound openSound  = AudioSystem.newSound(SoundBank.SOUND_BUFFER_DOOR_OPEN );
+    private Sound closeSound = AudioSystem.newSound(SoundBank.SOUND_BUFFER_DOOR_CLOSE);
 
     //private int side;
     /** открытая позиция */

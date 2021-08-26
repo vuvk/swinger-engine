@@ -96,12 +96,8 @@ public abstract class Enemy extends Breakable implements Serializable {
 
     @Override
     public void finalize() throws Throwable {
-        for (Sound snd : alarmSounds) {
-            snd.dispose();
-        }
-        for (Sound snd : attackSounds) {
-            snd.dispose();
-        }
+        for (Sound snd : alarmSounds) { snd.dispose(); }
+        for (Sound snd : attackSounds) { snd.dispose(); }
         super.finalize();
     }
 

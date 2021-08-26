@@ -8,6 +8,7 @@ import java.io.File;
 import java.net.MalformedURLException;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Random;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -50,7 +51,6 @@ public final class AudioSystem {
         }
     }
 
-    /*
     private final static UpdateTask updateSoundsTask = new UpdateTask() {
         @Override
         public void run() {
@@ -63,10 +63,11 @@ public final class AudioSystem {
                     Sound sound = it.next();
                     if (sound != null &&
                         sound.isStopped() &&
-                       !sound.isLooping()
+                       !sound.isLooping() &&
+                        sound.isPlayOnce()
                     ) {
-                        //sound.dispose();
-                        //SOUNDS.remove(sound);
+                        sound.dispose();
+                        SOUNDS.remove(sound);
                     }
                 }
 
@@ -80,7 +81,7 @@ public final class AudioSystem {
             setWork(false);
         }
     };
-*/
+
     private final static UpdateTask updateMusicsTask = new UpdateTask() {
     	@Override
     	public void run() {
@@ -126,7 +127,7 @@ public final class AudioSystem {
         }
     };
 
-    //private static Thread updateSoundsThread;
+    private static Thread updateSoundsThread;
     private static Thread updateMusicsThread;
 
     public static void init() {
@@ -137,8 +138,8 @@ public final class AudioSystem {
 
             LISTENER_INSTANCE = new AudioListener();
 
-            //updateSoundsThread = new Thread(updateSoundsTask);
-            //updateSoundsThread.start();
+            updateSoundsThread = new Thread(updateSoundsTask);
+            updateSoundsThread.start();
 
             updateMusicsThread = new Thread(updateMusicsTask);
             updateMusicsThread.start();
@@ -163,19 +164,27 @@ public final class AudioSystem {
 
     public static void deinit() {
         if (inited) {
-            disposeAll();
-
             LISTENER_INSTANCE = null;
 
-            //updateSoundsTask.setWork(false);
+            updateSoundsTask.setWork(false);
 //            updateSoundsThread.interrupt();
-            //updateSoundsThread = null;
+            updateSoundsThread = null;
 
             updateMusicsTask.setWork(false);
 //            updateMusicsThread.interrupt();
             updateMusicsThread = null;
 
-            checkError();
+            /*
+            try {
+                Thread.currentThread().wait(100);
+            } catch (InterruptedException ex) {
+                LOGGER.log(Level.SEVERE, null, ex);
+            }
+            */
+
+            disposeAll();
+
+            //checkError();
             ALut.alutExit();
 
             inited = false;
@@ -247,12 +256,14 @@ public final class AudioSystem {
 
     public static Sound newSound(SoundBuffer buffer) {
         if (inited) {
-            Sound sound = new Sound();
-            if (sound.setBuffer(buffer)) {
-                SOUNDS.add(0, sound);
-                return sound;
-            } else {
-                sound.dispose();
+            if (buffer != null && buffer.getBuffer()[0] != 0) {
+                Sound sound = new Sound();
+                if (sound.setBuffer(buffer)) {
+                    SOUNDS.add(0, sound);
+                    return sound;
+                } else {
+                    sound.dispose();
+                }
             }
         }
 
@@ -263,12 +274,12 @@ public final class AudioSystem {
         if (inited) {
             try {
                 Music music = new Music(new File(path).toURI().toURL());
-                if (music.open()) {
+                //if (music.open()) {
                     MUSICS.add(0, music);
                     return music;
-                } else {
+                /*} else {
                     music.dispose();
-                }
+                }*/
             } catch (MalformedURLException ex) {
                 LOGGER.log(Level.SEVERE, null, ex);
             }
@@ -278,10 +289,12 @@ public final class AudioSystem {
     }
 
     public static void playRandom(Sound ... sounds) {
-
+        int chance = new Random().nextInt(sounds.length);
+        sounds[chance].play();
     }
 
     public static void playRandomOnce(Sound ... sounds) {
-
+        int chance = new Random().nextInt(sounds.length);
+        sounds[chance].playOnce();
     }
 }

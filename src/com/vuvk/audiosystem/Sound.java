@@ -28,7 +28,11 @@ public class Sound extends AudioSource {
 
     boolean setBuffer(SoundBuffer buffer) {
         this.buffer = buffer;
-        AudioSystem.al.alSourcei(source[0], AL.AL_BUFFER, (buffer != null) ? buffer.getBuffer()[0] : 0);
+        if (buffer != null && buffer.getBuffer()[0] != 0) {
+            AudioSystem.al.alSourcei(source[0], AL.AL_BUFFER, buffer.getBuffer()[0]);
+        } else {
+            AudioSystem.al.alSourcei(source[0], AL.AL_BUFFER, 0);
+        }
         return AudioSystem.al.alGetError() == AL.AL_NO_ERROR;
     }
 

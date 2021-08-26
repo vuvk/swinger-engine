@@ -34,24 +34,8 @@ public class Guard extends RayEnemy implements Serializable {
     private final static int BULLETS_PER_SHOOT = 1;
     private final static double DAMAGE = 25.0;
 
-
     private final static double HEALTH = 100.0;
     private final static double RADIUS = 0.3;
-    transient private final static Sound[] ATK_SOUNDS = { AudioSystem.newSound(SoundBank.SOUND_BUFFER_PISTOL) };
-    transient private final static Sound[] ALARM_SOUNDS = {
-        AudioSystem.newSound(SoundBank.SOUND_BUFFER_ALARM1),
-        AudioSystem.newSound(SoundBank.SOUND_BUFFER_ALARM2),
-        AudioSystem.newSound(SoundBank.SOUND_BUFFER_ALARM3),
-        AudioSystem.newSound(SoundBank.SOUND_BUFFER_ALARM4)
-    };
-    transient private final static Sound[] PAIN_SOUNDS = {
-        AudioSystem.newSound(SoundBank.SOUND_BUFFER_PAIN1),
-        AudioSystem.newSound(SoundBank.SOUND_BUFFER_PAIN2)
-    };
-    transient private final static Sound[] DIE_SOUNDS  = {
-        AudioSystem.newSound(SoundBank.SOUND_BUFFER_DIE1),
-        AudioSystem.newSound(SoundBank.SOUND_BUFFER_DIE2)
-    };
 
     public Guard(final Vector3 pos) {
         this(pos, 0.0);
@@ -67,10 +51,21 @@ public class Guard extends RayEnemy implements Serializable {
               pos, direction,
               HEALTH, RADIUS);
 
-        setAttackSounds(ATK_SOUNDS);
-        setAlarmSounds(ALARM_SOUNDS);
-        setPainSounds(PAIN_SOUNDS);
-        setDieSounds(DIE_SOUNDS);
+        attackSounds = new Sound[] { AudioSystem.newSound(SoundBank.SOUND_BUFFER_PISTOL) };
+        alarmSounds = new Sound[] {
+            AudioSystem.newSound(SoundBank.SOUND_BUFFER_ALARM1),
+            AudioSystem.newSound(SoundBank.SOUND_BUFFER_ALARM2),
+            AudioSystem.newSound(SoundBank.SOUND_BUFFER_ALARM3),
+            AudioSystem.newSound(SoundBank.SOUND_BUFFER_ALARM4)
+        };
+        painSounds = new Sound[] {
+            AudioSystem.newSound(SoundBank.SOUND_BUFFER_PAIN1),
+            AudioSystem.newSound(SoundBank.SOUND_BUFFER_PAIN2)
+        };
+        dieSounds = new Sound[] {
+            AudioSystem.newSound(SoundBank.SOUND_BUFFER_DIE1),
+            AudioSystem.newSound(SoundBank.SOUND_BUFFER_DIE2)
+        };
 
         setViewAngle(VIEW_ANGLE);
         setViewDistance(VIEW_DISTANCE);
@@ -82,15 +77,5 @@ public class Guard extends RayEnemy implements Serializable {
         setDamage(DAMAGE);
 
         setLive(true);
-    }
-
-    @Override
-    public void finalize() throws Throwable {
-        for (Sound snd : ATK_SOUNDS  ) { snd.dispose(); }
-        for (Sound snd : ALARM_SOUNDS) { snd.dispose(); }
-        for (Sound snd : PAIN_SOUNDS ) { snd.dispose(); }
-        for (Sound snd : DIE_SOUNDS  ) { snd.dispose(); }
-
-        super.finalize();
     }
 }

@@ -15,7 +15,6 @@ package com.vuvk.swinger.graphic.gui.menu;
 
 import com.vuvk.swinger.Config;
 import com.vuvk.swinger.SavedGame;
-import com.vuvk.swinger.audio.SoundBank;
 import com.vuvk.swinger.graphic.Fog;
 import com.vuvk.swinger.graphic.Renderer;
 import com.vuvk.swinger.graphic.gui.text.FontBank;
@@ -221,7 +220,7 @@ public class Menu {
                                                    () -> {
                                                        Map.reset();
                                                        changeSubMenu(MAIN_MENU);
-                                                       SoundBank.MUSIC_TITLE.setLooping(true).play();
+                                                       //SoundBank.MUSIC_TITLE.setLooping(true).play();
                                                    }));
 
         // меню подтверждения выхода из игры

@@ -23,6 +23,7 @@ public class SoundBuffer extends Disposable {
         ByteBuffer[] data = new ByteBuffer[1];
 
         // Load wav data into a buffer.
+        AudioSystem.al.alGetError();
         AudioSystem.al.alGenBuffers(1, buffer, 0);
         if (AudioSystem.checkError() != AL.AL_NO_ERROR) {
             return false;
@@ -44,11 +45,14 @@ public class SoundBuffer extends Disposable {
             }
         }
 
-        AudioSystem.al.alDeleteBuffers(1, buffer, 0);
+        if (buffer[0] != 0) {
+            AudioSystem.al.alGetError();
+            AudioSystem.al.alDeleteBuffers(1, buffer, 0);
+            AudioSystem.checkError();
+            buffer[0] = 0;
+        }
         AudioSystem.SOUND_BUFFERS.remove(this);
-        AudioSystem.checkError();
 
-        buffer[0] = 0;
         format[0] = size[0] = freq[0] = loop[0] = AL.AL_INVALID;
     }
 

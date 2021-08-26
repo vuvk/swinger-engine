@@ -259,9 +259,9 @@ public class Game extends Frame {
         Config.save();
 
         batch.dispose();
-
         super.dispose();
-        //System.exit(0);
+        
+        System.exit(0);
     }
 
     private void update() {
