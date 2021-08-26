@@ -12,6 +12,7 @@ Features
 - command console;
 - drawing three levels of height;
 - curved walls;
+- fog (darkness) and light sources;
 - sprites scale;
 - enemies with primitive intelligence;
 - various weapons with different parameters;
@@ -41,9 +42,11 @@ https://youtu.be/5PZlaCT3xt4
 
 https://youtu.be/n4O6d5lWdYY
 
+https://youtu.be/CHHVQwcCkdE
+
 Build
 -----
-Use Netbeans.
+$ ant clean jar
 
 License
 -------
