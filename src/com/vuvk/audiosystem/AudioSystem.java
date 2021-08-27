@@ -1,8 +1,22 @@
+/**
+    Copyright (C) 2021 Anton "Vuvk" Shcherbatykh <vuvk69@gmail.com>
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <https://www.gnu.org/licenses/>.
+*/
 package com.vuvk.audiosystem;
 
 import com.jogamp.openal.AL;
 import com.jogamp.openal.ALFactory;
 import com.jogamp.openal.util.ALut;
+import com.vuvk.swinger.utils.Utils;
 import java.io.File;
 import java.net.MalformedURLException;
 import java.util.Iterator;
@@ -14,7 +28,7 @@ import java.util.logging.Logger;
 
 /**
  *
- * @author vuvk
+ * @author Anton "Vuvk" Shcherbatykh
  */
 public final class AudioSystem {
 
@@ -28,6 +42,8 @@ public final class AudioSystem {
     private static boolean inited = false;
 
     private static AudioListener LISTENER_INSTANCE = null;
+    private static float musicsVolume = 1.0f;
+    private static float soundsVolume = 1.0f;
 
     private static class UpdateTask implements Runnable {
         private boolean work = false;
@@ -60,18 +76,21 @@ public final class AudioSystem {
                      it.hasNext() && this.isWork();
                 ) {
                     Sound sound = it.next();
-                    if (sound != null &&
-                        sound.isStopped() &&
+                    if (sound != null) {
+                        sound.setVolume(soundsVolume);
+                    }
+
+                    if (sound.isStopped() &&
                        !sound.isLooping() &&
                         sound.isPlayOnce()
-                    ) {
+                     ) {
                         sound.dispose();
                         SOUNDS.remove(sound);
                     }
                 }
 
                 try {
-                    Thread.sleep(1000);
+                    Thread.sleep(200);
                 } catch (InterruptedException ex) {
                     LOGGER.log(Level.SEVERE, null, ex);
                 }
@@ -95,6 +114,8 @@ public final class AudioSystem {
                     if (music == null || !music.isOpened()) {
                         continue;
                     }
+
+                    music.setVolume(musicsVolume);
 
                     if (music.isPaused()) {
                         continue;
@@ -237,6 +258,22 @@ public final class AudioSystem {
 
     public static AudioListener getAudioListener() {
         return LISTENER_INSTANCE;
+    }
+
+    public static float getSoundsVolume() {
+        return soundsVolume;
+    }
+
+    public static float getMusicsVolume() {
+        return musicsVolume;
+    }
+
+    public static void setSoundsVolume(float soundsVolume) {
+        AudioSystem.soundsVolume = Utils.limit(soundsVolume, 0, 1f);
+    }
+
+    public static void setMusicsVolume(float musicsVolume) {
+        AudioSystem.musicsVolume = Utils.limit(musicsVolume, 0, 1f);
     }
 
     public static SoundBuffer newSoundBuffer(String path) {

@@ -1,3 +1,16 @@
+/**
+    Copyright (C) 2021 Anton "Vuvk" Shcherbatykh <vuvk69@gmail.com>
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <https://www.gnu.org/licenses/>.
+*/
 package com.vuvk.audiosystem;
 
 import com.jogamp.openal.AL;
@@ -7,7 +20,7 @@ import java.util.Arrays;
 
 /**
  *
- * @author vuvk
+ * @author Anton "Vuvk" Shcherbatykh
  */
 public class Music extends AudioSource {
     private static enum State {
@@ -40,11 +53,14 @@ public class Music extends AudioSource {
 
         this.url = url;
 
-        AudioSystem.al.alGenBuffers(NUM_BUFFERS, buffers, 0);
-        AudioSystem.checkError();
+        if (AudioSystem.isInited()) {
+            AudioSystem.al.alGetError();
+            AudioSystem.al.alGenBuffers(NUM_BUFFERS, buffers, 0);
+            AudioSystem.checkError();
+            AudioSystem.al.alSourcef(source[0], AL.AL_ROLLOFF_FACTOR,  0.0f    );
+        }
 
         setRelative(false);
-        AudioSystem.al.alSourcef(source[0], AL.AL_ROLLOFF_FACTOR,  0.0f    );
 
         stop();
     }
@@ -118,8 +134,10 @@ public class Music extends AudioSource {
             }
         }
 
-        AudioSystem.al.alSourceQueueBuffers(source[0], NUM_BUFFERS, buffers, 0);
-        AudioSystem.al.alSourcePlay(source[0]);
+        if (AudioSystem.isInited() && source[0] != 0) {
+            AudioSystem.al.alSourceQueueBuffers(source[0], NUM_BUFFERS, buffers, 0);
+            AudioSystem.al.alSourcePlay(source[0]);
+        }
 
         return true;
     }
@@ -128,7 +146,7 @@ public class Music extends AudioSource {
      * Update the stream if necessary
      */
     boolean update() {
-        if (source[0] <= 0) {
+        if (!AudioSystem.isInited() || source[0] <= 0) {
             return false;
         }
 
@@ -158,7 +176,7 @@ public class Music extends AudioSource {
      * Reloads a buffer (reads in the next chunk)
      */
     private boolean stream(int buffer) {
-        if (oggDecoder == null) {
+        if (oggDecoder == null || !AudioSystem.isInited()) {
             opened = false;
             return false;
         }
@@ -244,7 +262,10 @@ public class Music extends AudioSource {
         }
 
         //playback();
-        AudioSystem.al.alSourcePlay(source[0]);
+        if (AudioSystem.isInited() && source[0] != 0) {
+            setVolume(AudioSystem.getMusicsVolume());
+            AudioSystem.al.alSourcePlay(source[0]);
+        }
         state = State.PLAYING;
 
         return this;
@@ -252,14 +273,18 @@ public class Music extends AudioSource {
 
     @Override
     public Music pause() {
-        AudioSystem.al.alSourcePause(source[0]);
+        if (AudioSystem.isInited() && source[0] != 0) {
+            AudioSystem.al.alSourcePause(source[0]);
+        }
         state = State.PAUSED;
         return this;
     }
 
     @Override
     public Music stop() {
-        AudioSystem.al.alSourceStop(source[0]);
+        if (AudioSystem.isInited() && source[0] != 0) {
+            AudioSystem.al.alSourceStop(source[0]);
+        }
         clearQueue();
         state = State.STOPPED;
         opened = false;

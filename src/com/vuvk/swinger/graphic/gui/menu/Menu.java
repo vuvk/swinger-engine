@@ -122,30 +122,22 @@ public class Menu {
                                                   new Vector2(Renderer.HALF_WIDTH - 50, Renderer.HALF_HEIGHT - 72)),
                                          () -> {},
                                          () -> {
-                                             /*float volume = SoundSystem.getMusicVolume() - 0.05f;
-                                             volume = Utils.limit(volume, 0f, 1f);
-                                             SoundSystem.setMusicVolume(volume);*/
+                                             AudioSystem.setMusicsVolume(AudioSystem.getMusicsVolume() - 0.05f);
                                              updateOptionsSubMenu();
                                          },
                                          () -> {
-                                             /*float volume = SoundSystem.getMusicVolume() + 0.05f;
-                                             volume = Utils.limit(volume, 0f, 1f);
-                                             SoundSystem.setMusicVolume(volume);*/
+                                             AudioSystem.setMusicsVolume(AudioSystem.getMusicsVolume() + 0.05f);
                                              updateOptionsSubMenu();
                                          }));
         OPTIONS.addButton(new ButtonMenu(new Text(FontBank.FONT_MENU, "VOLUME   100%",
                                                   new Vector2(Renderer.HALF_WIDTH - 50, Renderer.HALF_HEIGHT - 48)),
                                          () -> {},
                                          () -> {
-                                             /*float volume = SoundSystem.getSoundsVolume() - 0.05f;
-                                             volume = Utils.limit(volume, 0f, 1f);
-                                             SoundSystem.setSoundsVolume(volume);*/
+                                             AudioSystem.setSoundsVolume(AudioSystem.getSoundsVolume() - 0.05f);
                                              updateOptionsSubMenu();
                                          },
                                          () -> {
-                                             /*float volume = SoundSystem.getSoundsVolume() + 0.05f;
-                                             volume = Utils.limit(volume, 0f, 1f);
-                                             SoundSystem.setSoundsVolume(volume);*/
+                                             AudioSystem.setSoundsVolume(AudioSystem.getSoundsVolume() + 0.05f);
                                              updateOptionsSubMenu();
                                          }));
         OPTIONS.addButton(new ButtonMenu(new Text(FontBank.FONT_MENU, "FOG      OLDSCHOOL",
@@ -222,7 +214,6 @@ public class Menu {
                                                    () -> {
                                                        Map.reset();
                                                        changeSubMenu(MAIN_MENU);
-                                                       //SoundBank.MUSIC_TITLE.setLooping(true).play();
                                                        AudioSystem.newMusic(SoundBank.PATH_MUSIC_TITLE).setLooping(true).play();
                                                    }));
 
@@ -272,10 +263,10 @@ public class Menu {
         ButtonMenu btn;
         //music
         btn = OPTIONS.getButton(1);
-        //btn.getText().setMessage("MUSIC    " + (int) (SoundSystem.getMusicVolume() * 100) + "%");
+        btn.getText().setMessage("MUSIC    " + (int) (AudioSystem.getMusicsVolume() * 100) + "%");
         //volume
         btn = OPTIONS.getButton(2);
-        //btn.getText().setMessage("VOLUME   " + (int) (SoundSystem.getSoundsVolume() * 100) + "%");
+        btn.getText().setMessage("VOLUME   " + (int) (AudioSystem.getSoundsVolume() * 100) + "%");
         // fog
         btn = OPTIONS.getButton(3);
         btn.getText().setMessage("FOG      " + Config.fog.name());

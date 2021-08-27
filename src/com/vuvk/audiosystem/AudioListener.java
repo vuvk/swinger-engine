@@ -1,10 +1,23 @@
+/**
+    Copyright (C) 2021 Anton "Vuvk" Shcherbatykh <vuvk69@gmail.com>
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <https://www.gnu.org/licenses/>.
+*/
 package com.vuvk.audiosystem;
 
 import com.jogamp.openal.AL;
 
 /**
  *
- * @author vuvk
+ * @author Anton "Vuvk" Shcherbatykh
  */
 public class AudioListener {
     // Position of the listener.
@@ -39,6 +52,13 @@ public class AudioListener {
             return this;
         }
         return setPosition(position[0], position[1], position[2]);
+    }
+
+    public AudioListener setPosition(final double[] position) {
+        if (position.length < 3) {
+            return this;
+        }
+        return setPosition((float) position[0], (float) position[1], (float) position[2]);
     }
 
     public AudioListener setPosition(float x, float y, float z) {
