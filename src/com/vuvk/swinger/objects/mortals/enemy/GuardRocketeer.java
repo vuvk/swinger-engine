@@ -68,6 +68,8 @@ public class GuardRocketeer extends ProjectileEnemy implements Serializable {
             AudioSystem.newSound(SoundBank.SOUND_BUFFER_DIE1),
             AudioSystem.newSound(SoundBank.SOUND_BUFFER_DIE2)
         };
+        
+        attackSounds[0].setMaxDistance(10);
 
         setViewAngle(VIEW_ANGLE);
         setViewDistance(VIEW_DISTANCE);

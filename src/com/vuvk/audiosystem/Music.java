@@ -57,7 +57,7 @@ public class Music extends AudioSource {
             AudioSystem.al.alGetError();
             AudioSystem.al.alGenBuffers(NUM_BUFFERS, buffers, 0);
             AudioSystem.checkError();
-            AudioSystem.al.alSourcef(source[0], AL.AL_ROLLOFF_FACTOR,  0.0f    );
+            AudioSystem.al.alSourcef(source[0], AL.AL_ROLLOFF_FACTOR,  0.0f);
         }
 
         setRelative(false);

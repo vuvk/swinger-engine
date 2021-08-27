@@ -67,6 +67,8 @@ public class Guard extends RayEnemy implements Serializable {
             AudioSystem.newSound(SoundBank.SOUND_BUFFER_DIE2)
         };
 
+        attackSounds[0].setMaxDistance(10);
+
         setViewAngle(VIEW_ANGLE);
         setViewDistance(VIEW_DISTANCE);
         setMinAttackDistance(MIN_ATK_DISTANCE);

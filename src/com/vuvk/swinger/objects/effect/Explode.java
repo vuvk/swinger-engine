@@ -36,7 +36,10 @@ public class Explode extends Effect implements Serializable {
 
         AudioSystem
             .newSound(SoundBank.SOUND_BUFFER_EXPLODE)
+            .setRelative(false)
             .setPosition(x, z, y)
+            .setMaxDistance(20)
+            .setRolloffFactor(0.5f)
             .playOnce();
     }
 }

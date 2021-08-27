@@ -345,6 +345,8 @@ public abstract class Enemy extends Breakable implements Serializable {
 
         for (Sound snd : attackSounds) { snd.setRelative(false);  snd.setPosition(x, z, y); }
         for (Sound snd : alarmSounds ) { snd.setRelative(false);  snd.setPosition(x, z, y); }
+        for (Sound snd : painSounds  ) { snd.setRelative(false);  snd.setPosition(x, z, y); }
+        for (Sound snd : dieSounds   ) { snd.setRelative(false);  snd.setPosition(x, z, y); }
 
         // умирать?
         if (health <= 0.0 && state != EnemyState.DIE) {

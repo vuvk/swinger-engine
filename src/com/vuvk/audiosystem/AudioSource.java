@@ -66,30 +66,40 @@ public abstract class AudioSource extends Disposable {
         return direction;
 	}
 
-    public float getPitch() {
-        if (AudioSystem.isInited()) {
-            return AudioSystem.al.alGetFloat(AL.AL_PITCH);
+    protected float getParamf(int param) {
+        if (AudioSystem.isInited() && source[0] != 0) {
+            float[] val = new float[1];
+            AudioSystem.al.alGetSourcef(source[0], param, val, 0);
+            return val[0];
         } else {
             return Float.NaN;
         }
     }
 
-    public float getGain() {
-        if (AudioSystem.isInited()) {
-            return AudioSystem.al.alGetFloat(AL.AL_GAIN);
-        } else {
-            return Float.NaN;
-        }
-    }
-
-    private int getParami(int param) {
-        if (AudioSystem.isInited()) {
+    protected int getParami(int param) {
+        if (AudioSystem.isInited() && source[0] != 0) {
             int[] ret = new int[1];
             AudioSystem.al.alGetSourcei(source[0], AL.AL_SOURCE_STATE, ret, 0);
             return ret[0];
         } else {
             return Integer.MAX_VALUE;
         }
+    }
+
+    public float getPitch() {
+        return getParamf(AL.AL_PITCH);
+    }
+
+    public float getGain() {
+        return getParamf(AL.AL_GAIN);
+    }
+
+    public float getMaxDistance() {
+        return getParamf(AL.AL_MAX_DISTANCE);
+    }
+
+    public float getRollofFactor() {
+        return getParamf(AL.AL_ROLLOFF_FACTOR);
     }
 
     private int getState() {
@@ -211,6 +221,20 @@ public abstract class AudioSource extends Disposable {
     public AudioSource setRelative(boolean relative) {
         if (AudioSystem.isInited() && source[0] != 0) {
             AudioSystem.al.alSourcei(source[0], AL.AL_SOURCE_RELATIVE, (relative) ? AL.AL_TRUE : AL.AL_FALSE);
+        }
+        return this;
+    }
+
+    public AudioSource setMaxDistance(float distance) {
+        if (AudioSystem.isInited() && source[0] != 0) {
+            AudioSystem.al.alSourcef (source[0], AL.AL_MAX_DISTANCE, distance);
+        }
+        return this;
+    }
+
+    public AudioSource setRolloffFactor(float rollof) {
+        if (AudioSystem.isInited() && source[0] != 0) {
+            AudioSystem.al.alSourcef (source[0], AL.AL_ROLLOFF_FACTOR, rollof);
         }
         return this;
     }
