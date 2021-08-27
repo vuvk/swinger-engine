@@ -16,6 +16,7 @@ package com.vuvk.swinger;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.stream.JsonWriter;
+import com.vuvk.audiosystem.AudioSystem;
 import com.vuvk.swinger.graphic.Fog;
 import java.io.File;
 import java.io.FileReader;
@@ -70,8 +71,8 @@ public final class Config {
 
                 float musicVolume = (json.has("music_volume"))  ? json.get("music_volume").getAsFloat()  : 1.0f;
                 float soundVolume = (json.has("sounds_volume")) ? json.get("sounds_volume").getAsFloat() : 1.0f;
-                //AudioSystem.setMusicVolume(musicVolume);
-                //AudioSystem.setSoundsVolume(soundVolume);
+                AudioSystem.setMusicsVolume(musicVolume);
+                AudioSystem.setSoundsVolume(soundVolume);
 
                 interlacing  = (json.has("interlacing"))  ? json.get("interlacing").getAsBoolean()  : false;
                 antialiasing = (json.has("antialiasing")) ? json.get("antialiasing").getAsBoolean() : false;
@@ -102,8 +103,8 @@ public final class Config {
 
         try (JsonWriter writer = new JsonWriter(new FileWriter(config))) {
             writer.beginObject();
-            //writer.name("music_volume").value(AudioSystem.getMusicVolume());
-            //writer.name("sounds_volume").value(AudioSystem.getSoundsVolume());
+            writer.name("music_volume").value(AudioSystem.getMusicsVolume());
+            writer.name("sounds_volume").value(AudioSystem.getSoundsVolume());
             writer.name("interlacing").value(interlacing);
             writer.name("antialiasing").value(antialiasing);
             writer.name("quality").value(quality);

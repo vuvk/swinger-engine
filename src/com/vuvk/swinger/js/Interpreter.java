@@ -14,14 +14,11 @@
 package com.vuvk.swinger.js;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
@@ -31,66 +28,66 @@ import javax.script.ScriptException;
  * @author Anton "Vuvk" Shcherbatykh
  */
 public class Interpreter {
-    private static final Logger LOG = Logger.getLogger(Interpreter.class.getName()); 
+    private static final Logger LOG = Logger.getLogger(Interpreter.class.getName());
 
     private Interpreter() {}
-    
+
     private final static ScriptEngineManager MANAGER = new ScriptEngineManager();
-    private final static ScriptEngine ENGINE = MANAGER.getEngineByName("nashorn");    
+    private final static ScriptEngine ENGINE = MANAGER.getEngineByName("nashorn");
     private final static StringBuilder SCRIPT_ACCUM = new StringBuilder();
-    
+
     /**
      * Добавить строку к единому скрипту
-     * @param script 
+     * @param script
      */
-    public static void addListing(String script) {        
+    public static void addListing(String script) {
         SCRIPT_ACCUM.append(script);
         SCRIPT_ACCUM.append('\n');
     }
-    
+
     /**
      * Добавить файл к единому скрипту
-     * @param file 
+     * @param file
      */
-    public static void addListing(File file) {        
+    public static void addListing(File file) {
         try {
             addListing(new String(Files.readAllBytes(file.toPath())));
         } catch (IOException ex) {
             LOG.log(Level.SEVERE, null, ex);
-        }            
+        }
     }
-    
+
     /**
      * Выполнить единый аккумулированный скрипт
      * @return результат работы скрипта
      */
     public static Object runListing() {
-        if (SCRIPT_ACCUM.length() > 0) {            
+        if (SCRIPT_ACCUM.length() > 0) {
             String scriptString = SCRIPT_ACCUM.toString();
-                        
+            /*
             try (OutputStream stream = new FileOutputStream(new File("script.js"))) {
                 stream.write(scriptString.getBytes());
             } catch (IOException ex) {
                 LOG.log(Level.SEVERE, null, ex);
             }
-            
+            */
             try {
                 return ENGINE.eval(scriptString);
             } catch (ScriptException ex) {
                 LOG.log(Level.SEVERE, null, ex);
-            }            
+            }
         }
-        
+
         return null;
     }
-    
+
     /**
      * Очистить единый скрипт
      */
     public static void clearListing() {
         SCRIPT_ACCUM.delete(0, SCRIPT_ACCUM.length());
     }
-    
+
     /**
      * Выполнить отдельный независимый скрипт
      * @param script Строка со скриптом
@@ -102,10 +99,10 @@ public class Interpreter {
         } catch (ScriptException ex) {
             LOG.log(Level.SEVERE, null, ex);
         }
-                
+
         return null;
     }
-    
+
     /**
      * Выполнить отдельный независимый скрипт
      * @param script Файл со скриптом
@@ -117,8 +114,8 @@ public class Interpreter {
         } catch (IOException | ScriptException ex) {
             LOG.log(Level.SEVERE, null, ex);
         }
-        
+
         return null;
     }
-    
+
 }
