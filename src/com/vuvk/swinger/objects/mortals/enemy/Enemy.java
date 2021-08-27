@@ -339,6 +339,13 @@ public abstract class Enemy extends Breakable implements Serializable {
         // прям грязный хак, но надо вызвать update от GameObject
         super.updateDefferedDelete();
 
+        float x = (float) getPos().x,
+              y = (float) getPos().y,
+              z = (float) getPos().z;
+
+        for (Sound snd : attackSounds) { snd.setRelative(false);  snd.setPosition(x, z, y); }
+        for (Sound snd : alarmSounds ) { snd.setRelative(false);  snd.setPosition(x, z, y); }
+
         // умирать?
         if (health <= 0.0 && state != EnemyState.DIE) {
             setState(EnemyState.DIE);

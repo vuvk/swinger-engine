@@ -224,6 +224,13 @@ public class Breakable extends Mortal implements Serializable {
     public void update() {
         super.update();
 
+        float x = (float) getPos().x,
+              y = (float) getPos().y,
+              z = (float) getPos().z;
+
+        for (Sound snd : painSounds) { snd.setRelative(false);  snd.setPosition(x, z, y); }
+        for (Sound snd : dieSounds ) { snd.setRelative(false);  snd.setPosition(x, z, y); }
+
         // умирать?
         if (health <= 0.0 && state != EnemyState.DIE) {
             setState(EnemyState.DIE);

@@ -29,6 +29,14 @@ public class Explode extends Effect implements Serializable {
     public Explode(Vector3 pos) {
         super(TextureBank.EXPLODE, ANIM_SPEED, true, pos);
 //        setBrightness(Fog.END);
-        AudioSystem.newSound(SoundBank.SOUND_BUFFER_EXPLODE).playOnce();
+
+        float x = (float) pos.x,
+              y = (float) pos.y,
+              z = (float) pos.z;
+
+        AudioSystem
+            .newSound(SoundBank.SOUND_BUFFER_EXPLODE)
+            .setPosition(x, z, y)
+            .playOnce();
     }
 }

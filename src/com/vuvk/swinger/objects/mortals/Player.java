@@ -13,6 +13,7 @@
 */
 package com.vuvk.swinger.objects.mortals;
 
+import com.vuvk.audiosystem.AudioListener;
 import com.vuvk.audiosystem.AudioSystem;
 import com.vuvk.audiosystem.Sound;
 import com.vuvk.swinger.Config;
@@ -432,6 +433,17 @@ public final class Player extends Mortal implements Serializable {
                 shooting = false;
             }
         }
+
+        // обновляем положение игрока
+        // да, координаты внутри игры и в OpenAL ни разу не совпадают
+        Camera camera = getCamera();
+        AudioListener listener = AudioSystem.getAudioListener();
+        float camX = (float) camera.getPos().x,
+              camY = (float) camera.getPos().y,
+              camZ = (float) camera.getPos().z;
+        listener.setPosition(camX, camZ, camY);
+        Vector2 at = camera.getView();
+        listener.setOrientation(new float[] { (float) at.x, 0f, (float) at.y}, new float[] { 0f, -1f, 0f });
     }
 
     public static Player getInstance() {
@@ -460,7 +472,7 @@ public final class Player extends Mortal implements Serializable {
             AudioSystem.newSound(SoundBank.SOUND_BUFFER_NEED_KEY1),
             AudioSystem.newSound(SoundBank.SOUND_BUFFER_NEED_KEY2)
         };
-        
+
         setLive(true);
 
         createWeaponsInHand();
