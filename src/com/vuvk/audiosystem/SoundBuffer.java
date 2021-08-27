@@ -16,8 +16,7 @@ public class SoundBuffer extends Disposable {
     private final int[] freq = new int[1];
     private final int[] loop = new int[1];
 
-    SoundBuffer() {
-    }
+    SoundBuffer() {}
 
     boolean load(String path) {
         ByteBuffer[] data = new ByteBuffer[1];
