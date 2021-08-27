@@ -1,0 +1,38 @@
+// https://simply-how.com/custom-java-runtime
+
+plugins {
+//    id "org.beryx.jlink" version "2.23.1"
+    id "org.beryx.runtime" version "1.12.5"
+}
+
+dependencies {
+    compile project(':desktop')
+    compileOnly 'org.ow2.asm:asm:9.2'
+}
+
+application {
+//    mainModule = "com.vuvk.swinger.desktop"
+    mainClass = "com.vuvk.swinger.desktop.DesktopLauncher"
+}
+
+//ext.os = org.gradle.internal.os.OperatingSystem.current()
+//jlink {
+//    sourceCompatibility = 1.8
+
+//    imageZip = file("$buildDir/image-zip/swinger.zip")
+//    options = ['--bind-services', '--strip-debug', '--compress', '2', '--no-header-files', '--no-man-pages']
+
+//    launcher {
+//        name = 'swinger'
+//        noConsole = false
+//    }
+//    jpackage {
+//        if(os.windows) {
+//            installerOptions = ['--win-per-user-install', '--win-dir-chooser', '--win-menu']
+//        }
+//    }
+//}
+
+runtime {
+    options = options = ['--bind-services', '--strip-debug', '--compress', '2', '--no-header-files', '--no-man-pages']
+}
