@@ -21,6 +21,7 @@ import com.google.gson.JsonParser;
 import com.vuvk.audiosystem.AudioSystem;
 import com.vuvk.audiosystem.Sound;
 import com.vuvk.audiosystem.SoundBuffer;
+import com.vuvk.swinger.audio.SoundBank;
 import com.vuvk.swinger.d3.Mesh;
 import com.vuvk.swinger.d3.Model;
 import com.vuvk.swinger.graphic.Fog;
@@ -1111,6 +1112,7 @@ public final class Map {
                 new LightSource(Color.WHITE, 1.0, new Vector3(10.5,  4.5, 0.0));
 
                 //SoundBank.MUSIC1.setLooping(true).play();
+                AudioSystem.newMusic(SoundBank.PATH_MUSIC1).setLooping(true).play();
 
                 active = true;
                 loaded = true;

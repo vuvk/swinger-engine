@@ -14,7 +14,6 @@
 package com.vuvk.swinger.audio;
 
 import com.vuvk.audiosystem.AudioSystem;
-import com.vuvk.audiosystem.Music;
 import com.vuvk.audiosystem.SoundBuffer;
 
 /**
@@ -64,8 +63,8 @@ public final class SoundBank {
     private final static String PATH_PLAYER_DIE = "resources/snd/player/Player Dies.wav";
 
     /* music */
-    private final static String PATH_MUSIC_TITLE = "resources/snd/music/title.ogg";
-    private final static String PATH_MUSIC1 = "resources/snd/music/music.ogg";
+    public static final String PATH_MUSIC_TITLE = "resources/snd/music/title.ogg";
+    public static final String PATH_MUSIC1 = "resources/snd/music/music.ogg";
 
     /* menu */
     private final static String PATH_MENU_SELECT = "resources/snd/menu/Menu Select.wav";
@@ -113,8 +112,8 @@ public final class SoundBank {
     public final static SoundBuffer SOUND_BUFFER_PLAYER_DIE = AudioSystem.newSoundBuffer(PATH_PLAYER_DIE);
 
     /* music */
-    public static final Music MUSIC_TITLE = AudioSystem.newMusic(PATH_MUSIC_TITLE);
-    public static final Music MUSIC1      = AudioSystem.newMusic(PATH_MUSIC1);
+//    public static final Music MUSIC_TITLE = AudioSystem.newMusic(PATH_MUSIC_TITLE);
+//    public static final Music MUSIC1      = AudioSystem.newMusic(PATH_MUSIC1);
 
     /* menu */
     public static final SoundBuffer SOUND_BUFFER_MENU_SELECT = AudioSystem.newSoundBuffer(PATH_MENU_SELECT);

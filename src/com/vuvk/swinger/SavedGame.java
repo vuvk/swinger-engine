@@ -13,6 +13,7 @@
 */
 package com.vuvk.swinger;
 
+import com.vuvk.audiosystem.AudioSystem;
 import com.vuvk.swinger.audio.SoundBank;
 import com.vuvk.swinger.d3.Mesh;
 import com.vuvk.swinger.d3.Model;
@@ -223,7 +224,8 @@ public class SavedGame implements Serializable {
             LOG.log(Level.SEVERE, null, ex);
         }
 
-        SoundBank.MUSIC1.setLooping(true).play();
+//        SoundBank.MUSIC1.setLooping(true).play();
+        AudioSystem.newMusic(SoundBank.PATH_MUSIC1).setLooping(true).play();
         Map.setLoaded(true);
     }
 }

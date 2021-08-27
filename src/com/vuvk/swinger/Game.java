@@ -14,6 +14,7 @@
 package com.vuvk.swinger;
 
 import com.vuvk.audiosystem.AudioSystem;
+import com.vuvk.swinger.audio.SoundBank;
 import com.vuvk.swinger.graphic.Fog;
 import com.vuvk.swinger.graphic.Renderer;
 import com.vuvk.swinger.graphic.Sky;
@@ -249,6 +250,7 @@ public class Game extends Frame {
         Menu.activate();
 
         //SoundBank.MUSIC_TITLE.setLooping(true).play();
+        AudioSystem.newMusic(SoundBank.PATH_MUSIC_TITLE).setLooping(true).play();
     }
 
     @Override
@@ -259,7 +261,7 @@ public class Game extends Frame {
 
         batch.dispose();
         super.dispose();
-        
+
         AudioSystem.deinit();
 
         System.exit(0);

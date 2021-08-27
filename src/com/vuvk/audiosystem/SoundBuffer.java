@@ -19,20 +19,28 @@ public class SoundBuffer extends Disposable {
     SoundBuffer() {}
 
     boolean load(String path) {
-        ByteBuffer[] data = new ByteBuffer[1];
+        if (AudioSystem.isInited()) {
+            if (buffer[0] == 0) {
+                dispose();
+            }
+            
+            ByteBuffer[] data = new ByteBuffer[1];
 
-        // Load wav data into a buffer.
-        AudioSystem.al.alGetError();
-        AudioSystem.al.alGenBuffers(1, buffer, 0);
-        if (AudioSystem.checkError() != AL.AL_NO_ERROR) {
+            // Load wav data into a buffer.
+            AudioSystem.al.alGetError();
+            AudioSystem.al.alGenBuffers(1, buffer, 0);
+            if (AudioSystem.checkError() != AL.AL_NO_ERROR) {
+                return false;
+            }
+
+            ALut.alutLoadWAVFile(path, format, data, size, freq, loop);
+            AudioSystem.al.alBufferData(buffer[0], format[0], data[0], size[0], freq[0]);
+            data[0].clear();
+
+            return (AudioSystem.checkError() == AL.AL_NO_ERROR);
+        } else {
             return false;
         }
-
-        ALut.alutLoadWAVFile(path, format, data, size, freq, loop);
-        AudioSystem.al.alBufferData(buffer[0], format[0], data[0], size[0], freq[0]);
-        data[0].clear();
-
-        return (AudioSystem.checkError() == AL.AL_NO_ERROR);
     }
 
     @Override

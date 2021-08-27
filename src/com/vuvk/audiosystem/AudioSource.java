@@ -9,7 +9,9 @@ import java.util.Arrays;
  */
 public abstract class AudioSource extends Disposable {
     protected int[] source = { 0 };
+    /** play in loop? */
     private boolean looping = false;
+    /** play once and destroy? */
     private boolean playOnce = false;
 
     // Position, Velocity, Direction of the source sound.
@@ -52,17 +54,29 @@ public abstract class AudioSource extends Disposable {
 	}
 
     public float getPitch() {
-        return AudioSystem.al.alGetFloat(AL.AL_PITCH);
+        if (AudioSystem.isInited()) {
+            return AudioSystem.al.alGetFloat(AL.AL_PITCH);
+        } else {
+            return Float.NaN;
+        }
     }
 
     public float getGain() {
-        return AudioSystem.al.alGetFloat(AL.AL_GAIN);
+        if (AudioSystem.isInited()) {
+            return AudioSystem.al.alGetFloat(AL.AL_GAIN);
+        } else {
+            return Float.NaN;
+        }
     }
 
     private int getParami(int param) {
-        int[] ret = new int[1];
-        AudioSystem.al.alGetSourcei(source[0], AL.AL_SOURCE_STATE, ret, 0);
-        return ret[0];
+        if (AudioSystem.isInited()) {
+            int[] ret = new int[1];
+            AudioSystem.al.alGetSourcei(source[0], AL.AL_SOURCE_STATE, ret, 0);
+            return ret[0];
+        } else {
+            return Integer.MAX_VALUE;
+        }
     }
 
     private int getState() {
@@ -199,6 +213,7 @@ public abstract class AudioSource extends Disposable {
 
     public abstract AudioSource play();
 
+    /** play once and destroy */
     public AudioSource playOnce() {
         setPlayOnce(true).play();
         return this;

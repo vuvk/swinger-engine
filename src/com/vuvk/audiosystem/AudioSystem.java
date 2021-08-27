@@ -287,11 +287,13 @@ public final class AudioSystem {
         return null;
     }
 
+    /** play random sound */
     public static void playRandom(Sound ... sounds) {
         int chance = new Random().nextInt(sounds.length);
         sounds[chance].play();
     }
 
+    /** play once random sound and destroy it sound */
     public static void playRandomOnce(Sound ... sounds) {
         int chance = new Random().nextInt(sounds.length);
         sounds[chance].playOnce();

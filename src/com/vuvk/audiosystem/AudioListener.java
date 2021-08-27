@@ -42,10 +42,12 @@ public class AudioListener {
     }
 
     public AudioListener setPosition(float x, float y, float z) {
-        this.position[0] = x;
-        this.position[1] = y;
-        this.position[2] = z;
-        AudioSystem.al.alListenerfv(AL.AL_POSITION, position, 0);
+        if (AudioSystem.isInited()) {
+            this.position[0] = x;
+            this.position[1] = y;
+            this.position[2] = z;
+            AudioSystem.al.alListenerfv(AL.AL_POSITION, position, 0);
+        }
         return this;
     }
 
@@ -57,10 +59,12 @@ public class AudioListener {
     }
 
     public AudioListener setVelocity(float x, float y, float z) {
-        this.velocity[0] = x;
-        this.velocity[1] = y;
-        this.velocity[2] = z;
-        AudioSystem.al.alListenerfv(AL.AL_VELOCITY, velocity, 0);
+        if (AudioSystem.isInited()) {
+            this.velocity[0] = x;
+            this.velocity[1] = y;
+            this.velocity[2] = z;
+            AudioSystem.al.alListenerfv(AL.AL_VELOCITY, velocity, 0);
+        }
         return this;
     }
 
@@ -89,13 +93,15 @@ public class AudioListener {
     }
 
     public AudioListener setOrientation(float atX, float atY, float atZ, float upX, float upY, float upZ) {
-        orientation[0] = atX;
-        orientation[1] = atY;
-        orientation[2] = atZ;
-        orientation[3] = upX;
-        orientation[4] = upY;
-        orientation[5] = upZ;
-        AudioSystem.al.alListenerfv(AL.AL_ORIENTATION, orientation, 0);
+        if (AudioSystem.isInited()) {
+            orientation[0] = atX;
+            orientation[1] = atY;
+            orientation[2] = atZ;
+            orientation[3] = upX;
+            orientation[4] = upY;
+            orientation[5] = upZ;
+            AudioSystem.al.alListenerfv(AL.AL_ORIENTATION, orientation, 0);
+        }
         return this;
     }
 }
