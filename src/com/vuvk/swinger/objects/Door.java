@@ -31,8 +31,8 @@ import java.util.concurrent.CopyOnWriteArrayList;
  * @author Anton "Vuvk" Shcherbatykh
  */
 public class Door extends TexturedSegment implements Serializable {
-    private Sound openSound  = AudioSystem.newSound(SoundBank.SOUND_BUFFER_DOOR_OPEN );
-    private Sound closeSound = AudioSystem.newSound(SoundBank.SOUND_BUFFER_DOOR_CLOSE);
+    private Sound openSound;
+    private Sound closeSound;
 
     //private int side;
     /** открытая позиция */
@@ -78,6 +78,15 @@ public class Door extends TexturedSegment implements Serializable {
 
         this.keyForOpen = keyForOpen;
         this.neadKey = (keyForOpen >= 0);
+
+        closeSound = (Sound) AudioSystem
+            .newSound(SoundBank.SOUND_BUFFER_DOOR_CLOSE)
+            .setPosition((float) center.x, 0f, (float) center.y)
+            .setRelative(false);
+        openSound = (Sound) AudioSystem
+            .newSound(SoundBank.SOUND_BUFFER_DOOR_OPEN )
+            .setPosition((float) center.x, 0f, (float) center.y)
+            .setRelative(false);
 
         LIB.add(this);
     }
