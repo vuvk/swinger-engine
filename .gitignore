@@ -33,8 +33,8 @@ com_crashlytics_export_strings.xml
 
 ## Eclipse
 
-.classpath
-.project
+#.classpath
+#.project
 .metadata/
 /android/bin/
 /core/bin/
@@ -129,3 +129,7 @@ Thumbs.db
 /distribution/build/
 /desktop/config.json
 /config.json
+
+/bin
+*.swp
+workbench.xmi

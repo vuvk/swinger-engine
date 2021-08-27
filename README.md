@@ -1,6 +1,6 @@
 About
 -----
-swinger engine is a Raycasting Game Engine written in Java and use libGDX (only swing early).
+swinger engine is a Raycasting Game Engine written in Java, which use AWT ("Swing" early) for graphics output.
 
 -----
 Features
@@ -12,6 +12,7 @@ Features
 - command console;
 - drawing three levels of height;
 - curved walls;
+- fog (darkness) and light sources;
 - sprites scale;
 - enemies with primitive intelligence;
 - various weapons with different parameters;
@@ -27,7 +28,7 @@ Features
 - GUI;
 - save/load game.
 
-This is real raycasting (software rendering), not OpenGL or Direct3D.
+This is real raycasting (software rendering), not OpenGL or Direct3D, or Vulkan, or... you understand :))
 
 -----
 
@@ -41,9 +42,11 @@ https://youtu.be/5PZlaCT3xt4
 
 https://youtu.be/n4O6d5lWdYY
 
+https://youtu.be/CHHVQwcCkdE
+
 Build
 -----
-Use Netbeans.
+$ ant clean jar
 
 License
 -------
