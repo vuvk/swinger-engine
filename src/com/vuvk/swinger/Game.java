@@ -135,16 +135,16 @@ public class Game extends Frame {
             public void windowDeactivated(WindowEvent e) {
                 toFront();
             }*/
+
+            @Override
+            public void windowActivated(WindowEvent e) {
+                updateWindowCenter();
+            }
         });
         addComponentListener(new ComponentAdapter() {
             @Override
             public void componentMoved(ComponentEvent e) {
-                if (isVisible()) {
-                    Point location = getLocationOnScreen();
-                    int centerX = location.x + (getWidth() >> 1);
-                    int centerY = location.y + (getHeight() >> 1);
-                    windowCenter.set(centerX, centerY);
-                }
+                updateWindowCenter();
             }
         });
 
@@ -459,8 +459,7 @@ public class Game extends Frame {
                         if (Config.mouseLook) {
                             double deltaX = MouseManager.getDeltaX();
                             if (deltaX != 0.0) {
-                                double mouseSpeed = deltaX / Config.WIDTH;
-                                playerCamera.rotate(Math.toRadians(mouseSpeed * Player.MOUSE_ROT_SPEED ));
+                                playerCamera.rotate(Math.toRadians(deltaX * Player.MOUSE_ROT_SPEED * Engine.getDeltaTime()));
                             }
 
                             /*if (deltaX < 0.0) {
@@ -535,6 +534,15 @@ public class Game extends Frame {
             }
             dispose();
         }, "GameLoop Thread").start();
+    }
+
+    private void updateWindowCenter() {
+        if (isVisible()) {
+            Point location = getLocationOnScreen();
+            int centerX = location.x + (getWidth() >> 1);
+            int centerY = location.y + (getHeight() >> 1);
+            windowCenter.set(centerX, centerY);
+        }
     }
 
     public static void setFullscreenMode(boolean fullscreen) {
