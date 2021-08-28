@@ -30,7 +30,7 @@ public class Sound extends AudioSource {
     @Override
     public void dispose() {
         setBuffer(null);
-        
+
         super.dispose();
 
         AudioSystem.SOUNDS.remove(this);
@@ -43,6 +43,8 @@ public class Sound extends AudioSource {
     boolean setBuffer(SoundBuffer buffer) {
         this.buffer = buffer;
         if (AudioSystem.isInited() && source[0] != 0) {
+            stop();
+
             if (buffer != null && buffer.getBuffer()[0] != 0) {
                 AudioSystem.al.alSourcei(source[0], AL.AL_BUFFER, buffer.getBuffer()[0]);
             } else {

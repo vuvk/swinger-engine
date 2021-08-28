@@ -57,7 +57,12 @@ public class Music extends AudioSource {
             AudioSystem.al.alGetError();
             AudioSystem.al.alGenBuffers(NUM_BUFFERS, buffers, 0);
             AudioSystem.checkError();
-            AudioSystem.al.alSourcef(source[0], AL.AL_ROLLOFF_FACTOR,  0.0f);
+
+            if (source[0] != 0) {
+                AudioSystem.al.alGetError();
+                AudioSystem.al.alSourcef(source[0], AL.AL_ROLLOFF_FACTOR,  0.0f);
+                AudioSystem.checkError();
+            }
         }
 
         setRelative(false);
@@ -146,7 +151,7 @@ public class Music extends AudioSource {
      * Update the stream if necessary
      */
     boolean update() {
-        if (!AudioSystem.isInited() || source[0] <= 0) {
+        if (!AudioSystem.isInited() || source[0] == 0) {
             return false;
         }
 
@@ -203,8 +208,11 @@ public class Music extends AudioSource {
      * Empties the queue
      */
     void clearQueue() {
-        int[] queued = new int[1];
+        if (!AudioSystem.isInited() || source[0] == 0) {
+            return;
+        }
 
+        int[] queued = new int[1];
         AudioSystem.al.alGetSourcei(source[0], AL.AL_BUFFERS_QUEUED, queued, 0);
 
         while (queued[0] > 0) {
