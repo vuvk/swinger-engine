@@ -423,7 +423,7 @@ public class Game extends Frame {
                             Vector2 pos = player.getPos();
                             playerPosText.setMessage(String.format(Locale.ENGLISH, "PLAYER POS: %.2f %.2f", pos.x, pos.y));
 
-                            playerHpText.setLocation(new Vector2(16, Config.HEIGHT - 16));
+                            playerHpText.setLocation(new Vector2(16, Config.HEIGHT - 32));
                             playerHpText.setMessage(String.format(Locale.ENGLISH, "HP %.0f", player.getHealth()));
 
                             String ammoText;
@@ -439,7 +439,7 @@ public class Game extends Frame {
                                     ammoText = "AMMO " + AmmoPack.PACK.get(ammoType);
                                     break;
                             }
-                            playerAmmoText.setLocation(new Vector2(16, Config.HEIGHT - 40));
+                            playerAmmoText.setLocation(new Vector2(16, Config.HEIGHT - 56));
                             playerAmmoText.setMessage(ammoText);
 
                             playerPosText.setVisible(true);

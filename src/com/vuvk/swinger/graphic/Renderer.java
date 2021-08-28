@@ -1806,7 +1806,9 @@ public final class Renderer/* extends JPanel*/ {
 
     public void stopRenderTasks() {
         for (RenderTask task : RENDER_TASKS) {
-            task.getLatch().countDown();
+            if (task != null && task.getLatch() != null) {
+                task.getLatch().countDown();
+            }
         }
     }
 

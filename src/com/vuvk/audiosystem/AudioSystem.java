@@ -90,7 +90,7 @@ public final class AudioSystem {
                 }
 
                 try {
-                    Thread.sleep(200);
+                    Thread.sleep(1000);
                 } catch (InterruptedException ex) {
                     LOGGER.log(Level.SEVERE, null, ex);
                 }
@@ -154,7 +154,6 @@ public final class AudioSystem {
         if (!inited) {
             // Initialize OpenAL and clear the error bit.
             ALut.alutInit();
-            checkError();
 
             LISTENER_INSTANCE = new AudioListener();
 

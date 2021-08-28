@@ -30,9 +30,10 @@ public class Sound extends AudioSource {
     @Override
     public void dispose() {
         setBuffer(null);
-        AudioSystem.SOUNDS.remove(this);
-
+        
         super.dispose();
+
+        AudioSystem.SOUNDS.remove(this);
     }
 
     public SoundBuffer getBuffer() {
@@ -81,7 +82,9 @@ public class Sound extends AudioSource {
     @Override
     public Sound stop() {
         if (AudioSystem.isInited() && source[0] != 0) {
-            AudioSystem.al.alSourceStop(source[0]);
+            if (!isStopped()) {
+                AudioSystem.al.alSourceStop(source[0]);
+            }
         }
         return this;
     }

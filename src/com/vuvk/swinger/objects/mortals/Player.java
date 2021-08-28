@@ -443,7 +443,7 @@ public final class Player extends Mortal implements Serializable {
               camZ = (float) camera.getPos().z;
         listener.setPosition(camX, camZ, camY);
         Vector2 at = camera.getView();
-        listener.setOrientation(new float[] { (float) at.x, 0f, (float) at.y}, new float[] { 0f, -1f, 0f });
+        listener.setOrientation(new float[] { (float) at.x, 0f, (float) at.y}, new float[] { 0f, 1f, 0f });
     }
 
     public static Player getInstance() {
