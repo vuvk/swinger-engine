@@ -262,11 +262,19 @@ public class Menu {
     private static void updateOptionsSubMenu() {
         ButtonMenu btn;
         //music
+        int musicVolume = (int) Math.floor(AudioSystem.getMusicsVolume() * 100);
+        if (musicVolume % 5 > 0) {
+            musicVolume += 5 - (musicVolume % 5);
+        }
         btn = OPTIONS.getButton(1);
-        btn.getText().setMessage("MUSIC    " + (int) (AudioSystem.getMusicsVolume() * 100) + "%");
+        btn.getText().setMessage("MUSIC    " + musicVolume + "%");
         //volume
+        int soundVolume = (int) Math.floor(AudioSystem.getSoundsVolume() * 100);
+        if (soundVolume % 5 > 0) {
+            soundVolume += 5 - (soundVolume % 5);
+        }
         btn = OPTIONS.getButton(2);
-        btn.getText().setMessage("VOLUME   " + (int) (AudioSystem.getSoundsVolume() * 100) + "%");
+        btn.getText().setMessage("VOLUME   " + soundVolume + "%");
         // fog
         btn = OPTIONS.getButton(3);
         btn.getText().setMessage("FOG      " + Config.fog.name());

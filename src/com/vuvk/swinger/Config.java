@@ -69,7 +69,7 @@ public final class Config {
             try {
                 JsonObject json = JsonParser.parseReader(new FileReader(config)).getAsJsonObject();
 
-                float musicVolume = (json.has("music_volume"))  ? json.get("music_volume").getAsFloat()  : 1.0f;
+                float musicVolume = (json.has("music_volume" )) ? json.get("music_volume" ).getAsFloat() : 0.2f;
                 float soundVolume = (json.has("sounds_volume")) ? json.get("sounds_volume").getAsFloat() : 1.0f;
                 AudioSystem.setMusicsVolume(musicVolume);
                 AudioSystem.setSoundsVolume(soundVolume);
