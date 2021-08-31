@@ -67,7 +67,7 @@ public abstract class WeaponInHand implements Serializable {
         moveSpeed = min * (2.0 / 3.0);
         moveDistance = min / 12.0;
 
-        startPos = new Vector2(Renderer.HALF_WIDTH, Renderer.HEIGHT - 1 + moveDistance);
+        startPos = new Vector2(Renderer.HALF_WIDTH, Renderer.HEIGHT + moveDistance);
         pos = new Vector2(startPos);
     }
 

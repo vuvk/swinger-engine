@@ -1443,11 +1443,12 @@ public final class Renderer/* extends JPanel*/ {
                 //int drawStartY = -halfSpriteHeight + HALF_HEIGHT + depth;
                 int drawEndY = dSY /*+ spriteHeight*/ +
                                (int)Math.ceil(txr.getVolume().getBottom() * spriteHeight) /* смещаем до полезного объема снизу*/;
-                if (drawStartY < 1) {
-                    drawStartY = 1;
+                if (drawStartY < 0) {
+                    drawStartY = 0;
                 }
-                if (drawEndY >= HEIGHT) {
-                    drawEndY = HEIGHT - 1;
+                // исключительно, а не включительно
+                if (drawEndY > HEIGHT) {
+                    drawEndY = HEIGHT;
                 }
 
                 //calculate width of the sprite
@@ -1459,8 +1460,9 @@ public final class Renderer/* extends JPanel*/ {
                 if (drawStartX < 0) {
                     drawStartX = 0;
                 }
-                if (drawEndX >= WIDTH) {
-                    drawEndX = WIDTH - 1;
+                // исключительно, а не включительно
+                if (drawEndX > WIDTH) {
+                    drawEndX = WIDTH;
                 }
 
                 // учитываем чересстрочность
