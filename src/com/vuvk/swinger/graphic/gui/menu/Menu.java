@@ -159,8 +159,14 @@ public class Menu {
                                              Config.fog = Fog.getByNum(num);
                                              updateOptionsSubMenu();
                                          } ));
-        OPTIONS.addButton(new ButtonMenu(new Text(FontBank.FONT_MENU, "ANTIALIASING   OFF",
+        OPTIONS.addButton(new ButtonMenu(new Text(FontBank.FONT_MENU, "USE OPENGL     OFF",
                                                   new Vector2(Renderer.HALF_WIDTH - 50, Renderer.HALF_HEIGHT)),
+                                         () -> {
+                                             Config.useOpenGL = !Config.useOpenGL;
+                                             updateOptionsSubMenu();
+                                         } ));
+        OPTIONS.addButton(new ButtonMenu(new Text(FontBank.FONT_MENU, "ANTIALIASING   OFF",
+                                                  new Vector2(Renderer.HALF_WIDTH - 50, Renderer.HALF_HEIGHT + 24)),
                                          () -> {
                                              Config.antialiasing = !Config.antialiasing;
                                              if (Config.interlacing && Config.antialiasing) {
@@ -169,7 +175,7 @@ public class Menu {
                                              updateOptionsSubMenu();
                                          } ));
         OPTIONS.addButton(new ButtonMenu(new Text(FontBank.FONT_MENU, "INTERLACING    OFF",
-                                                  new Vector2(Renderer.HALF_WIDTH - 50, Renderer.HALF_HEIGHT + 24)),
+                                                  new Vector2(Renderer.HALF_WIDTH - 50, Renderer.HALF_HEIGHT + 48)),
                                          () -> {
                                              Config.interlacing = !Config.interlacing;
                                              if (Config.interlacing && Config.antialiasing) {
@@ -178,26 +184,26 @@ public class Menu {
                                              updateOptionsSubMenu();
                                          } ));
         OPTIONS.addButton(new ButtonMenu(new Text(FontBank.FONT_MENU, "MULTITHREADING ON",
-                                                  new Vector2(Renderer.HALF_WIDTH - 50, Renderer.HALF_HEIGHT + 48)),
+                                                  new Vector2(Renderer.HALF_WIDTH - 50, Renderer.HALF_HEIGHT + 72)),
                                          () -> {
                                              Config.multithreading = !Config.multithreading;
                                              updateOptionsSubMenu();
                                          } ));
         OPTIONS.addButton(new ButtonMenu(new Text(FontBank.FONT_MENU, "MOUSELOOK      ON",
-                                                  new Vector2(Renderer.HALF_WIDTH - 50, Renderer.HALF_HEIGHT + 72)),
+                                                  new Vector2(Renderer.HALF_WIDTH - 50, Renderer.HALF_HEIGHT + 96)),
                                          () -> {
                                              Config.mouseLook = !Config.mouseLook;
                                              updateOptionsSubMenu();
                                          } ));
         OPTIONS.addButton(new ButtonMenu(new Text(FontBank.FONT_MENU, "VSYNC          ON",
-                                                  new Vector2(Renderer.HALF_WIDTH - 50, Renderer.HALF_HEIGHT + 96)),
+                                                  new Vector2(Renderer.HALF_WIDTH - 50, Renderer.HALF_HEIGHT + 120)),
                                          () -> {
                                              //Game.setVSync(!Config.vSync);
                                              updateOptionsSubMenu();
                                          } ));
         if (!Config.buildForMobiles) {
             OPTIONS.addButton(new ButtonMenu(new Text(FontBank.FONT_MENU, "FULLSCREEN     ON",
-                                                  new Vector2(Renderer.HALF_WIDTH - 50, Renderer.HALF_HEIGHT + 120)),
+                                                  new Vector2(Renderer.HALF_WIDTH - 50, Renderer.HALF_HEIGHT + 144)),
                                              () -> {
                                                 // Game.setFullscreenMode(!Config.fullscreen);
                                                  updateOptionsSubMenu();
@@ -278,24 +284,27 @@ public class Menu {
         // fog
         btn = OPTIONS.getButton(3);
         btn.getText().setMessage("FOG      " + Config.fog.name());
-        // antialising
+        // use opengl
         btn = OPTIONS.getButton(4);
+        btn.getText().setMessage("USE OPENGL     " +  ((Config.useOpenGL) ? "ON" : "OFF"));
+        // antialising
+        btn = OPTIONS.getButton(5);
         btn.getText().setMessage("ANTIALIASING   " + ((Config.antialiasing) ? "ON" : "OFF"));
         // interlacing
-        btn = OPTIONS.getButton(5);
+        btn = OPTIONS.getButton(6);
         btn.getText().setMessage("INTERLACING    " + ((Config.interlacing) ? "ON" : "OFF"));
         // multithreading
-        btn = OPTIONS.getButton(6);
+        btn = OPTIONS.getButton(7);
         btn.getText().setMessage("MULTITHREADING " + ((Config.multithreading) ? "ON" : "OFF"));
         // mouselook
-        btn = OPTIONS.getButton(7);
+        btn = OPTIONS.getButton(8);
         btn.getText().setMessage("MOUSELOOK      " + ((Config.mouseLook) ? "ON" : "OFF"));
         // vsync
-        btn = OPTIONS.getButton(8);
+        btn = OPTIONS.getButton(9);
         btn.getText().setMessage("VSYNC          " + ((Config.vSync) ? "ON" : "OFF"));
         // fullscreen
         if (!Config.buildForMobiles) {
-            btn = OPTIONS.getButton(9);
+            btn = OPTIONS.getButton(10);
             btn.getText().setMessage("FULLSCREEN     " + ((Config.fullscreen) ? "ON" : "OFF"));
         }
     }

@@ -13,10 +13,15 @@
 */
 package com.vuvk.swinger.desktop;
 
+import com.vuvk.swinger.Config;
 import com.vuvk.swinger.Game;
 
 public class DesktopLauncher {
     public static void main (String ... args) {
+        Config.load();
+
+        System.setProperty("sun.java2d.opengl", (Config.useOpenGL) ? "True" : "False");
+
         Game game = new Game();
         game.gameLoop();
     }

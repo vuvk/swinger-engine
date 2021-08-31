@@ -181,7 +181,7 @@ public class Game extends Frame {
     }
 
     private void create() {
-        Config.load();
+        //Config.load();
         Config.init();
 
         ScreenBlood.drops = new ScreenBlood[Config.WIDTH];

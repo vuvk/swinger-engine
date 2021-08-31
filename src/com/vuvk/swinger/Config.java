@@ -33,6 +33,7 @@ public final class Config {
 
     private static final Logger LOG = Logger.getLogger(Config.class.getName());
 
+    public static boolean useOpenGL = false;
     public static boolean interlacing = false;
     public static boolean antialiasing = false;
     public static int quality = 0;  // чем больше, тем хуже качество
@@ -74,6 +75,7 @@ public final class Config {
                 AudioSystem.setMusicsVolume(musicVolume);
                 AudioSystem.setSoundsVolume(soundVolume);
 
+                useOpenGL    = (json.has("use_opengl"))   ? json.get("use_opengl").getAsBoolean()   : false;
                 interlacing  = (json.has("interlacing"))  ? json.get("interlacing").getAsBoolean()  : false;
                 antialiasing = (json.has("antialiasing")) ? json.get("antialiasing").getAsBoolean() : false;
                 quality      = (json.has("quality"))      ? json.get("quality").getAsInt()          : 0;
@@ -105,6 +107,7 @@ public final class Config {
             writer.beginObject();
             writer.name("music_volume").value(AudioSystem.getMusicsVolume());
             writer.name("sounds_volume").value(AudioSystem.getSoundsVolume());
+            writer.name("use_opengl").value(useOpenGL);
             writer.name("interlacing").value(interlacing);
             writer.name("antialiasing").value(antialiasing);
             writer.name("quality").value(quality);
