@@ -22,6 +22,8 @@ import java.net.MalformedURLException;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -45,110 +47,8 @@ public final class AudioSystem {
     private static float musicsVolume = 1.0f;
     private static float soundsVolume = 1.0f;
 
-    private static class UpdateTask implements Runnable {
-        private boolean work = false;
-
-        public UpdateTask() {
-            super();
-        }
-
-        public boolean isWork() {
-            return work;
-        }
-
-        public void setWork(boolean work) {
-            this.work = work;
-        }
-
-        @Override
-        public void run() {
-            setWork(true);
-        }
-    }
-
-    private final static UpdateTask updateSoundsTask = new UpdateTask() {
-        @Override
-        public void run() {
-            super.run();
-
-            while (!Thread.interrupted() && this.isWork()) {
-                for (Iterator<Sound> it = SOUNDS.iterator();
-                     it.hasNext() && this.isWork();
-                ) {
-                    Sound sound = it.next();
-                    if (sound != null) {
-                        sound.setVolume(soundsVolume);
-                    }
-
-                    if (sound.isStopped() &&
-                       !sound.isLooping() &&
-                        sound.isPlayOnce()
-                     ) {
-                        sound.dispose();
-                        SOUNDS.remove(sound);
-                    }
-                }
-
-                try {
-                    Thread.sleep(1000);
-                } catch (InterruptedException ex) {
-                    LOGGER.log(Level.SEVERE, null, ex);
-                }
-            }
-
-            setWork(false);
-        }
-    };
-
-    private final static UpdateTask updateMusicsTask = new UpdateTask() {
-    	@Override
-    	public void run() {
-            super.run();
-
-            while (!Thread.interrupted() && this.isWork()) {
-                for (Iterator<Music> it = MUSICS.iterator();
-                     it.hasNext() && this.isWork();
-                ) {
-                    Music music = it.next();
-                    // не валидный экземпляр или даже не открыт? уходи
-                    if (music == null || !music.isOpened()) {
-                        continue;
-                    }
-
-                    music.setVolume(musicsVolume);
-
-                    if (music.isPaused()) {
-                        continue;
-                    }
-
-                    if (music.isStopped() && !music.isLooping()) {
-                        continue;
-                    }
-
-                    if (music.update()) {
-                        if (!music.playback()) {
-                            music.stop();
-
-                            if (music.isLooping()) {
-                                music.play();
-                            }
-                        }
-                    }
-                }
-
-                try {
-                    Thread.sleep(200);
-                } catch (InterruptedException ex) {
-                    LOGGER.log(Level.SEVERE, null, ex);
-                }
-            }
-
-            setWork(false);
-        }
-    };
-
-    private static Thread updateSoundsThread;
-    private static Thread updateMusicsThread;
+    private static Timer updateSoundsTimer;
+    private static Timer updateMusicsTimer;
 
     public static void init() {
         if (!inited) {
@@ -157,11 +57,64 @@ public final class AudioSystem {
 
             LISTENER_INSTANCE = new AudioListener();
 
-            updateSoundsThread = new Thread(updateSoundsTask);
-            updateSoundsThread.start();
+            // запускаем таймер слежения за звуками
+            updateSoundsTimer = new Timer("Update Sounds Timer");
+            updateSoundsTimer.schedule(new TimerTask() {
+                @Override
+                public void run() {
+                    for (Iterator<Sound> it = SOUNDS.iterator();
+                         it.hasNext();
+                    ) {
+                        Sound sound = it.next();
+                        if (sound == null) {
+                            continue;
+                        }
 
-            updateMusicsThread = new Thread(updateMusicsTask);
-            updateMusicsThread.start();
+                        sound.setVolume(soundsVolume);
+
+                        if (sound.isStopped() &&
+                           !sound.isLooping() &&
+                            sound.isPlayOnce()
+                         ) {
+                            sound.dispose();
+                            SOUNDS.remove(sound);
+                        }
+                    }
+                }
+            }, 0, 1000);
+
+            // запускаем таймер слежения за музыками
+            updateMusicsTimer = new Timer("Update Musics Timer");
+            updateMusicsTimer.schedule(new TimerTask() {
+                @Override
+                public void run() {
+                    for (Iterator<Music> it = MUSICS.iterator();
+                             it.hasNext();
+                        ) {
+                        Music music = it.next();
+                        // не валидный экземпляр или даже не открыт? уходи
+                        if (music == null || !music.isOpened()) {
+                            continue;
+                        }
+
+                        if (music.isPaused() || (music.isStopped() && !music.isLooping())) {
+                            continue;
+                        }
+
+                        music.setVolume(musicsVolume);
+
+                        if (music.update()) {
+                            if (!music.playback()) {
+                                music.stop();
+
+                                if (music.isLooping()) {
+                                    music.play();
+                                }
+                            }
+                        }
+                    }
+                }
+            }, 0, 200);
 
             inited = true;
         }
@@ -185,21 +138,11 @@ public final class AudioSystem {
         if (inited) {
             LISTENER_INSTANCE = null;
 
-            updateSoundsTask.setWork(false);
-//            updateSoundsThread.interrupt();
-            updateSoundsThread = null;
+            updateSoundsTimer.cancel();
+            updateSoundsTimer = null;
 
-            updateMusicsTask.setWork(false);
-//            updateMusicsThread.interrupt();
-            updateMusicsThread = null;
-
-            /*
-            try {
-                Thread.currentThread().wait(100);
-            } catch (InterruptedException ex) {
-                LOGGER.log(Level.SEVERE, null, ex);
-            }
-            */
+            updateMusicsTimer.cancel();
+            updateMusicsTimer = null;
 
             disposeAll();
 
