@@ -891,18 +891,19 @@ public final class Renderer/* extends JPanel*/ {
                     // calculate lowest and highest pixel to fill in current stripe
                     int drawStart = HALF_HEIGHT - (lineHeight >> 1) - (int)(lineHeight * level - lineHeight * pos.z);
                     int dS = drawStart;
-                    int drawEnd = dS + lineHeight/*HALF_HEIGHT + (lineHeight >> 1)*/;
+                    int drawEnd = dS + lineHeight;
 
-                    if ((drawStart < 1 && drawEnd < 1) ||
-                        (drawStart >= HEIGHT && drawEnd >= HEIGHT)) {
+                    // вне зоны видимости? забей
+                    if (drawEnd < 0 || drawStart >= HEIGHT) {
                         continue;
                     } else {
                         //int dE = drawEnd;
-                        if (drawStart < 1) {
-                            drawStart = 1;
+                        if (drawStart < 0) {
+                            drawStart = 0;
                         }
-                        if (drawEnd >= HEIGHT) {
-                            drawEnd =  HEIGHT - 1;
+                        // именно так, а не HEIGHT - 1, поскольку в цикле исключительно, а не включительно
+                        if (drawEnd > HEIGHT) {
+                            drawEnd = HEIGHT;
                         }
                     }
 
@@ -1092,11 +1093,12 @@ public final class Renderer/* extends JPanel*/ {
                         }
                     }*/
 
-                    if (drawEnd < 1) {
+/*
+                    if (drawEnd < 0) {
                         continue;
                         //drawEnd = HEIGHT; //becomes < 0 when the integer overflows
                     }
-
+*/
                     //draw the floor from drawEnd to the bottom of the screen
                     Texture floorTex = null,
                             ceilTex  = null;
@@ -1114,7 +1116,7 @@ public final class Renderer/* extends JPanel*/ {
 
                         double currentFloorX = weight * floorXWall + (1.0 - weight) * pos.x;
                         double currentFloorY = weight * floorYWall + (1.0 - weight) * pos.y;
-                        if (currentFloorX < 0 || currentFloorY < 0 || !Map.isActive()) {
+                        if (currentFloorX < 0 || currentFloorY < 0/* || !Map.isActive()*/) {
                             continue;
                         }
 
@@ -1150,7 +1152,7 @@ public final class Renderer/* extends JPanel*/ {
                             }
                         }
 
-                        int color;
+                        int color = 0;
                         switch (Config.fog) {
                             case NOTHING   : fogBrightness = 0.0; break;
                             case OLDSCHOOL : fogBrightness = Fog.OLDSCHOOL_TABLE[y]; break;
@@ -1170,7 +1172,7 @@ public final class Renderer/* extends JPanel*/ {
                         //int pixelPos = (floorTexY << Texture.WIDTH_POT) + floorTexX;
                         //if (ZBUFFER[arrayPos] > currentDist) {
                         if (floorCell >= 0) {
-                            if (ZBUFFER[x][y - 1] > currentDist) {
+                            if (ZBUFFER[x][y/* - 1*/] > currentDist) {
                                 //TEMP_BUFFER.setRGB(x, y, Texture.WALLS[3].getPixel(floorTexX, floorTexY));
                                 //buffer[(y - 1) * WIDTH + x] = Texture.WALLS[3].getPixel(floorTexX, floorTexY);
                                 //TEMP_BUFFER_RASTER.setPixel(x, y, new int[]{Texture.WALLS[3].getPixel(floorTexX, floorTexY)});
@@ -1181,20 +1183,21 @@ public final class Renderer/* extends JPanel*/ {
                                 if (Config.fog != Fog.NOTHING) {
                                     color = applyFog(color, currentDist, fogBrightness);
                                 }
-                                SCREEN_BUFFER[(y - 1) * WIDTH + x] = color;
+                                SCREEN_BUFFER[(y/* - 1*/) * WIDTH + x] = color;
                                 //TEMP_BUFFER.setElem(arrayPos, color);
                                 //putPixel(x, y - 1, Texture.FLOOR[Map.FLOOR[floorX][floorY]].getPixel(floorTexX, floorTexY));
                                 //ZBUFFER[arrayPos] = currentDist;
-                                ZBUFFER[x][y - 1] = currentDist;
+                                ZBUFFER[x][y/* - 1*/] = currentDist;
                                 ++pixelsInColumn;
                             }
                         }
 
                         // ceiling (symmetrical!)
                         if (ceilCell >= 0) {
+                            int yPos = HEIGHT - y/* - 1*/;
                             //arrayPos = (HEIGHT - y) * WIDTH + x;
                             //if (ZBUFFER[arrayPos] > currentDist) {
-                            if (ZBUFFER[x][HEIGHT - y] > currentDist) {
+                            if (ZBUFFER[x][yPos] > currentDist) {
                                 //TEMP_BUFFER.setRGB(x, HEIGHT - y, Texture.WALLS[6].getPixel(floorTexX, floorTexY));
                                 //buffer[(HEIGHT - y) * WIDTH + x] = Texture.WALLS[6].getPixel(floorTexX, floorTexY);
                                 //TEMP_BUFFER_RASTER.setPixel(x, HEIGHT - y, new int[]{Texture.WALLS[6].getPixel(floorTexX, floorTexY)});
@@ -1206,11 +1209,21 @@ public final class Renderer/* extends JPanel*/ {
                                     if (Config.fog != Fog.NOTHING) {
                                         color = applyFog(color, currentDist, fogBrightness);
                                     }
-                                    SCREEN_BUFFER[(HEIGHT - y) * WIDTH + x] = color;
+                                    SCREEN_BUFFER[yPos * WIDTH + x] = color;
                                     //TEMP_BUFFER.setElem(arrayPos, color);
                                     //putPixel(x, HEIGHT - y, Texture.CEIL[Map.CEIL[floorX][floorY]].getPixel(floorTexX, floorTexY));
                                     //ZBUFFER[arrayPos] = currentDist;
-                                    ZBUFFER[x][HEIGHT - y] = currentDist;
+                                    ZBUFFER[x][yPos] = currentDist;
+                                    ++pixelsInColumn;
+                                }
+                            }
+
+                            // продублировать для первой (нулевой) строки,
+                            // чтобы не было просвета (возникает из-за того, что "y" никогда не равен HEIGHT)
+                            if (yPos == 1) {
+                                if (ZBUFFER[x][0] > currentDist) {
+                                    SCREEN_BUFFER[x] = color;
+                                    ZBUFFER[x][0] = currentDist;
                                     ++pixelsInColumn;
                                 }
                             }
@@ -1235,7 +1248,7 @@ public final class Renderer/* extends JPanel*/ {
             }
 
             // после рисовки стен и пола/потолка, закрашиваем небо, если есть что закрашивать
-            if (pixelsInColumn < HEIGHT - 1) {
+            if (pixelsInColumn < HEIGHT/* - 1*/) {
                 if (Config.drawSky) {
 
                     if (Config.STEP_BY_STEP_RENDERING) {
@@ -1251,7 +1264,7 @@ public final class Renderer/* extends JPanel*/ {
                     }
                     int[] pixels = sky.getColumn(skyX);
 
-                    for (int y = 1; y < HEIGHT && (pixelsInColumn < HEIGHT - 1); ++y) {
+                    for (int y = 0; y < HEIGHT && (pixelsInColumn < HEIGHT/* - 1*/); ++y) {
                         //int arrayPos = y * WIDTH + x;
                         //if (ZBUFFER[arrayPos] == Double.MAX_VALUE) {
                         if (ZBUFFER[x][y] == Double.MAX_VALUE) {
@@ -1261,7 +1274,7 @@ public final class Renderer/* extends JPanel*/ {
                         }
                     }
                 } else {
-                    for (int y = 1; y < HEIGHT && (pixelsInColumn < HEIGHT - 1); ++y) {
+                    for (int y = 0; y < HEIGHT && (pixelsInColumn < HEIGHT/* - 1*/); ++y) {
                         //int arrayPos = y * WIDTH + x;
                         //if (ZBUFFER[arrayPos] == Double.MAX_VALUE) {
                         if (ZBUFFER[x][y] == Double.MAX_VALUE) {
