@@ -170,14 +170,7 @@ public abstract class WeaponInHand implements Serializable {
             climbing = false;
 
             // определяем скорость движения ствола в зависимости от направления игрока
-            double speed = moveSpeed;
-            if (player.isMoveF()) {
-                speed = moveSpeed;
-            } else if (player.isMoveB()) {
-                speed = moveSpeed * 0.66666;
-            } else if (player.isMoveL() || player.isMoveR()) {
-                speed = moveSpeed * 0.5;
-            }
+            double speed = (player.isMoveF() || player.isMoveR()) ? moveSpeed : -moveSpeed;
 
             // двигаем ствол по восьмерке
             angle += speed * deltaTime;
