@@ -41,6 +41,7 @@ import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
@@ -48,7 +49,7 @@ import java.util.logging.Logger;
  * @author Anton "Vuvk" Shcherbatykh
  */
 public final class Renderer/* extends JPanel*/ {
-    private final static Logger LOG = Logger.getLogger(Renderer.class.getName());
+    private final static Logger LOGGER = Logger.getLogger(Renderer.class.getName());
     private static Renderer instance = null;
     //private final static Player PLAYER = Player.getInstance();
     /*private final static RepaintManager REPAINT_MANAGER;
@@ -1376,11 +1377,12 @@ public final class Renderer/* extends JPanel*/ {
             }
             try {
                 cdl.await();
-            } catch(InterruptedException ignored) {}
-            /*while (cdl.getCount() > 0) {
+            } catch(InterruptedException ex) {
+                LOGGER.log(Level.SEVERE, null, ex);
+            }
+            while (cdl.getCount() > 0) {
                 Thread.yield();
-            }*/
-
+            }
         } else {
             renderWorld(0, WIDTH);
         }
@@ -1706,10 +1708,12 @@ public final class Renderer/* extends JPanel*/ {
                 }
                 try {
                     cdl.await();
-                } catch(InterruptedException ignored) {}
-                /*while (cdl.getCount() > 0) {
+                } catch(InterruptedException ex) {
+                    LOGGER.log(Level.SEVERE, null, ex);
+                }
+                while (cdl.getCount() > 0) {
                     Thread.yield();
-                }*/
+                }
             } else {
                 antialiasing(WIDTH, SCREEN_BUFFER.length - 1);
             }

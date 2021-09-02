@@ -28,7 +28,7 @@ import javax.script.ScriptException;
  * @author Anton "Vuvk" Shcherbatykh
  */
 public class Interpreter {
-    private static final Logger LOG = Logger.getLogger(Interpreter.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(Interpreter.class.getName());
 
     private Interpreter() {}
 
@@ -53,7 +53,7 @@ public class Interpreter {
         try {
             addListing(new String(Files.readAllBytes(file.toPath())));
         } catch (IOException ex) {
-            LOG.log(Level.SEVERE, null, ex);
+            LOGGER.log(Level.SEVERE, null, ex);
         }
     }
 
@@ -74,7 +74,7 @@ public class Interpreter {
             try {
                 return ENGINE.eval(scriptString);
             } catch (ScriptException ex) {
-                LOG.log(Level.SEVERE, null, ex);
+                LOGGER.log(Level.SEVERE, null, ex);
             }
         }
 
@@ -97,7 +97,7 @@ public class Interpreter {
         try {
             return ENGINE.eval(script);
         } catch (ScriptException ex) {
-            LOG.log(Level.SEVERE, null, ex);
+            LOGGER.log(Level.SEVERE, null, ex);
         }
 
         return null;
@@ -112,7 +112,7 @@ public class Interpreter {
         try {
             return ENGINE.eval(Files.newBufferedReader(file.toPath(), Charset.defaultCharset()));
         } catch (IOException | ScriptException ex) {
-            LOG.log(Level.SEVERE, null, ex);
+            LOGGER.log(Level.SEVERE, null, ex);
         }
 
         return null;

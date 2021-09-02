@@ -21,7 +21,7 @@ import java.util.logging.Logger;
  * @author Anton "Vuvk" Shcherbatykh
  */
 public class Symbol {
-    transient private static final Logger LOG = Logger.getLogger(Symbol.class.getName());
+    transient private static final Logger LOGGER = Logger.getLogger(Symbol.class.getName());
 
     private BufferedImage image;
 

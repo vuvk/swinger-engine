@@ -31,7 +31,7 @@ import java.util.logging.Logger;
  */
 public final class Config {
 
-    private static final Logger LOG = Logger.getLogger(Config.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(Config.class.getName());
 
     public static boolean useOpenGL = false;
     public static boolean interlacing = false;
@@ -92,7 +92,7 @@ public final class Config {
                 vSync  = (json.has("vsync"))          ? json.get("vsync").getAsBoolean()       : true;
 
             } catch (IOException ex) {
-                LOG.log(Level.SEVERE, null, ex);
+                LOGGER.log(Level.SEVERE, null, ex);
             }
         }
     }

@@ -34,7 +34,7 @@ import java.util.logging.Logger;
  */
 public abstract class Enemy extends Breakable implements Serializable {
 
-    private static final Logger LOG = Logger.getLogger(Enemy.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(Enemy.class.getName());
 
     /** список всех вражин */
     //public final static List<Enemy> LIB = new ArrayList<>();

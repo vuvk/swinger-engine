@@ -52,7 +52,7 @@ import java.util.logging.Logger;
  */
 public class SavedGame implements Serializable {
 
-    private static final Logger LOG = Logger.getLogger(SavedGame.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(SavedGame.class.getName());
 
     private static final long serialVersionUID = 1L;
 
@@ -112,7 +112,7 @@ public class SavedGame implements Serializable {
             objectOutputStream.writeObject(this);
             objectOutputStream.close();
         } catch (IOException ex) {
-           LOG.log(Level.SEVERE, null, ex);
+           LOGGER.log(Level.SEVERE, null, ex);
         }
 
         Map.active  = true;
@@ -190,7 +190,7 @@ public class SavedGame implements Serializable {
             Map.active = true;
             Config.draw = true;
         } catch (ClassNotFoundException | IOException ex) {
-            LOG.log(Level.SEVERE, null, ex);
+            LOGGER.log(Level.SEVERE, null, ex);
         }
     }
 
@@ -206,7 +206,7 @@ public class SavedGame implements Serializable {
             //    Game.screenMsg.setMessage("GAME SAVED");
             } catch (Exception ex) {
             //    Game.screenMsg.setMessage("GAME NOT SAVED");
-                LOG.log(Level.SEVERE, null, ex);
+                LOGGER.log(Level.SEVERE, null, ex);
             }
         }
     }
@@ -221,7 +221,7 @@ public class SavedGame implements Serializable {
             //Game.screenMsg.setMessage("GAME LOADED");
         } catch (Exception ex) {
             //Game.screenMsg.setMessage("GAME NOT LOADED");
-            LOG.log(Level.SEVERE, null, ex);
+            LOGGER.log(Level.SEVERE, null, ex);
         }
 
 //        SoundBank.MUSIC1.setLooping(true).play();

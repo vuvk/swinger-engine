@@ -31,7 +31,7 @@ import com.vuvk.swinger.math.Vector2;
  * @author Anton "Vuvk" Shcherbatykh
  */
 public class MouseManager implements MouseListener, MouseWheelListener, MouseMotionListener {
-    private static final Logger LOG = Logger.getLogger(MouseManager.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(MouseManager.class.getName());
     private static MouseManager instance = null;       
 
     private static Robot robot;
@@ -47,7 +47,7 @@ public class MouseManager implements MouseListener, MouseWheelListener, MouseMot
         try {
             robot = new Robot();
         } catch (AWTException ex) {
-            LOG.log(Level.SEVERE, null, ex);
+            LOGGER.log(Level.SEVERE, null, ex);
         }
     }
 

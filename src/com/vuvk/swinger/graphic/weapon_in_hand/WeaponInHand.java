@@ -1,5 +1,5 @@
 /**
-    Copyright (C) 2019-2020 Anton "Vuvk" Shcherbatykh <vuvk69@gmail.com>
+    Copyright (C) 2019-2021 Anton "Vuvk" Shcherbatykh <vuvk69@gmail.com>
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
@@ -29,7 +29,7 @@ import java.util.logging.Logger;
  * @author Anton "Vuvk" Shcherbatykh
  */
 public abstract class WeaponInHand implements Serializable {
-    transient private static final Logger LOG = Logger.getLogger(WeaponInHand.class.getName());
+    transient private static final Logger LOGGER = Logger.getLogger(WeaponInHand.class.getName());
 
     private final Vector2 startPos;
     private Vector2 pos;

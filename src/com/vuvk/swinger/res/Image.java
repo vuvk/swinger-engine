@@ -1,5 +1,5 @@
 /**
-    Copyright (C) 2019-2020 Anton "Vuvk" Shcherbatykh <vuvk69@gmail.com>
+    Copyright (C) 2019-2021 Anton "Vuvk" Shcherbatykh <vuvk69@gmail.com>
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
@@ -27,7 +27,7 @@ import javax.imageio.ImageIO;
  * @author Anton "Vuvk" Shcherbatykh
  */
 public/* abstract*/ class Image implements Serializable {
-    transient private static final Logger LOG = Logger.getLogger(Image.class.getName());
+    transient private static final Logger LOGGER = Logger.getLogger(Image.class.getName());
 
     protected int[][] pixels;
     protected int width;
@@ -196,7 +196,7 @@ public/* abstract*/ class Image implements Serializable {
             BufferedImage img = ImageIO.read(file);
             load(img, newWidth, newHeight);
         } catch (Exception ex) {
-            LOG.log(Level.SEVERE, null, ex);
+            LOGGER.log(Level.SEVERE, null, ex);
         }
     }
 
