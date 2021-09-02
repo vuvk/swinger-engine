@@ -527,13 +527,11 @@ public class Game extends Frame {
     }
 */
     public void gameLoop() {
-        new Thread(() -> {
-            while (!Config.QUIT) {
-                update();
-                Thread.yield();
-            }
-            dispose();
-        }, "GameLoop Thread").start();
+        while (!Config.QUIT) {
+            update();
+            Thread.yield();
+        }
+        dispose();
     }
 
     private void updateWindowCenter() {
