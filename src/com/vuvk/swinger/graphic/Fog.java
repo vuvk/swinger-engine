@@ -53,12 +53,12 @@ public enum Fog {
             case 4 : return EXPONENTIAL2;
         }
     }
-
+/*
     public static int COLOR = 0xFF000000;
     public static int RED;
     public static int GREEN;
     public static int BLUE;
-
+*/
     public static double START = 2.0;
     public static double END   = 8.0;
     public static double EXP_DENSITY = 0.5; // arbitrary fog density that can range from 0.0 to 1.0 (exp/exp2 fog)
@@ -74,10 +74,11 @@ public enum Fog {
     public static double[] EXPONENTIAL2_TABLE;
 
     public static void init() {
+/*
         RED   = (COLOR >> 16) & 0xFF;
         GREEN = (COLOR >>  8) & 0xFF;
         BLUE  = (COLOR >>  0) & 0xFF;
-
+*/
         double factor = 1.0 / (END - START);
 
         // предварительный расчет таблицы с шагами яркости тумана

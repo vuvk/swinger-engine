@@ -932,8 +932,8 @@ public final class Map {
 
                 Gson gson = new Gson();
 
-                String fogColorString = (jsonlevel.has("fog_color")) ? jsonlevel.get("fog_color").getAsString() : "0xFF";
-                Fog.COLOR = Integer.parseUnsignedInt(fogColorString, 16);
+//              String fogColorString = (jsonlevel.has("fog_color")) ? jsonlevel.get("fog_color").getAsString() : "0xFF";
+//              Fog.COLOR = Integer.parseUnsignedInt(fogColorString, 16);
                 Fog.START = (jsonlevel.has("fog_start")) ? jsonlevel.get("fog_start").getAsDouble() : 2.0;
                 Fog.END   = (jsonlevel.has("fog_end"))   ? jsonlevel.get("fog_end").getAsDouble()   : 8.0;
                 Fog.init();

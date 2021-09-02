@@ -336,24 +336,16 @@ public final class Renderer/* extends JPanel*/ {
      * Применить туман к пикселю (проверка расстояния)
      * @param pixel Исходный цвет пикселя в формате ARGB
      * @param distance Дистанция до пикселя
+     * @param fogBrightness Яркость тумана в пикселе
      * @return полученный цвет
      */
-    /*private int applyFog(int pixel, double distance) {
+/*
+    private int applyFog(int pixel, double distance, double fogBrightness) {
         // близко - вернуть оригинальный пиксель
         if (distance < Fog.START) {
             return pixel;
         // дистанция между началом и концом тумана
-        } else if (distance < Fog.END) {
-            // определяем яркость/силу тумана в точке
-            double fogBrightness;
-
-            if (Config.fog == Fog.OLD) {
-                int pos = (int)((distance - Fog.START) * Fog.INV_SIMPLE_DISTANCE_STEP);
-                fogBrightness = Fog.SIMPLE_BRIGHTNESS[pos];
-            } else {
-                fogBrightness = (distance - Fog.START) * Fog.FACTOR;
-            }
-
+        } else { //if (distance < Fog.END) {
             // яркость/сила пикселя обратная силе тумана
             double pixelBrightness = 1.0 - fogBrightness;
             if (pixelBrightness <= 0.0) {
@@ -364,49 +356,7 @@ public final class Renderer/* extends JPanel*/ {
                 int gF = (int)(Fog.GREEN * fogBrightness);
                 int bF = (int)(Fog.BLUE  * fogBrightness);
 
-                int rP = (int)(((pixel >> 24) & 0xFF) * pixelBrightness);
-                int gP = (int)(((pixel >> 16) & 0xFF) * pixelBrightness);
-                int bP = (int)(((pixel >>  8) & 0xFF) * pixelBrightness);
-                int aP = (int)(((pixel      ) & 0xFF)                  );
-
-                // складываем компоненты цветов
-                // берем альфу пикселя, потому что он может быть полупрозрачным
-                pixel = aP |
-                        ((rF + rP) << 24) |
-                        ((gF + gP) << 16) |
-                        ((bF + bP) <<  8);
-            }
-
-            return pixel;
-        }
-        // очень далеко - просто цвет тумана
-        return Fog.COLOR;
-    }*/
-
-    /**
-     * Применить туман к пикселю (проверка расстояния)
-     * @param pixel Исходный цвет пикселя в формате ARGB
-     * @param distance Дистанция до пикселя
-     * @param fogBrightness Яркость тумана в пикселе
-     * @return полученный цвет
-     */
-    private int applyFog(int pixel, double distance, double fogBrightness) {
-        // близко - вернуть оригинальный пиксель
-        if (distance < Fog.START) {
-            return pixel;
-        // дистанция между началом и концом тумана
-        } else /*if (distance < Fog.END)*/ {
-            // яркость/сила пикселя обратная силе тумана
-            double pixelBrightness = 1.0 - fogBrightness;
-            if (pixelBrightness <= 0.0) {
-                pixel = Fog.COLOR;
-            } else {
-                /* раскладываем */
-                int rF = (int)(Fog.RED   * fogBrightness);
-                int gF = (int)(Fog.GREEN * fogBrightness);
-                int bF = (int)(Fog.BLUE  * fogBrightness);
-
-                int aP = (int)(((pixel >> 24) & 0xFF)/* * pixelBrightness*/);
+                int aP = (int)(((pixel >> 24) & 0xFF));
                 int rP = (int)(((pixel >> 16) & 0xFF) * pixelBrightness);
                 int gP = (int)(((pixel >>  8) & 0xFF) * pixelBrightness);
                 int bP = (int)(((pixel >>  0) & 0xFF) * pixelBrightness);
@@ -423,6 +373,48 @@ public final class Renderer/* extends JPanel*/ {
         }
         // очень далеко - просто цвет тумана
         //return Fog.COLOR;
+    }
+*/
+    /**
+     * Применить туман к пикселю (проверка расстояния)
+     * @param pixel Исходный цвет пикселя в формате ARGB
+     * @param distance Дистанция до пикселя
+     * @param fogBrightness Яркость тумана в пикселе
+     * @return полученный цвет
+     */
+    private int applyFog(int pixel, double distance, double fogBrightness) {
+        // близко - вернуть оригинальный пиксель
+        if (distance < Fog.START) {
+            return pixel;
+        // дистанция между началом и концом тумана
+        } else {
+            // тумана нет
+            if (fogBrightness <= 0.0) {
+                return pixel;
+            }
+            // яркость/сила пикселя обратная силе тумана
+            double pixelBrightness = 1.0 - fogBrightness;
+            // туман поглотил свет
+            if (pixelBrightness <= 0.0) {
+                pixel = 0xFF000000;
+            // что-то видно
+            } else {
+                // раскладываем
+                int aP = (int)(((pixel >> 24) & 0xFF));
+                int rP = (int)(((pixel >> 16) & 0xFF) * pixelBrightness);
+                int gP = (int)(((pixel >>  8) & 0xFF) * pixelBrightness);
+                int bP = (int)(((pixel >>  0) & 0xFF) * pixelBrightness);
+
+                // складываем компоненты цветов
+                // берем альфу пикселя, потому что он может быть полупрозрачным
+                pixel = (aP << 24) |
+                        (rP << 16) |
+                        (gP <<  8) |
+                        (bP <<  0);
+            }
+
+            return pixel;
+        }
     }
 
     /**

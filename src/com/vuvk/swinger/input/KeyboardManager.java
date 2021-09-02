@@ -22,7 +22,6 @@ import com.vuvk.swinger.graphic.Renderer;
 import com.vuvk.swinger.graphic.gui.menu.Menu;
 import com.vuvk.swinger.objects.mortals.Player;
 import com.vuvk.swinger.res.Map;
-import com.vuvk.swinger.utils.Utils;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.util.Scanner;
@@ -275,7 +274,7 @@ public final class KeyboardManager extends KeyAdapter {
                                         Fog.init();
                                     }
                                     break;
-
+/*
                                 case "fog_color" :
                                     int red, green, blue;
 
@@ -309,7 +308,7 @@ public final class KeyboardManager extends KeyAdapter {
 
                                     Fog.init();
                                     break;
-
+*/
                                 case "antialiasing" :
                                     Config.antialiasing = (scanCommand.hasNextInt() && scanCommand.nextInt() == 1);
                                     Config.init();
