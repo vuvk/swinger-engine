@@ -18,6 +18,7 @@ import com.vuvk.swinger.audio.SoundBank;
 import com.vuvk.swinger.graphic.Fog;
 import com.vuvk.swinger.graphic.Renderer;
 import com.vuvk.swinger.graphic.Sky;
+import com.vuvk.swinger.graphic.gui.GuiBank;
 import com.vuvk.swinger.graphic.gui.ScreenBlood;
 import com.vuvk.swinger.graphic.gui.menu.Menu;
 import com.vuvk.swinger.graphic.gui.text.FontBank;
@@ -46,7 +47,6 @@ import com.vuvk.swinger.res.Material;
 import com.vuvk.swinger.res.TextureBank;
 import java.awt.Canvas;
 import java.awt.Color;
-import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.Frame;
 import java.awt.Graphics;
@@ -453,6 +453,14 @@ public class Game extends Frame {
                             playerPosText.setVisible(true);
                             playerHpText.setVisible(true);
                             playerAmmoText.setVisible(true);
+
+                            // crosshair
+                            lastFrame.getGraphics().drawImage(
+                                GuiBank.IMG_CROSSHAIR,
+                                (Config.HALF_WIDTH ) - ((GuiBank.IMG_CROSSHAIR.getWidth())  >> 1),
+                                (Config.HALF_HEIGHT) - ((GuiBank.IMG_CROSSHAIR.getHeight()) >> 1),
+                                null
+                            );
                         }
 
                         /*
@@ -508,11 +516,13 @@ public class Game extends Frame {
 
             Text.drawAll(batch);
 
-            if (!Menu.isActive() && Config.console) {
-                int consoleY = Config.HEIGHT - consoleBackground.getHeight();
-                batch.drawImage(consoleBackground, 0, consoleY, null);
-                batch.setColor(Color.RED);
-                batch.drawString(Config.consoleCommand, 10, consoleY + 15);
+            if (!Menu.isActive()) {
+                if (Config.console) {
+                    int consoleY = Config.HEIGHT - consoleBackground.getHeight();
+                    batch.drawImage(consoleBackground, 0, consoleY, null);
+                    batch.setColor(Color.RED);
+                    batch.drawString(Config.consoleCommand, 10, consoleY + 15);
+                }
             }
         }
         MouseManager.reset();
@@ -553,10 +563,14 @@ public class Game extends Frame {
 
     public void setShowCursor(boolean show) {
         if (show) {
-            setCursor(Cursor.getDefaultCursor());
+            setCursor(getToolkit().createCustomCursor(
+                GuiBank.IMG_ARROW,
+                new Point(),
+                null)
+            );
         } else {
             setCursor(getToolkit().createCustomCursor(
-                new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB),
+                GuiBank.IMG_NULL,
                 new Point(),
                 null)
             );

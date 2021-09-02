@@ -1,5 +1,5 @@
 /**
-    Copyright (C) 2019-2020 Anton "Vuvk" Shcherbatykh <vuvk69@gmail.com>
+    Copyright (C) 2019-2021 Anton "Vuvk" Shcherbatykh <vuvk69@gmail.com>
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
@@ -14,27 +14,52 @@
 package com.vuvk.swinger.graphic.gui;
 
 import com.vuvk.swinger.Config;
-import com.vuvk.swinger.objects.mortals.Player;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.imageio.ImageIO;
 
 /**
  *
  * @author Anton "Vuvk" Shcherbatykh
  */
 public class GuiBank {
+
+    private final static Logger LOGGER = Logger.getLogger(Config.class.getName());
+
+    private final static String PATH_ARROW = "resources/pics/gui/slick_arrow.png";
+    private final static String PATH_CROSSHAIR = "resources/pics/gui/circle_dot.png";
+
     private final static String PATH_MOBILE_BUTTON_UP    = "resources/pics/gui/button_up.png";
     private final static String PATH_MOBILE_BUTTON_DOWN  = "resources/pics/gui/button_down.png";
     private final static String PATH_MOBILE_BUTTON_LEFT  = "resources/pics/gui/button_left.png";
     private final static String PATH_MOBILE_BUTTON_RIGHT = "resources/pics/gui/button_right.png";
     private final static String PATH_MOBILE_BUTTON_USE   = "resources/pics/gui/button_use.png";
     private final static String PATH_MOBILE_BUTTON_SHOOT = "resources/pics/gui/button_shoot.png";
-    
+
+    public final static BufferedImage IMG_NULL = new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB);
+    public static BufferedImage IMG_ARROW;
+    public static BufferedImage IMG_CROSSHAIR;
+
+    static {
+        try {
+            IMG_ARROW = ImageIO.read(new File(PATH_ARROW));
+            IMG_CROSSHAIR = ImageIO.read(new File(PATH_CROSSHAIR));
+        } catch (IOException ex) {
+            LOGGER.log(Level.SEVERE, null, ex);
+        }
+    }
+
+/*
     private static Texture TXR_MOBILE_BUTTON_UP;
     private static Texture TXR_MOBILE_BUTTON_DOWN;
     private static Texture TXR_MOBILE_BUTTON_LEFT;
     private static Texture TXR_MOBILE_BUTTON_RIGHT;
     private static Texture TXR_MOBILE_BUTTON_USE;
     private static Texture TXR_MOBILE_BUTTON_SHOOT;
-    
+
     public static Actor MOBILE_BUTTON_UP;
     public static Actor MOBILE_BUTTON_DOWN;
     public static Actor MOBILE_BUTTON_LEFT;
@@ -43,7 +68,9 @@ public class GuiBank {
     public static Actor MOBILE_BUTTON_SHOOT;
     public static Actor MOBILE_BUTTON_NEXT_WEAPON;
     public static Actor MOBILE_BUTTON_PREV_WEAPON;
-    
+*/
+
+/*
     public static void init() {
         //int btnSize = Math.min(Config.WIDTH, Config.HEIGHT) / 8;
         int btnSize = Math.min(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()) / 8;
@@ -55,7 +82,7 @@ public class GuiBank {
         TXR_MOBILE_BUTTON_RIGHT = new Texture(Gdx.files.internal(PATH_MOBILE_BUTTON_RIGHT));
         TXR_MOBILE_BUTTON_USE   = new Texture(Gdx.files.internal(PATH_MOBILE_BUTTON_USE  ));
         TXR_MOBILE_BUTTON_SHOOT = new Texture(Gdx.files.internal(PATH_MOBILE_BUTTON_SHOOT));
-        
+
         MOBILE_BUTTON_UP = new Image(TXR_MOBILE_BUTTON_UP);
         MOBILE_BUTTON_UP.setSize(btnSize, btnSize);
         MOBILE_BUTTON_UP.setPosition(btnSize * 2.0f, btnSize * 2.0f);
@@ -64,17 +91,17 @@ public class GuiBank {
             public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
                 Player.getInstance().setMoveF(true);
                 return false;
-            }       
+            }
             @Override
             public void touchUp (InputEvent event, float x, float y, int pointer, int button) {
                 Player.getInstance().setMoveF(false);
-            } 
-            @Override  
+            }
+            @Override
             public void exit (InputEvent event, float x, float y, int pointer, Actor toActor) {
-                Player.getInstance().setMoveF(false);          
-            }  
+                Player.getInstance().setMoveF(false);
+            }
         });
-        
+
         MOBILE_BUTTON_DOWN = new Image(TXR_MOBILE_BUTTON_DOWN);
         MOBILE_BUTTON_DOWN.setSize(btnSize, btnSize);
         MOBILE_BUTTON_DOWN.setPosition(btnSize * 2.0f, btnSize * 0.5f);
@@ -83,17 +110,17 @@ public class GuiBank {
             public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
                 Player.getInstance().setMoveB(true);
                 return false;
-            }        
+            }
             @Override
             public void touchUp (InputEvent event, float x, float y, int pointer, int button) {
                 Player.getInstance().setMoveB(false);
-            }    
-            @Override  
-            public void exit (InputEvent event, float x, float y, int pointer, Actor toActor) { 
-                Player.getInstance().setMoveB(false);          
-            }  
+            }
+            @Override
+            public void exit (InputEvent event, float x, float y, int pointer, Actor toActor) {
+                Player.getInstance().setMoveB(false);
+            }
         });
-        
+
         MOBILE_BUTTON_LEFT = new Image(TXR_MOBILE_BUTTON_LEFT);
         MOBILE_BUTTON_LEFT.setSize(btnSize, btnSize);
         MOBILE_BUTTON_LEFT.setPosition(btnSize * 0.5f, btnSize * 0.5f);
@@ -102,17 +129,17 @@ public class GuiBank {
             public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
                 Player.getInstance().setRotL(true);
                 return false;
-            }           
+            }
             @Override
             public void touchUp (InputEvent event, float x, float y, int pointer, int button) {
                 Player.getInstance().setRotL(false);
-            } 
-            @Override  
-            public void exit (InputEvent event, float x, float y, int pointer, Actor toActor) { 
-                Player.getInstance().setRotL(false);          
-            }  
+            }
+            @Override
+            public void exit (InputEvent event, float x, float y, int pointer, Actor toActor) {
+                Player.getInstance().setRotL(false);
+            }
         });
-        
+
         MOBILE_BUTTON_RIGHT = new Image(TXR_MOBILE_BUTTON_RIGHT);
         MOBILE_BUTTON_RIGHT.setSize(btnSize, btnSize);
         MOBILE_BUTTON_RIGHT.setPosition(btnSize * 3.5f, btnSize * 0.5f);
@@ -121,17 +148,17 @@ public class GuiBank {
             public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
                 Player.getInstance().setRotR(true);
                 return false;
-            }              
+            }
             @Override
             public void touchUp (InputEvent event, float x, float y, int pointer, int button) {
                 Player.getInstance().setRotR(false);
-            } 
-            @Override  
-            public void exit (InputEvent event, float x, float y, int pointer, Actor toActor) { 
-                Player.getInstance().setRotR(false);          
-            }  
+            }
+            @Override
+            public void exit (InputEvent event, float x, float y, int pointer, Actor toActor) {
+                Player.getInstance().setRotR(false);
+            }
         });
-                
+
         MOBILE_BUTTON_USE = new Image(TXR_MOBILE_BUTTON_USE);
         MOBILE_BUTTON_USE.setSize(btnSize, btnSize);
         MOBILE_BUTTON_USE.setPosition(Config.WIDTH - btnSize, btnSize * 0.5f);
@@ -140,9 +167,9 @@ public class GuiBank {
             public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
                 Player.getInstance().openDoor();
                 return false;
-            }       
+            }
         });
-                
+
         MOBILE_BUTTON_SHOOT = new Image(TXR_MOBILE_BUTTON_SHOOT);
         MOBILE_BUTTON_SHOOT.setSize(btnSize, btnSize);
         MOBILE_BUTTON_SHOOT.setPosition(Config.WIDTH - btnSize * 2, btnSize * 0.5f);
@@ -151,17 +178,17 @@ public class GuiBank {
             public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
                 Player.getInstance().setShooting(true);
                 return false;
-            }           
+            }
             @Override
             public void touchUp (InputEvent event, float x, float y, int pointer, int button) {
-                Player.getInstance().setShooting(false);    
-            } 
-            @Override  
-            public void exit (InputEvent event, float x, float y, int pointer, Actor toActor) { 
-                Player.getInstance().setShooting(false);          
-            }      
+                Player.getInstance().setShooting(false);
+            }
+            @Override
+            public void exit (InputEvent event, float x, float y, int pointer, Actor toActor) {
+                Player.getInstance().setShooting(false);
+            }
         });
-                
+
         MOBILE_BUTTON_NEXT_WEAPON = new Image(TXR_MOBILE_BUTTON_UP);
         MOBILE_BUTTON_NEXT_WEAPON.setSize(btnSize, btnSize);
         MOBILE_BUTTON_NEXT_WEAPON.setPosition(Config.WIDTH - btnSize * 0.5f, Config.HEIGHT - btnSize * 0.5f);
@@ -172,7 +199,7 @@ public class GuiBank {
                 return false;
             }
         });
-                
+
         MOBILE_BUTTON_PREV_WEAPON = new Image(TXR_MOBILE_BUTTON_DOWN);
         MOBILE_BUTTON_PREV_WEAPON.setSize(btnSize, btnSize);
         MOBILE_BUTTON_PREV_WEAPON.setPosition(Config.WIDTH - btnSize * 0.5f, Config.HEIGHT - btnSize * 1.5f);
@@ -184,7 +211,7 @@ public class GuiBank {
             }
         });
     }
-    
+
     public static void deinit() {
         TXR_MOBILE_BUTTON_UP   .dispose();
         TXR_MOBILE_BUTTON_DOWN .dispose();
@@ -192,12 +219,13 @@ public class GuiBank {
         TXR_MOBILE_BUTTON_RIGHT.dispose();
         TXR_MOBILE_BUTTON_USE  .dispose();
         TXR_MOBILE_BUTTON_SHOOT.dispose();
-        
+
         TXR_MOBILE_BUTTON_UP    = null;
         TXR_MOBILE_BUTTON_DOWN  = null;
         TXR_MOBILE_BUTTON_LEFT  = null;
         TXR_MOBILE_BUTTON_RIGHT = null;
         TXR_MOBILE_BUTTON_USE   = null;
-        TXR_MOBILE_BUTTON_SHOOT  = null;
+        TXR_MOBILE_BUTTON_SHOOT = null;
     }
+*/
 }

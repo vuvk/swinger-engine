@@ -31,7 +31,7 @@ import java.util.logging.Logger;
  */
 public final class Config {
 
-    private static final Logger LOGGER = Logger.getLogger(Config.class.getName());
+    private final static Logger LOGGER = Logger.getLogger(Config.class.getName());
 
     public static boolean useOpenGL = false;
     public static boolean interlacing = false;
