@@ -272,34 +272,35 @@ public final class Renderer/* extends JPanel*/ {
     }
 
     /* минимальное видмое значение полупрозрачности */
-    final static int MIN_VISIBLE_TRANSPARENT  = 25;
+    //final static int MIN_VISIBLE_TRANSPARENT  = 25;
     /* значение полупрозрачности, выше которого уже 100% непрозрачность */
-    final static int MAX_ADDITIVE_TRANSPARENT = 230;
-    final static double INV_255 = 1.0 / 255.0;
+    //final static int MAX_ADDITIVE_TRANSPARENT = 230;
+    //final static double INV_255 = 1.0 / 255.0;
     /**
      * Наложить на пиксель пиксель с полупрозрачностью
      * @param pixel исходный пиксель
      * @param additive добавляемый пиксель
      * @return то, что получилось в ходе сложения
      */
+/*
     private int makeAdditive(int pixel, int additive) {
-        /* альфа полупрозрачного пикселя */
+        // альфа полупрозрач
         int aA = (additive >> 24) & 0xFF;
         //int aP = (pixel >> 24) & 0xFF;
 
-        /* добавляемый пиксель вообще не виден */
+        // добавляемый пиксель вообще не виден
         if (aA <= MIN_VISIBLE_TRANSPARENT) {
             return pixel;
-        /* исходный пиксель перекрывается полностью */
+        // исходный пиксель перекрывается полностью
         } else if (aA >= MAX_ADDITIVE_TRANSPARENT) {
             return additive;
-        /* надо смешивать */
+        // надо смешивать
         } else {
-            /* считаем яркость добавляемого и исходного пикселя с учетом накладываемого */
+            // считаем яркость добавляемого и исходного пикселя с учетом накладываемого
             double aBrightness = aA * INV_255;
             double pBrightness = 1.0 - aBrightness;
 
-            /* раскладываем */
+            // раскладываем
             int rA = (int)(((additive >> 16) & 0xFF) * aBrightness);
             int gA = (int)(((additive >>  8) & 0xFF) * aBrightness);
             int bA = (int)(((additive >>  0) & 0xFF) * aBrightness);
@@ -308,13 +309,14 @@ public final class Renderer/* extends JPanel*/ {
             int gP = (int)(((pixel >>  8) & 0xFF) * pBrightness);
             int bP = (int)(((pixel >>  0) & 0xFF) * pBrightness);
 
-            /* получаем результат */
+            // получаем результат
             return 0xFF000000 |
                    ((rA + rP) << 16) |
                    ((gA + gP) <<  8) |
                    ((bA + bP) <<  0);
         }
     }
+*/
 
     /**
      * Нарисовать на полотне пиксель
@@ -323,14 +325,17 @@ public final class Renderer/* extends JPanel*/ {
      * @param pixel рисуемый пиксель
 //     * @param brightness яркость пикселя
      */
-    private void drawPixel(int x, int y, int pixel/*, double brightness*/) {
+/*
+    private void drawPixel(int x, int y, int pixel) {//, double brightness) {
+
         int arrayPos = y * WIDTH + x;
         int oldPixel = SCREEN_BUFFER[arrayPos];
-        int newPixel = makeAdditive(oldPixel, pixel/*makeColorDarker(pixel, brightness)*/);
+        int newPixel = makeAdditive(oldPixel, pixel);//makeColorDarker(pixel, brightness));
         if (oldPixel != newPixel) {
             SCREEN_BUFFER[arrayPos] = newPixel;
         }
     }
+*/
 
     /**
      * Применить туман к пикселю (проверка расстояния)
@@ -999,7 +1004,7 @@ public final class Renderer/* extends JPanel*/ {
                         }*/
                         int color = pixelsColumn[texY];
                         int a = (color >> 24) & 0xFF;
-                        if (a <= MAX_ADDITIVE_TRANSPARENT) {
+                        if (a < 255) {
                             continue;
                         }
 
@@ -1524,7 +1529,7 @@ public final class Renderer/* extends JPanel*/ {
                         int color = txr.getPixel(texX, texY);
                         int a = (color >> 24) & 0xFF;
 
-                        if (a < MIN_VISIBLE_TRANSPARENT) {
+                        if (a < 255) {
                             continue;
                         } else {
                             if (Config.fog != Fog.NOTHING) {
@@ -1553,11 +1558,12 @@ public final class Renderer/* extends JPanel*/ {
                                 int newPixel = makeAdditive(pixel, color);
                                 TEMP_BUFFER[arrayPos] = newPixel;
                             }*/
-                            drawPixel(x, y, color);
+                            //drawPixel(x, y, color);
+                            SCREEN_BUFFER[y * WIDTH + x] = color;
                             //TEMP_BUFFER.put(y * WIDTH + x, color);
-                            if (a >= MAX_ADDITIVE_TRANSPARENT) {
-                                ZBUFFER[x][y] = transform.y;
-                            }
+                            //if (a >= MAX_ADDITIVE_TRANSPARENT) {
+                            ZBUFFER[x][y] = transform.y;
+                            //}
                         }
                     }
                 }
