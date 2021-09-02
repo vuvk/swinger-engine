@@ -15,19 +15,16 @@ package com.vuvk.swinger.res;
 
 import com.vuvk.swinger.Engine;
 import com.vuvk.swinger.objects.Object3D;
-
 import java.io.Serializable;
-import java.util.List;
-import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.Set;
+import java.util.concurrent.CopyOnWriteArraySet;
 
 /**
  *
  * @author Anton "Vuvk" Shcherbatykh
  */
 public class Material extends Object3D implements Serializable {
-    transient public  final static List<Material> LIB = new CopyOnWriteArrayList<>();
-    //transient private final static List<Material> FOR_ADD_TO_LIB = new CopyOnWriteArrayList<>();
-    //transient private final static List<Material> FOR_DELETE_FROM_LIB = new CopyOnWriteArrayList<>();
+    transient public  final static Set<Material> LIB = new CopyOnWriteArraySet<>();
 
     // для анимации массив двумерный, где x - кадры, а y - текстуры для углов поворота (1 или 8 штук)
     private Image[][] frames;

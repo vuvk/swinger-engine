@@ -19,18 +19,17 @@ import com.vuvk.swinger.math.Vector2;
 import com.vuvk.swinger.math.Vector3;
 import com.vuvk.swinger.objects.Object3D;
 import java.io.Serializable;
-import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Iterator;
-import java.util.List;
-import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.Set;
+import java.util.concurrent.CopyOnWriteArraySet;
 
 /**
  *
  * @author Anton "Vuvk" Shcherbatykh
  */
 public abstract class Mortal extends Object3D implements Serializable {
-    transient public final static List<Mortal> LIB = new CopyOnWriteArrayList<>();
-    //transient private final static List<Mortal> FOR_DELETE_FROM_LIB = new ArrayList<>();
+    transient public final static Set<Mortal> LIB = new CopyOnWriteArraySet<>();
 
     protected double health;
     protected final double maxHealth;
@@ -152,8 +151,8 @@ public abstract class Mortal extends Object3D implements Serializable {
      * @param pos Проверяемая позиция
      * @return Список существ
      */
-    public static List<Mortal> whoInPos(final Vector2 pos) {
-        ArrayList<Mortal> mortals = new ArrayList<>(Mortal.LIB.size());
+    public static Set<Mortal> whoInPos(final Vector2 pos) {
+        Set<Mortal> mortals = new HashSet<>();
         for (Mortal mortal : LIB) {
             if (mortal.bb.hasPoint(pos)) {
                 mortals.add(mortal);
@@ -168,8 +167,8 @@ public abstract class Mortal extends Object3D implements Serializable {
      * @param whoIgnore Какое существо игнорировать в проверке
      * @return Список существ
      */
-    public static List<Mortal> whoInPos(final Vector2 pos, final Mortal whoIgnore) {
-        List<Mortal> mortals = whoInPos(pos);
+    public static Set<Mortal> whoInPos(final Vector2 pos, final Mortal whoIgnore) {
+        Set<Mortal> mortals = whoInPos(pos);
         mortals.remove(whoIgnore);
         return mortals;
     }
@@ -179,8 +178,8 @@ public abstract class Mortal extends Object3D implements Serializable {
      * @param box Проверяемый квадрат
      * @return Список существ
      */
-    public static List<Mortal> whoIntersectBox(final BoundingBox box) {
-        ArrayList<Mortal> mortals = new ArrayList<>(Mortal.LIB.size());
+    public static Set<Mortal> whoIntersectBox(final BoundingBox box) {
+        Set<Mortal> mortals = new HashSet<>();
         for (Mortal mortal : LIB) {
             if (mortal.intersect(box)) {
                 mortals.add(mortal);
@@ -195,8 +194,8 @@ public abstract class Mortal extends Object3D implements Serializable {
      * @param whoIgnore Какое существо игнорировать в проверке
      * @return Список существ
      */
-    public static List<Mortal> whoIntersectBox(final BoundingBox box, final Mortal whoIgnore) {
-        List<Mortal> mortals = whoIntersectBox(box);
+    public static Set<Mortal> whoIntersectBox(final BoundingBox box, final Mortal whoIgnore) {
+        Set<Mortal> mortals = whoIntersectBox(box);
         mortals.remove(whoIgnore);
         return mortals;
     }
@@ -207,8 +206,8 @@ public abstract class Mortal extends Object3D implements Serializable {
      * @param radius Радиус круга
      * @return Список существ
      */
-    public static List<Mortal> whoIntersectCircle(final Vector2 center, double radius) {
-        ArrayList<Mortal> mortals = new ArrayList<>(Mortal.LIB.size());
+    public static Set<Mortal> whoIntersectCircle(final Vector2 center, double radius) {
+        Set<Mortal> mortals = new HashSet<>();
         for (Mortal mortal : LIB) {
             if (mortal.intersect(center, radius)) {
                 mortals.add(mortal);
@@ -224,8 +223,8 @@ public abstract class Mortal extends Object3D implements Serializable {
      * @param whoIgnore Какое существо игнорировать в проверке
      * @return Список существ
      */
-    public static List<Mortal> whoIntersectCircle(final Vector2 center, double radius, final Mortal whoIgnore) {
-        List<Mortal> mortals = whoIntersectCircle(center, radius);
+    public static Set<Mortal> whoIntersectCircle(final Vector2 center, double radius, final Mortal whoIgnore) {
+        Set<Mortal> mortals = whoIntersectCircle(center, radius);
         mortals.remove(whoIgnore);
         return mortals;
     }
@@ -235,8 +234,8 @@ public abstract class Mortal extends Object3D implements Serializable {
      * @param segment Проверяемый сегмент
      * @return Список существ
      */
-    public static List<Mortal> whoIntersectSegment(final Segment segment) {
-        ArrayList<Mortal> mortals = new ArrayList<>(Mortal.LIB.size());
+    public static Set<Mortal> whoIntersectSegment(final Segment segment) {
+        Set<Mortal> mortals = new HashSet<>();
         for (Mortal mortal : LIB) {
             if (mortal.bb.intersect(segment)) {
                 mortals.add(mortal);
@@ -251,15 +250,14 @@ public abstract class Mortal extends Object3D implements Serializable {
      * @param whoIgnore Какое существо игнорировать в проверке
      * @return Список существ
      */
-    public static List<Mortal> whoIntersectSegment(final Segment segment, final Mortal whoIgnore) {
-        List<Mortal> mortals = whoIntersectSegment(segment);
+    public static Set<Mortal> whoIntersectSegment(final Segment segment, final Mortal whoIgnore) {
+        Set<Mortal> mortals = whoIntersectSegment(segment);
         for (Iterator<Mortal> it = mortals.iterator(); it.hasNext(); ) {
             Mortal mortal = it.next();
             if (mortal.equals(whoIgnore)) {
                 it.remove();
             }
         }
-
         return mortals;
     }
 

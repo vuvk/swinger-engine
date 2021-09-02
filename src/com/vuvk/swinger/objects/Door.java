@@ -23,8 +23,8 @@ import com.vuvk.swinger.objects.mortals.Mortal;
 import com.vuvk.swinger.res.Map;
 import com.vuvk.swinger.res.Material;
 import java.io.Serializable;
-import java.util.List;
-import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.Set;
+import java.util.concurrent.CopyOnWriteArraySet;
 
 /**
  *
@@ -58,7 +58,7 @@ public class Door extends TexturedSegment implements Serializable {
     private int keyForOpen;
 
     //private Player PLAYER = Player.getInstance();
-    public final static List<Door> LIB = new CopyOnWriteArrayList<>();
+    public final static Set<Door> LIB = new CopyOnWriteArraySet<>();
 
     public Door(final Vector2 a, final Vector2 b, final Material material) {
         this(a, b, material, -1);

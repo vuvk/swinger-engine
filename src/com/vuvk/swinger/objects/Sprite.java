@@ -20,8 +20,8 @@ import com.vuvk.swinger.res.Image;
 import com.vuvk.swinger.res.Material;
 import com.vuvk.swinger.res.Texture;
 import java.io.Serializable;
-import java.util.List;
-import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.Set;
+import java.util.concurrent.CopyOnWriteArraySet;
 
 /**
  *
@@ -29,8 +29,8 @@ import java.util.concurrent.CopyOnWriteArrayList;
  */
 public class Sprite extends Material implements Comparable<Sprite>, Serializable {
     //private final static Player PLAYER = Player.getInstance();
-    transient public final static List<Sprite> LIB = new CopyOnWriteArrayList<>();
-    //private final static List<Sprite> FOR_ADD_TO_LIB = new ArrayList<>();
+    transient public final static Set<Sprite> LIB = new CopyOnWriteArraySet<>();
+    //private final static Set<Sprite> FOR_ADD_TO_LIB = new ArrayList<>();
     //transient private final static List<Sprite> FOR_DELETE_FROM_LIB = new ArrayList<>();
     //public final static double DEPTH_FACTOR = Texture.HEIGHT * ((int)(Math.ceil((double)Window.HEIGHT / Texture.HEIGHT)) >> Config.quality);
     //public final static double DEPTH_FACTOR = Window.HEIGHT >> Config.quality;

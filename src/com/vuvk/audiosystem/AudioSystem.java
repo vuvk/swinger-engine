@@ -20,11 +20,11 @@ import com.vuvk.swinger.utils.Utils;
 import java.io.File;
 import java.net.MalformedURLException;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Random;
+import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
-import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -37,9 +37,9 @@ public final class AudioSystem {
     private final static Logger LOGGER = Logger.getLogger(AudioSystem.class.getName());
 
     final static AL al = ALFactory.getAL();
-    final static List<SoundBuffer> SOUND_BUFFERS = new CopyOnWriteArrayList<>();
-    final static List<Sound> SOUNDS = new CopyOnWriteArrayList<>();
-    final static List<Music> MUSICS = new CopyOnWriteArrayList<>();
+    final static Set<SoundBuffer> SOUND_BUFFERS = new CopyOnWriteArraySet<>();
+    final static Set<Sound> SOUNDS = new CopyOnWriteArraySet<>();
+    final static Set<Music> MUSICS = new CopyOnWriteArraySet<>();
 
     private static boolean inited = false;
 
@@ -222,7 +222,7 @@ public final class AudioSystem {
         if (inited) {
             SoundBuffer buffer = new SoundBuffer();
             if (buffer.load(path)) {
-                SOUND_BUFFERS.add(0, buffer);
+                SOUND_BUFFERS.add(buffer);
                 return buffer;
             } else {
                 buffer.dispose();
@@ -237,7 +237,7 @@ public final class AudioSystem {
             if (buffer != null && buffer.getBuffer()[0] != 0) {
                 Sound sound = new Sound();
                 if (sound.setBuffer(buffer)) {
-                    SOUNDS.add(0, sound);
+                    SOUNDS.add(sound);
                     return sound;
                 } else {
                     sound.dispose();
@@ -253,7 +253,7 @@ public final class AudioSystem {
             try {
                 Music music = new Music(new File(path).toURI().toURL());
                 //if (music.open()) {
-                    MUSICS.add(0, music);
+                    MUSICS.add(music);
                     return music;
                 /*} else {
                     music.dispose();

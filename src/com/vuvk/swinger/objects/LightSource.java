@@ -21,15 +21,15 @@ import com.vuvk.swinger.utils.Pair;
 import com.vuvk.swinger.utils.Utils;
 import java.awt.Color;
 import java.io.Serializable;
-import java.util.List;
-import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.Set;
+import java.util.concurrent.CopyOnWriteArraySet;
 
 /**
  *
  * @author Anton "Vuvk" Shcherbatykh
  */
 public class LightSource extends Object3D implements Serializable {
-    transient public final static List<LightSource> LIB = new CopyOnWriteArrayList<>();
+    transient public final static Set<LightSource> LIB = new CopyOnWriteArraySet<>();
 
     private Color color;
     private double brightness;

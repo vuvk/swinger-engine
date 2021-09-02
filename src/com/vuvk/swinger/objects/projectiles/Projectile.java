@@ -22,9 +22,8 @@ import com.vuvk.swinger.objects.Sprite;
 import com.vuvk.swinger.objects.mortals.Mortal;
 import com.vuvk.swinger.res.Map;
 import com.vuvk.swinger.res.Texture;
-
 import java.io.Serializable;
-import java.util.List;
+import java.util.Set;
 
 /**
  *
@@ -92,7 +91,7 @@ public abstract class Projectile extends Sprite implements Serializable {
         int newPosX = (int)newPos.x;
         int newPosY = (int)newPos.y;
         boolean canMove = false;
-        List<Mortal> targets = null;
+        Set<Mortal> targets = null;
 
         // если не столкнулся со стеной
         if (newPosX >= 0 && newPosX < Map.WIDTH &&

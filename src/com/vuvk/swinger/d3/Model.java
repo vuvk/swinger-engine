@@ -19,15 +19,15 @@ import com.vuvk.swinger.math.Vector3;
 import com.vuvk.swinger.objects.Object3D;
 import com.vuvk.swinger.objects.mortals.Player;
 import java.io.Serializable;
-import java.util.List;
-import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.Set;
+import java.util.concurrent.CopyOnWriteArraySet;
 
 /**
  *
  * @author Anton "Vuvk" Shcherbatykh
  */
 public class Model extends Object3D implements Comparable<Model>, Serializable {
-    transient public final static List<Model> LIB = new CopyOnWriteArrayList<>();
+    transient public final static Set<Model> LIB = new CopyOnWriteArraySet<>();
 
     private Matrix4 mdlMtx = new Matrix4();
     private Mesh mesh;

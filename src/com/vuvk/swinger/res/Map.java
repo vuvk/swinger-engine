@@ -55,7 +55,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.Set;
+import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -65,7 +66,7 @@ import java.util.logging.Logger;
  * @author Anton "Vuvk" Shcherbatykh
  */
 public final class Map {
-    private final static Logger LOG = Logger.getLogger(Map.class.getName());
+    private final static Logger LOGGER = Logger.getLogger(Map.class.getName());
 
     public final static int WIDTH  = 24;
     public final static int HEIGHT = 24;
@@ -327,7 +328,7 @@ public final class Map {
     //public final static Model[][] MODELS = new Model[WIDTH][HEIGHT];
     public static LightSource light1, light2;
 
-    private static List<SoundBuffer> mapSoundBuffers = new CopyOnWriteArrayList<>();
+    private static Set<SoundBuffer> mapSoundBuffers = new CopyOnWriteArraySet<>();
 
     private static void loadTexturesAndMaterials(JsonObject jsonLevel) {
         int texturesCount  = TextureBank.WALLS.size();
@@ -371,7 +372,7 @@ public final class Map {
                 new FileReader("resources/maps/" + levelNum + "/sprites.json")
             ).getAsJsonObject();
         } catch (FileNotFoundException ex) {
-            LOG.log(Level.SEVERE, null, ex);
+            LOGGER.log(Level.SEVERE, null, ex);
         }
 
         Gson gson = new Gson();
@@ -437,7 +438,7 @@ public final class Map {
                 new FileReader("resources/maps/" + levelNum + "/weapons.json")
             ).getAsJsonObject();
         } catch (FileNotFoundException ex) {
-            LOG.log(Level.SEVERE, null, ex);
+            LOGGER.log(Level.SEVERE, null, ex);
         }
 
         Gson gson = new Gson();
@@ -494,7 +495,7 @@ public final class Map {
                 new FileReader("resources/maps/" + levelNum + "/clips.json")
             ).getAsJsonObject();
         } catch (FileNotFoundException ex) {
-            LOG.log(Level.SEVERE, null, ex);
+            LOGGER.log(Level.SEVERE, null, ex);
         }
 
         Gson gson = new Gson();
@@ -554,7 +555,7 @@ public final class Map {
                 new FileReader("resources/maps/" + levelNum + "/medkits.json")
             ).getAsJsonObject();
         } catch (FileNotFoundException ex) {
-            LOG.log(Level.SEVERE, null, ex);
+            LOGGER.log(Level.SEVERE, null, ex);
         }
 
         Gson gson = new Gson();
@@ -598,7 +599,7 @@ public final class Map {
                 new FileReader("resources/maps/" + levelNum + "/keys_doors.json")
             ).getAsJsonObject();
         } catch (FileNotFoundException ex) {
-            LOG.log(Level.SEVERE, null, ex);
+            LOGGER.log(Level.SEVERE, null, ex);
         }
 
         Gson gson = new Gson();
@@ -709,7 +710,7 @@ public final class Map {
                 new FileReader("resources/maps/" + levelNum + "/breakables.json")
             ).getAsJsonObject();
         } catch (FileNotFoundException ex) {
-            LOG.log(Level.SEVERE, null, ex);
+            LOGGER.log(Level.SEVERE, null, ex);
         }
 
         Gson gson = new Gson();
@@ -1117,7 +1118,7 @@ public final class Map {
                 active = true;
                 loaded = true;
             } catch (IOException ex) {
-                LOG.log(Level.SEVERE, null, ex);
+                LOGGER.log(Level.SEVERE, null, ex);
             }
         }
 

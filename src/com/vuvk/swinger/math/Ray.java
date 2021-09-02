@@ -17,7 +17,7 @@ import com.vuvk.swinger.objects.mortals.Mortal;
 import com.vuvk.swinger.objects.mortals.Player;
 import com.vuvk.swinger.res.Map;
 import java.io.Serializable;
-import java.util.List;
+import java.util.Set;
 
 /**
  *
@@ -140,7 +140,7 @@ public final class Ray implements Serializable {
      * @return Создание, если есть попадание. Или null, если ни в кого не попал
      */
     public Mortal getMortal(Mortal whoIgnore) {
-        List<Mortal> mortals = Mortal.whoIntersectSegment(segment, whoIgnore);
+        Set<Mortal> mortals = Mortal.whoIntersectSegment(segment, whoIgnore);
         Mortal target = null;
 
         if (mortals.size() > 0) {

@@ -372,7 +372,8 @@ public final class Player extends Mortal implements Serializable {
                     // нет столкновения с сегментом
                     // а нет ли моба?
                     if (!segmentCollision) {
-                        if (whoInPos(new Vector2(check.x, pos.y), this).isEmpty()) {
+                        Set<Mortal> inPos = whoInPos(new Vector2(check.x, pos.y), this);
+                        if (inPos.isEmpty()) {
                             newPos.x += moveVector.x;
                             canMove = true;
                         }
@@ -397,7 +398,8 @@ public final class Player extends Mortal implements Serializable {
                     // нет столкновения с сегментом
                     // а нет ли моба?
                     if (!segmentCollision) {
-                        if (whoInPos(new Vector2(pos.x, check.y), this).isEmpty()) {
+                        Set<Mortal> inPos = whoInPos(new Vector2(check.x, pos.y), this);
+                        if (inPos.isEmpty()) {
                             newPos.y += moveVector.y;
                             canMove = true;
                         }

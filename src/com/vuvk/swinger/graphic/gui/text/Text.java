@@ -13,39 +13,38 @@
 */
 package com.vuvk.swinger.graphic.gui.text;
 
+import com.vuvk.swinger.math.Vector2;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
-import java.util.List;
-import java.util.concurrent.CopyOnWriteArrayList;
-
-import com.vuvk.swinger.math.Vector2;
+import java.util.Set;
+import java.util.concurrent.CopyOnWriteArraySet;
 
 /**
  *
  * @author Anton "Vuvk" Shcherbatykh
  */
 public class Text {
-    
-    private final static List<Text> TEXTS = new CopyOnWriteArrayList<>();
-    
+
+    private final static Set<Text> TEXTS = new CopyOnWriteArraySet<>();
+
     private Vector2 location;
     private Font font;
     protected String message;
     protected boolean visible = true;
-    
+
     public Text(final Font font) {
         this(font, "");
     }
-    
+
     public Text(final Font font, String message) {
         this(font, message, new Vector2());
     }
-    
+
     public Text(final Font font, String message, Vector2 location) {
         setFont(font);
         setMessage(message);
         setLocation(location);
-        
+
         TEXTS.add(this);
     }
 
@@ -63,7 +62,7 @@ public class Text {
 
     public boolean isVisible() {
         return visible;
-    }   
+    }
 
     public void setLocation(Vector2 location) {
         this.location = location;
@@ -75,24 +74,24 @@ public class Text {
 
     public void setMessage(String message) {
         this.message = message;
-    }    
+    }
 
     public void setVisible(boolean visible) {
         this.visible = visible;
     }
-    
-    public void draw(Graphics g) {            
-        if (message == null       || 
-            message.length() == 0 || 
-            font == null          || 
+
+    public void draw(Graphics g) {
+        if (message == null       ||
+            message.length() == 0 ||
+            font == null          ||
             !isVisible()
            ) {
             return;
         }
-         
+
         int x = (int) location.x,
             y = (int) location.y;
-        
+
         for (int i = 0; i < message.length(); ++i) {
             int ascii = message.charAt(i);
             Symbol symbol = font.getSymbol(ascii);
@@ -105,17 +104,17 @@ public class Text {
             }
         }
     }
-    
+
     public static void drawAll(Graphics g) {
         for (Text text : TEXTS) {
             text.draw(g);
         }
     }
-    
+
     public static void remove(Text text) {
         TEXTS.remove(text);
     }
-    
+
     public static void clearAll() {
         TEXTS.clear();
     }

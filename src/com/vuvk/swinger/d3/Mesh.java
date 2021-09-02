@@ -14,26 +14,26 @@
 package com.vuvk.swinger.d3;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.concurrent.CopyOnWriteArraySet;
 
 /**
  *
  * @author Anton "Vuvk" Shcherbatykh
  */
 public class Mesh implements Serializable {
-    transient public final static List<Mesh> LIB = new CopyOnWriteArrayList<>();
+    transient public final static Set<Mesh> LIB = new CopyOnWriteArraySet<>();
 
-    private List<Polygon> polys = new ArrayList<>();
+    private Set<Polygon> polys = new HashSet<>();
 
-    public Mesh(List<Polygon> polys) {
+    public Mesh(Set<Polygon> polys) {
         this.polys.addAll(polys);
 
         LIB.add(this);
     }
 
-    public List<Polygon> getPolygons() {
+    public Set<Polygon> getPolygons() {
         return polys;
     }
 
