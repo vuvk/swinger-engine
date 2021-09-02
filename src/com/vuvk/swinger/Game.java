@@ -46,6 +46,7 @@ import com.vuvk.swinger.res.Material;
 import com.vuvk.swinger.res.TextureBank;
 import java.awt.Canvas;
 import java.awt.Color;
+import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.Frame;
 import java.awt.Graphics;
@@ -62,6 +63,8 @@ import java.util.Locale;
  * @author Anton "Vuvk" Shcherbatykh
  */
 public class Game extends Frame {
+
+    private static Game INSTANCE = null;
 
     private boolean initialized = false;
     private Canvas canvas;
@@ -116,7 +119,7 @@ public class Game extends Frame {
 
     double angle = 0.0;
 
-    public Game() {
+    private Game() {
         super();
 
         addKeyListener(KeyboardManager.getInstance());
@@ -174,15 +177,9 @@ public class Game extends Frame {
         }, FocusEvent.FOCUS_EVENT_MASK | WindowEvent.WINDOW_FOCUS_EVENT_MASK | WindowEvent.WINDOW_EVENT_MASK);
 */
 
-        create();
-
-        initialized = true;
-        setVisible(true);
-    }
-
-    private void create() {
         //Config.load();
         Config.init();
+        setShowCursor(!Config.mouseLook);
 
         ScreenBlood.drops = new ScreenBlood[Config.WIDTH];
         for (int i = 0; i < ScreenBlood.drops.length; ++i) {
@@ -251,6 +248,15 @@ public class Game extends Frame {
 
         //SoundBank.MUSIC_TITLE.setLooping(true).play();
         AudioSystem.newMusic(SoundBank.PATH_MUSIC_TITLE).setLooping(true).play();
+
+        initialized = true;
+        setVisible(true);
+
+        INSTANCE = this;
+    }
+
+    public static Game getInstance() {
+        return (INSTANCE != null) ? INSTANCE : new Game();
     }
 
     @Override
@@ -263,6 +269,8 @@ public class Game extends Frame {
         super.dispose();
 
         AudioSystem.deinit();
+
+        INSTANCE = null;
 
         System.exit(0);
     }
@@ -540,6 +548,18 @@ public class Game extends Frame {
             int centerX = location.x + (getWidth() >> 1);
             int centerY = location.y + (getHeight() >> 1);
             windowCenter.set(centerX, centerY);
+        }
+    }
+
+    public void setShowCursor(boolean show) {
+        if (show) {
+            setCursor(Cursor.getDefaultCursor());
+        } else {
+            setCursor(getToolkit().createCustomCursor(
+                new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB),
+                new Point(),
+                null)
+            );
         }
     }
 

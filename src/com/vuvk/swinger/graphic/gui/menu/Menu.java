@@ -15,6 +15,7 @@ package com.vuvk.swinger.graphic.gui.menu;
 
 import com.vuvk.audiosystem.AudioSystem;
 import com.vuvk.swinger.Config;
+import com.vuvk.swinger.Game;
 import com.vuvk.swinger.SavedGame;
 import com.vuvk.swinger.audio.SoundBank;
 import com.vuvk.swinger.graphic.Fog;
@@ -193,6 +194,7 @@ public class Menu {
                                                   new Vector2(Renderer.HALF_WIDTH - 50, Renderer.HALF_HEIGHT + 96)),
                                          () -> {
                                              Config.mouseLook = !Config.mouseLook;
+                                             Game.getInstance().setShowCursor(!Config.mouseLook);
                                              updateOptionsSubMenu();
                                          } ));
         OPTIONS.addButton(new ButtonMenu(new Text(FontBank.FONT_MENU, "VSYNC          ON",

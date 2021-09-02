@@ -22,7 +22,7 @@ public class DesktopLauncher {
 
         System.setProperty("sun.java2d.opengl", (Config.useOpenGL) ? "True" : "False");
 
-        Game game = new Game();
+        Game game = Game.getInstance();
         game.gameLoop();
     }
 }

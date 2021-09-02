@@ -13,10 +13,6 @@
 */
 package com.vuvk.swinger.input;
 
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
-import java.util.Scanner;
-
 import com.vuvk.swinger.Config;
 import com.vuvk.swinger.Engine;
 import com.vuvk.swinger.Game;
@@ -27,15 +23,18 @@ import com.vuvk.swinger.graphic.gui.menu.Menu;
 import com.vuvk.swinger.objects.mortals.Player;
 import com.vuvk.swinger.res.Map;
 import com.vuvk.swinger.utils.Utils;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.util.Scanner;
 
 /**
  *
  * @author Anton "Vuvk" Shcherbatykh
  */
 public final class KeyboardManager extends KeyAdapter {
-    private static KeyboardManager instance = null;       
-    
-    private KeyboardManager () {}    
+    private static KeyboardManager instance = null;
+
+    private KeyboardManager () {}
 
     public static KeyboardManager getInstance() {
         if (instance == null) {
@@ -43,11 +42,11 @@ public final class KeyboardManager extends KeyAdapter {
         }
         return instance;
     }
-    
+
     @Override
     public void keyReleased(final KeyEvent e) {
         Player player = Player.getInstance();
-        
+
         if (!Config.console) {
             switch (e.getKeyCode()) {
                 case KeyEvent.VK_UP:
@@ -58,7 +57,7 @@ public final class KeyboardManager extends KeyAdapter {
                     break;
 
                 case KeyEvent.VK_DOWN:
-                case KeyEvent.VK_S : 
+                case KeyEvent.VK_S :
                     if (Map.active && player.getHealth() > 0.0) {
                         player.setMoveB(false);
                     }
@@ -69,16 +68,16 @@ public final class KeyboardManager extends KeyAdapter {
 
                 case KeyEvent.VK_LEFT : player.setRotL(false); break;
                 case KeyEvent.VK_RIGHT: player.setRotR(false); break;
-                
+
                 case KeyEvent.VK_1 : player.setWeaponInHand(0); break;
                 case KeyEvent.VK_2 : player.setWeaponInHand(1); break;
                 case KeyEvent.VK_3 : player.setWeaponInHand(2); break;
                 case KeyEvent.VK_4 : player.setWeaponInHand(3); break;
                 case KeyEvent.VK_5 : player.setWeaponInHand(4); break;
-                
+
                 case KeyEvent.VK_SPACE : player.openDoor(); break;
-                
-                case KeyEvent.VK_R : 
+
+                case KeyEvent.VK_R :
                     Config.draw = false;
                     Renderer.getInstance().stopRenderTasks();
 
@@ -87,9 +86,10 @@ public final class KeyboardManager extends KeyAdapter {
                     Config.draw = true;
                     Game.screenMsg.setMessage("LEVEL RESTARTED");
                     break;
-                
+
                 case KeyEvent.VK_M :
                     Config.mouseLook = !Config.mouseLook;
+                    Game.getInstance().setShowCursor(!Config.mouseLook);
                     Game.screenMsg.setMessage("MOUSELOOK " + ((Config.mouseLook) ? "ON" : "OFF"));
                     break;
 
@@ -125,7 +125,7 @@ public final class KeyboardManager extends KeyAdapter {
     public void keyPressed(final KeyEvent e) {
         Player player = Player.getInstance();
         int keycode = e.getKeyCode();
-        
+
         if (!Config.console) {
             switch (keycode) {
                 case KeyEvent.VK_UP:
@@ -142,7 +142,7 @@ public final class KeyboardManager extends KeyAdapter {
                     break;
 
                 case KeyEvent.VK_DOWN:
-                case KeyEvent.VK_S : 
+                case KeyEvent.VK_S :
                     if (Map.isLoaded() &&
                         Map.active     &&
                         player.getHealth() > 0.0
@@ -236,7 +236,7 @@ public final class KeyboardManager extends KeyAdapter {
                                 case "quit" :
                                     Config.QUIT = true;
                                     break;
-                                        
+
                                 case "interlacing" :
                                     Config.interlacing = (scanCommand.hasNextInt() && scanCommand.nextInt() == 1);
                                     Config.init();
