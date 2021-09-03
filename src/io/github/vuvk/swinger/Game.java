@@ -369,144 +369,141 @@ public class Game extends Frame {
                 playerAmmoText.setVisible(false);
             }
 
-            if (Map.isLoaded()) {
+            if (Map.isLoaded() && Map.isActive()) {
                 Player player = Player.getInstance();
                 Camera playerCamera = player.getCamera();
 
-                if (Map.isActive()) {
+                angle += Engine.getDeltaTime();
+                if (angle >= 360.0) {
+                    angle -= 360.0;
+                }
 
-                    angle += Engine.getDeltaTime();
-                    if (angle >= 360.0) {
-                        angle -= 360.0;
-                    }
-
-                    double x = 11.5 + 2.0 * Math.cos(angle),
-                           y =  4.5 + 2.0 * Math.sin(angle);
+                double x = 11.5 + 2.0 * Math.cos(angle),
+                       y =  4.5 + 2.0 * Math.sin(angle);
 
 //                    Map.light1.setPos(new Vector3(x, y));
 
 
-                    x = 11.5 + Math.cos(-angle);
-                    y =  4.5 + Math.sin(-angle);
+                x = 11.5 + Math.cos(-angle);
+                y =  4.5 + Math.sin(-angle);
 
 //                    Map.light2.setPos(new Vector3(x, y));
 
-                    /*batch.begin();
-                    if (lastFrame != null) {
-                        batch.draw(lastFrame, 0, 0, Config.WIDTH + 1, Config.HEIGHT + 1);
-                    }
-                    batch.end();*/
+                /*batch.begin();
+                if (lastFrame != null) {
+                    batch.draw(lastFrame, 0, 0, Config.WIDTH + 1, Config.HEIGHT + 1);
+                }
+                batch.end();*/
 
-                    if (player.getHealth() > 0.0) {
-                        LightSource.updateAll();
-                        Material.updateAll();
-                        Sprite.updateAll();
-                        Door.updateAll();
-                        Mortal.updateAll();
+                if (player.getHealth() > 0.0) {
+                    LightSource.updateAll();
+                    Material.updateAll();
+                    Sprite.updateAll();
+                    Door.updateAll();
+                    Mortal.updateAll();
 /*
-                        Model.updateAll();
-                        for (Model mdl : Model.LIB) {
-                            mdl.rotateX(Engine.getDeltaTime());
-                        }
+                    Model.updateAll();
+                    for (Model mdl : Model.LIB) {
+                        mdl.rotateX(Engine.getDeltaTime());
+                    }
 */
-                        Sky.getInstance().update();
+                    Sky.getInstance().update();
 
-                        renderer.setActiveCamera(playerCamera);
+                    renderer.setActiveCamera(playerCamera);
 
-                        // set viewport
-                        //Gdx.gl.glViewport((int) viewport.x,     (int) viewport.y,
-                        //                  (int) viewport.width, (int) viewport.height);
+                    // set viewport
+                    //Gdx.gl.glViewport((int) viewport.x,     (int) viewport.y,
+                    //                  (int) viewport.width, (int) viewport.height);
 
-                        //Renderer.canRender = false;
-                        //Renderer.SCREEN.draw(Renderer.getInstance().SCREEN_RASTER, 0, 0);
+                    //Renderer.canRender = false;
+                    //Renderer.SCREEN.draw(Renderer.getInstance().SCREEN_RASTER, 0, 0);
 
-                        lastFrame = renderer.getFrame();
-                        //batch.begin();
-                        //batch.draw(renderer.getFrame(), 0, 0, Config.WIDTH + 1, Config.HEIGHT + 1);
-                        //Renderer.canRender = true;
+                    lastFrame = renderer.getFrame();
+                    //batch.begin();
+                    //batch.draw(renderer.getFrame(), 0, 0, Config.WIDTH + 1, Config.HEIGHT + 1);
+                    //Renderer.canRender = true;
 
-                        // GUI
-                        if (!Config.STEP_BY_STEP_RENDERING) {
-                            Vector2 pos = player.getPos();
-                            playerPosText.setMessage(String.format(Locale.ENGLISH, "PLAYER POS: %.2f %.2f", pos.x, pos.y));
+                    // GUI
+                    if (!Config.STEP_BY_STEP_RENDERING) {
+                        Vector2 pos = player.getPos();
+                        playerPosText.setMessage(String.format(Locale.ENGLISH, "PLAYER POS: %.2f %.2f", pos.x, pos.y));
 
-                            playerHpText.setLocation(new Vector2(16, Config.HEIGHT - 32));
-                            playerHpText.setMessage(String.format(Locale.ENGLISH, "HP %.0f", player.getHealth()));
+                        playerHpText.setLocation(new Vector2(16, Config.HEIGHT - 32));
+                        playerHpText.setMessage(String.format(Locale.ENGLISH, "HP %.0f", player.getHealth()));
 
-                            String ammoText;
-                            AmmoType ammoType = player.getWeaponInHand().getAmmoType();
-                            switch (ammoType) {
-                                default:
-                                case NOTHING:
-                                    ammoText = "";
-                                    break;
-                                case PISTOL:
-                                case SHOTGUN:
-                                case ROCKET:
-                                    ammoText = "AMMO " + AmmoPack.PACK.get(ammoType);
-                                    break;
-                            }
-                            playerAmmoText.setLocation(new Vector2(16, Config.HEIGHT - 56));
-                            playerAmmoText.setMessage(ammoText);
+                        String ammoText;
+                        AmmoType ammoType = player.getWeaponInHand().getAmmoType();
+                        switch (ammoType) {
+                            default:
+                            case NOTHING:
+                                ammoText = "";
+                                break;
+                            case PISTOL:
+                            case SHOTGUN:
+                            case ROCKET:
+                                ammoText = "AMMO " + AmmoPack.PACK.get(ammoType);
+                                break;
+                        }
+                        playerAmmoText.setLocation(new Vector2(16, Config.HEIGHT - 56));
+                        playerAmmoText.setMessage(ammoText);
 
-                            playerPosText.setVisible(true);
-                            playerHpText.setVisible(true);
-                            playerAmmoText.setVisible(true);
+                        playerPosText.setVisible(true);
+                        playerHpText.setVisible(true);
+                        playerAmmoText.setVisible(true);
 
-                            // crosshair
-                            lastFrame.getGraphics().drawImage(
-                                GuiBank.IMG_CROSSHAIR,
-                                (Config.HALF_WIDTH ) - ((GuiBank.IMG_CROSSHAIR.getWidth())  >> 1),
-                                (Config.HALF_HEIGHT) - ((GuiBank.IMG_CROSSHAIR.getHeight()) >> 1),
-                                null
-                            );
+                        // crosshair
+                        lastFrame.getGraphics().drawImage(
+                            GuiBank.IMG_CROSSHAIR,
+                            (Config.HALF_WIDTH ) - ((GuiBank.IMG_CROSSHAIR.getWidth())  >> 1),
+                            (Config.HALF_HEIGHT) - ((GuiBank.IMG_CROSSHAIR.getHeight()) >> 1),
+                            null
+                        );
+                    }
+
+                    /*
+                    if (Config.console) {
+                        batch.begin();
+                        batch.draw(consoleBackground, 0, 0);
+                        font.draw(batch, Config.consoleCommand, 10, 25);
+                        batch.end();
+                    }*/
+
+                    // вращение мышкой и фиксация курсора в центре окна
+                    if (Config.mouseLook) {
+                        double deltaX = MouseManager.getDeltaX();
+                        if (deltaX != 0.0) {
+                            playerCamera.rotate(Math.toRadians(deltaX * Player.MOUSE_ROT_SPEED * Engine.getDeltaTime()));
                         }
 
-                        /*
-                        if (Config.console) {
-                            batch.begin();
-                            batch.draw(consoleBackground, 0, 0);
-                            font.draw(batch, Config.consoleCommand, 10, 25);
-                            batch.end();
+                        /*if (deltaX < 0.0) {
+                            player.setRotL(false);
+                            player.setRotR(true);
+                        } else if (deltaX > 0.0) {
+                            player.setRotL(true);
+                            player.setRotR(false);
+                        } else {
+                            player.setRotL(false);
+                            player.setRotR(false);
                         }*/
 
-                        // вращение мышкой и фиксация курсора в центре окна
-                        if (Config.mouseLook) {
-                            double deltaX = MouseManager.getDeltaX();
-                            if (deltaX != 0.0) {
-                                playerCamera.rotate(Math.toRadians(deltaX * Player.MOUSE_ROT_SPEED * Engine.getDeltaTime()));
-                            }
-
-                            /*if (deltaX < 0.0) {
-                                player.setRotL(false);
-                                player.setRotR(true);
-                            } else if (deltaX > 0.0) {
-                                player.setRotL(true);
-                                player.setRotR(false);
-                            } else {
-                                player.setRotL(false);
-                                player.setRotR(false);
-                            }*/
-
-                            if (getInstance().isFocused()) {
-                                MouseManager.setLocation(windowCenter);
-                            }
+                        if (getInstance().isFocused()) {
+                            MouseManager.setLocation(windowCenter);
                         }
-
-                        //batch.end();
-
-                        //Gdx.gl.glViewport(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-                        /*stage.getViewport().apply();
-                        stage.draw();
-                        stage.act();*/
                     }
-                    // игрок умер
-                    else {
-                        for (int i = 0; i < ScreenBlood.drops.length; ++i) {
-                            ScreenBlood.drops[i].update();
-                            Vector2 pos = ScreenBlood.drops[i].getPos();
-                            lastFrame.getGraphics().drawImage(ScreenBlood.DROP, (int)pos.x, (int)pos.y, null);
-                        }
+
+                    //batch.end();
+
+                    //Gdx.gl.glViewport(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+                    /*stage.getViewport().apply();
+                    stage.draw();
+                    stage.act();*/
+                }
+                // игрок умер
+                else {
+                    for (int i = 0; i < ScreenBlood.drops.length; ++i) {
+                        ScreenBlood.drops[i].update();
+                        Vector2 pos = ScreenBlood.drops[i].getPos();
+                        lastFrame.getGraphics().drawImage(ScreenBlood.DROP, (int)pos.x, (int)pos.y, null);
                     }
                 }
             }
