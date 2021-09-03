@@ -32,7 +32,7 @@ This is real raycasting (software rendering), not OpenGL or Direct3D, or Vulkan,
 
 -----
 
-Demo Videos
+Demo
 -----
 [![WIP 200304](https://raw.githubusercontent.com/vuvk/swinger-engine/master/screenshots/video_preview/menu_update.png)](https://youtu.be/enT9bPH1cO8)
 [![WIP 200124](https://raw.githubusercontent.com/vuvk/swinger-engine/master/screenshots/video_preview/load_save_game.png)](https://youtu.be/ePYd1Csw_f4)
