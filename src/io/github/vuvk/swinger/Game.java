@@ -373,7 +373,7 @@ public class Game extends Frame {
                 Player player = Player.getInstance();
                 Camera playerCamera = player.getCamera();
 
-                if (Map.active) {
+                if (Map.isActive()) {
 
                     angle += Engine.getDeltaTime();
                     if (angle >= 360.0) {

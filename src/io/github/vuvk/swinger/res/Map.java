@@ -74,10 +74,10 @@ public final class Map {
     public final static boolean[][] SOLIDS = new boolean[WIDTH][HEIGHT];
     public final static boolean[][] VISIBLE_CELLS = new boolean[WIDTH][HEIGHT];
 
-    // уровень активен?
-    public static boolean active = false;
     // уровень загружен?
     private static boolean loaded = false;
+    // уровень активен?
+    private static boolean active = false;
 
     private Map() {}
 
@@ -880,6 +880,10 @@ public final class Map {
 
     public static void setLoaded(boolean loaded) {
         Map.loaded = loaded;
+    }
+
+    public static void setActivated(boolean active) {
+        Map.active = active;
     }
 
     public static void reset() {

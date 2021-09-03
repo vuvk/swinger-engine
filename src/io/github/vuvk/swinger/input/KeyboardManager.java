@@ -44,38 +44,45 @@ public final class KeyboardManager extends KeyAdapter {
 
     @Override
     public void keyReleased(final KeyEvent e) {
-        Player player = Player.getInstance();
+        int keyCode = e.getKeyCode();
 
         if (!Config.console) {
-            switch (e.getKeyCode()) {
-                case KeyEvent.VK_UP:
-                case KeyEvent.VK_W :
-                    if (Map.active && player.getHealth() > 0.0) {
-                        player.setMoveF(false);
-                    }
-                    break;
+            // события только для игрока
+            if (Map.isLoaded() && Map.isActive()) {
+                Player player = Player.getInstance();
 
-                case KeyEvent.VK_DOWN:
-                case KeyEvent.VK_S :
-                    if (Map.active && player.getHealth() > 0.0) {
-                        player.setMoveB(false);
-                    }
-                    break;
+                switch (keyCode) {
+                    case KeyEvent.VK_UP:
+                    case KeyEvent.VK_W :
+                        if (player.getHealth() > 0.0) {
+                            player.setMoveF(false);
+                        }
+                        break;
 
-                case KeyEvent.VK_A : player.setMoveL(false); break;
-                case KeyEvent.VK_D : player.setMoveR(false); break;
+                    case KeyEvent.VK_DOWN:
+                    case KeyEvent.VK_S :
+                        if (player.getHealth() > 0.0) {
+                            player.setMoveB(false);
+                        }
+                        break;
 
-                case KeyEvent.VK_LEFT : player.setRotL(false); break;
-                case KeyEvent.VK_RIGHT: player.setRotR(false); break;
+                    case KeyEvent.VK_A : player.setMoveL(false); break;
+                    case KeyEvent.VK_D : player.setMoveR(false); break;
 
-                case KeyEvent.VK_1 : player.setWeaponInHand(0); break;
-                case KeyEvent.VK_2 : player.setWeaponInHand(1); break;
-                case KeyEvent.VK_3 : player.setWeaponInHand(2); break;
-                case KeyEvent.VK_4 : player.setWeaponInHand(3); break;
-                case KeyEvent.VK_5 : player.setWeaponInHand(4); break;
+                    case KeyEvent.VK_LEFT : player.setRotL(false); break;
+                    case KeyEvent.VK_RIGHT: player.setRotR(false); break;
 
-                case KeyEvent.VK_SPACE : player.openDoor(); break;
+                    case KeyEvent.VK_1 : player.setWeaponInHand(0); break;
+                    case KeyEvent.VK_2 : player.setWeaponInHand(1); break;
+                    case KeyEvent.VK_3 : player.setWeaponInHand(2); break;
+                    case KeyEvent.VK_4 : player.setWeaponInHand(3); break;
+                    case KeyEvent.VK_5 : player.setWeaponInHand(4); break;
 
+                    case KeyEvent.VK_SPACE : player.openDoor(); break;
+                }
+            }
+
+            switch (keyCode) {
                 case KeyEvent.VK_R :
                     Config.draw = false;
                     Renderer.getInstance().stopRenderTasks();
@@ -122,89 +129,87 @@ public final class KeyboardManager extends KeyAdapter {
 
     @Override
     public void keyPressed(final KeyEvent e) {
-        Player player = Player.getInstance();
-        int keycode = e.getKeyCode();
+        int keyCode = e.getKeyCode();
 
         if (!Config.console) {
-            switch (keycode) {
-                case KeyEvent.VK_UP:
-                case KeyEvent.VK_W :
-                    if (Map.isLoaded() &&
-                        Map.active     &&
-                        player.getHealth() > 0.0
-                       ) {
-                        player.setMoveF(true);
-                    }
-                    if (Menu.isActive()) {
+            // события только для игрока
+            if (Map.isLoaded() && Map.isActive()) {
+                Player player = Player.getInstance();
+
+                switch (keyCode) {
+                    case KeyEvent.VK_UP:
+                    case KeyEvent.VK_W :
+                        if (player.getHealth() > 0.0) {
+                            player.setMoveF(true);
+                        }
+                        break;
+
+                    case KeyEvent.VK_DOWN:
+                    case KeyEvent.VK_S :
+                        if (player.getHealth() > 0.0) {
+                            player.setMoveB(true);
+                        }
+                        break;
+
+                    case KeyEvent.VK_A :
+                        if (player.getHealth() > 0.0) {
+                            player.setMoveL(true);
+                        }
+                        break;
+
+                    case KeyEvent.VK_D :
+                        if (player.getHealth() > 0.0) {
+                            player.setMoveR(true);
+                        }
+                        break;
+
+                    case KeyEvent.VK_Q : player.getPos().z -= Engine.getDeltaTime() * 15; break;
+                    case KeyEvent.VK_Z : player.getPos().z += Engine.getDeltaTime() * 15; break;
+
+                    case KeyEvent.VK_LEFT :
+                        if (player.getHealth() > 0.0) {
+                            player.setRotL(true);
+                        }
+                        break;
+                    case KeyEvent.VK_RIGHT:
+                        if (player.getHealth() > 0.0) {
+                            player.setRotR(true);
+                        }
+                        break;
+
+                }
+            }
+
+            // события для меню
+            if (Menu.isActive()) {
+                switch (keyCode) {
+                    case KeyEvent.VK_UP:
+                    case KeyEvent.VK_W :
                         Menu.currentMenu.prev();
-                    }
-                    break;
+                        break;
 
-                case KeyEvent.VK_DOWN:
-                case KeyEvent.VK_S :
-                    if (Map.isLoaded() &&
-                        Map.active     &&
-                        player.getHealth() > 0.0
-                       ) {
-                        player.setMoveB(true);
-                    }
-                    if (Menu.isActive()) {
+                    case KeyEvent.VK_DOWN:
+                    case KeyEvent.VK_S :
                         Menu.currentMenu.next();
-                    }
-                    break;
+                        break;
 
-                case KeyEvent.VK_A :
-                    if (Map.isLoaded() &&
-                        Map.active     &&
-                        player.getHealth() > 0.0
-                       ) {
-                        player.setMoveL(true);
-                    }
-                    if (Menu.isActive()) {
+                    case KeyEvent.VK_A :
                         Menu.currentMenu.getCurrentButton().left();
-                    }
-                    break;
-                case KeyEvent.VK_D :
-                    if (Map.isLoaded() &&
-                        Map.active     &&
-                        player.getHealth() > 0.0
-                       ) {
-                        player.setMoveR(true);
-                    }
-                    if (Menu.isActive()) {
+                        break;
+                    case KeyEvent.VK_D :
                         Menu.currentMenu.getCurrentButton().right();
-                    }
-                    break;
+                        break;
 
-                case KeyEvent.VK_Q : player.getPos().z -= Engine.getDeltaTime() * 15; break;
-                case KeyEvent.VK_Z : player.getPos().z += Engine.getDeltaTime() * 15; break;
-
-                case KeyEvent.VK_LEFT :
-                    if (Map.isLoaded() &&
-                        Map.active     &&
-                        player.getHealth() > 0.0
-                       ) {
-                        player.setRotL(true);
-                    }
-                    if (Menu.isActive()) {
+                    case KeyEvent.VK_LEFT :
                         Menu.currentMenu.getCurrentButton().left();
-                    }
-                    break;
-                case KeyEvent.VK_RIGHT:
-                    if (Map.isLoaded() &&
-                        Map.active     &&
-                        player.getHealth() > 0.0
-                       ) {
-                        player.setRotR(true);
-                    }
-                    if (Menu.isActive()) {
+                        break;
+                    case KeyEvent.VK_RIGHT:
                         Menu.currentMenu.getCurrentButton().right();
-                    }
-                    break;
-
+                        break;
+                }
             }
         } else {
-            switch (keycode) {
+            switch (keyCode) {
                 case KeyEvent.VK_BACK_SPACE :
                     if (Config.consoleCommand.length() > 0) {
                         char[] cmd = Config.consoleCommand.toCharArray();
@@ -223,7 +228,7 @@ public final class KeyboardManager extends KeyAdapter {
             }
         }
 
-        switch (keycode) {
+        switch (keyCode) {
             case KeyEvent.VK_ENTER :
                 if (!Menu.isActive()) {
                     if (Config.console) {
@@ -361,14 +366,18 @@ public final class KeyboardManager extends KeyAdapter {
                     Menu.activate();
                     //Map.active = false;
 
-                    if (player.getHealth() > 0.0) {
-                        player.setMoveB(false);
-                        player.setMoveF(false);
-                        player.setMoveL(false);
-                        player.setMoveR(false);
+                    if (Map.isLoaded()) {
+                        Player player = Player.getInstance();
+                        
+                        if (player.getHealth() > 0.0) {
+                            player.setMoveB(false);
+                            player.setMoveF(false);
+                            player.setMoveL(false);
+                            player.setMoveR(false);
 
-                        player.setRotL(false);
-                        player.setRotR(false);
+                            player.setRotL(false);
+                            player.setRotR(false);
+                        }
                     }
                 }
 

@@ -83,7 +83,7 @@ public class SavedGame implements Serializable {
     }
 
     public void saveToFile(String path) {
-        Map.active  = false;
+        Map.setActivated(false);
         Config.draw = false;
 
         textureWalls  = TextureBank.getWalls();
@@ -116,7 +116,7 @@ public class SavedGame implements Serializable {
            LOGGER.log(Level.SEVERE, null, ex);
         }
 
-        Map.active  = true;
+        Map.setActivated(true);
         Config.draw = true;
     }
 
@@ -188,7 +188,7 @@ public class SavedGame implements Serializable {
             LightSource.deleteAll();
             LightSource.LIB.addAll(Arrays.asList(game.lightSourcesLib));
 
-            Map.active = true;
+            Map.setActivated(true);
             Config.draw = true;
         } catch (ClassNotFoundException | IOException ex) {
             LOGGER.log(Level.SEVERE, null, ex);
