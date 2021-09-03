@@ -2,7 +2,6 @@ About
 -----
 swinger engine is a Raycasting Game Engine written in Java, which use AWT ("Swing" early) for graphics output and input listening of keyboard/mouse events.
 
------
 Features
 -----
 - multi-threaded rendering;
@@ -29,8 +28,6 @@ Features
 - save/load game.
 
 This is **real** raycasting (software rendering), not OpenGL or Direct3D, or Vulkan, or... you understand :))
-
------
 
 Demo
 -----
