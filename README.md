@@ -1,6 +1,6 @@
 About
 -----
-swinger engine is a Raycasting Game Engine written in Java, which use AWT ("Swing" early) for graphics output.
+swinger engine is a Raycasting Game Engine written in Java, which use AWT ("Swing" early) for graphics output and input listening of keyboard/mouse events.
 
 -----
 Features
@@ -28,7 +28,7 @@ Features
 - GUI;
 - save/load game.
 
-This is real raycasting (software rendering), not OpenGL or Direct3D, or Vulkan, or... you understand :))
+This is **real** raycasting (software rendering), not OpenGL or Direct3D, or Vulkan, or... you understand :))
 
 -----
 
@@ -42,7 +42,15 @@ Build
 -----
 $ ant clean jar
 
+Where can I download release?
+-----
+See [**Releases**](https://github.com/vuvk/swinger-engine/releases) section. 
+
+Can I help?
+-----
+Why not? You can add [**issues**](https://github.com/vuvk/swinger-engine/issues), or fork it project and add [**pull requests**](https://github.com/vuvk/swinger-engine/pulls).
+
 License
--------
+-----
 swinger engine is licensed under the GNU GPL 3.0 license.  A copy of the license can
 be found in the header of every source file as well as in the LICENSE file.
