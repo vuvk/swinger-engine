@@ -50,5 +50,5 @@ Why not? You can add [**issues**](https://github.com/vuvk/swinger-engine/issues)
 
 License
 -----
-swinger engine is licensed under the GNU GPL 3.0 license.  A copy of the license can
-be found in the header of every source file as well as in the LICENSE file.
+swinger engine is licensed under the **GNU GPL 3.0 license**.  A copy of the license can
+be found in the header of every source file as well as in the [**LICENSE**](https://github.com/vuvk/swinger-engine/blob/master/LICENSE) file.
