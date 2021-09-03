@@ -32,17 +32,11 @@ This is real raycasting (software rendering), not OpenGL or Direct3D, or Vulkan,
 
 -----
 
-Demo
+Demo Videos
 -----
-https://youtu.be/enT9bPH1cO8
-
-https://youtu.be/ePYd1Csw_f4
-
-https://youtu.be/5PZlaCT3xt4
-
-https://youtu.be/n4O6d5lWdYY
-
-https://youtu.be/CHHVQwcCkdE
+[![WIP 200304](https://raw.githubusercontent.com/vuvk/swinger-engine/master/screenshots/video_preview/menu_update.png)](https://youtu.be/enT9bPH1cO8)
+[![WIP 200124](https://raw.githubusercontent.com/vuvk/swinger-engine/master/screenshots/video_preview/load_save_game.png)](https://youtu.be/ePYd1Csw_f4)
+[![WIP 210210](https://raw.githubusercontent.com/vuvk/swinger-engine/master/screenshots/video_preview/light_and_fog.png)](https://youtu.be/CHHVQwcCkdE)
 
 Build
 -----
