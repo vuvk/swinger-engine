@@ -1,6 +1,5 @@
-About
------
-swinger engine is a Raycasting Game Engine written in Java, which use AWT ("Swing" early) for graphics output and input listening of keyboard/mouse events.
+# About
+**swinger engine** is a Raycasting Game Engine written in Java, which use **AWT** ("Swing" early) for graphics output and input listening of keyboard/mouse events.
 
 Features
 -----
@@ -27,7 +26,7 @@ Features
 - GUI;
 - save/load game.
 
-This is **real** raycasting (software rendering), not OpenGL or Direct3D, or Vulkan, or... you understand :))
+This is **REAL** raycasting (software rendering), not OpenGL or Direct3D, or Vulkan, or... you understand :))
 
 Demo
 -----
@@ -37,7 +36,9 @@ Demo
 
 Build
 -----
+```bash
 $ ant clean jar
+```
 
 Where can I download release?
 -----
