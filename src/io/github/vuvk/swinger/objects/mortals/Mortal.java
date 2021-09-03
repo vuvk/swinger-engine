@@ -20,7 +20,6 @@ import io.github.vuvk.swinger.math.Vector3;
 import io.github.vuvk.swinger.objects.Object3D;
 import java.io.Serializable;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;
 
@@ -38,7 +37,7 @@ public abstract class Mortal extends Object3D implements Serializable {
     protected boolean live = false;
     protected final BoundingBox bb;
 
-    public Mortal(final Vector3 pos, double health, double radius) {
+    protected Mortal(final Vector3 pos, double health, double radius) {
         bb = new BoundingBox(pos, radius);
 
         setHealth(health);
@@ -60,18 +59,19 @@ public abstract class Mortal extends Object3D implements Serializable {
      */
     @Override
     public void destroy() {
-        synchronized (LIB) {
+        //synchronized (LIB) {
             LIB.remove(this);
-        }
+        //}
     }
 
     public static void updateAll() {
-        synchronized(LIB) {
+        //synchronized(LIB) {
             LIB.forEach(Mortal::update);
-        }
+        //}
     }
 
     public static void deleteAll() {
+        LIB.forEach(Mortal::destroy);
         LIB.clear();
     }
 
@@ -252,12 +252,7 @@ public abstract class Mortal extends Object3D implements Serializable {
      */
     public static Set<Mortal> whoIntersectSegment(final Segment segment, final Mortal whoIgnore) {
         Set<Mortal> mortals = whoIntersectSegment(segment);
-        for (Iterator<Mortal> it = mortals.iterator(); it.hasNext(); ) {
-            Mortal mortal = it.next();
-            if (mortal.equals(whoIgnore)) {
-                it.remove();
-            }
-        }
+        mortals.remove(whoIgnore);
         return mortals;
     }
 

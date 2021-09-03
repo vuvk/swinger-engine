@@ -31,8 +31,8 @@ import java.util.concurrent.CopyOnWriteArraySet;
  * @author Anton "Vuvk" Shcherbatykh
  */
 public class Door extends TexturedSegment implements Serializable {
-    private Sound openSound;
-    private Sound closeSound;
+    transient private Sound openSound;
+    transient private Sound closeSound;
 
     //private int side;
     /** открытая позиция */

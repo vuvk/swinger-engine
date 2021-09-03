@@ -42,8 +42,8 @@ public abstract class Enemy extends Breakable implements Serializable {
     private Material atk;
     private Material walk;
 
-    protected Sound[] alarmSounds;
-    protected Sound[] attackSounds;
+    transient protected Sound[] alarmSounds;
+    transient protected Sound[] attackSounds;
 
 //    private Vector2 viewVector = new Vector2(1, 0);
 //    private Sprite sprite;

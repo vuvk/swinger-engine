@@ -72,6 +72,15 @@ public final class Player extends Mortal implements Serializable {
     transient private Sound[] soundsNeadKey;
     transient private Sound soundDie;
 
+    /**
+     * Пометить объект на удаление
+     */
+    @Override
+    public void destroy() {
+        super.destroy();
+        instance = null;
+    }
+
     public void finalize() throws Throwable {
         for (Sound snd : soundsNeadKey) {
             snd.dispose();
@@ -449,24 +458,23 @@ public final class Player extends Mortal implements Serializable {
     }
 
     public static Player getInstance() {
-        if (instance == null) {
-            instance = new Player(new Vector3(20.5, 4.75, 0.0));
-        }
-        return instance;
+        return (instance != null) ? instance : new Player(new Vector3(20.5, 4.75, 0.0));
     }
 
     public static void setInstance(Player instance) {
-        deleteInstance();
+        if (instance != null) {
+            instance.destroy();
+        }
         Player.instance = instance;
     }
-
+/*
     public static void deleteInstance() {
         if (instance != null) {
             instance.destroy();
             instance = null;
         }
     }
-
+*/
     private Player(Vector3 pos) {
         super(pos, HEALTH, RADIUS);
         soundDie = AudioSystem.newSound(SoundBank.SOUND_BUFFER_PLAYER_DIE);
@@ -480,5 +488,7 @@ public final class Player extends Mortal implements Serializable {
         createWeaponsInHand();
         camera.setPos(pos);
         camera.rotate(Math.toRadians(-90));
+
+        instance = this;
     }
 }

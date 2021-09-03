@@ -34,7 +34,6 @@ import io.github.vuvk.swinger.graphic.weapon_in_hand.ShotgunInHand;
 import io.github.vuvk.swinger.input.KeyboardManager;
 import io.github.vuvk.swinger.input.MouseManager;
 import io.github.vuvk.swinger.math.Vector2;
-import io.github.vuvk.swinger.math.Vector3;
 import io.github.vuvk.swinger.objects.Camera;
 import io.github.vuvk.swinger.objects.Door;
 import io.github.vuvk.swinger.objects.LightSource;
@@ -384,13 +383,13 @@ public class Game extends Frame {
                     double x = 11.5 + 2.0 * Math.cos(angle),
                            y =  4.5 + 2.0 * Math.sin(angle);
 
-                    Map.light1.setPos(new Vector3(x, y));
+//                    Map.light1.setPos(new Vector3(x, y));
 
 
                     x = 11.5 + Math.cos(-angle);
                     y =  4.5 + Math.sin(-angle);
 
-                    Map.light2.setPos(new Vector3(x, y));
+//                    Map.light2.setPos(new Vector3(x, y));
 
                     /*batch.begin();
                     if (lastFrame != null) {
@@ -489,7 +488,9 @@ public class Game extends Frame {
                                 player.setRotR(false);
                             }*/
 
-                            MouseManager.setLocation(windowCenter);
+                            if (getInstance().isFocused()) {
+                                MouseManager.setLocation(windowCenter);
+                            }
                         }
 
                         //batch.end();

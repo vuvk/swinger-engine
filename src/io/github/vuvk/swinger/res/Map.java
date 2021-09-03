@@ -37,7 +37,6 @@ import io.github.vuvk.swinger.objects.items.Clip;
 import io.github.vuvk.swinger.objects.items.Key;
 import io.github.vuvk.swinger.objects.items.MedKit;
 import io.github.vuvk.swinger.objects.mortals.Mortal;
-import io.github.vuvk.swinger.objects.mortals.Player;
 import io.github.vuvk.swinger.objects.mortals.enemy.Breakable;
 import io.github.vuvk.swinger.objects.mortals.enemy.Guard;
 import io.github.vuvk.swinger.objects.mortals.enemy.GuardRocketeer;
@@ -897,6 +896,7 @@ public final class Map {
 
         LightSource.deleteAll();
         Door.deleteAll();
+        //Player.deleteInstance();
         Mortal.deleteAll();
         Sprite.deleteAll();
         Material.deleteAll();
@@ -904,7 +904,6 @@ public final class Map {
         MaterialBank.deleteBank();
         Mesh.deleteAll();
         Model.deleteAll();
-        Player.deleteInstance();
 
         System.gc();
     }

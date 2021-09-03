@@ -80,6 +80,12 @@ public class SavedGame implements Serializable {
 
 
     public SavedGame() {
+    }
+
+    public void saveToFile(String path) {
+        Map.active  = false;
+        Config.draw = false;
+
         textureWalls  = TextureBank.getWalls();
         materialsBank = MaterialBank.getBank();
         materialsLib  = Material.getLib();
@@ -101,11 +107,6 @@ public class SavedGame implements Serializable {
         mapWallsMaterialsMap = Map.WALLS_MATERIALS_MAP;
 
         ammoPack = AmmoPack.PACK;
-    }
-
-    public void saveToFile(String path) {
-        Map.active  = false;
-        Config.draw = false;
 
         try (FileOutputStream fileOutputStream = new FileOutputStream(path)) {
             ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream);
@@ -184,8 +185,8 @@ public class SavedGame implements Serializable {
             AmmoPack.PACK.clear();
             AmmoPack.PACK.putAll(game.ammoPack);
 
-            LightSource.LIB.clear();
-            LightSource.LIB.addAll(Arrays.asList(lightSourcesLib));
+            LightSource.deleteAll();
+            LightSource.LIB.addAll(Arrays.asList(game.lightSourcesLib));
 
             Map.active = true;
             Config.draw = true;

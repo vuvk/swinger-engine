@@ -32,8 +32,8 @@ public class Breakable extends Mortal implements Serializable {
     protected Material die;
     protected Material dead;
 
-    protected Sound[] painSounds;
-    protected Sound[] dieSounds;
+    transient protected Sound[] painSounds;
+    transient protected Sound[] dieSounds;
 
     protected Vector2 viewVector = new Vector2(1, 0);
     protected Sprite sprite;
