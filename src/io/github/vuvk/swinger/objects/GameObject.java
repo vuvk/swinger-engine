@@ -41,12 +41,7 @@ public abstract class GameObject implements Serializable {
         delayForDelete = delay;
     }
 
-    // почему так? Потому что в Java нельзя вызвать метод супер.супер.класса
     public void update() {
-        updateDefferedDelete();
-    }
-
-    protected void updateDefferedDelete() {
         if (deferredDelete) {
             if (delayForDelete > 0.0) {
                 delayForDelete -= Engine.getDeltaTime();

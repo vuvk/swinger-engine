@@ -1,5 +1,5 @@
 /**
-    Copyright (C) 2019-2020 Anton "Vuvk" Shcherbatykh <vuvk69@gmail.com>
+    Copyright (C) 2019-2021 Anton "Vuvk" Shcherbatykh <vuvk69@gmail.com>
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
@@ -20,7 +20,6 @@ import io.github.vuvk.swinger.math.Ray;
 import io.github.vuvk.swinger.math.Vector2;
 import io.github.vuvk.swinger.math.Vector3;
 import io.github.vuvk.swinger.objects.LightSource;
-import io.github.vuvk.swinger.objects.Sprite;
 import io.github.vuvk.swinger.objects.mortals.Mortal;
 import io.github.vuvk.swinger.objects.mortals.Player;
 import io.github.vuvk.swinger.res.Map;
@@ -28,6 +27,7 @@ import io.github.vuvk.swinger.res.Material;
 import java.awt.Color;
 import java.io.Serializable;
 import java.util.logging.Logger;
+    
 /**
  *
  * @author Anton "Vuvk" Shcherbatykh
@@ -111,6 +111,8 @@ public abstract class Enemy extends Breakable implements Serializable {
 
     @Override
     public void setState(final EnemyState state) {
+        super.setState(state);
+        
         flashCreated = false; // не было создано вспышки от выстрела
         /*prevState = this.state;
         this.state = state;
@@ -118,7 +120,6 @@ public abstract class Enemy extends Breakable implements Serializable {
         stateDelay = 0.0;*/
         shootDelay = 0.0;
         //frameDelay = 0.0;
-        super.setState(state);
         switch (state) {
             /*case IDLE:
                 sprite.duplicate(idle);
@@ -336,8 +337,7 @@ public abstract class Enemy extends Breakable implements Serializable {
 
     @Override
     public void update() {
-        // прям грязный хак, но надо вызвать update от GameObject
-        super.updateDefferedDelete();
+        super.update();
 
         float x = (float) getPos().x,
               y = (float) getPos().y,
@@ -348,50 +348,10 @@ public abstract class Enemy extends Breakable implements Serializable {
         for (Sound snd : painSounds  ) { snd.setRelative(false);  snd.setPosition(x, z, y); }
         for (Sound snd : dieSounds   ) { snd.setRelative(false);  snd.setPosition(x, z, y); }
 
-        // умирать?
-        if (health <= 0.0 && state != EnemyState.DIE) {
-            setState(EnemyState.DIE);
-        }
-
-        // обновляем кадр
-        /*if (state != EnemyState.PAIN) {
-            if (frameDelay < 1.0) {
-                frameDelay += Renderer.getDeltaTime() * 8;
-            } else {
-                frameDelay -= 1.0;
-                ++curFrame;
-
-                if (curFrame >= curAnim.length) {
-                    // если он умирал, то создать дохлый труп
-                    if (state == EnemyState.DIE) {
-                        new Sprite(dead, pos);
-                        FOR_DELETE_FROM_LIB.add(this);
-                        return;
-                    } else {
-                        curFrame = 0;
-                    }
-                }
-
-                // передаем кадры углов поворота
-                sprite.setFrames(curAnim[curFrame]);
-            }
-        }*/
-
-        if (state == EnemyState.DIE) {
-            if (!sprite.isAnimate()) {
-                destroy();
-                new Sprite(dead, pos);
-            }
-            return;
-        }
-
         // игрок в зоне видимости?
         boolean playerInFov = isPlayerInFov();
         // Игрок на линии и не пересекается ничем?
         boolean playerInLine = isPlayerInLine();
-
-        // обновляем состояние
-        stateDelay += Engine.getDeltaTime();
 
         // если ещё не видел, то проверить не заметил ли
         if (!noticed) {
@@ -404,11 +364,7 @@ public abstract class Enemy extends Breakable implements Serializable {
         double angleToPlayer = Math.toDegrees(Math.atan2(plPos.y - pos.y, plPos.x - pos.x));
         double distanceToPlayer = pos.distance(plPos);
 
-        if (state == EnemyState.PAIN) {
-            if (stateDelay >= 0.25) {
-                setState(prevState);
-            }
-        } else {
+        if (state != EnemyState.PAIN) {
             if (stateDelay < 3.0) {
                 // стоит
                 if (state == EnemyState.IDLE) {
@@ -461,19 +417,7 @@ public abstract class Enemy extends Breakable implements Serializable {
                 }
             }
         }
-        /*
-        if (stateDelay < 3.0) {
-            stateDelay += Renderer.getDeltaTime();
-        } else {
-            stateDelay = 0.0;
-            if (state == EnemyState.IDLE) {
-                rotate(Math.random() * 360.0);
-                setState(EnemyState.WALK);
-            } else {
-                setState(EnemyState.IDLE);
-            }
-        }*/
-
+        
         if (state == EnemyState.WALK) {
             double moveSpeed = Engine.getDeltaTime();
             if (moveSpeed > radius) {

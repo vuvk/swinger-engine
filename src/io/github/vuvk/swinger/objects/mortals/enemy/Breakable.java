@@ -1,5 +1,5 @@
 /**
-    Copyright (C) 2019-2020 Anton "Vuvk" Shcherbatykh <vuvk69@gmail.com>
+    Copyright (C) 2019-2021 Anton "Vuvk" Shcherbatykh <vuvk69@gmail.com>
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
@@ -22,6 +22,7 @@ import io.github.vuvk.swinger.objects.Sprite;
 import io.github.vuvk.swinger.objects.mortals.Mortal;
 import io.github.vuvk.swinger.res.Material;
 import java.io.Serializable;
+
 /**
  *
  * @author Anton "Vuvk" Shcherbatykh
@@ -39,7 +40,7 @@ public class Breakable extends Mortal implements Serializable {
     protected Sprite sprite;
 
     protected double stateDelay = 0.0;
-    protected EnemyState state     = EnemyState.IDLE;
+    protected EnemyState state  = EnemyState.IDLE;
     protected EnemyState prevState = state;
 
     public Breakable(
@@ -101,7 +102,7 @@ public class Breakable extends Mortal implements Serializable {
         dead = animation;
     }
 
-    public void setState(final EnemyState state) {
+    public void setState(final EnemyState state) {        
         prevState = this.state;
         this.state = state;
         stateDelay = 0.0;
@@ -250,10 +251,6 @@ public class Breakable extends Mortal implements Serializable {
         if (state == EnemyState.PAIN) {
             if (stateDelay >= 0.25) {
                 setState(prevState);
-            }
-        } else {
-            if (stateDelay < 3.0) {
-                setState(EnemyState.IDLE);
             }
         }
     }
