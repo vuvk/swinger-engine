@@ -14,6 +14,7 @@
 package io.github.vuvk.swinger.graphic;
 
 import io.github.vuvk.swinger.Config;
+import io.github.vuvk.swinger.Const;
 import io.github.vuvk.swinger.d3.Model;
 import io.github.vuvk.swinger.graphic.weapon_in_hand.WeaponInHand;
 import io.github.vuvk.swinger.math.Segment;
@@ -169,10 +170,10 @@ public final class Renderer/* extends JPanel*/ {
     }
 
     // ПОТОКИ РЕНДЕРИНГА
-    private final /*static*/ RenderTask[] RENDER_TASKS = new RenderTask[Config.THREADS_COUNT];
-    private final /*static*/ AntialiasingTask[] ANTIALIASING_TASKS = new AntialiasingTask[Config.THREADS_COUNT];
+    private final /*static*/ RenderTask[] RENDER_TASKS = new RenderTask[Const.THREADS_COUNT];
+    private final /*static*/ AntialiasingTask[] ANTIALIASING_TASKS = new AntialiasingTask[Const.THREADS_COUNT];
     //private /*final static*/ Thread[] RENDER_THREADS = new Thread[4];
-    private final /*static*/ ExecutorService EXECUTOR = Executors.newFixedThreadPool(Config.THREADS_COUNT);
+    private final /*static*/ ExecutorService EXECUTOR = Executors.newFixedThreadPool(Const.THREADS_COUNT);
     //private boolean[] render = {false,false,false,false};
     private final /*static*/ List<Sprite> SPRITES_FOR_DRAW = new ArrayList<>(50);
     private final /*static*/ List<Model> MODELS_FOR_DRAW = new ArrayList<>(50);
@@ -1249,7 +1250,7 @@ public final class Renderer/* extends JPanel*/ {
             if (pixelsInColumn < HEIGHT/* - 1*/) {
                 if (Config.drawSky) {
 
-                    if (Config.STEP_BY_STEP_RENDERING) {
+                    if (Const.STEP_BY_STEP_RENDERING) {
                         try {
                             Thread.sleep(5);
                         } catch (InterruptedException ex) {}
@@ -1757,7 +1758,7 @@ public final class Renderer/* extends JPanel*/ {
             fpsCounter = 0;
         }
 */
-        if (Config.STEP_BY_STEP_RENDERING) {
+        if (Const.STEP_BY_STEP_RENDERING) {
             try {
                 Thread.sleep(5000);
             } catch (InterruptedException ex) {}
@@ -1884,7 +1885,7 @@ public final class Renderer/* extends JPanel*/ {
         RENDER_TASKS[2] = new RenderTask("task3", HALF_WIDTH,            WIDTH - QUARTER_WIDTH);
         RENDER_TASKS[3] = new RenderTask("task4", WIDTH - QUARTER_WIDTH, WIDTH);
         */
-        int widthStep = WIDTH / Config.THREADS_COUNT;
+        int widthStep = WIDTH / Const.THREADS_COUNT;
         // стартовая точка обязана быть четной, поскольку иначе при
         // чересстрочном и многопоточном режиме может происходить
         // несовпадение четности и нечетности рисуемых столбцов
@@ -1892,18 +1893,18 @@ public final class Renderer/* extends JPanel*/ {
         if (widthStep % 2 != 0) {
             --widthStep;
         }
-        for (int i = 0; i < Config.THREADS_COUNT; ++i) {
+        for (int i = 0; i < Const.THREADS_COUNT; ++i) {
             int fromX = i * widthStep;
-            int toX = (i == Config.THREADS_COUNT - 1) ? WIDTH : fromX + widthStep;
+            int toX = (i == Const.THREADS_COUNT - 1) ? WIDTH : fromX + widthStep;
 
             RENDER_TASKS[i] = newRenderTask("render_task " + i, fromX, toX);
         }
 
-        int lengthStep = SCREEN_BUFFER.length / Config.THREADS_COUNT;
+        int lengthStep = SCREEN_BUFFER.length / Const.THREADS_COUNT;
         if (lengthStep % 2 != 0) {
             --lengthStep;
         }
-        for (int i = 0; i < Config.THREADS_COUNT; ++i) {
+        for (int i = 0; i < Const.THREADS_COUNT; ++i) {
             int fromX = i * lengthStep;
             /*if (i == 0) {
                 fromX += WIDTH;
@@ -1912,7 +1913,7 @@ public final class Renderer/* extends JPanel*/ {
             if (toX >= SCREEN_BUFFER.limit() - 1) {
                 toX = SCREEN_BUFFER.limit() - 1;
             }*/
-            int toX = (i == Config.THREADS_COUNT - 1) ? SCREEN_BUFFER.length - 1 : fromX + lengthStep;
+            int toX = (i == Const.THREADS_COUNT - 1) ? SCREEN_BUFFER.length - 1 : fromX + lengthStep;
 
             ANTIALIASING_TASKS[i] = newAntialiasingTask("antialiasing_task " + i, fromX, toX);
         }

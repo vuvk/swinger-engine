@@ -429,7 +429,7 @@ public class Game extends Frame {
                     //Renderer.canRender = true;
 
                     // GUI
-                    if (!Config.STEP_BY_STEP_RENDERING) {
+                    if (!Const.STEP_BY_STEP_RENDERING) {
                         Vector2 pos = player.getPos();
                         playerPosText.setMessage(String.format(Locale.ENGLISH, "PLAYER POS: %.2f %.2f", pos.x, pos.y));
 
