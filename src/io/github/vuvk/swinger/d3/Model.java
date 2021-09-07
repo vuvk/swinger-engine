@@ -120,14 +120,14 @@ public class Model extends Object3D implements Comparable<Model>, Serializable {
         final double y0 = y1 - y2;
         distance = x0*x0 + y0*y0; // sqrt not taken, unneeded
     }
-
+/*
     public static void updateAll() {
         synchronized(LIB) {
             LIB.forEach(Model::update);
         }
     }
-
-
+*/
+    
     public static Model[] getLib() {
         return LIB.toArray(new Model[LIB.size()]);
     }

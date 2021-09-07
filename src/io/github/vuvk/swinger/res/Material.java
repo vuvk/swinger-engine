@@ -219,10 +219,11 @@ public class Material extends Object3D implements Serializable {
             }
         }
     }
-
+/*
     public static void updateAll() {
         synchronized (LIB) {
             LIB.forEach(Material::update);
         }
     }
+*/
 }

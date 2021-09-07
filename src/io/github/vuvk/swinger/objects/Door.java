@@ -124,10 +124,6 @@ public class Door extends TexturedSegment implements Serializable {
         openSound.play();
     }
 
-    public static void deleteAll() {
-        LIB.clear();
-    }
-
     public void update() {
         if (isOpen()) {
             final double deltaTime = Engine.getDeltaTime();
@@ -186,9 +182,11 @@ public class Door extends TexturedSegment implements Serializable {
     }
 
     public static void updateAll() {
-        synchronized(LIB) {
-            LIB.forEach(Door::update);
-        }
+        LIB.forEach(Door::update);
+    }
+
+    public static void deleteAll() {
+        LIB.clear();
     }
 
     public static Door[] getLib() {

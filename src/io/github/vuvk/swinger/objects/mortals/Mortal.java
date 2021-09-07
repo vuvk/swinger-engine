@@ -62,18 +62,16 @@ public abstract class Mortal extends Object3D implements Serializable {
         super.destroy();
         LIB.remove(this);
     }
-
+/*
     public static void updateAll() {
-        //synchronized(LIB) {
-            LIB.forEach(Mortal::update);
-        //}
+        LIB.forEach(Mortal::update);
     }
-
+*/
     public static void deleteAll() {
         LIB.forEach(Mortal::destroy);
         LIB.clear();
     }
-
+    
     public double getHealth() {
         return health;
     }

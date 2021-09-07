@@ -161,17 +161,13 @@ public class LightSource extends Object3D implements Serializable {
     public static LightSource[] getLib() {
         return LIB.toArray(new LightSource[LIB.size()]);
     }
-
+/*
     public static void updateAll() {
-        synchronized (LIB) {
-            LIB.forEach(LightSource::update);
-        }
+        LIB.forEach(LightSource::update);
     }
-
+*/
     public static void deleteAll() {
-        synchronized (LIB) {
-            LIB.clear();
-        }
+        LIB.clear();
     }
 
 }

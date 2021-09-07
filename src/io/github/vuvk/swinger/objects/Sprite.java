@@ -280,18 +280,8 @@ public class Sprite extends Material implements Comparable<Sprite>, Serializable
     }*/
 
 
-    public static void updateAll() {
-        /*for (Sprite spr : LIB) {
-            spr.update();
-        }
-
-        Collections.sort(LIB);*/
-    }
-
     public static void deleteAll() {
-        synchronized (LIB) {
-            LIB.clear();
-        }
+        LIB.clear();
     }
 
     public static Sprite[] getLib() {
