@@ -25,7 +25,7 @@ import java.util.concurrent.CopyOnWriteArraySet;
  */
 public abstract class GameObject implements Serializable {
 
-    private static final Set<GameObject> LIB = new CopyOnWriteArraySet<>();    
+    transient private static final Set<GameObject> LIB = new CopyOnWriteArraySet<>();    
     private static final long serialVersionUID = 1L;
 
     private boolean deferredDelete = false; // отложенное удаление

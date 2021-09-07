@@ -15,6 +15,7 @@ package io.github.vuvk.swinger.objects.mortals.enemy;
 
 import io.github.vuvk.audiosystem.AudioSystem;
 import io.github.vuvk.audiosystem.Sound;
+import io.github.vuvk.swinger.Const;
 import io.github.vuvk.swinger.Engine;
 import io.github.vuvk.swinger.math.Ray;
 import io.github.vuvk.swinger.math.Vector2;
@@ -60,7 +61,9 @@ public abstract class Enemy extends Breakable implements Serializable {
     /* создана вспышка от выстрела */
     private boolean flashCreated = false;
 
-
+    /** time for update AI */
+    protected double aiUpdateDelay = 0.0;
+    
     protected double viewDistance;
     protected double viewAngle;
 
@@ -211,10 +214,28 @@ public abstract class Enemy extends Breakable implements Serializable {
     }
 
     protected Sound[] getAlarmSounds() {
+        float x = (float) getPos().x,
+              y = (float) getPos().y,
+              z = (float) getPos().z;
+
+        for (Sound snd : alarmSounds) { 
+            snd.setRelative(false)
+               .setPosition(x, z, y); 
+        }
+        
         return alarmSounds;
     }
 
     protected Sound[] getAttackSounds() {
+        float x = (float) getPos().x,
+              y = (float) getPos().y,
+              z = (float) getPos().z;
+
+        for (Sound snd : attackSounds) { 
+            snd.setRelative(false)
+               .setPosition(x, z, y); 
+        }
+        
         return attackSounds;
     }
 
@@ -337,16 +358,18 @@ public abstract class Enemy extends Breakable implements Serializable {
 
     @Override
     public void update() {
+        double accumulatedDeltaTime;
+        
+        // timeout for update ai
+        if (aiUpdateDelay < Const.AI_UPDATE_TIMEOUT) {
+            aiUpdateDelay += Engine.getDeltaTime();
+            return;
+        } else {
+            accumulatedDeltaTime = aiUpdateDelay;
+            aiUpdateDelay -= Const.AI_UPDATE_TIMEOUT;
+        }
+        
         super.update();
-
-        float x = (float) getPos().x,
-              y = (float) getPos().y,
-              z = (float) getPos().z;
-
-        for (Sound snd : attackSounds) { snd.setRelative(false);  snd.setPosition(x, z, y); }
-        for (Sound snd : alarmSounds ) { snd.setRelative(false);  snd.setPosition(x, z, y); }
-        for (Sound snd : painSounds  ) { snd.setRelative(false);  snd.setPosition(x, z, y); }
-        for (Sound snd : dieSounds   ) { snd.setRelative(false);  snd.setPosition(x, z, y); }
 
         // игрок в зоне видимости?
         boolean playerInFov = isPlayerInFov();
@@ -375,7 +398,7 @@ public abstract class Enemy extends Breakable implements Serializable {
 
                         // пришло время стрелять? Стрельни
                         if (shootDelay < getShootSpeed()) {
-                            shootDelay += Engine.getDeltaTime();
+                            shootDelay += accumulatedDeltaTime;
                         } else {
                             shootDelay = 0.0;
                             prevStateDelay = stateDelay;
@@ -419,7 +442,7 @@ public abstract class Enemy extends Breakable implements Serializable {
         }
         
         if (state == EnemyState.WALK) {
-            double moveSpeed = Engine.getDeltaTime();
+            double moveSpeed = accumulatedDeltaTime;
             if (moveSpeed > radius) {
                 moveSpeed = radius;
             }
