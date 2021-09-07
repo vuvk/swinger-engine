@@ -16,6 +16,8 @@ package io.github.vuvk.swinger.objects;
 import java.io.Serializable;
 
 import io.github.vuvk.swinger.Engine;
+import java.util.Set;
+import java.util.concurrent.CopyOnWriteArraySet;
 
 /**
  *
@@ -23,15 +25,22 @@ import io.github.vuvk.swinger.Engine;
  */
 public abstract class GameObject implements Serializable {
 
-    static final long serialVersionUID = 1L;
+    private static final Set<GameObject> LIB = new CopyOnWriteArraySet<>();    
+    private static final long serialVersionUID = 1L;
 
     private boolean deferredDelete = false; // отложенное удаление
     private double delayForDelete = 0;      // время до отложенного удаления
 
+    protected GameObject() {
+        LIB.add(this);
+    }
+    
     /**
      * Пометить объект на удаление
      */
-    public abstract void destroy();
+    public void destroy() {
+        LIB.remove(this);
+    }
 
     /**
      * Пометить объект на отложенное удаление
@@ -50,4 +59,12 @@ public abstract class GameObject implements Serializable {
             }
         }
     }
+    
+    public static void updateAll() {
+        LIB.forEach(GameObject::update);
+    }
+    
+    public static void destroyAll() {
+        LIB.forEach(GameObject::destroy);
+    }  
 }

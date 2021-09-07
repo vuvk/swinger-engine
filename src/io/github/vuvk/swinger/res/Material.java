@@ -91,9 +91,9 @@ public class Material extends Object3D implements Serializable {
     }
 
     public static void deleteAll() {
-        synchronized (LIB) {
+        //synchronized (LIB) {
             LIB.clear();
-        }
+        //}
     }
 
     /**
@@ -189,9 +189,8 @@ public class Material extends Object3D implements Serializable {
 
     @Override
     public void destroy() {
-        synchronized (LIB) {
-            LIB.remove(this);
-        }
+        super.destroy();
+        LIB.remove(this);
     }
 
     @Override

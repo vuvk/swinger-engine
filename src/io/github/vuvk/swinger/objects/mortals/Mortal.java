@@ -59,9 +59,8 @@ public abstract class Mortal extends Object3D implements Serializable {
      */
     @Override
     public void destroy() {
-        //synchronized (LIB) {
-            LIB.remove(this);
-        //}
+        super.destroy();
+        LIB.remove(this);
     }
 
     public static void updateAll() {

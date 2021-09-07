@@ -31,6 +31,7 @@ import io.github.vuvk.swinger.math.Segment;
 import io.github.vuvk.swinger.math.Vector2;
 import io.github.vuvk.swinger.math.Vector3;
 import io.github.vuvk.swinger.objects.Door;
+import io.github.vuvk.swinger.objects.GameObject;
 import io.github.vuvk.swinger.objects.LightSource;
 import io.github.vuvk.swinger.objects.Sprite;
 import io.github.vuvk.swinger.objects.items.Clip;
@@ -898,16 +899,19 @@ public final class Map {
         }
         mapSoundBuffers.clear();
 
-        LightSource.deleteAll();
-        Door.deleteAll();
+        GameObject.destroyAll();
+        
+        //LightSource.deleteAll();
         //Player.deleteInstance();
-        Mortal.deleteAll();
-        Sprite.deleteAll();
-        Material.deleteAll();
+        //Mortal.deleteAll();
+        Door.deleteAll();
+        //Sprite.deleteAll();
+        //Material.deleteAll();
         TextureBank.deleteWalls();
-        MaterialBank.deleteBank();
-        Mesh.deleteAll();
-        Model.deleteAll();
+        //MaterialBank.deleteBank();
+        //Mesh.deleteAll();
+        //Model.deleteAll();
+        
 
         System.gc();
     }

@@ -36,6 +36,7 @@ import io.github.vuvk.swinger.input.MouseManager;
 import io.github.vuvk.swinger.math.Vector2;
 import io.github.vuvk.swinger.objects.Camera;
 import io.github.vuvk.swinger.objects.Door;
+import io.github.vuvk.swinger.objects.GameObject;
 import io.github.vuvk.swinger.objects.LightSource;
 import io.github.vuvk.swinger.objects.Sprite;
 import io.github.vuvk.swinger.objects.mortals.Mortal;
@@ -396,11 +397,15 @@ public class Game extends Frame {
                 batch.end();*/
 
                 if (player.getHealth() > 0.0) {
+                    /*
                     LightSource.updateAll();
                     Material.updateAll();
                     Sprite.updateAll();
-                    Door.updateAll();
                     Mortal.updateAll();
+                    */
+                    
+                    Door.updateAll();
+                    GameObject.updateAll();
 /*
                     Model.updateAll();
                     for (Model mdl : Model.LIB) {
