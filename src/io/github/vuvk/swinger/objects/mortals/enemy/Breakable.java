@@ -15,6 +15,7 @@ package io.github.vuvk.swinger.objects.mortals.enemy;
 
 import io.github.vuvk.audiosystem.AudioSystem;
 import io.github.vuvk.audiosystem.Sound;
+import io.github.vuvk.swinger.Const;
 import io.github.vuvk.swinger.Engine;
 import io.github.vuvk.swinger.math.Vector2;
 import io.github.vuvk.swinger.math.Vector3;
@@ -39,6 +40,11 @@ public class Breakable extends Mortal implements Serializable {
     protected Vector2 viewVector = new Vector2(1, 0);
     protected Sprite sprite;
 
+    /** timeout for update AI */
+    protected double aiUpdateDelay = 0.0;
+    /** delta time per timeout AI */
+    protected double accumulatedDeltaTime = 0.0;
+    /** timeout for update state */
     protected double stateDelay = 0.0;
     protected EnemyState state  = EnemyState.IDLE;
     protected EnemyState prevState = state;
@@ -102,7 +108,7 @@ public class Breakable extends Mortal implements Serializable {
         dead = animation;
     }
 
-    public void setState(final EnemyState state) {        
+    public void setState(final EnemyState state) {
         prevState = this.state;
         this.state = state;
         stateDelay = 0.0;
@@ -152,10 +158,28 @@ public class Breakable extends Mortal implements Serializable {
     }
 */
     protected Sound[] getPainSounds() {
+        float x = (float) getPos().x,
+              y = (float) getPos().y,
+              z = (float) getPos().z;
+
+        for (Sound snd : painSounds) {
+            snd.setRelative(false)
+               .setPosition(x, z, y);
+        }
+
         return painSounds;
     }
 
     protected Sound[] getDieSounds() {
+        float x = (float) getPos().x,
+              y = (float) getPos().y,
+              z = (float) getPos().z;
+
+        for (Sound snd : dieSounds) {
+            snd.setRelative(false)
+               .setPosition(x, z, y);
+        }
+
         return dieSounds;
     }
 
@@ -225,13 +249,6 @@ public class Breakable extends Mortal implements Serializable {
     public void update() {
         super.update();
 
-        float x = (float) getPos().x,
-              y = (float) getPos().y,
-              z = (float) getPos().z;
-
-        for (Sound snd : painSounds) { snd.setRelative(false);  snd.setPosition(x, z, y); }
-        for (Sound snd : dieSounds ) { snd.setRelative(false);  snd.setPosition(x, z, y); }
-
         // умирать?
         if (health <= 0.0 && state != EnemyState.DIE) {
             setState(EnemyState.DIE);
@@ -245,8 +262,17 @@ public class Breakable extends Mortal implements Serializable {
             return;
         }
 
+        // timeout for update ai
+        if (aiUpdateDelay < Const.AI_UPDATE_TIMEOUT) {
+            aiUpdateDelay += Engine.getDeltaTime();
+            return;
+        } else {
+            accumulatedDeltaTime = aiUpdateDelay;
+            aiUpdateDelay -= Const.AI_UPDATE_TIMEOUT;
+        }
+
         // обновляем состояние
-        stateDelay += Engine.getDeltaTime();
+        stateDelay += accumulatedDeltaTime;
 
         if (state == EnemyState.PAIN) {
             if (stateDelay >= 0.25) {
@@ -254,18 +280,4 @@ public class Breakable extends Mortal implements Serializable {
             }
         }
     }
-
-    /*
-    public static void updateAll() {
-        if (FOR_DELETE_FROM_LIB.size() > 0) {
-            for (Iterator<Enemy> it = FOR_DELETE_FROM_LIB.iterator(); it.hasNext(); ) {
-                it.next().finalize();
-            }
-            FOR_DELETE_FROM_LIB.clear();
-        }
-
-        for (Enemy enemy : LIB) {
-            enemy.update();
-        }
-    }*/
 }
