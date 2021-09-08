@@ -2,6 +2,7 @@
 print("\tCreate clips from JS?..");
 
 // import classes
+var Integer = Java.type("java.lang.Integer")
 var Vector3 = Java.type("io.github.vuvk.swinger.math.Vector3");
 var Texture = Java.type("io.github.vuvk.swinger.res.Texture");
 var Material = Java.type("io.github.vuvk.swinger.res.Material");
