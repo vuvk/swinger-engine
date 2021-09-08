@@ -1,5 +1,5 @@
 /**
-    Copyright (C) 2019-2020 Anton "Vuvk" Shcherbatykh <vuvk69@gmail.com>
+    Copyright (C) 2019-2021 Anton "Vuvk" Shcherbatykh <vuvk69@gmail.com>
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
@@ -37,13 +37,9 @@ import io.github.vuvk.swinger.math.Vector2;
 import io.github.vuvk.swinger.objects.Camera;
 import io.github.vuvk.swinger.objects.Door;
 import io.github.vuvk.swinger.objects.GameObject;
-import io.github.vuvk.swinger.objects.LightSource;
-import io.github.vuvk.swinger.objects.Sprite;
-import io.github.vuvk.swinger.objects.mortals.Mortal;
 import io.github.vuvk.swinger.objects.mortals.Player;
 import io.github.vuvk.swinger.objects.weapon.AmmoType;
 import io.github.vuvk.swinger.res.Map;
-import io.github.vuvk.swinger.res.Material;
 import io.github.vuvk.swinger.res.TextureBank;
 import java.awt.Canvas;
 import java.awt.Color;
@@ -403,7 +399,7 @@ public class Game extends Frame {
                     Sprite.updateAll();
                     Mortal.updateAll();
                     */
-                    
+
                     Door.updateAll();
                     GameObject.updateAll();
 /*
