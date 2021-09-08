@@ -21,13 +21,12 @@ import io.github.vuvk.swinger.objects.Sprite;
 import io.github.vuvk.swinger.objects.mortals.Player;
 import io.github.vuvk.swinger.objects.weapon.AmmoType;
 import io.github.vuvk.swinger.res.Material;
-import java.io.Serializable;
 
 /**
  * Валяющиеся обоймы
  * @author Anton "Vuvk" Shcherbatykh
  */
-public class Clip extends Sprite implements Serializable {
+public class Clip extends Sprite {
     private final AmmoType ammoType;
     private final int volume;
 
