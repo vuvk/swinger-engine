@@ -18,7 +18,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
-
 import javax.imageio.ImageIO;
 
 /**
@@ -26,29 +25,29 @@ import javax.imageio.ImageIO;
  * @author Anton "Vuvk" Shcherbatykh
  */
 public final class TextureBank {
-    public final static String PICS_FOLDER = "resources/pics/";
+    public static final String PICS_FOLDER = "resources/pics/";
 
-    public static Texture   SKY;
+    public static Texture SKY;
     public static final List<Texture> WALLS = new CopyOnWriteArrayList<>()/*   = new Texture[11]*/;/*
-    public final static Texture[] FLOOR   = new Texture[6];
-    public final static Texture[] CEIL    = new Texture[7];*/
-    //public final static Texture[] SPRITES = new Texture[50];
-    //public final static Texture[] DOORS   = new Texture[3];
+    public static final Texture[] FLOOR   = new Texture[6];
+    public static final Texture[] CEIL    = new Texture[7];*/
+    //public static final Texture[] SPRITES = new Texture[50];
+    //public static final Texture[] DOORS   = new Texture[3];
 
     // для анимации массив двумерный, где x - кадры, а y - текстуры для углов поворота (1 или 8 штук)
-    public final static Texture[][] GUARD_ATK   = new Texture[3][1];
-    public final static Texture[][] GUARD_STAND = new Texture[1][8];
-    public final static Texture[][] GUARD_WALK  = new Texture[4][8];
-    public final static Texture[][] GUARD_PAIN  = new Texture[2][1];
-    public final static Texture[][] GUARD_DIE   = new Texture[3][1];
-    public static Texture     GUARD_DEAD;
+    public static final Texture[][] GUARD_ATK   = new Texture[3][1];
+    public static final Texture[][] GUARD_STAND = new Texture[1][8];
+    public static final Texture[][] GUARD_WALK  = new Texture[4][8];
+    public static final Texture[][] GUARD_PAIN  = new Texture[2][1];
+    public static final Texture[][] GUARD_DIE   = new Texture[3][1];
+    public static Texture GUARD_DEAD;
 
-    public final static Texture[][] ROCKET = new Texture[1][8];
+    public static final Texture[][] ROCKET = new Texture[1][8];
 
-    public final static Texture[] EXPLODE = new Texture[3];
-    public final static Texture[] BLOOD = new Texture[3];
-    public final static Texture[] PUFF = new Texture[4];
-    public final static Texture[] SMOKE = new Texture[16];
+    public static final Texture[] EXPLODE = new Texture[3];
+    public static final Texture[] BLOOD = new Texture[3];
+    public static final Texture[] PUFF = new Texture[4];
+    public static final Texture[] SMOKE = new Texture[16];
 
     public static BufferedImage MAIN_MENU;
 

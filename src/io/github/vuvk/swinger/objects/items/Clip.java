@@ -37,6 +37,7 @@ public class Clip extends Sprite implements Serializable {
         this.volume = volume;
     }
 
+    @Override
     public void update() {
         super.update();
 

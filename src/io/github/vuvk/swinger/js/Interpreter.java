@@ -105,7 +105,7 @@ public class Interpreter {
 
     /**
      * Выполнить отдельный независимый скрипт
-     * @param script Файл со скриптом
+     * @param file Файл со скриптом
      * @return результат работы скрипта
      */
     public static Object evalScript(File file) {

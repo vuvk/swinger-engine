@@ -22,11 +22,10 @@ import io.github.vuvk.audiosystem.AudioSystem;
 import io.github.vuvk.audiosystem.Sound;
 import io.github.vuvk.audiosystem.SoundBuffer;
 import io.github.vuvk.swinger.audio.SoundBank;
-import io.github.vuvk.swinger.d3.Mesh;
-import io.github.vuvk.swinger.d3.Model;
 import io.github.vuvk.swinger.graphic.Fog;
 import io.github.vuvk.swinger.graphic.TexturedSegment;
 import io.github.vuvk.swinger.graphic.weapon_in_hand.AmmoPack;
+import io.github.vuvk.swinger.js.Interpreter;
 import io.github.vuvk.swinger.math.Segment;
 import io.github.vuvk.swinger.math.Vector2;
 import io.github.vuvk.swinger.math.Vector3;
@@ -34,14 +33,11 @@ import io.github.vuvk.swinger.objects.Door;
 import io.github.vuvk.swinger.objects.GameObject;
 import io.github.vuvk.swinger.objects.LightSource;
 import io.github.vuvk.swinger.objects.Sprite;
-import io.github.vuvk.swinger.objects.items.Clip;
 import io.github.vuvk.swinger.objects.items.Key;
 import io.github.vuvk.swinger.objects.items.MedKit;
-import io.github.vuvk.swinger.objects.mortals.Mortal;
 import io.github.vuvk.swinger.objects.mortals.enemy.Breakable;
 import io.github.vuvk.swinger.objects.mortals.enemy.Guard;
 import io.github.vuvk.swinger.objects.mortals.enemy.GuardRocketeer;
-import io.github.vuvk.swinger.objects.weapon.AmmoType;
 import io.github.vuvk.swinger.objects.weapon.Minigun;
 import io.github.vuvk.swinger.objects.weapon.Pistol;
 import io.github.vuvk.swinger.objects.weapon.Rifle;
@@ -485,63 +481,7 @@ public final class Map {
     }
 
     private static void loadClips(int levelNum) {
-        System.out.println("\tClips...");
-
-        int materialsCount = MaterialBank.BANK.size();
-
-        JsonObject json = null;
-        try {
-            json = JsonParser.parseReader(
-                new FileReader("resources/maps/" + levelNum + "/clips.json")
-            ).getAsJsonObject();
-        } catch (FileNotFoundException ex) {
-            LOGGER.log(Level.SEVERE, null, ex);
-        }
-
-        Gson gson = new Gson();
-
-        System.out.println("\t\tTextures and materials...");
-        loadTexturesAndMaterials(json);
-
-        JsonArray clipsArray = json.get("config").getAsJsonArray();
-        Material[] clipsMat = new Material[clipsArray.size()];
-        AmmoType[] clipsType = new AmmoType[clipsArray.size()];
-        int[] clipsVol = new int[clipsArray.size()];
-        for (int i = 0; i < clipsArray.size(); ++i) {
-            JsonObject jsonClip = clipsArray.get(i).getAsJsonObject();
-
-            int matNum = jsonClip.get("material").getAsInt();
-            if (matNum >= 0) {
-                clipsMat[i] = MaterialBank.BANK.get(materialsCount + matNum);
-            }
-            int type = jsonClip.get("type").getAsInt();
-            switch (type) {
-                case 1:
-                    clipsType[i] = AmmoType.PISTOL;
-                    break;
-                case 2:
-                    clipsType[i] = AmmoType.SHOTGUN;
-                    break;
-                case 3:
-                    clipsType[i] = AmmoType.ROCKET;
-                    break;
-                default:
-                    clipsType[i] = AmmoType.NOTHING;
-                    break;
-            }
-            clipsVol[i] = jsonClip.get("volume").getAsInt();
-        }
-
-        JsonArray clipsMap = json.get("map").getAsJsonArray();
-        for (int i = 0; i < clipsMap.size(); ++i) {
-            JsonObject jsonValue = clipsMap.get(i).getAsJsonObject();
-            int clipNum = jsonValue.get("clip").getAsInt();
-
-            float[] jsonPos = gson.fromJson(jsonValue.get("position"), float[].class);
-            Vector3 pos = new Vector3(jsonPos);
-
-            new Clip(clipsMat[clipNum], pos, clipsType[clipNum], clipsVol[clipNum]);
-        }
+        Interpreter.evalScript(new File("resources/maps/" + levelNum + "/clips.js"));
     }
 
     private static void loadMedkits(int levelNum) {
@@ -900,7 +840,7 @@ public final class Map {
         mapSoundBuffers.clear();
 
         GameObject.destroyAll();
-        
+
         //LightSource.deleteAll();
         //Player.deleteInstance();
         //Mortal.deleteAll();
@@ -911,7 +851,7 @@ public final class Map {
         //MaterialBank.deleteBank();
         //Mesh.deleteAll();
         //Model.deleteAll();
-        
+
 
         System.gc();
     }

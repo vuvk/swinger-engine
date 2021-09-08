@@ -1,43 +1,44 @@
 
-print("\tClips...");
+print("\tCreate clips from JS?..");
 
-var clipsParams = loadJSON("resources/maps/1/clips.json");
+// import classes
+var Vector3 = Java.type('io.github.vuvk.swinger.math.Vector3');
+var Texture = Java.type('io.github.vuvk.swinger.res.Texture');
+var Material = Java.type('io.github.vuvk.swinger.res.Material');
+var AmmoType = Java.type('io.github.vuvk.swinger.objects.weapon.AmmoType');
+var Clip = Java.type('io.github.vuvk.swinger.objects.items.Clip');
 
-var materialsCount = MATERIALS.size;
-loadTexturesAndMaterials(clipsParams);
+// paths to texture files
+var PATH_SMALL_CLIP = "resources/pics/items/clips/small_clip.png";
+var PATH_BIG_CLIP = "resources/pics/items/clips/big_clip.png";
 
-var presets = [];
+// textures of clips
+var TXR_SMALL_CLIP = new Texture(PATH_SMALL_CLIP);
+var TXR_BIG_CLIP = new Texture(PATH_BIG_CLIP);
 
-for (var i = 0; i < clipsParams.config.length; ++i) {
-	var config = clipsParams.config[i];
-	
-	presets[i] = {};
-	
-	presets[i].material = MATERIALS.get(materialsCount + config.material);		
-	switch (config.type) {
-		case 1:
-			presets[i].type = AmmoType.PISTOL;
-			break;
-		case 2:
-			presets[i].type = AmmoType.SHOTGUN;
-			break;
-		case 3:
-			presets[i].type = AmmoType.ROCKET;
-			break;
-		default:
-			presets[i].type = AmmoType.NOTHING;
-			break;                
-	}
-	
-	presets[i].volume = config.volume;
-}        
+// materials of clips
+var MAT_SMALL_CLIP = new Material(TXR_SMALL_CLIP);
+var MAT_BIG_CLIP = new Material(TXR_BIG_CLIP);
 
-for (var i = 0; i < clipsParams.map.length; ++i) {
-	var obj = clipsParams.map[i];
-	var num = obj.clip;		
-	var preset = presets[num];
-	
-	var pos = new Vector3(obj.position[0], obj.position[1], obj.position[2]);
-	
-	new Clip(preset.material, pos, preset.type, preset.volume);
+// ---------------------------
+// positions of clips
+// ---------------------------
+var smallClipPositions = [
+    new Vector3(11.5, 3.5, 0.0),
+    new Vector3(11.5, 5.5, 0.0)
+];
+
+var bigClipPositions = [
+    new Vector3(12.5, 4.5, 0.0)
+];
+
+// place small clips
+for each (var pos in smallClipPositions) {
+    new Clip(MAT_SMALL_CLIP, pos, AmmoType.PISTOL, 25);
 }
+
+// place big clips
+for each (var pos in bigClipPositions) {
+    new Clip(MAT_BIG_CLIP, pos, AmmoType.PISTOL, 100);
+}
+
