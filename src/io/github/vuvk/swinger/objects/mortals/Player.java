@@ -93,7 +93,14 @@ public final class Player extends Mortal implements Serializable {
     @Override
     public void destroy() {
         super.destroy();
-        instance = null;
+
+        if (instance == this) {
+            synchronized (Player.class) {
+                if (instance == this) {
+                    instance = null;
+                }
+            }
+        }
     }
 
     public void finalize() throws Throwable {
@@ -485,8 +492,10 @@ public final class Player extends Mortal implements Serializable {
 
     public static synchronized void setInstance(Player player) {
         synchronized (Player.class) {
-            if (instance != null) {
-                instance.destroy();
+            if (instance != null && !player.equals(instance)) {
+                synchronized (instance) {
+                    instance.destroy();
+                }
             }
             instance = player;
         }
