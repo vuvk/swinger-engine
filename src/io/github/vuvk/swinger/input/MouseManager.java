@@ -13,6 +13,7 @@
 */
 package io.github.vuvk.swinger.input;
 
+import io.github.vuvk.swinger.math.Vector2;
 import java.awt.AWTException;
 import java.awt.Point;
 import java.awt.Robot;
@@ -24,15 +25,13 @@ import java.awt.event.MouseWheelListener;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import io.github.vuvk.swinger.math.Vector2;
-
 /**
  *
  * @author Anton "Vuvk" Shcherbatykh
  */
 public class MouseManager implements MouseListener, MouseWheelListener, MouseMotionListener {
     private static final Logger LOGGER = Logger.getLogger(MouseManager.class.getName());
-    private static MouseManager instance = null;       
+    private static volatile MouseManager instance = null;
 
     private static Robot robot;
     private static Vector2 prevLoc  = new Vector2();
@@ -41,7 +40,7 @@ public class MouseManager implements MouseListener, MouseWheelListener, MouseMot
                          scrollAmountY = 0;
     private static boolean leftClick  = false;
     private static boolean rightClick = false;
-    
+
 
     private MouseManager() {
         try {
@@ -51,9 +50,13 @@ public class MouseManager implements MouseListener, MouseWheelListener, MouseMot
         }
     }
 
-    public static MouseManager getInstance() {
+    public static synchronized MouseManager getInstance() {
         if (instance == null) {
-            instance = new MouseManager();
+            synchronized (MouseManager.class) {
+                if (instance == null) {
+                    instance = new MouseManager();
+                }
+            }
         }
         return instance;
     }
@@ -97,7 +100,7 @@ public class MouseManager implements MouseListener, MouseWheelListener, MouseMot
     @Override
     public void mouseWheelMoved(MouseWheelEvent e) {
         /*if (e.getScrollType() == MouseWheelEvent.WHEEL_UNIT_SCROLL)*/ {
-            scrollAmountY = e.getScrollAmount();    
+            scrollAmountY = e.getScrollAmount();
         }
     }
 

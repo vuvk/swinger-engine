@@ -60,7 +60,7 @@ import java.util.Locale;
  */
 public class Game extends Frame {
 
-    private static Game INSTANCE = null;
+    private static Game instance = null;
 
     private boolean initialized = false;
     private Canvas canvas;
@@ -247,12 +247,17 @@ public class Game extends Frame {
 
         initialized = true;
         setVisible(true);
-
-        INSTANCE = this;
     }
 
-    public static Game getInstance() {
-        return (INSTANCE != null) ? INSTANCE : new Game();
+    public static synchronized Game getInstance() {
+        if (instance == null) {
+            synchronized (Game.class) {
+                if (instance == null) {
+                    instance = new Game();
+                }
+            }
+        }
+        return instance;
     }
 
     @Override
@@ -266,7 +271,13 @@ public class Game extends Frame {
 
         AudioSystem.deinit();
 
-        INSTANCE = null;
+        if (instance != null) {
+            synchronized (instance) {
+                synchronized (Game.class) {
+                    instance = null;
+                }
+            }
+        }
 
         System.exit(0);
     }

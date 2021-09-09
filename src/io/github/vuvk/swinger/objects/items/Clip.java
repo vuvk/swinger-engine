@@ -13,20 +13,11 @@
 */
 package io.github.vuvk.swinger.objects.items;
 
-import io.github.vuvk.audiosystem.AudioSystem;
-import io.github.vuvk.swinger.audio.SoundBank;
-import io.github.vuvk.swinger.graphic.weapon_in_hand.AmmoPack;
-import io.github.vuvk.swinger.math.Vector3;
-import io.github.vuvk.swinger.objects.Sprite;
-import io.github.vuvk.swinger.objects.mortals.Player;
-import io.github.vuvk.swinger.objects.weapon.AmmoType;
-import io.github.vuvk.swinger.res.Material;
-
 /**
  * Валяющиеся обоймы
  * @author Anton "Vuvk" Shcherbatykh
  */
-public class Clip extends Sprite {
+/*public class Clip extends Sprite {
     private final AmmoType ammoType;
     private final int volume;
 
@@ -60,3 +51,4 @@ public class Clip extends Sprite {
         }
     }
 }
+*/

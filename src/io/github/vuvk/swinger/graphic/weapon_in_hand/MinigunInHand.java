@@ -23,23 +23,23 @@ import io.github.vuvk.swinger.res.Image;
  * @author Anton "Vuvk" Shcherbatykh
  */
 public class MinigunInHand  extends RayWeaponInHand {
-    private final static int FRAMES_COUNT = 4;
-    private final static Image[] FRAMES = new Image[FRAMES_COUNT];
-    private final static String[] FILES = {
+    private static final int FRAMES_COUNT = 4;
+    private static final Image[] FRAMES = new Image[FRAMES_COUNT];
+    private static final String[] FILES = {
         "resources/pics/weapons/minigun_hand0.png",
         "resources/pics/weapons/minigun_hand1.png",
         "resources/pics/weapons/minigun_hand2.png",
         "resources/pics/weapons/minigun_hand3.png"
     };
-    private static MinigunInHand instance = null;
-    private final static double ACCURACY = 6.0;
-    private final static int BULLETS_PER_SHOOT = 1;
-    private final static double DISTANCE = 100;
-    private final static double ANIM_SPEED = 40.0;
-    private final static double SHOOT_DELAY = 0.005;
-    private final static double DAMAGE = 15.0;
-    private final static int FRAME_FOR_SHOOT = 2;
-    private final static AmmoType AMMO_TYPE = AmmoType.PISTOL;
+    private static volatile MinigunInHand instance = null;
+    private static final double ACCURACY = 6.0;
+    private static final int BULLETS_PER_SHOOT = 1;
+    private static final double DISTANCE = 100;
+    private static final double ANIM_SPEED = 40.0;
+    private static final double SHOOT_DELAY = 0.005;
+    private static final double DAMAGE = 15.0;
+    private static final int FRAME_FOR_SHOOT = 2;
+    private static final AmmoType AMMO_TYPE = AmmoType.PISTOL;
 
     @Override
     public void init() {
@@ -73,9 +73,13 @@ public class MinigunInHand  extends RayWeaponInHand {
         //FRAMES[4] = FRAMES[1];
     }
 
-    public static MinigunInHand getInstance() {
+    public static synchronized MinigunInHand getInstance() {
         if (instance == null) {
-            instance = new MinigunInHand();
+            synchronized (MinigunInHand.class) {
+                if (instance == null) {
+                    instance = new MinigunInHand();
+                }
+            }
         }
         return instance;
     }

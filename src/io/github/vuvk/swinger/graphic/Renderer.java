@@ -50,10 +50,10 @@ import java.util.logging.Logger;
  * @author Anton "Vuvk" Shcherbatykh
  */
 public final class Renderer/* extends JPanel*/ {
-    private final static Logger LOGGER = Logger.getLogger(Renderer.class.getName());
-    private static Renderer instance = null;
-    //private final static Player PLAYER = Player.getInstance();
-    /*private final static RepaintManager REPAINT_MANAGER;
+    private static final Logger LOGGER = Logger.getLogger(Renderer.class.getName());
+    private static volatile Renderer instance = null;
+    //private static final Player PLAYER = Player.getInstance();
+    /*private static final RepaintManager REPAINT_MANAGER;
     static {
         REPAINT_MANAGER = RepaintManager.currentManager(INSTANCE);
     };*/
@@ -172,7 +172,7 @@ public final class Renderer/* extends JPanel*/ {
     // ПОТОКИ РЕНДЕРИНГА
     private final /*static*/ RenderTask[] RENDER_TASKS = new RenderTask[Const.THREADS_COUNT];
     private final /*static*/ AntialiasingTask[] ANTIALIASING_TASKS = new AntialiasingTask[Const.THREADS_COUNT];
-    //private /*final static*/ Thread[] RENDER_THREADS = new Thread[4];
+    //private /*static final*/ Thread[] RENDER_THREADS = new Thread[4];
     private final /*static*/ ExecutorService EXECUTOR = Executors.newFixedThreadPool(Const.THREADS_COUNT);
     //private boolean[] render = {false,false,false,false};
     private final /*static*/ List<Sprite> SPRITES_FOR_DRAW = new ArrayList<>(50);
@@ -183,14 +183,14 @@ public final class Renderer/* extends JPanel*/ {
     //private boolean alreadyRendered = false;    // уже отрендерил в память
 
 
-    public static Renderer getInstance() {
+    public static synchronized Renderer getInstance() {
         if (instance == null) {
-            instance = new Renderer();
-            /*instance.setDoubleBuffered(false);
-            instance.setIgnoreRepaint(true);
-            instance.setOpaque(false);*/
+            synchronized (Renderer.class) {
+                if (instance == null) {
+                    instance = new Renderer();
+                }
+            }
         }
-
         return instance;
     }
 /*
@@ -273,10 +273,10 @@ public final class Renderer/* extends JPanel*/ {
     }
 
     /* минимальное видмое значение полупрозрачности */
-    //final static int MIN_VISIBLE_TRANSPARENT  = 25;
+    //static final int MIN_VISIBLE_TRANSPARENT  = 25;
     /* значение полупрозрачности, выше которого уже 100% непрозрачность */
-    //final static int MAX_ADDITIVE_TRANSPARENT = 230;
-    //final static double INV_255 = 1.0 / 255.0;
+    //static final int MAX_ADDITIVE_TRANSPARENT = 230;
+    //static final double INV_255 = 1.0 / 255.0;
     /**
      * Наложить на пиксель пиксель с полупрозрачностью
      * @param pixel исходный пиксель

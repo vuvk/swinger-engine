@@ -23,22 +23,22 @@ import io.github.vuvk.swinger.res.Image;
  * @author Anton "Vuvk" Shcherbatykh
  */
 public class KnifeInHand extends RayWeaponInHand {
-    private final static int FRAMES_COUNT = 7;
-    private final static Image[] FRAMES = new Image[FRAMES_COUNT];
-    private final static String[] FILES = {
+    private static final int FRAMES_COUNT = 7;
+    private static final Image[] FRAMES = new Image[FRAMES_COUNT];
+    private static final String[] FILES = {
         "resources/pics/weapons/knife0.png",
         "resources/pics/weapons/knife1.png",
         "resources/pics/weapons/knife2.png",
         "resources/pics/weapons/knife3.png"
     };
-    private static KnifeInHand instance = null;
-    private final static double ACCURACY = 0.0;
-    private final static int BULLETS_PER_SHOOT = 1;
-    private final static double DISTANCE = 1.25;
-    private final static double ANIM_SPEED = 25.0;
-    private final static double DAMAGE = 40.0;
-    private final static int FRAME_FOR_SHOOT = 3;
-    private final static AmmoType AMMO_TYPE = AmmoType.NOTHING;
+    private static volatile KnifeInHand instance = null;
+    private static final double ACCURACY = 0.0;
+    private static final int BULLETS_PER_SHOOT = 1;
+    private static final double DISTANCE = 1.25;
+    private static final double ANIM_SPEED = 25.0;
+    private static final double DAMAGE = 40.0;
+    private static final int FRAME_FOR_SHOOT = 3;
+    private static final AmmoType AMMO_TYPE = AmmoType.NOTHING;
 
     @Override
     public void init() {
@@ -73,11 +73,14 @@ public class KnifeInHand extends RayWeaponInHand {
         }
     }
 
-    public static KnifeInHand getInstance() {
+    public static synchronized KnifeInHand getInstance() {
         if (instance == null) {
-            instance = new KnifeInHand();
+            synchronized (KnifeInHand.class) {
+                if (instance == null) {
+                    instance = new KnifeInHand();
+                }
+            }
         }
-
         return instance;
     }
 }

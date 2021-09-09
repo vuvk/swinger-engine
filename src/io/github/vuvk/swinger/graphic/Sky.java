@@ -22,7 +22,7 @@ import io.github.vuvk.swinger.res.TextureBank;
  * @author Anton "Vuvk" Shcherbatykh
  */
 public final class Sky extends Image {
-    private static Sky instance = new Sky(TextureBank.PICS_FOLDER + "sky.png");
+    private static volatile Sky instance;
     //private final static Player PLAYER = Player.getInstance();
 
     private final double xStep;
@@ -37,7 +37,14 @@ public final class Sky extends Image {
         return xStart;
     }
 
-    public static Sky getInstance() {
+    public static synchronized Sky getInstance() {
+        if (instance == null) {
+            synchronized (Sky.class) {
+                if (instance == null) {
+                    instance = new Sky(TextureBank.PICS_FOLDER + "sky.png");
+                }
+            }
+        }
         return instance;
     }
 

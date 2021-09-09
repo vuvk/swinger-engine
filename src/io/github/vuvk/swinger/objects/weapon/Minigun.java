@@ -13,22 +13,21 @@
 */
 package io.github.vuvk.swinger.objects.weapon;
 
-import java.io.Serializable;
-
 import io.github.vuvk.swinger.graphic.weapon_in_hand.MinigunInHand;
 import io.github.vuvk.swinger.graphic.weapon_in_hand.WeaponInHand;
 import io.github.vuvk.swinger.math.Vector3;
 import io.github.vuvk.swinger.res.Material;
+import java.io.Serializable;
 
 /**
  *
  * @author Anton "Vuvk" Shcherbatykh
  */
 public class Minigun extends Weapon implements Serializable {
-    
-    private final static int WEAPON_NUM = 3;
-    private final static AmmoType AMMO_TYPE = AmmoType.PISTOL;
-    
+
+    private static final int WEAPON_NUM = 3;
+    private static final AmmoType AMMO_TYPE = AmmoType.PISTOL;
+
     public Minigun(Material material, Vector3 pos) {
         super(material, pos, WEAPON_NUM, AMMO_TYPE);
     }

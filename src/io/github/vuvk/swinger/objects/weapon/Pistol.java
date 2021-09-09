@@ -24,10 +24,10 @@ import java.io.Serializable;
  * @author Anton "Vuvk" Shcherbatykh
  */
 public class Pistol extends Weapon implements Serializable {
-    
-    private final static int WEAPON_NUM = 1;
-    private final static AmmoType AMMO_TYPE = AmmoType.PISTOL;
-    
+
+    private static final int WEAPON_NUM = 1;
+    private static final AmmoType AMMO_TYPE = AmmoType.PISTOL;
+
     public Pistol(Material material, Vector3 pos) {
         super(material, pos, WEAPON_NUM, AMMO_TYPE);
     }

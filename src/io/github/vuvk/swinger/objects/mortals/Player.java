@@ -42,7 +42,7 @@ import java.util.Set;
  * @author Anton "Vuvk" Shcherbatykh
  */
 public final class Player extends Mortal implements Serializable {
-    private static Player instance = null;
+    private static volatile Player instance = null;
 
     /*
     private double direction = 180.0;
@@ -64,13 +64,28 @@ public final class Player extends Mortal implements Serializable {
                     rotR = false;
     private boolean shooting = false;
 
-    private final static double HEALTH = 100.0;
-    private final static double RADIUS = 0.25;
-    public  final static double MOVE_SPEED = 5.0;
-    public  final static double KEY_ROT_SPEED  = 3.0;
-    public  final static double MOUSE_ROT_SPEED  = 15.0;
+    private static final double HEALTH = 100.0;
+    private static final double RADIUS = 0.25;
+    public  static final double MOVE_SPEED = 5.0;
+    public  static final double KEY_ROT_SPEED  = 3.0;
+    public  static final double MOUSE_ROT_SPEED  = 15.0;
     transient private Sound[] soundsNeadKey;
     transient private Sound soundDie;
+
+    private Player(Vector3 pos) {
+        super(pos, HEALTH, RADIUS);
+        soundDie = AudioSystem.newSound(SoundBank.SOUND_BUFFER_PLAYER_DIE);
+        soundsNeadKey = new Sound[] {
+            AudioSystem.newSound(SoundBank.SOUND_BUFFER_NEED_KEY1),
+            AudioSystem.newSound(SoundBank.SOUND_BUFFER_NEED_KEY2)
+        };
+
+        setLive(true);
+
+        createWeaponsInHand();
+        camera.setPos(pos);
+        camera.rotate(Math.toRadians(-90));
+    }
 
     /**
      * Пометить объект на удаление
@@ -457,15 +472,24 @@ public final class Player extends Mortal implements Serializable {
         listener.setOrientation(new float[] { (float) at.x, 0f, (float) at.y}, new float[] { 0f, -1f, 0f });
     }
 
-    public static Player getInstance() {
-        return (instance != null) ? instance : new Player(new Vector3(20.5, 4.75, 0.0));
+    public static synchronized Player getInstance() {
+        if (instance == null) {
+            synchronized (Player.class) {
+                if (instance == null) {
+                    instance = new Player(new Vector3(20.5, 4.75, 0.0));
+                }
+            }
+        }
+        return instance;
     }
 
-    public static void setInstance(Player instance) {
-        if (instance != null) {
-            instance.destroy();
+    public static synchronized void setInstance(Player player) {
+        synchronized (Player.class) {
+            if (instance != null) {
+                instance.destroy();
+            }
+            instance = player;
         }
-        Player.instance = instance;
     }
 /*
     public static void deleteInstance() {
@@ -475,20 +499,4 @@ public final class Player extends Mortal implements Serializable {
         }
     }
 */
-    private Player(Vector3 pos) {
-        super(pos, HEALTH, RADIUS);
-        soundDie = AudioSystem.newSound(SoundBank.SOUND_BUFFER_PLAYER_DIE);
-        soundsNeadKey = new Sound[] {
-            AudioSystem.newSound(SoundBank.SOUND_BUFFER_NEED_KEY1),
-            AudioSystem.newSound(SoundBank.SOUND_BUFFER_NEED_KEY2)
-        };
-
-        setLive(true);
-
-        createWeaponsInHand();
-        camera.setPos(pos);
-        camera.rotate(Math.toRadians(-90));
-
-        instance = this;
-    }
 }

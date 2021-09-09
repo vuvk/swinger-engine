@@ -13,35 +13,35 @@
 */
 package io.github.vuvk.swinger.graphic.weapon_in_hand;
 
-import io.github.vuvk.swinger.objects.weapon.AmmoType;
 import io.github.vuvk.swinger.graphic.Renderer;
 import io.github.vuvk.swinger.math.Vector3;
 import io.github.vuvk.swinger.objects.projectiles.Projectile;
 import io.github.vuvk.swinger.objects.projectiles.Rocket;
+import io.github.vuvk.swinger.objects.weapon.AmmoType;
 import io.github.vuvk.swinger.res.Image;
 
 /**
  *
  * @author Anton "Vuvk" Shcherbatykh
  */
-public class RocketLauncherInHand extends ProjectileWeaponInHand {    
-    private final static int FRAMES_COUNT = 5;
-    private final static Image[] FRAMES = new Image[FRAMES_COUNT];
-    private final static String[] FILES = { 
-        "resources/pics/weapons/rocketlauncher1.png", 
+public class RocketLauncherInHand extends ProjectileWeaponInHand {
+    private static final int FRAMES_COUNT = 5;
+    private static final Image[] FRAMES = new Image[FRAMES_COUNT];
+    private static final String[] FILES = {
+        "resources/pics/weapons/rocketlauncher1.png",
         "resources/pics/weapons/rocketlauncher2.png",
         "resources/pics/weapons/rocketlauncher3.png",
         "resources/pics/weapons/rocketlauncher4.png"
-    };    
-    private static RocketLauncherInHand instance = null;
-    private final static double ACCURACY = 2.5;
-    private final static int BULLETS_PER_SHOOT = 1;
-    private final static double DISTANCE = 0;
-    private final static double ANIM_SPEED = 15.0;
-    private final static double SHOOT_DELAY = 0.0;
-    private final static double DAMAGE = 25.0;
-    private final static int FRAME_FOR_SHOOT = 2;
-    private final static AmmoType AMMO_TYPE = AmmoType.ROCKET;
+    };
+    private static volatile RocketLauncherInHand instance = null;
+    private static final double ACCURACY = 2.5;
+    private static final int BULLETS_PER_SHOOT = 1;
+    private static final double DISTANCE = 0;
+    private static final double ANIM_SPEED = 15.0;
+    private static final double SHOOT_DELAY = 0.0;
+    private static final double DAMAGE = 25.0;
+    private static final int FRAME_FOR_SHOOT = 2;
+    private static final AmmoType AMMO_TYPE = AmmoType.ROCKET;
 
     @Override
     public void init() {
@@ -56,17 +56,17 @@ public class RocketLauncherInHand extends ProjectileWeaponInHand {
         // setSoundShoot(SoundBank.SOUND_BUFFER_BAZOOKA);
         setAmmoType(AMMO_TYPE);
     }
-    
+
     private RocketLauncherInHand() {
         super();
         init();
     }
-    
-    public static void loadFrames() {        
+
+    public static void loadFrames() {
         int rW = Renderer.WIDTH;
         int rH = Renderer.HEIGHT;
 
-        int min = Math.min(rW, rH);        
+        int min = Math.min(rW, rH);
         int size = min >> 1;
 
         for (int i = 0; i < FILES.length; ++i) {
@@ -74,13 +74,17 @@ public class RocketLauncherInHand extends ProjectileWeaponInHand {
         }
         FRAMES[4] = FRAMES[1];
     }
-    
-    public static RocketLauncherInHand getInstance() {
+
+    public static synchronized RocketLauncherInHand getInstance() {
         if (instance == null) {
-            instance = new RocketLauncherInHand();
-        }        
+            synchronized (RocketLauncherInHand.class) {
+                if (instance == null) {
+                    instance = new RocketLauncherInHand();
+                }
+            }
+        }
         return instance;
-    }    
+    }
 
     @Override
     protected Projectile createProjectile(Vector3 pos, double direction) {

@@ -31,13 +31,17 @@ import java.util.Scanner;
  * @author Anton "Vuvk" Shcherbatykh
  */
 public final class KeyboardManager extends KeyAdapter {
-    private static KeyboardManager instance = null;
+    private static volatile KeyboardManager instance = null;
 
     private KeyboardManager () {}
 
-    public static KeyboardManager getInstance() {
+    public static synchronized KeyboardManager getInstance() {
         if (instance == null) {
-            instance = new KeyboardManager();
+            synchronized (KeyboardManager.class) {
+                if (instance == null) {
+                    instance = new KeyboardManager();
+                }
+            }
         }
         return instance;
     }
@@ -368,7 +372,7 @@ public final class KeyboardManager extends KeyAdapter {
 
                     if (Map.isLoaded()) {
                         Player player = Player.getInstance();
-                        
+
                         if (player.getHealth() > 0.0) {
                             player.setMoveB(false);
                             player.setMoveF(false);

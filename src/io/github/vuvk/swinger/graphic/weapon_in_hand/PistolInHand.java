@@ -23,22 +23,22 @@ import io.github.vuvk.swinger.res.Image;
  * @author Anton "Vuvk" Shcherbatykh
  */
 public class PistolInHand extends RayWeaponInHand {
-    private final static int FRAMES_COUNT = 4;
-    private final static Image[] FRAMES = new Image[FRAMES_COUNT];
-    private final static String[] FILES = {
+    private static final int FRAMES_COUNT = 4;
+    private static final Image[] FRAMES = new Image[FRAMES_COUNT];
+    private static final String[] FILES = {
         "resources/pics/weapons/pistol0.png",
         "resources/pics/weapons/pistol1.png",
         "resources/pics/weapons/pistol2.png"
     };
-    private static PistolInHand instance = null;
-    private final static double ACCURACY = 5.0;
-    private final static int BULLETS_PER_SHOOT = 1;
-    private final static double DISTANCE = 100;
-    private final static double ANIM_SPEED = 15.0;
-    private final static double SHOOT_DELAY = 0.5;
-    private final static double DAMAGE = 25.0;
-    private final static int FRAME_FOR_SHOOT = 1;
-    private final static AmmoType AMMO_TYPE = AmmoType.PISTOL;
+    private static volatile PistolInHand instance = null;
+    private static final double ACCURACY = 5.0;
+    private static final int BULLETS_PER_SHOOT = 1;
+    private static final double DISTANCE = 100;
+    private static final double ANIM_SPEED = 15.0;
+    private static final double SHOOT_DELAY = 0.5;
+    private static final double DAMAGE = 25.0;
+    private static final int FRAME_FOR_SHOOT = 1;
+    private static final AmmoType AMMO_TYPE = AmmoType.PISTOL;
 
     @Override
     public void init() {
@@ -72,9 +72,13 @@ public class PistolInHand extends RayWeaponInHand {
         FRAMES[3] = FRAMES[2];
     }
 
-    public static PistolInHand getInstance() {
+    public static synchronized PistolInHand getInstance() {
         if (instance == null) {
-            instance = new PistolInHand();
+            synchronized (PistolInHand.class) {
+                if (instance == null) {
+                    instance = new PistolInHand();
+                }
+            }
         }
         return instance;
     }
