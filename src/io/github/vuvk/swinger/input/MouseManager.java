@@ -17,11 +17,9 @@ import io.github.vuvk.swinger.math.Vector2;
 import java.awt.AWTException;
 import java.awt.Point;
 import java.awt.Robot;
+import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionListener;
 import java.awt.event.MouseWheelEvent;
-import java.awt.event.MouseWheelListener;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -29,7 +27,7 @@ import java.util.logging.Logger;
  *
  * @author Anton "Vuvk" Shcherbatykh
  */
-public class MouseManager implements MouseListener, MouseWheelListener, MouseMotionListener {
+public class MouseManager extends MouseAdapter {
     private static final Logger LOGGER = Logger.getLogger(MouseManager.class.getName());
     private static volatile MouseManager instance = null;
 
@@ -103,15 +101,6 @@ public class MouseManager implements MouseListener, MouseWheelListener, MouseMot
             scrollAmountY = e.getScrollAmount();
         }
     }
-
-    @Override
-    public void mouseClicked(MouseEvent e) {}
-
-    @Override
-    public void mouseEntered(MouseEvent e) {}
-
-    @Override
-    public void mouseExited(MouseEvent e) {}
 
     public static double getDeltaX() {
         return prevLoc.x - location.x;
