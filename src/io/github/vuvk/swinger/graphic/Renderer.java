@@ -41,7 +41,6 @@ import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
@@ -72,7 +71,7 @@ public final class Renderer/* extends JPanel*/ {
     /** "экран", в который рисуется кадр */
     private final BufferedImage screen/* = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_ARGB)*/;
     /** внутренний контейнер данных экрана. Просто для более быстрого доступа */
-    private WritableRaster screenRaster;
+    private final WritableRaster screenRaster;
     /** массив пикселей в сыром виде, куда рисует рендерер */
     private final int[] screenBuffer;/* = new int[WIDTH * HEIGHT]*/;
     /** z-buffer */
@@ -1335,14 +1334,14 @@ public final class Renderer/* extends JPanel*/ {
                 task.setLatch(cdl);
                 EXECUTOR.execute(task);
             }
-            try {
+            /*try {
                 cdl.await();
             } catch(InterruptedException ex) {
                 LOGGER.log(Level.SEVERE, null, ex);
-            }
-            /*while (cdl.getCount() > 0) {
-                Thread.yield();
             }*/
+            while (cdl.getCount() > 0) {
+                Thread.yield();
+            }
         } else {
             renderWorld(0, WIDTH);
         }
@@ -1664,16 +1663,14 @@ public final class Renderer/* extends JPanel*/ {
                     task.setLatch(cdl);
                     EXECUTOR.execute(task);
                 }
-                try {
+                /*try {
                     cdl.await();
                 } catch(InterruptedException ex) {
                     LOGGER.log(Level.SEVERE, null, ex);
-                }
-                /*
+                }*/
                 while (cdl.getCount() > 0) {
                     Thread.yield();
                 }
-                */
             } else {
                 antialiasing(WIDTH, screenBuffer.length - 1);
             }

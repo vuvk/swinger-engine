@@ -13,13 +13,11 @@
 */
 package io.github.vuvk.swinger.graphic.gui;
 
-import java.awt.Color;
-import java.awt.image.BufferedImage;
-import java.util.Random;
-
 import io.github.vuvk.swinger.Engine;
 import io.github.vuvk.swinger.graphic.Renderer;
 import io.github.vuvk.swinger.math.Vector2;
+import java.awt.image.BufferedImage;
+import java.util.Random;
 
 /**
  *
