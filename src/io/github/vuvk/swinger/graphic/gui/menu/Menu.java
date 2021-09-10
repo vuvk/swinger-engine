@@ -340,6 +340,7 @@ public class Menu {
         currentMenu.activate();
 
         if (Map.isLoaded()) {
+            Renderer.getInstance().stopRenderTasks();
             Map.setActivated(false);
         }
     }
@@ -356,6 +357,7 @@ public class Menu {
         CLOSE_GAME_CONFIRM.deactivate();
 
         if (Map.isLoaded()) {
+            Renderer.getInstance().stopRenderTasks();
             Map.setActivated(true);
         }
     }
