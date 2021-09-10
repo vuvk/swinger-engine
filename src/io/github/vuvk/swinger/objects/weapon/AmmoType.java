@@ -1,5 +1,5 @@
 /**
-    Copyright (C) 2019-2020 Anton "Vuvk" Shcherbatykh <vuvk69@gmail.com>
+    Copyright (C) 2019-2021 Anton "Vuvk" Shcherbatykh <vuvk69@gmail.com>
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
@@ -19,18 +19,18 @@ import java.io.Serializable;
  *
  * @author Anton "Vuvk" Shcherbatykh
  */
-public enum AmmoType implements Serializable {   
+public enum AmmoType implements Serializable {
     NOTHING (0  ),
     PISTOL  (250),
     SHOTGUN (50 ),
-    ROCKET  (25 );  
-    
+    ROCKET  (25 );
+
     private final int max;
-    
-    AmmoType(int max) {
+
+    private AmmoType(int max) {
         this.max = max;
     }
-    
+
     public int getMax() {
         return max;
     }
