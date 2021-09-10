@@ -38,15 +38,11 @@ var Clip = function(material, position, ammoType, volume) {
             
             var player = Player.getInstance();
             if (player != null && player.getPos().distance(__super.getPos()) < 0.5) {
-                var curAmmo = AmmoPack.PACK.get(ammoType);
+                var curAmmo = AmmoPack.getNum(ammoType);
                 var maxAmmo = ammoType.getMax();
 
                 if (curAmmo < maxAmmo) {
-                    curAmmo += volume;
-                    if (curAmmo > maxAmmo) {
-                        curAmmo = maxAmmo;
-                    }
-                    AmmoPack.PACK.put(ammoType, Integer.parseInt(curAmmo));
+                    AmmoPack.setNum(ammoType, Integer.parseInt(curAmmo + volume));
 
                     //AudioSystem.newSound(SoundBank.SOUND_BUFFER_GET_AMMO).playOnce();
 

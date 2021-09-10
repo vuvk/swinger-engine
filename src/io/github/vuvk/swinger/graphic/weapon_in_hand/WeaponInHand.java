@@ -232,8 +232,8 @@ public abstract class WeaponInHand implements Serializable {
                 if (curFrameNum == frameForShoot) {
                     playSoundShoot();
 
-                    int curAmmo = AmmoPack.PACK.get(ammoType);
-                    AmmoPack.PACK.put(ammoType, --curAmmo);
+                    int curAmmo = AmmoPack.getNum(ammoType);
+                    AmmoPack.setNum(ammoType, --curAmmo);
 
                     // стреляем столько раз, сколько пуль
                     for (int i = 0; i < bulletPerShoot; ++i) {

@@ -83,13 +83,9 @@ public abstract class Weapon extends Sprite implements Serializable {
             player.addWeaponInHand(this);
 
             // добавить игроку патронов того же типа, что и оружие
-            int curAmmo = AmmoPack.PACK.get(ammoType);
+            int curAmmo = AmmoPack.getNum(ammoType);
             curAmmo += ammoInClip;
-            int maxAmmo = ammoType.getMax();
-            if (curAmmo > maxAmmo) {
-                curAmmo = maxAmmo;
-            }
-            AmmoPack.PACK.put(ammoType, curAmmo);
+            AmmoPack.setNum(ammoType, curAmmo);
 
             destroy();
         }

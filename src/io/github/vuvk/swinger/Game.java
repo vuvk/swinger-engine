@@ -453,7 +453,7 @@ public class Game extends Frame {
                             case PISTOL:
                             case SHOTGUN:
                             case ROCKET:
-                                ammoText = "AMMO " + AmmoPack.PACK.get(ammoType);
+                                ammoText = "AMMO " + AmmoPack.getNum(ammoType);
                                 break;
                         }
                         playerAmmoText.setLocation(new Vector2(16, Config.HEIGHT - 56));

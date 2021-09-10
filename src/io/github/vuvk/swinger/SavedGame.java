@@ -106,7 +106,7 @@ public class SavedGame implements Serializable {
         mapVisibleCells = Map.VISIBLE_CELLS;
         mapWallsMaterialsMap = Map.WALLS_MATERIALS_MAP;
 
-        ammoPack = AmmoPack.PACK;
+        ammoPack = AmmoPack.getPack();
 
         try (FileOutputStream fileOutputStream = new FileOutputStream(path)) {
             ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream);
@@ -182,8 +182,8 @@ public class SavedGame implements Serializable {
                 }
             }
 
-            AmmoPack.PACK.clear();
-            AmmoPack.PACK.putAll(game.ammoPack);
+            AmmoPack.reset();
+            AmmoPack.setPack(game.ammoPack);
 
             LightSource.deleteAll();
             LightSource.LIB.addAll(Arrays.asList(game.lightSourcesLib));

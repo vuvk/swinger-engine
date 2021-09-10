@@ -457,7 +457,7 @@ public final class Player extends Mortal implements Serializable {
 
         if (shooting) {
             AmmoType ammoType = getWeaponInHand().getAmmoType();
-            int curAmmo = AmmoPack.PACK.get(ammoType);
+            int curAmmo = AmmoPack.getNum(ammoType);
             if ((ammoType == AmmoType.NOTHING) ||
                 (ammoType != AmmoType.NOTHING && curAmmo > 0)
                ) {

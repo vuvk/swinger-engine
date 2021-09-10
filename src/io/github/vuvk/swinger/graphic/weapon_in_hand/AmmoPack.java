@@ -14,17 +14,18 @@
 package io.github.vuvk.swinger.graphic.weapon_in_hand;
 
 import io.github.vuvk.swinger.objects.weapon.AmmoType;
+import io.github.vuvk.swinger.utils.Utils;
 import java.io.Serializable;
-import java.util.Map;
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  *
  * @author Anton "Vuvk" Shcherbatykh
  */
 public final class AmmoPack implements Serializable {
-    public final static Map<AmmoType, Integer> PACK = new HashMap<>();
-        
+    private final static Map<AmmoType, Integer> PACK = new HashMap<>();
+
     public static void reset() {
         PACK.clear();
         PACK.put(AmmoType.NOTHING, 0 );
@@ -32,6 +33,37 @@ public final class AmmoPack implements Serializable {
         PACK.put(AmmoType.SHOTGUN, 0 );
         PACK.put(AmmoType.ROCKET,  0 );
     }
-    
+
+    public static int getNum(AmmoType ammoType) {
+        return PACK.get(ammoType);
+    }
+
+    public static final Map<AmmoType, Integer> getPack() {
+        return PACK;
+    }
+
+    public static void setNum(AmmoType ammoType, int volume) {
+        PACK.put(
+            ammoType,
+            Utils.limit(
+                volume,
+                0,
+                ammoType.getMax()
+            )
+        );
+    }
+
+    public static void setPack(Map<AmmoType, Integer> pack) {
+        reset();
+
+        Integer pistolAmmo  = pack.get(AmmoType.PISTOL);
+        Integer shotgunAmmo = pack.get(AmmoType.SHOTGUN);
+        Integer rocketAmmo  = pack.get(AmmoType.ROCKET);
+
+        if (pistolAmmo  != null) { PACK.put(AmmoType.PISTOL,  pistolAmmo);  }
+        if (shotgunAmmo != null) { PACK.put(AmmoType.SHOTGUN, shotgunAmmo); }
+        if (rocketAmmo  != null) { PACK.put(AmmoType.ROCKET,  rocketAmmo);  }
+    }
+
     private AmmoPack() {}
 }
