@@ -76,7 +76,7 @@ public final class Renderer/* extends JPanel*/ {
     /** массив пикселей в сыром виде, куда рисует рендерер */
     private final int[] screenBuffer;/* = new int[WIDTH * HEIGHT]*/;
     /** z-buffer */
-    private final double[][] zbuffer/* = new double[WIDTH]*/;
+    private final double[] zbuffer/* = new double[WIDTH]*/;
 
     private int evenFactor = 0; // фактор столбца при чересстрочном (четный/нечетный) (0/1)
     private int xStep;          // шаг по ширине. При обычном режиме 1, при чересстрочном 2
@@ -960,13 +960,13 @@ public final class Renderer/* extends JPanel*/ {
 
                     //int[] pixelsColumn = txr.getCol(texX);
                     for (int y = drawStart; y < drawEnd; ++y) {
-                        //int arrayPos = y * WIDTH + x;
+                        int arrayPos = y * WIDTH + x;
                         // первый уровень однозначно рисуется и забивает Z-BUFFER
                         /*if (level > 0)*/ {
                             /*if (ZBUFFER[arrayPos] < wallDist) {
                                 continue;
                             }*/
-                            if (zbuffer[x][y] <= wallDist) {
+                            if (zbuffer[arrayPos] <= wallDist) {
                                 continue;
                             }
                         }
@@ -1006,14 +1006,14 @@ public final class Renderer/* extends JPanel*/ {
                         //TEMP_BUFFER_RASTER.setPixel(x, y, new int[]{color});
 
                         //drawPixel(x, y, color);
-                        screenBuffer[y * WIDTH + x] = color;
+                        screenBuffer[arrayPos] = color;
                         //TEMP_BUFFER.setElem(arrayPos, color);
                         //putPixel(x, y, color);
                         //ZBUFFER[arrayPos] = wallDist;//TEMP_BUFFER.setElem(arrayPos, color);
                         //putPixel(x, y, color);
                         //ZBUFFER[arrayPos] = wallDist;
                         /*if (a > MAX_ADDITIVE_TRANSPARENT)*/ {
-                            zbuffer[x][y] = wallDist;
+                            zbuffer[arrayPos] = wallDist;
                             ++pixelsDrawed;
                             ++pixelsInColumn;
                         }
@@ -1153,11 +1153,11 @@ public final class Renderer/* extends JPanel*/ {
                         }
 
                         // floor
-                        //int arrayPos = (y - 1) * WIDTH + x;
+                        int arrayPos = y * WIDTH + x;
                         //int pixelPos = (floorTexY << Texture.WIDTH_POT) + floorTexX;
                         //if (ZBUFFER[arrayPos] > currentDist) {
                         if (floorCell >= 0) {
-                            if (zbuffer[x][y/* - 1*/] > currentDist) {
+                            if (zbuffer[arrayPos] > currentDist) {
                                 //TEMP_BUFFER.setRGB(x, y, Texture.WALLS[3].getPixel(floorTexX, floorTexY));
                                 //buffer[(y - 1) * WIDTH + x] = Texture.WALLS[3].getPixel(floorTexX, floorTexY);
                                 //TEMP_BUFFER_RASTER.setPixel(x, y, new int[]{Texture.WALLS[3].getPixel(floorTexX, floorTexY)});
@@ -1168,21 +1168,21 @@ public final class Renderer/* extends JPanel*/ {
                                 if (Config.fog != Fog.NOTHING) {
                                     color = applyFog(color, currentDist, fogBrightness);
                                 }
-                                screenBuffer[(y/* - 1*/) * WIDTH + x] = color;
+                                screenBuffer[arrayPos] = color;
                                 //TEMP_BUFFER.setElem(arrayPos, color);
                                 //putPixel(x, y - 1, Texture.FLOOR[Map.FLOOR[floorX][floorY]].getPixel(floorTexX, floorTexY));
                                 //ZBUFFER[arrayPos] = currentDist;
-                                zbuffer[x][y/* - 1*/] = currentDist;
+                                zbuffer[arrayPos] = currentDist;
                                 ++pixelsInColumn;
                             }
                         }
 
                         // ceiling (symmetrical!)
                         if (ceilCell >= 0) {
-                            int yPos = HEIGHT - y/* - 1*/;
-                            //arrayPos = (HEIGHT - y) * WIDTH + x;
+                            int yPos = HEIGHT - y;
+                            arrayPos = yPos * WIDTH + x;
                             //if (ZBUFFER[arrayPos] > currentDist) {
-                            if (zbuffer[x][yPos] > currentDist) {
+                            if (zbuffer[arrayPos] > currentDist) {
                                 //TEMP_BUFFER.setRGB(x, HEIGHT - y, Texture.WALLS[6].getPixel(floorTexX, floorTexY));
                                 //buffer[(HEIGHT - y) * WIDTH + x] = Texture.WALLS[6].getPixel(floorTexX, floorTexY);
                                 //TEMP_BUFFER_RASTER.setPixel(x, HEIGHT - y, new int[]{Texture.WALLS[6].getPixel(floorTexX, floorTexY)});
@@ -1194,11 +1194,11 @@ public final class Renderer/* extends JPanel*/ {
                                     if (Config.fog != Fog.NOTHING) {
                                         color = applyFog(color, currentDist, fogBrightness);
                                     }
-                                    screenBuffer[yPos * WIDTH + x] = color;
+                                    screenBuffer[arrayPos] = color;
                                     //TEMP_BUFFER.setElem(arrayPos, color);
                                     //putPixel(x, HEIGHT - y, Texture.CEIL[Map.CEIL[floorX][floorY]].getPixel(floorTexX, floorTexY));
                                     //ZBUFFER[arrayPos] = currentDist;
-                                    zbuffer[x][yPos] = currentDist;
+                                    zbuffer[arrayPos] = currentDist;
                                     ++pixelsInColumn;
                                 }
                             }
@@ -1206,9 +1206,9 @@ public final class Renderer/* extends JPanel*/ {
                             // продублировать для первой (нулевой) строки,
                             // чтобы не было просвета (возникает из-за того, что "y" никогда не равен HEIGHT)
                             if (yPos == 1) {
-                                if (zbuffer[x][0] > currentDist) {
+                                if (zbuffer[x] > currentDist) {
                                     screenBuffer[x] = color;
-                                    zbuffer[x][0] = currentDist;
+                                    zbuffer[x] = currentDist;
                                     ++pixelsInColumn;
                                 }
                             }
@@ -1250,20 +1250,18 @@ public final class Renderer/* extends JPanel*/ {
                     int[] pixels = sky.getColumn(skyX);
 
                     for (int y = 0; y < HEIGHT && (pixelsInColumn < HEIGHT/* - 1*/); ++y) {
-                        //int arrayPos = y * WIDTH + x;
-                        //if (ZBUFFER[arrayPos] == Double.MAX_VALUE) {
-                        if (zbuffer[x][y] == Double.MAX_VALUE) {
-                            screenBuffer[y * WIDTH + x] = pixels[y];
+                        int arrayPos = y * WIDTH + x;
+                        if (zbuffer[arrayPos] == Double.MAX_VALUE) {
+                            screenBuffer[arrayPos] = pixels[y];
                             //TEMP_BUFFER.setElem(arrayPos, pixels[y]);
                             ++pixelsInColumn;
                         }
                     }
                 } else {
                     for (int y = 0; y < HEIGHT && (pixelsInColumn < HEIGHT/* - 1*/); ++y) {
-                        //int arrayPos = y * WIDTH + x;
-                        //if (ZBUFFER[arrayPos] == Double.MAX_VALUE) {
-                        if (zbuffer[x][y] == Double.MAX_VALUE) {
-                            screenBuffer[y * WIDTH + x] = 0xFF000000;
+                        int arrayPos = y * WIDTH + x;
+                        if (zbuffer[arrayPos] == Double.MAX_VALUE) {
+                            screenBuffer[arrayPos] = 0xFF000000;
                             //TEMP_BUFFER.setElem(arrayPos, 0xFF000000);
                             ++pixelsInColumn;
                         }
@@ -1327,30 +1325,8 @@ public final class Renderer/* extends JPanel*/ {
         }*/
         //Arrays.fill(TEMP_BUFFER, Color.BLACK.getRGB());
 
-        // забиваем Z-BUFFER и полотно
-        /*if (Config.interlacing) {
-            for (int y = 0; y < HEIGHT; ++y) {
-                int col = y * WIDTH;
-                for (int x = evenFactor; x < WIDTH; x += xStep) {
-                    TEMP_BUFFER[col + x] = 0xFF000000;
-                    ZBUFFER[col + x] = Double.MAX_VALUE;
-                }
-            }
-        } else {
-            for (int i = 0; i < TEMP_BUFFER.length; ++i) {
-                TEMP_BUFFER[i] = 0xFF000000;
-                ZBUFFER      [i] = Double.MAX_VALUE;
-            }
-        }*/
-
         // забиваем Z-BUFFER
-        /*for (int i = 0; i < ZBUFFER.length; ++i) {
-            ZBUFFER[i] = Double.MAX_VALUE;
-        }*/
-        //Utils.arrayFastFill(ZBUFFER, Double.MAX_VALUE);
-        for (double[] array : zbuffer) {
-            ArrayUtils.fill(array, Double.MAX_VALUE);
-        }
+        ArrayUtils.fill(zbuffer, Double.MAX_VALUE);
 
         // WORLD RENDERING
         if (Config.multithreading) {
@@ -1498,11 +1474,8 @@ public final class Renderer/* extends JPanel*/ {
 
                     // for every pixel of the current stripe
                     for (int y = drawStartY; y < drawEndY; ++y) {
-                        //int arrayPos = y * WIDTH + x;
-                        /*if (ZBUFFER[arrayPos] < transform.y) {
-                            continue;
-                        }*/
-                        if (zbuffer[x][y] <= transform.y) {
+                        int arrayPos = y * WIDTH + x;
+                        if (zbuffer[arrayPos] <= transform.y) {
                             continue;
                         }
 
@@ -1546,10 +1519,10 @@ public final class Renderer/* extends JPanel*/ {
                                 TEMP_BUFFER[arrayPos] = newPixel;
                             }*/
                             //drawPixel(x, y, color);
-                            screenBuffer[y * WIDTH + x] = color;
+                            screenBuffer[arrayPos] = color;
                             //TEMP_BUFFER.put(y * WIDTH + x, color);
                             //if (a >= MAX_ADDITIVE_TRANSPARENT) {
-                            zbuffer[x][y] = transform.y;
+                            zbuffer[arrayPos] = transform.y;
                             //}
                         }
                     }
@@ -1873,7 +1846,7 @@ public final class Renderer/* extends JPanel*/ {
         //TEMP_BUFFER = TEMP_RASTER.getPixels().asIntBuffer();
         screenBuffer = new int[WIDTH * HEIGHT];
 
-        zbuffer = new double[WIDTH][HEIGHT];
+        zbuffer = new double[WIDTH * HEIGHT];
 
         // инициализируем задачи для потоков
         /*
