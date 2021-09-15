@@ -350,29 +350,31 @@ public final class Player extends Mortal implements Serializable {
 
             // move forward if no wall in front of you
             if (moveF) {
-                moveVector.set( view.x,
-                                view.y);
+                moveVector.x += view.x;
+                moveVector.y += view.y;
             }
 
             // move backwards if no wall behind you
             if (moveB) {
-                moveVector.set(-view.x,
-                               -view.y);
+                moveVector.x -= view.x;
+                moveVector.y -= view.y;
             }
 
             // Strafe right
             if (moveR) {
-                moveVector.set( view.y,
-                               -view.x);
+                moveVector.x += view.y;
+                moveVector.y -= view.x;
             }
 
             // strafe left
             if (moveL) {
-                moveVector.set(-view.y,
-                                view.x);
+                moveVector.x -= view.y;
+                moveVector.y += view.x;
             }
 
-            moveVector = moveVector.mul(moveSpeed);
+            moveVector = moveVector
+                            .normalize()
+                            .mul(moveSpeed);
 
             Vector3 newPos = new Vector3(pos);
 
