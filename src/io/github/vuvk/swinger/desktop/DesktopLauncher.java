@@ -15,10 +15,25 @@ package io.github.vuvk.swinger.desktop;
 
 import io.github.vuvk.swinger.Config;
 import io.github.vuvk.swinger.Game;
+import java.util.Arrays;
+import java.util.List;
 
 public class DesktopLauncher {
     public static void main (String ... args) {
         Config.load();
+
+        List<String> argsList = Arrays.asList(args);
+        if (!argsList.contains("-XX:-UseCompressedOops")) {
+            System.out.println("JVM use compressed ordinary object pointers. I recommend start engine with flag:");
+            System.out.println("\t-XX:-UseCompressedOops");
+        }
+        if (!argsList.contains("-server")) {
+            String jvmName = System.getProperty("java.vm.name");
+            if (jvmName == null || !jvmName.toLowerCase().contains("server")) {
+                System.out.println("JVM not ran in server mode. I recommend start engine with flag:");
+                System.out.println("\t-server");
+            }
+        }
 
         System.setProperty("sun.java2d.opengl", (Config.useOpenGL) ? "True" : "False");
 
