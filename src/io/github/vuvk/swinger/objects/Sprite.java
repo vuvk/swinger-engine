@@ -226,14 +226,11 @@ public class Sprite extends Material implements Comparable<Sprite>, Serializable
         if (hasSides()) {
             double degree = Math.toDegrees(Math.atan2(/*(int)*/y1 - /*(int)*/y2,
                                                       /*(int)*/x1 - /*(int)*/x2)) - direction;
-            while (degree < 0.0) {
-                degree += 360.0;
-            }
-            while (degree >= 360.0) {
-                degree -= 360.0;
-            }
+            while (degree <    0.0) { degree += 360.0; }
+            while (degree >= 360.0) { degree -= 360.0; }
 
-            int side;if (degree >= 22.5 && degree < 67.5) {
+            int side;
+            if (degree >= 22.5 && degree < 67.5) {
                 side = 1;
             } else if (/*degree >= 67.5 && */degree < 112.5) {
                 side = 2;
