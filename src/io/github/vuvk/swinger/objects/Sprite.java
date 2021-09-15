@@ -233,10 +233,7 @@ public class Sprite extends Material implements Comparable<Sprite>, Serializable
                 degree -= 360.0;
             }
 
-            int side = 0;
-            if (degree >= 337.5 || degree < 22.5) {
-                side = 0;
-            } else if (/*degree >= 22.5 && */degree < 67.5) {
+            int side;if (degree >= 22.5 && degree < 67.5) {
                 side = 1;
             } else if (/*degree >= 67.5 && */degree < 112.5) {
                 side = 2;
@@ -250,6 +247,8 @@ public class Sprite extends Material implements Comparable<Sprite>, Serializable
                 side = 6;
             } else if (/*degree >= 292.5 && */degree < 337.5) {
                 side = 7;
+            } else /*(degree >= 337.5 || degree < 22.5)*/{
+                side = 0;
             }
 
             //Texture nextTexture = textures[(int)(degree) / 45];
