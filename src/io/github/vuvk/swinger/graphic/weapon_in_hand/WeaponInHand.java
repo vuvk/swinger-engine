@@ -15,9 +15,9 @@ package io.github.vuvk.swinger.graphic.weapon_in_hand;
 
 import io.github.vuvk.audiosystem.AudioSystem;
 import io.github.vuvk.audiosystem.SoundBuffer;
-import io.github.vuvk.swinger.Engine;
 import io.github.vuvk.swinger.graphic.Renderer;
 import io.github.vuvk.swinger.math.Vector2;
+import io.github.vuvk.swinger.objects.GameObject;
 import io.github.vuvk.swinger.objects.mortals.Player;
 import io.github.vuvk.swinger.objects.weapon.AmmoType;
 import io.github.vuvk.swinger.res.Image;
@@ -28,7 +28,7 @@ import java.util.logging.Logger;
  *
  * @author Anton "Vuvk" Shcherbatykh
  */
-public abstract class WeaponInHand implements Serializable {
+public abstract class WeaponInHand extends GameObject implements Serializable {
     transient private static final Logger LOGGER = Logger.getLogger(WeaponInHand.class.getName());
 
     private final Vector2 startPos;
@@ -162,8 +162,10 @@ public abstract class WeaponInHand implements Serializable {
     public abstract void init();
 
     public void update() {
+        //super.update();
+
         Player player = Player.getInstance();
-        double deltaTime = Engine.getDeltaTime();
+        double deltaTime = getAccumulatedDeltaTime();
 
         // если игрок движется, то двигать ствол по восьмерке
         if (player.isMove()) {

@@ -13,7 +13,6 @@
 */
 package io.github.vuvk.swinger.objects.projectiles;
 
-import io.github.vuvk.swinger.Engine;
 import io.github.vuvk.swinger.math.BoundingBox;
 import io.github.vuvk.swinger.math.Segment;
 import io.github.vuvk.swinger.math.Vector2;
@@ -86,7 +85,7 @@ public abstract class Projectile extends Sprite implements Serializable {
     public void update() {
         super.update();
 
-        Vector2 moveVector = viewVector.mul(moveSpeed * Engine.getDeltaTime());
+        Vector2 moveVector = viewVector.mul(moveSpeed * getAccumulatedDeltaTime());
         Vector3 newPos = getPos().add(moveVector);
         int newPosX = (int)newPos.x;
         int newPosY = (int)newPos.y;

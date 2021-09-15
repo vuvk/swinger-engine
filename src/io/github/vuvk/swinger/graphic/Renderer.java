@@ -41,6 +41,7 @@ import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
@@ -456,10 +457,10 @@ public final class Renderer/* extends JPanel*/ {
      * @param toX Позиция X до которой рендерить
      */
     private void renderWorld(int fromX, int toX) {
-        /*if (alreadyRendered || activeCamera == null || !Map.isLoaded() || !Map.isActive()) {
+        if (alreadyRendered || activeCamera == null || !Map.isLoaded() || !Map.isActive()) {
             //Thread.yield();
             return;
-        }*/
+        }
 
         /*Player player = Player.getInstance();
 
@@ -1334,13 +1335,13 @@ public final class Renderer/* extends JPanel*/ {
                 task.setLatch(cdl);
                 EXECUTOR.execute(task);
             }
-            /*try {
+            try {
                 cdl.await();
             } catch(InterruptedException ex) {
                 LOGGER.log(Level.SEVERE, null, ex);
-            }*/
+            }
             while (cdl.getCount() > 0) {
-                Thread.yield();
+                renderThread.yield();
             }
         } else {
             renderWorld(0, WIDTH);
@@ -1663,13 +1664,13 @@ public final class Renderer/* extends JPanel*/ {
                     task.setLatch(cdl);
                     EXECUTOR.execute(task);
                 }
-                /*try {
+                try {
                     cdl.await();
                 } catch(InterruptedException ex) {
                     LOGGER.log(Level.SEVERE, null, ex);
-                }*/
+                }
                 while (cdl.getCount() > 0) {
-                    Thread.yield();
+                    renderThread.yield();
                 }
             } else {
                 antialiasing(WIDTH, screenBuffer.length - 1);
@@ -1723,7 +1724,9 @@ public final class Renderer/* extends JPanel*/ {
             } catch (InterruptedException ex) {}
         }
 
-        alreadyRendered = true;
+        //if (Map.isLoaded() && Map.isActive()) {
+            alreadyRendered = true;
+        //}
         // меняем текущий экран для рисования
         /*currentScreenNum = (currentScreenNum == 0) ? 1 : 0;
         currentScreen = screens[currentScreenNum];
@@ -1731,9 +1734,9 @@ public final class Renderer/* extends JPanel*/ {
     }
 
     public BufferedImage getFrame() {
-        /*while (!alreadyRendered) {
+        while (!alreadyRendered) {
             Thread.yield();
-        }*/
+        }
         if (alreadyRendered) {
             screenRaster.setDataElements(0, 0, WIDTH, HEIGHT, screenBuffer);
             alreadyRendered = false;

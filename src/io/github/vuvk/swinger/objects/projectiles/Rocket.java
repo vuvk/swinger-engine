@@ -13,7 +13,6 @@
 */
 package io.github.vuvk.swinger.objects.projectiles;
 
-import io.github.vuvk.swinger.Engine;
 import io.github.vuvk.swinger.math.Vector3;
 import io.github.vuvk.swinger.objects.LightSource;
 import io.github.vuvk.swinger.objects.effect.Explode;
@@ -56,7 +55,7 @@ public class Rocket extends Projectile  implements Serializable{
         super.update();
 
         if (timeToSmoke < 0.25) {
-            timeToSmoke += Engine.getDeltaTime();
+            timeToSmoke += getAccumulatedDeltaTime();
         } else {
             timeToSmoke -= 0.25;
             new Smoke(getPos());

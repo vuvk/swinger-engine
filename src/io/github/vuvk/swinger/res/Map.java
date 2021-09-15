@@ -1057,7 +1057,7 @@ public final class Map {
                 new LightSource(Color.WHITE, 1.5, new Vector3( 8.5, 13.5, 0.0));
 
                 // fire
-                new LightSource(Color.WHITE, 1.0, new Vector3(10.5,  4.5, 0.0));
+                new LightSource(Color.WHITE, 0.75, new Vector3(10.5,  4.5, 0.0));
 
                 //SoundBank.MUSIC1.setLooping(true).play();
                 AudioSystem.newMusic(SoundBank.PATH_MUSIC1).setLooping(true).play();

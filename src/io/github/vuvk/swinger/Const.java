@@ -19,13 +19,8 @@ package io.github.vuvk.swinger;
  */
 public final class Const {
     private Const() {}
-    
+
     public static final int THREADS_COUNT = Runtime.getRuntime().availableProcessors() + 1;
     public static final boolean STEP_BY_STEP_RENDERING = false;
-    public static final int STEP_BY_STEP_DELAY = 10;  
-    
-    /** frame count in sec when ai updating */
-    public static final double AI_UPDATE_PER_SEC = 30;
-    /** max timeout between frames for update ai */
-    public static final double AI_UPDATE_TIMEOUT = 1 / AI_UPDATE_PER_SEC;  
+    public static final int STEP_BY_STEP_DELAY = 10; 
 }

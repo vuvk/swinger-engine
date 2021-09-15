@@ -17,7 +17,6 @@ import io.github.vuvk.audiosystem.AudioListener;
 import io.github.vuvk.audiosystem.AudioSystem;
 import io.github.vuvk.audiosystem.Sound;
 import io.github.vuvk.swinger.Config;
-import io.github.vuvk.swinger.Engine;
 import io.github.vuvk.swinger.audio.SoundBank;
 import io.github.vuvk.swinger.graphic.gui.ScreenBlood;
 import io.github.vuvk.swinger.graphic.weapon_in_hand.AmmoPack;
@@ -316,7 +315,7 @@ public final class Player extends Mortal implements Serializable {
             return;
         }
 
-        final double deltaTime = Engine.getDeltaTime();
+        final double deltaTime = getAccumulatedDeltaTime();
 
         // обновляем оружие в руках
         if (getWeaponInHand() != null) {

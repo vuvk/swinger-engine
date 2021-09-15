@@ -13,9 +13,8 @@
 */
 package io.github.vuvk.swinger.objects;
 
-import java.io.Serializable;
-
 import io.github.vuvk.swinger.Engine;
+import java.io.Serializable;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;
 
@@ -25,8 +24,16 @@ import java.util.concurrent.CopyOnWriteArraySet;
  */
 public abstract class GameObject implements Serializable {
 
-    transient private static final Set<GameObject> LIB = new CopyOnWriteArraySet<>();    
+    transient private static final Set<GameObject> LIB = new CopyOnWriteArraySet<>();
     private static final long serialVersionUID = 1L;
+
+    /** frame count in sec when go updating */
+    private static final double UPDATES_PER_SEC = 30;
+    /** max timeout between frames for update go */
+    private static final double UPDATE_TIMEOUT = 1 / UPDATES_PER_SEC;
+
+    private static double delayUpdate = 0;
+    private static double accumulatedDeltaTime = 0;
 
     private boolean deferredDelete = false; // отложенное удаление
     private double delayForDelete = 0;      // время до отложенного удаления
@@ -34,7 +41,7 @@ public abstract class GameObject implements Serializable {
     protected GameObject() {
         LIB.add(this);
     }
-    
+
     /**
      * Пометить объект на удаление
      */
@@ -53,18 +60,31 @@ public abstract class GameObject implements Serializable {
     public void update() {
         if (deferredDelete) {
             if (delayForDelete > 0.0) {
-                delayForDelete -= Engine.getDeltaTime();
+                delayForDelete -= getAccumulatedDeltaTime();
             } else {
                 destroy();
             }
         }
     }
-    
-    public static void updateAll() {
-        LIB.forEach(GameObject::update);
+
+    protected static double getAccumulatedDeltaTime() {
+        return accumulatedDeltaTime;
     }
-    
+
+    public static void updateAll() {
+        // timeout for update ai
+        if (delayUpdate < UPDATE_TIMEOUT) {
+            delayUpdate += Engine.getDeltaTime();
+            return;
+        } else {
+            accumulatedDeltaTime = delayUpdate;
+            delayUpdate = 0;
+
+            LIB.forEach(GameObject::update);
+        }
+    }
+
     public static void destroyAll() {
         LIB.forEach(GameObject::destroy);
-    }  
+    }
 }

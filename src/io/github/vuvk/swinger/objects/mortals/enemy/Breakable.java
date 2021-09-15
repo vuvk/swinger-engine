@@ -15,8 +15,6 @@ package io.github.vuvk.swinger.objects.mortals.enemy;
 
 import io.github.vuvk.audiosystem.AudioSystem;
 import io.github.vuvk.audiosystem.Sound;
-import io.github.vuvk.swinger.Const;
-import io.github.vuvk.swinger.Engine;
 import io.github.vuvk.swinger.math.Vector2;
 import io.github.vuvk.swinger.math.Vector3;
 import io.github.vuvk.swinger.objects.Sprite;
@@ -40,10 +38,6 @@ public class Breakable extends Mortal implements Serializable {
     protected Vector2 viewVector = new Vector2(1, 0);
     protected Sprite sprite;
 
-    /** timeout for update AI */
-    protected double aiUpdateDelay = 0.0;
-    /** delta time per timeout AI */
-    protected double accumulatedDeltaTime = 0.0;
     /** timeout for update state */
     protected double stateDelay = 0.0;
     protected EnemyState state  = EnemyState.IDLE;
@@ -262,17 +256,8 @@ public class Breakable extends Mortal implements Serializable {
             return;
         }
 
-        // timeout for update ai
-        if (aiUpdateDelay < Const.AI_UPDATE_TIMEOUT) {
-            aiUpdateDelay += Engine.getDeltaTime();
-            return;
-        } else {
-            accumulatedDeltaTime = aiUpdateDelay;
-            aiUpdateDelay -= Const.AI_UPDATE_TIMEOUT;
-        }
-
         // обновляем состояние
-        stateDelay += accumulatedDeltaTime;
+        stateDelay += getAccumulatedDeltaTime();
 
         if (state == EnemyState.PAIN) {
             if (stateDelay >= 0.25) {

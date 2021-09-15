@@ -15,7 +15,6 @@ package io.github.vuvk.swinger.objects.mortals.enemy;
 
 import io.github.vuvk.audiosystem.AudioSystem;
 import io.github.vuvk.audiosystem.Sound;
-import io.github.vuvk.swinger.Const;
 import io.github.vuvk.swinger.math.Ray;
 import io.github.vuvk.swinger.math.Vector2;
 import io.github.vuvk.swinger.math.Vector3;
@@ -356,11 +355,6 @@ public abstract class Enemy extends Breakable implements Serializable {
     public void update() {
         super.update();
 
-        // рано?
-        if (aiUpdateDelay < Const.AI_UPDATE_TIMEOUT) {
-            return;
-        }
-
         // игрок в зоне видимости?
         boolean playerInFov = isPlayerInFov();
         // Игрок на линии и не пересекается ничем?
@@ -388,7 +382,7 @@ public abstract class Enemy extends Breakable implements Serializable {
 
                         // пришло время стрелять? Стрельни
                         if (shootDelay < getShootSpeed()) {
-                            shootDelay += accumulatedDeltaTime;
+                            shootDelay += getAccumulatedDeltaTime();
                         } else {
                             shootDelay = 0.0;
                             prevStateDelay = stateDelay;
@@ -432,7 +426,7 @@ public abstract class Enemy extends Breakable implements Serializable {
         }
 
         if (state == EnemyState.WALK) {
-            double moveSpeed = accumulatedDeltaTime;
+            double moveSpeed = getAccumulatedDeltaTime();
             if (moveSpeed > radius) {
                 moveSpeed = radius;
             }
