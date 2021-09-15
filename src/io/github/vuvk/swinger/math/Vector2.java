@@ -154,7 +154,6 @@ public class Vector2 implements Serializable {
             return x == v.x &&
                    y == v.y;
         }
-
-        return false;
+        return true;
     }
 }

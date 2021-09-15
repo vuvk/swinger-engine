@@ -156,7 +156,6 @@ public class Vector3 extends Vector2 {
                    y == v.y &&
                    z == v.z;
         }
-
-        return false;
+        return true;
     }
 }

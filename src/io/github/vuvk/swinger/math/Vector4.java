@@ -146,6 +146,6 @@ public class Vector4 extends Vector3 {
                    z == v.z &&
                    w == v.w;
         }
-        return false;
+        return true;
     }
 }
