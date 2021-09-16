@@ -370,7 +370,7 @@ public class Game extends Frame {
         }
 
         if (Config.draw) {
-            if (!Map.isLoaded() && !TextureBank.MAIN_MENU.equals(lastFrame)) {
+            if ((!Map.isLoaded() || !Map.isActive()) && !TextureBank.MAIN_MENU.equals(lastFrame)) {
                 lastFrame = TextureBank.MAIN_MENU;
                 playerPosText.setVisible(false);
                 playerHpText.setVisible(false);
@@ -386,22 +386,18 @@ public class Game extends Frame {
                     angle -= 360.0;
                 }
 
+                /*
                 double x = 11.5 + 2.0 * Math.cos(angle),
                        y =  4.5 + 2.0 * Math.sin(angle);
 
-//                    Map.light1.setPos(new Vector3(x, y));
+                Map.light1.setPos(new Vector3(x, y));
 
 
                 x = 11.5 + Math.cos(-angle);
                 y =  4.5 + Math.sin(-angle);
 
-//                    Map.light2.setPos(new Vector3(x, y));
-
-                /*batch.begin();
-                if (lastFrame != null) {
-                    batch.draw(lastFrame, 0, 0, Config.WIDTH + 1, Config.HEIGHT + 1);
-                }
-                batch.end();*/
+                Map.light2.setPos(new Vector3(x, y));
+                */
 
                 if (player.getHealth() > 0.0) {
                     /*
@@ -422,18 +418,7 @@ public class Game extends Frame {
                     Sky.getInstance().update();
 
                     renderer.setActiveCamera(playerCamera);
-
-                    // set viewport
-                    //Gdx.gl.glViewport((int) viewport.x,     (int) viewport.y,
-                    //                  (int) viewport.width, (int) viewport.height);
-
-                    //Renderer.canRender = false;
-                    //Renderer.SCREEN.draw(Renderer.getInstance().SCREEN_RASTER, 0, 0);
-
                     lastFrame = renderer.getFrame();
-                    //batch.begin();
-                    //batch.draw(renderer.getFrame(), 0, 0, Config.WIDTH + 1, Config.HEIGHT + 1);
-                    //Renderer.canRender = true;
 
                     // GUI
                     if (!Const.STEP_BY_STEP_RENDERING) {

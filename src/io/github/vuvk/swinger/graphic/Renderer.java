@@ -1282,7 +1282,7 @@ public final class Renderer/* extends JPanel*/ {
     }
 
     private void render() {
-        while (alreadyRendered || nextActiveCamera == null || !Map.isLoaded()/* || !Map.isActive()*/) {
+        while (alreadyRendered || nextActiveCamera == null || !Map.isLoaded() || !Map.isActive()) {
             //Thread.yield();
             return;
         }
@@ -1737,6 +1737,7 @@ public final class Renderer/* extends JPanel*/ {
         while (!alreadyRendered) {
             Thread.yield();
         }
+        
         if (alreadyRendered) {
             screenRaster.setDataElements(0, 0, WIDTH, HEIGHT, screenBuffer);
             alreadyRendered = false;
