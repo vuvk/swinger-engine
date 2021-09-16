@@ -68,16 +68,12 @@
         /* 60*/	"resources/pics/effects/fire/fire_56.png",
         /*  */	"resources/pics/effects/fire/fire_57.png",
         /*  */	"resources/pics/effects/fire/fire_58.png",
-        /*  */	"resources/pics/effects/fire/fire_59.png",
-        /*  */	"resources/pics/effects/fire/fire_60.png",
-        /*  */	"resources/pics/effects/fire/fire_61.png",
-        /*  */	"resources/pics/effects/fire/fire_62.png",
-        /* 67*/	"resources/pics/effects/fire/fire_63.png",
+        /* 63*/	"resources/pics/effects/fire/fire_59.png",
 
         /* waiter */
-        /* 68*/	"resources/pics/sprites/creature/anim01.png",
-        /* 69*/	"resources/pics/sprites/creature/anim02.png",
-        /* 70*/	"resources/pics/sprites/creature/anim03.png"
+        /* 64*/	"resources/pics/sprites/creature/anim01.png",
+        /* 65*/	"resources/pics/sprites/creature/anim02.png",
+        /* 66*/	"resources/pics/sprites/creature/anim03.png"
     ],
 
     "materials": [
@@ -93,18 +89,18 @@
                               31, 32, 33, 34, 35, 36, 37, 38, 39, 40,
                               41, 42, 43, 44, 45, 46, 47, 48, 49, 50,
                               51, 52, 53, 54, 55, 56, 57, 58, 59, 60,
-                              61, 62, 63, 64, 65, 66, 67
+                              61, 62, 63
                             ], 
 
                  "animation_speed": 30, 
                  "play_once": false,
                  "brightness": 15.0},
         /* waiter */
-        /* 4 */	{"textures": [68, 69, 70], "animation_speed": 10, "play_once": false}
+        /* 4 */	{"textures": [64, 65, 66], "animation_speed": 10, "play_once": false}
     ],
     
     "config": [
-		/* lighters */
+	/* lighters */
         /* 0 */ {"material": 0, "solid": true,  "scale": [1.0, 1.0]},
         /* 1 */ {"material": 1, "solid": false, "scale": [1.0, 1.0]},
         
